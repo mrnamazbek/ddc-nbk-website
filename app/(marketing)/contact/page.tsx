@@ -1,0 +1,250 @@
+"use client";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { motion } from "framer-motion";
+import Button from "@/components/ui/Button";
+import { MapPin, Phone, Mail, Clock, Send, CheckCircle2 } from "lucide-react";
+import { useState } from "react";
+
+// Схема валидации Zod для защиты формы и обеспечения качества входящих данных
+const contactSchema = z.object({
+  name: z.string().min(2, { message: "Пожалуйста, введите ваше имя (минимум 2 символа)" }),
+  email: z.string().email({ message: "Некорректный адрес электронной почты" }),
+  organization: z.string().min(2, { message: "Пожалуйста, укажите название вашей организации" }),
+  message: z.string().min(10, { message: "Сообщение должно содержать минимум 10 символов" }),
+});
+
+type ContactFormValues = z.infer<typeof contactSchema>;
+
+export default function ContactPage() {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactSchema),
+  });
+
+  const onSubmit = async (data: ContactFormValues) => {
+    // Имитация отправки данных на сервер
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    console.log("Отправленные данные формы:", data);
+    setIsSubmitted(true);
+    reset();
+  };
+
+  return (
+    <div className="relative w-full bg-[#0A0A0A] overflow-hidden min-h-screen pt-32 pb-24 font-sans">
+      {/* Мягкие свечения */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
+        
+        {/* Заголовок */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-3xl mb-20"
+        >
+          <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
+            СВЯЗАТЬСЯ С НАМИ
+          </span>
+          <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
+            Контакты DDC <br />
+            <span className="text-gradient-gold font-medium">и обратная связь</span>
+          </h1>
+          <p className="text-lg text-zinc-400 font-light leading-relaxed">
+            Мы всегда готовы к сотрудничеству с партнерами, прессой и будущими коллегами. Оставьте обращение, и наши специалисты свяжутся с вами в ближайшее время.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+          
+          {/* Левая сторона: Контактная информация */}
+          <div className="lg:col-span-5 space-y-10">
+            <div>
+              <h3 className="text-xl font-bold text-white mb-6 tracking-wide">Главный офис в Алматы</h3>
+              
+              <div className="space-y-6">
+                <div className="flex gap-4 items-start">
+                  <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold shrink-0">
+                    <MapPin className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">Адрес</h5>
+                    <p className="text-sm text-zinc-400 font-light leading-relaxed">
+                      Республика Казахстан, 050040, г. Алматы, <br />
+                      проспект Аль-Фараби, д. 21 (БЦ «Al-Farabi»)
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4 items-start">
+                  <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold shrink-0">
+                    <Phone className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">Телефон приемной</h5>
+                    <p className="text-sm text-zinc-400 font-light font-mono leading-relaxed">
+                      +7 (727) 330-24-00
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4 items-start">
+                  <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold shrink-0">
+                    <Mail className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">Электронная почта</h5>
+                    <p className="text-sm text-zinc-400 font-light font-mono leading-relaxed">
+                      info@ddc.nationalbank.kz
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4 items-start">
+                  <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold shrink-0">
+                    <Clock className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">Режим работы</h5>
+                    <p className="text-sm text-zinc-400 font-light leading-relaxed">
+                      Понедельник — Пятница: 09:00 - 18:30 <br />
+                      Обед: 13:00 - 14:30
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Официальная плашка */}
+            <div className="p-6 rounded-2xl bg-charcoal/30 border border-white/5">
+              <span className="text-[10px] uppercase text-gold font-semibold tracking-wider block mb-2">Статус обращения</span>
+              <p className="text-xs text-zinc-500 font-light leading-relaxed">
+                Все обращения, направленные через форму, фиксируются в Единой системе документооборота Национального Банка РК и рассматриваются в установленные законодательством сроки.
+              </p>
+            </div>
+          </div>
+
+          {/* Правая сторона: Форма обратной связи */}
+          <div className="lg:col-span-7 bg-charcoal/20 border border-white/5 rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+            {isSubmitted ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="text-center py-16 flex flex-col items-center justify-center"
+              >
+                <div className="w-16 h-16 rounded-full bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
+                  <CheckCircle2 className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4 tracking-wide">Обращение отправлено</h3>
+                <p className="text-sm text-zinc-400 font-light leading-relaxed max-w-md mx-auto mb-8">
+                  Спасибо! Ваше обращение успешно зарегистрировано. Мы свяжемся с вами в течение 2 рабочих дней.
+                </p>
+                <Button variant="outline" onClick={() => setIsSubmitted(false)}>
+                  Отправить еще одно сообщение
+                </Button>
+              </motion.div>
+            ) : (
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="name" className="block text-xs uppercase tracking-wider text-zinc-400 font-semibold mb-2">
+                      Имя и фамилия
+                    </label>
+                    <input
+                      id="name"
+                      type="text"
+                      {...register("name")}
+                      className={`w-full bg-[#0A0A0A] border rounded-lg px-4 py-3 text-sm text-white font-light focus:outline-none transition-all duration-300 ${
+                        errors.name ? "border-red-500 focus:border-red-500" : "border-white/10 focus:border-gold/50 focus:shadow-gold focus:shadow-[0_0_8px_rgba(201,168,76,0.15)]"
+                      }`}
+                      placeholder="Иван Иванов"
+                    />
+                    {errors.name && (
+                      <p className="text-xs text-red-500 mt-1.5 font-light">{errors.name.message}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label htmlFor="email" className="block text-xs uppercase tracking-wider text-zinc-400 font-semibold mb-2">
+                      Электронная почта
+                    </label>
+                    <input
+                      id="email"
+                      type="email"
+                      {...register("email")}
+                      className={`w-full bg-[#0A0A0A] border rounded-lg px-4 py-3 text-sm text-white font-light focus:outline-none transition-all duration-300 ${
+                        errors.email ? "border-red-500 focus:border-red-500" : "border-white/10 focus:border-gold/50 focus:shadow-gold focus:shadow-[0_0_8px_rgba(201,168,76,0.15)]"
+                      }`}
+                      placeholder="example@mail.com"
+                    />
+                    {errors.email && (
+                      <p className="text-xs text-red-500 mt-1.5 font-light">{errors.email.message}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="organization" className="block text-xs uppercase tracking-wider text-zinc-400 font-semibold mb-2">
+                    Организация
+                  </label>
+                  <input
+                    id="organization"
+                    type="text"
+                    {...register("organization")}
+                    className={`w-full bg-[#0A0A0A] border rounded-lg px-4 py-3 text-sm text-white font-light focus:outline-none transition-all duration-300 ${
+                      errors.organization ? "border-red-500 focus:border-red-500" : "border-white/10 focus:border-gold/50 focus:shadow-gold focus:shadow-[0_0_8px_rgba(201,168,76,0.15)]"
+                    }`}
+                    placeholder="АО 'Банк Казахстана'"
+                  />
+                  {errors.organization && (
+                    <p className="text-xs text-red-500 mt-1.5 font-light">{errors.organization.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="block text-xs uppercase tracking-wider text-zinc-400 font-semibold mb-2">
+                    Текст обращения
+                  </label>
+                  <textarea
+                    id="message"
+                    rows={6}
+                    {...register("message")}
+                    className={`w-full bg-[#0A0A0A] border rounded-lg px-4 py-3 text-sm text-white font-light focus:outline-none transition-all duration-300 resize-none ${
+                      errors.message ? "border-red-500 focus:border-red-500" : "border-white/10 focus:border-gold/50 focus:shadow-gold focus:shadow-[0_0_8px_rgba(201,168,76,0.15)]"
+                    }`}
+                    placeholder="Опишите цель вашего обращения или предложение о сотрудничестве..."
+                  />
+                  {errors.message && (
+                    <p className="text-xs text-red-500 mt-1.5 font-light">{errors.message.message}</p>
+                  )}
+                </div>
+
+                <Button
+                  type="submit"
+                  variant="gold"
+                  disabled={isSubmitting}
+                  className="w-full justify-center flex items-center gap-2"
+                >
+                  {isSubmitting ? "Отправка..." : "Отправить обращение"}
+                  <Send className="w-4 h-4" />
+                </Button>
+              </form>
+            )}
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  );
+}
