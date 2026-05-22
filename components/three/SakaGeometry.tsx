@@ -27,7 +27,7 @@ export default function SakaGeometry() {
       );
     }
 
-    // 2. Икосаэдр (кристалл безопасности, изумрудный цвет)
+    // 2. Икосаэдр (кристалл безопасности, сапфирово-синий цвет)
     if (icoRef.current) {
       icoRef.current.rotation.x = -time * 0.15;
       icoRef.current.rotation.z = time * 0.08;
@@ -62,14 +62,14 @@ export default function SakaGeometry() {
         <meshPhysicalMaterial
           color="#C9A84C"
           emissive="#E8C87A"
-          emissiveIntensity={0.15}
-          roughness={0.03}
-          metalness={0.15}
-          transmission={0.8} // Эффект стекла
-          thickness={1.8}    // Толщина преломления
-          ior={1.5}          // Индекс преломления света
+          emissiveIntensity={0.25}
+          roughness={0.01}
+          metalness={0.25}
+          transmission={0.95} // Эффект стекла
+          thickness={2.2}    // Толщина преломления
+          ior={1.65}          // Индекс преломления света
           clearcoat={1.0}
-          clearcoatRoughness={0.1}
+          clearcoatRoughness={0.02}
         />
       </mesh>
 
@@ -79,14 +79,14 @@ export default function SakaGeometry() {
         <meshPhysicalMaterial
           color="#005cbb"
           emissive="#38bdf8"
-          emissiveIntensity={0.25}
-          roughness={0.02}
-          metalness={0.25}
-          transmission={0.9}
-          thickness={2.2}
-          ior={1.65}
+          emissiveIntensity={0.35}
+          roughness={0.01}
+          metalness={0.3}
+          transmission={0.96}
+          thickness={2.8}
+          ior={1.8}
           clearcoat={1.0}
-          clearcoatRoughness={0.05}
+          clearcoatRoughness={0.01}
         />
       </mesh>
 
@@ -96,12 +96,13 @@ export default function SakaGeometry() {
         <meshPhysicalMaterial
           color="#E8C87A"
           emissive="#C9A84C"
-          emissiveIntensity={0.1}
-          roughness={0.08}
-          metalness={0.35}
-          transmission={0.65}
-          thickness={1.5}
-          ior={1.45}
+          emissiveIntensity={0.3}
+          roughness={0.12}
+          metalness={0.95}
+          transmission={0.0}
+          thickness={0.0}
+          clearcoat={1.0}
+          clearcoatRoughness={0.05}
         />
       </mesh>
     </>

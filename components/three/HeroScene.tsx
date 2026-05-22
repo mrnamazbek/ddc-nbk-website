@@ -16,7 +16,7 @@ export default function HeroScene() {
   if (!mounted) {
     // Красивый фоновый градиент-заглушка во время гидратации и загрузки
     return (
-      <div className="absolute inset-0 bg-radial-[at_50%_50%] from-[#0F251A] via-[#0A0A0A] to-[#0A0A0A] opacity-70" />
+      <div className="absolute inset-0 bg-radial-[at_50%_50%] from-[#002d62] via-[#08080a] to-[#08080a] opacity-70" />
     );
   }
 
@@ -27,7 +27,7 @@ export default function HeroScene() {
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         className="w-full h-full"
       >
-        <color attach="background" args={["#0A0A0A"]} />
+        <color attach="background" args={["#08080a"]} />
         
         {/* Освещение для реалистичного преломления стекла */}
         <ambientLight intensity={0.4} />
@@ -42,7 +42,7 @@ export default function HeroScene() {
         <directionalLight
           position={[-5, -5, 2]}
           intensity={0.8}
-          color="#52B788" // Изумрудный оттенок заполняющего света
+          color="#38bdf8" // Фирменный бирюзово-голубой свет ЦЦР
         />
 
         <pointLight position={[0, 0, 10]} intensity={1.5} color="#FFFFFF" />
