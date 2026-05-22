@@ -1,50 +1,53 @@
 @import "tailwindcss";
 
 :root {
-  /* Базовый темный фон и контрастный белый текст для премиального финансового сайта */
-  --background: #0A0A0A;
+  /* Базовый глубокий угольный фон и контрастный белый текст */
+  --background: #08080a;
   --foreground: #FFFFFF;
 
-  /* Дизайн-токены DDC */
-  --color-forest: #1A3D2B;
-  --color-forest-mid: #2D6A4F;
-  --color-forest-light: #52B788;
-  --color-forest-dark: #0F251A;
+  /* Дизайн-токены DDC Digital Blue (АО «Центр цифрового развития») */
+  --color-brand-blue: #005cbb;
+  --color-brand-blue-mid: #0077e6;
+  --color-brand-blue-light: #38bdf8;
+  --color-brand-blue-dark: #002d62;
 
+  /* Дизайн-токены NBK Premium Gold (Национальный Банк Казахстана) */
   --color-gold: #C9A84C;
   --color-gold-light: #E8C87A;
   --color-gold-muted: #8B7035;
   --color-gold-dark: #58461F;
 
-  --color-charcoal: #1C1C1E;
-  --color-black: #0A0A0A;
+  --color-charcoal: #141419;
+  --color-black: #08080a;
   --color-white: #FFFFFF;
   --color-offwhite: #F5F5F0;
 
   /* Стеклянные эффекты (Glassmorphism) */
-  --glass-bg: rgba(255, 255, 255, 0.04);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-border-gold: rgba(201, 168, 76, 0.15);
-  --glass-blur: blur(24px) saturate(180%);
+  --glass-bg: rgba(20, 20, 25, 0.4);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.15);
+  --glass-border-gold: rgba(201, 168, 76, 0.2);
+  --glass-border-blue: rgba(0, 92, 187, 0.2);
+  --glass-blur: blur(16px) saturate(180%);
+  --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 
   /* Скругления углов */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius-xl: 22px; /* Из личного стиля пользователя */
   --radius-2xl: 32px;
   --radius-pill: 9999px;
 
   /* Тени */
   --shadow-gold: 0 8px 32px rgba(201, 168, 76, 0.15);
-  --shadow-green: 0 8px 32px rgba(26, 61, 43, 0.25);
+  --shadow-blue: 0 8px 32px rgba(0, 92, 187, 0.15);
 }
 
 @theme {
-  --color-forest: var(--color-forest);
-  --color-forest-mid: var(--color-forest-mid);
-  --color-forest-light: var(--color-forest-light);
-  --color-forest-dark: var(--color-forest-dark);
+  --color-brand-blue: var(--color-brand-blue);
+  --color-brand-blue-mid: var(--color-brand-blue-mid);
+  --color-brand-blue-light: var(--color-brand-blue-light);
+  --color-brand-blue-dark: var(--color-brand-blue-dark);
 
   --color-gold: var(--color-gold);
   --color-gold-light: var(--color-gold-light);
@@ -69,22 +72,46 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Скрываем дефолтный курсор на десктопах для активации интерактивного курсора */
+@media (min-width: 1025px) {
+  body:not(.low-power) {
+    cursor: none;
+  }
+  body:not(.low-power) a,
+  body:not(.low-power) button,
+  body:not(.low-power) [role="button"],
+  body:not(.low-power) select,
+  body:not(.low-power) input {
+    cursor: none !important;
+  }
+}
+
 /* ==========================================
    Утилиты и эффекты
    ========================================== */
 
 .glass-panel {
   background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
+  border: var(--glass-border);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-panel-blue {
+  background: rgba(20, 20, 25, 0.6);
+  border: 1px solid var(--glass-border-blue);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: 0 8px 32px rgba(0, 92, 187, 0.05);
 }
 
 .glass-panel-gold {
-  background: rgba(26, 61, 43, 0.3);
+  background: rgba(20, 20, 25, 0.6);
   border: 1px solid var(--glass-border-gold);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-gold);
 }
 
 .text-gradient-gold {
@@ -93,8 +120,8 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-.text-gradient-green {
-  background: linear-gradient(135deg, var(--color-forest-light) 0%, var(--color-forest-mid) 50%, var(--color-forest) 100%);
+.text-gradient-blue {
+  background: linear-gradient(135deg, var(--color-brand-blue-light) 0%, var(--color-brand-blue-mid) 50%, var(--color-brand-blue) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -105,22 +132,279 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0A0A0A;
+  background: #08080a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1A3D2B;
+  background: #18181c;
   border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #C9A84C;
+  background: var(--color-brand-blue);
 }
 
 /* Индикатор фокуса для доступности */
 *:focus-visible {
-  outline: 2px solid var(--color-gold);
+  outline: 2px solid var(--color-brand-blue-light);
   outline-offset: 4px;
+}
+
+/* ==========================================
+   Элементы из стилей пользователя (styles.css)
+   ========================================== */
+
+/* CUSTOM CURSOR */
+#custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--color-brand-blue-light);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+  transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s;
+  will-change: transform;
+  display: none;
+}
+
+@media (min-width: 1025px) {
+  body:not(.low-power) #custom-cursor {
+    display: block;
+  }
+}
+
+#custom-cursor.hovered {
+  width: 64px;
+  height: 64px;
+  background-color: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.8);
+}
+
+#custom-cursor.hovered-gold {
+  width: 64px;
+  height: 64px;
+  background-color: rgba(201, 168, 76, 0.1);
+  border-color: rgba(201, 168, 76, 0.8);
+}
+
+/* LIQUID GLASS CARD */
+.glass-card {
+  background: var(--glass-bg);
+  border: var(--glass-border);
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius-xl);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  transform: translateY(-4px);
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  transition: left 0.6s ease-in-out;
+  pointer-events: none;
+}
+
+.glass-card:hover::before {
+  left: 100%;
+}
+
+/* SPOTLIGHT BORDER EFFECT */
+.spotlight-card {
+  position: relative;
+}
+
+.spotlight-glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(56, 189, 248, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  will-change: transform, opacity;
+}
+
+.spotlight-card:hover .spotlight-glow {
+  opacity: 1;
+}
+
+/* CLOCK LIQUID (ЖИДКОСТНЫЕ ЧАСЫ) */
+.clock-liquid {
+  display: grid;
+  gap: 12px;
+}
+
+.clock-liquid__hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  backdrop-filter: blur(26px) saturate(170%);
+  -webkit-backdrop-filter: blur(26px) saturate(170%);
+  padding: 20px 22px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 20px 55px rgba(2, 6, 23, 0.25);
+}
+
+.clock-liquid__glow {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 9999px;
+  filter: blur(36px);
+  opacity: 0.25;
+  pointer-events: none;
+  top: -110px;
+  right: -80px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.8) 0%, rgba(56, 189, 248, 0) 68%);
+}
+
+.clock-liquid__city {
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-brand-blue-light);
+}
+
+.clock-liquid__time {
+  margin-top: 8px;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.clock-liquid__digits {
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  line-height: 0.95;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: rgba(248, 250, 252, 0.98);
+}
+
+.clock-liquid__seconds {
+  font-size: 0.95rem;
+  line-height: 1;
+  font-family: var(--font-mono);
+  color: var(--color-brand-blue-light);
+  transform: translateY(-6px);
+}
+
+.clock-liquid__date {
+  margin-top: 7px;
+  color: rgba(203, 213, 225, 0.85);
+  font-size: 0.85rem;
+}
+
+/* MINI TABLE (МИКРО-ТАБЛИЦА) */
+.mini-table-caption {
+  margin-bottom: 8px;
+  font-size: 0.7rem;
+  color: rgba(148, 163, 184, 0.85);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.mini-table-shell {
+  position: relative;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.01);
+  overflow: hidden;
+}
+
+.mini-table-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mini-table {
+  display: grid;
+  gap: 6px;
+  min-width: 600px;
+  padding: 8px;
+}
+
+.mini-table__head {
+  display: grid;
+  grid-template-columns: 80px minmax(200px, 1fr) minmax(180px, 0.95fr) 100px;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: linear-gradient(145deg, rgba(20, 20, 25, 0.8), rgba(20, 20, 25, 0.4));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mini-table__head-cell {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(148, 163, 184, 0.8);
+}
+
+.mini-table__head-cell:last-child {
+  text-align: right;
+}
+
+.mini-table__row {
+  display: grid;
+  grid-template-columns: 80px minmax(200px, 1fr) minmax(180px, 0.95fr) 100px;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mini-table__row--top {
+  border-color: rgba(56, 189, 248, 0.18);
+  background: linear-gradient(140deg, rgba(0, 92, 187, 0.1), rgba(0, 92, 187, 0.02) 62%);
+}
+
+.mini-table__cell {
+  min-width: 0;
+  font-size: 0.8rem;
+}
+
+.mini-table__cell.mono {
+  font-family: var(--font-mono);
+  color: rgba(229, 231, 235, 0.9);
+  white-space: nowrap;
+}
+
+.mini-table__cell.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 /* Снижение движения (prefers-reduced-motion) */

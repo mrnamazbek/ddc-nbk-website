@@ -56,34 +56,37 @@ export default function SakaGeometry() {
 
   return (
     <>
-      {/* Парящий тор (золотое стекло) */}
+      {/* Парящий тор (золотое стекло Национального Банка) */}
       <mesh ref={torusRef} position={[-3, 1.2, 0]}>
         <torusGeometry args={[1.2, 0.3, 24, 48]} />
         <meshPhysicalMaterial
           color="#C9A84C"
-          roughness={0.05}
-          metalness={0.1}
-          transmission={0.7} // Эффект стекла
-          thickness={1.5}    // Толщина преломления
+          emissive="#E8C87A"
+          emissiveIntensity={0.15}
+          roughness={0.03}
+          metalness={0.15}
+          transmission={0.8} // Эффект стекла
+          thickness={1.8}    // Толщина преломления
           ior={1.5}          // Индекс преломления света
           clearcoat={1.0}
           clearcoatRoughness={0.1}
         />
       </mesh>
 
-      {/* Парящий икосаэдр (изумрудное стекло) */}
+      {/* Парящий икосаэдр (сапфировое цифровое стекло ЦЦР) */}
       <mesh ref={icoRef} position={[3, -1.5, 0]}>
         <icosahedronGeometry args={[1.3, 0]} />
         <meshPhysicalMaterial
-          color="#1A3D2B"
-          emissive="#52B788"
-          emissiveIntensity={0.2}
+          color="#005cbb"
+          emissive="#38bdf8"
+          emissiveIntensity={0.25}
           roughness={0.02}
-          metalness={0.2}
-          transmission={0.85}
-          thickness={2.0}
-          ior={1.6}
+          metalness={0.25}
+          transmission={0.9}
+          thickness={2.2}
+          ior={1.65}
           clearcoat={1.0}
+          clearcoatRoughness={0.05}
         />
       </mesh>
 
@@ -92,11 +95,13 @@ export default function SakaGeometry() {
         <dodecahedronGeometry args={[0.7, 0]} />
         <meshPhysicalMaterial
           color="#E8C87A"
-          roughness={0.1}
-          metalness={0.3}
-          transmission={0.6}
-          thickness={1.2}
-          ior={1.4}
+          emissive="#C9A84C"
+          emissiveIntensity={0.1}
+          roughness={0.08}
+          metalness={0.35}
+          transmission={0.65}
+          thickness={1.5}
+          ior={1.45}
         />
       </mesh>
     </>

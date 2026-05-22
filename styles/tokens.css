@@ -7,11 +7,11 @@
      1. Цветовая система (Color System)
      ========================================== */
   
-  /* Первичная палитра (Forest Green) */
-  --color-forest: #1A3D2B;       /* Глубокий лесной зеленый - основной бренд */
-  --color-forest-mid: #2D6A4F;   /* Средний зеленый - вторичные кнопки/акценты */
-  --color-forest-light: #52B788; /* Светлый зеленый - метки успеха, яркие акценты */
-  --color-forest-dark: #0F251A;  /* Ультра-темный лесной зеленый */
+  /* Первичная палитра (DDC Digital Blue - АО «Центр цифрового развития») */
+  --color-brand-blue: #005cbb;       /* Фирменный цифровой синий ЦЦР */
+  --color-brand-blue-mid: #0077e6;   /* Средний синий - кнопки, акценты */
+  --color-brand-blue-light: #38bdf8; /* Светлый голубой/бирюзовый - индикаторы, ховеры */
+  --color-brand-blue-dark: #002d62;  /* Глубокий полуночный синий */
 
   /* Золотая палитра (Premium Gold) */
   --color-gold: #C9A84C;         /* Благородное золото - премиальные акценты */
@@ -35,10 +35,12 @@
   --color-info: #457B9D;
 
   /* Стеклянные эффекты (Glassmorphism) */
-  --glass-bg: rgba(255, 255, 255, 0.04);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(20, 20, 25, 0.4);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.15);
   --glass-border-gold: rgba(201, 168, 76, 0.15);
-  --glass-blur: blur(24px) saturate(180%);
+  --glass-border-blue: rgba(0, 92, 187, 0.15);
+  --glass-blur: blur(16px) saturate(180%);
+  --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 
   /* ==========================================
      2. Типографика (Typography System)

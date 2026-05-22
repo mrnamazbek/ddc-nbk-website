@@ -2,45 +2,93 @@
 
 import { motion } from "framer-motion";
 import GlassCard from "@/components/ui/GlassCard";
-import { Coins, Zap, ShieldCheck, Share2, BarChart3, Landmark } from "lucide-react";
 
 interface ServiceItem {
-  icon: React.ComponentType<{ className?: string }>;
+  number: string;
   title: string;
   description: string;
+  hoverAccent: "blue" | "gold";
+  svgIcon: React.ReactNode;
 }
 
 export default function Services() {
   const services: ServiceItem[] = [
     {
-      icon: Coins,
-      title: "Цифровой Тенге",
-      description: "Разработка, интеграция и развитие платформы национальной цифровой валюты (CBDC) Республики Казахстан.",
+      number: "01",
+      title: "Цифровой Тенге (CBDC)",
+      description: "Проектирование, внедрение и масштабирование платформы национальной валюты третьего поколения для Республики Казахстан.",
+      hoverAccent: "gold",
+      svgIcon: (
+        <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" />
+          <path d="M12 7v10M8 9.5h8M8 12.5h8" stroke="currentColor" strokeLinecap="round" />
+          <path d="M12 3a9 9 0 0 1 6.364 2.636M5.636 18.364a9 9 0 0 1 0-12.728" stroke="currentColor" strokeDasharray="2 2" />
+        </svg>
+      ),
     },
     {
-      icon: Zap,
-      title: "Мгновенные платежи",
-      description: "Обеспечение бесперебойной работы национальной системы мгновенных межбанковских платежей 24/7/365.",
+      number: "02",
+      title: "Система Мгновенных Платежей",
+      description: "Высокоскоростная инфраструктура для межбанковских переводов в режиме реального времени 24/7/365 с нулевой задержкой.",
+      hoverAccent: "blue",
+      svgIcon: (
+        <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="13" cy="7" r="1" fill="currentColor" />
+          <circle cx="11" cy="17" r="1" fill="currentColor" />
+        </svg>
+      ),
     },
     {
-      icon: Landmark,
-      title: "Межбанковский клиринг",
-      description: "Высокотехнологичные системы клиринга и расчетов, гарантирующие стабильность финансового сектора.",
+      number: "03",
+      title: "Межбанковский Клиринг",
+      description: "Оптимизация встречных требований и расчетов участников финансового рынка с гарантированной стабильностью системы.",
+      hoverAccent: "blue",
+      svgIcon: (
+        <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 21h18M5 21V10m14 11V10M2 10h20M12 3L2 10h20L12 3z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="12" cy="14" r="1.5" stroke="currentColor" />
+          <path d="M9 14h6" stroke="currentColor" />
+        </svg>
+      ),
     },
     {
-      icon: ShieldCheck,
-      title: "Инфраструктурная безопасность",
-      description: "Защита критических узлов финансовой сети с использованием передовых отечественных алгоритмов шифрования.",
+      number: "04",
+      title: "Национальный Удостоверяющий Центр",
+      description: "Криптографическая безопасность государственного масштаба, выпуск регистрационных свидетельств и ключей шифрования.",
+      hoverAccent: "gold",
+      svgIcon: (
+        <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M9 11l2 2 4-4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      ),
     },
     {
-      icon: Share2,
-      title: "Открытый банкинг (Open API)",
-      description: "Разработка единых стандартов технологического взаимодействия для финтех-компаний и банков второго уровня.",
+      number: "05",
+      title: "Цифровой Банкинг & Open API",
+      description: "Стандартизация интерфейсов прикладного программирования для формирования открытой экосистемы Open Finance.",
+      hoverAccent: "blue",
+      svgIcon: (
+        <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" />
+          <path d="M7 8h10M7 12h10M7 16h5" stroke="currentColor" strokeLinecap="round" />
+          <circle cx="16" cy="16" r="1.5" fill="currentColor" />
+        </svg>
+      ),
     },
     {
-      icon: BarChart3,
-      title: "Аналитика Big Data",
-      description: "Анализ макроэкономических финансовых потоков и разработка систем прогнозного моделирования рынка.",
+      number: "06",
+      title: "Аналитический Финтех-Хаб",
+      description: "Продвинутая Big Data аналитика, интеллектуальное прогнозирование финансовых рисков и микроэкономический анализ.",
+      hoverAccent: "blue",
+      svgIcon: (
+        <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 3v18h18" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M18.7 8l-5.1 5.2-2.8-2.7-4.8 4.8" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="18.7" cy="8" r="1.5" fill="currentColor" />
+        </svg>
+      ),
     },
   ];
 
@@ -72,9 +120,9 @@ export default function Services() {
   };
 
   return (
-    <section id="services" className="relative w-full py-24 sm:py-32 bg-[#0A0A0A] overflow-hidden border-t border-white/5">
-      {/* Декоративный бэкграунд */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-forest/5 rounded-full blur-[140px] pointer-events-none" />
+    <section id="services" className="relative w-full py-24 sm:py-32 bg-[#08080a] overflow-hidden border-t border-white/5">
+      {/* Декоративный высокотехнологичный бэкграунд */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-blue/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gold/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
@@ -85,21 +133,21 @@ export default function Services() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={headerVariants}
-          className="text-center max-w-3xl mx-auto mb-20"
+          className="text-left max-w-4xl mb-20"
         >
-          <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
-            направления деятельности
+          <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
+            ЦЕНТР ЦИФРОВОГО РАЗВИТИЯ • INFRASTRUCTURE
           </span>
-          <h2 className="font-display text-3xl sm:text-5xl font-normal tracking-tight text-white mb-6">
+          <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
             Национальные финансовые <br />
-            <span className="text-gradient-gold font-medium">технологии и решения</span>
+            <span className="text-gradient-gold font-medium">технологии и платформы</span>
           </h2>
-          <p className="text-zinc-400 font-sans font-light leading-relaxed">
-            DDC создает цифровую основу для следующего поколения финансовых сервисов Казахстана, сочетая государственную надежность с инновациями мирового уровня.
+          <p className="text-zinc-400 font-sans font-light leading-relaxed max-w-2xl text-lg">
+            АО «ЦЦР» формирует устойчивую цифровую экосистему финансового сектора Казахстана, сочетая технологическое превосходство и строгие государственные регламенты.
           </p>
         </motion.div>
 
-        {/* Сетка услуг */}
+        {/* Сетка услуг Bento Grid с асимметричным дизайном */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -108,21 +156,48 @@ export default function Services() {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           {services.map((service, index) => {
-            const IconComponent = service.icon;
             return (
-              <motion.div key={index} variants={cardVariants} className="h-full">
-                <GlassCard className="h-full flex flex-col p-8 border-white/5 hover:border-gold/20">
-                  <div className="w-12 h-12 rounded-lg bg-forest/30 border border-forest-light/20 flex items-center justify-center mb-6 text-gold group-hover:scale-110 transition-transform duration-300">
-                    <IconComponent className="w-6 h-6" />
+              <motion.div key={index} variants={cardVariants} className="h-full group">
+                <GlassCard 
+                  hoverAccent={service.hoverAccent}
+                  className="h-full flex flex-col p-8 justify-between relative"
+                >
+                  <div>
+                    {/* Верхняя строка карточки */}
+                    <div className="flex items-center justify-between mb-8">
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                        service.hoverAccent === "gold"
+                          ? "bg-gold/10 border border-gold/20 text-gold group-hover:bg-gold/20 group-hover:scale-110"
+                          : "bg-brand-blue/10 border border-brand-blue/20 text-brand-blue-light group-hover:bg-brand-blue/20 group-hover:scale-110"
+                      }`}>
+                        {service.svgIcon}
+                      </div>
+                      
+                      <span className="text-sm font-mono font-bold text-zinc-600 group-hover:text-zinc-400 transition-colors">
+                        {service.number}
+                      </span>
+                    </div>
+                    
+                    <h3 className="text-xl font-sans font-semibold text-white tracking-wide mb-4 group-hover:text-zinc-100 transition-colors">
+                      {service.title}
+                    </h3>
+                    
+                    <p className="text-sm font-sans font-light text-zinc-400 leading-relaxed group-hover:text-zinc-300 transition-colors">
+                      {service.description}
+                    </p>
                   </div>
-                  
-                  <h3 className="text-xl font-sans font-semibold text-white tracking-wide mb-4">
-                    {service.title}
-                  </h3>
-                  
-                  <p className="text-sm font-sans font-light text-zinc-400 leading-relaxed">
-                    {service.description}
-                  </p>
+
+                  {/* Интерактивный футер карты */}
+                  <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between opacity-60 group-hover:opacity-100 transition-all duration-300">
+                    <span className="text-xs font-mono tracking-widest text-zinc-500 uppercase">
+                      status: operational
+                    </span>
+                    <svg viewBox="0 0 24 24" className={`w-4 h-4 stroke-[2] transition-transform duration-300 transform group-hover:translate-x-1 ${
+                      service.hoverAccent === "gold" ? "text-gold" : "text-brand-blue-light"
+                    }`} fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
                 </GlassCard>
               </motion.div>
             );
@@ -133,3 +208,4 @@ export default function Services() {
     </section>
   );
 }
+

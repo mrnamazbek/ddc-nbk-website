@@ -15,8 +15,8 @@ export default function ParticleField() {
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
 
-    const colorGreen = new THREE.Color("#52B788");
-    const colorGold = new THREE.Color("#C9A84C");
+    const colorBlue = new THREE.Color("#38bdf8"); // Фирменный бирюзово-голубой ЦЦР
+    const colorGold = new THREE.Color("#C9A84C"); // Премиальное золото Нацбанка
 
     for (let i = 0; i < count; i++) {
       // Распределение по спиральному диску (символизирует спирали галактики или финансовые потоки)
@@ -26,8 +26,8 @@ export default function ParticleField() {
       positions[i * 3 + 1] = (Math.random() - 0.5) * 5;
       positions[i * 3 + 2] = Math.sin(angle) * radius;
 
-      // Смешиваем изумрудный и золотой цвета в пропорции 60/40
-      const mixedColor = Math.random() > 0.4 ? colorGreen : colorGold;
+      // Смешиваем цифровой синий и золотой цвета в пропорции 60/40
+      const mixedColor = Math.random() > 0.4 ? colorBlue : colorGold;
       colors[i * 3] = mixedColor.r;
       colors[i * 3 + 1] = mixedColor.g;
       colors[i * 3 + 2] = mixedColor.b;

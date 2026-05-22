@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
-import { ArrowRight, Calendar } from "lucide-react";
 
 interface NewsItem {
   category: string;
@@ -12,6 +11,7 @@ interface NewsItem {
   date: string;
   readTime: string;
   gradient: string;
+  hoverAccent: "blue" | "gold";
 }
 
 export default function News() {
@@ -22,7 +22,8 @@ export default function News() {
       excerpt: "Завершен первый этап тестирования двусторонних оффлайн-платежей на мобильных устройствах и смарт-картах в отдаленных регионах.",
       date: "18 Мая 2026",
       readTime: "5 мин",
-      gradient: "from-[#1A3D2B] via-[#0F251A] to-[#0A0A0A]",
+      gradient: "from-brand-blue-dark/50 via-charcoal to-[#08080a]",
+      hoverAccent: "blue",
     },
     {
       category: "Интеграция",
@@ -30,7 +31,8 @@ export default function News() {
       excerpt: "Внедрение единых стандартов открытого банкинга позволяет автоматизировать мгновенный межбанковский обмен информацией.",
       date: "04 Мая 2026",
       readTime: "4 мин",
-      gradient: "from-[#8B7035] via-[#58461F] to-[#0A0A0A]",
+      gradient: "from-gold-dark/40 via-charcoal to-[#08080a]",
+      hoverAccent: "gold",
     },
     {
       category: "Релиз",
@@ -38,7 +40,8 @@ export default function News() {
       excerpt: "Новый документ подробно описывает механизмы смарт-контрактов для маркирования целевых государственных субсидий.",
       date: "22 Апреля 2026",
       readTime: "8 мин",
-      gradient: "from-[#2D6A4F] via-[#102A1E] to-[#0A0A0A]",
+      gradient: "from-[#002d62]/50 via-charcoal to-[#08080a]",
+      hoverAccent: "blue",
     },
   ];
 
@@ -70,9 +73,9 @@ export default function News() {
   };
 
   return (
-    <section id="news" className="relative w-full py-24 sm:py-32 bg-[#0A0A0A] overflow-hidden border-t border-white/5">
-      {/* Декоративное сияние */}
-      <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[120px] pointer-events-none" />
+    <section id="news" className="relative w-full py-24 sm:py-32 bg-[#08080a] overflow-hidden border-t border-white/5">
+      {/* Декоративное сияние в стиле DDC Digital Blue и NBK Premium Gold */}
+      <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-brand-blue/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
@@ -103,7 +106,17 @@ export default function News() {
           >
             <Button variant="outline" className="flex items-center gap-2 group cursor-pointer">
               Все публикации
-              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+              <svg 
+                className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 stroke-current" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
             </Button>
           </motion.div>
         </div>
@@ -118,7 +131,10 @@ export default function News() {
         >
           {newsList.map((news, index) => (
             <motion.div key={index} variants={cardVariants} className="h-full">
-              <GlassCard className="h-full flex flex-col p-0 border-white/5 hover:border-gold/20 overflow-hidden group">
+              <GlassCard 
+                hoverAccent={news.hoverAccent}
+                className="h-full flex flex-col p-0 border-white/5 overflow-hidden group"
+              >
                 
                 {/* Abstract gradient cover background in card header */}
                 <div className={`w-full h-48 bg-gradient-to-br ${news.gradient} relative overflow-hidden flex items-center justify-center border-b border-white/5`}>
@@ -140,7 +156,19 @@ export default function News() {
                     {/* Дата и время */}
                     <div className="flex items-center gap-4 text-xs text-zinc-500 mb-4 font-sans font-light">
                       <div className="flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5" />
+                        <svg 
+                          className="w-3.5 h-3.5 stroke-current" 
+                          viewBox="0 0 24 24" 
+                          fill="none" 
+                          strokeWidth="2" 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round"
+                        >
+                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                          <line x1="16" y1="2" x2="16" y2="6"></line>
+                          <line x1="8" y1="2" x2="8" y2="6"></line>
+                          <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
                         {news.date}
                       </div>
                       <span>•</span>
@@ -156,9 +184,19 @@ export default function News() {
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-1 text-xs font-semibold text-gold group-hover:text-gold-light transition-colors duration-300">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-gold group-hover:text-gold-light transition-colors duration-300 cursor-pointer">
                     Читать полностью
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                    <svg 
+                      className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1 stroke-current" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      strokeWidth="2" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
                   </div>
                 </div>
 
