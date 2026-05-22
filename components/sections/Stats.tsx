@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import GlassCard from "@/components/ui/GlassCard";
+import { animate } from "animejs";
 
 interface Transaction {
   id: string;
@@ -12,32 +13,27 @@ interface Transaction {
   time: string;
 }
 
-function Counter({ target, duration = 2 }: { target: number; duration?: number }) {
+function Counter({ target, duration = 2.5 }: { target: number; duration?: number }) {
   const [count, setCount] = useState(0);
-  const ref = useRef(null);
+  const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   useEffect(() => {
     if (!isInView) return;
 
-    let start = 0;
-    const end = target;
-    if (start === end) return;
+    const obj = { value: 0 };
+    const animation = animate(obj, {
+      value: target,
+      duration: duration * 1000,
+      ease: "outExpo",
+      onUpdate: () => {
+        setCount(Math.round(obj.value));
+      },
+    });
 
-    const totalMiliseconds = duration * 1000;
-    const incrementTime = Math.max(Math.floor(totalMiliseconds / end), 15);
-    
-    const timer = setInterval(() => {
-      start += Math.ceil(end / (totalMiliseconds / incrementTime));
-      if (start >= end) {
-        clearInterval(timer);
-        setCount(end);
-      } else {
-        setCount(start);
-      }
-    }, incrementTime);
-
-    return () => clearInterval(timer);
+    return () => {
+      animation.pause();
+    };
   }, [isInView, target, duration]);
 
   return <span ref={ref}>{count}</span>;
