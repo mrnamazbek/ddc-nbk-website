@@ -69,10 +69,10 @@ export default function GlassCard({
     gold: "hover:border-gold/30 hover:shadow-[0_8px_32px_rgba(201,168,76,0.15)]",
   };
 
-  // Цвет подсветки Spotlight Border
+  // Цвет подсветки Spotlight Border (повышенная яркость и радиус для эффекта жидкого стекла)
   const spotlightColor = hoverAccent === "gold"
-    ? "radial-gradient(circle, rgba(201, 168, 76, 0.15) 0%, rgba(201, 168, 76, 0) 70%)"
-    : "radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(56, 189, 248, 0) 70%)";
+    ? "radial-gradient(circle, rgba(201, 168, 76, 0.22) 0%, rgba(201, 168, 76, 0) 75%)"
+    : "radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, rgba(56, 189, 248, 0) 75%)";
 
   return (
     <motion.div
