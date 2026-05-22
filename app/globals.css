@@ -1,26 +1,135 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Базовый темный фон и контрастный белый текст для премиального финансового сайта */
+  --background: #0A0A0A;
+  --foreground: #FFFFFF;
+
+  /* Дизайн-токены DDC */
+  --color-forest: #1A3D2B;
+  --color-forest-mid: #2D6A4F;
+  --color-forest-light: #52B788;
+  --color-forest-dark: #0F251A;
+
+  --color-gold: #C9A84C;
+  --color-gold-light: #E8C87A;
+  --color-gold-muted: #8B7035;
+  --color-gold-dark: #58461F;
+
+  --color-charcoal: #1C1C1E;
+  --color-black: #0A0A0A;
+  --color-white: #FFFFFF;
+  --color-offwhite: #F5F5F0;
+
+  /* Стеклянные эффекты (Glassmorphism) */
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-gold: rgba(201, 168, 76, 0.15);
+  --glass-blur: blur(24px) saturate(180%);
+
+  /* Скругления углов */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-pill: 9999px;
+
+  /* Тени */
+  --shadow-gold: 0 8px 32px rgba(201, 168, 76, 0.15);
+  --shadow-green: 0 8px 32px rgba(26, 61, 43, 0.25);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@theme {
+  --color-forest: var(--color-forest);
+  --color-forest-mid: var(--color-forest-mid);
+  --color-forest-light: var(--color-forest-light);
+  --color-forest-dark: var(--color-forest-dark);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-gold: var(--color-gold);
+  --color-gold-light: var(--color-gold-light);
+  --color-gold-muted: var(--color-gold-muted);
+  --color-gold-dark: var(--color-gold-dark);
+
+  --color-charcoal: var(--color-charcoal);
+  --color-offwhite: var(--color-offwhite);
+
+  --font-display: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-mono), monospace;
+
+  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================
+   Утилиты и эффекты
+   ========================================== */
+
+.glass-panel {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+
+.glass-panel-gold {
+  background: rgba(26, 61, 43, 0.3);
+  border: 1px solid var(--glass-border-gold);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, var(--color-gold-light) 0%, var(--color-gold) 50%, var(--color-gold-muted) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-green {
+  background: linear-gradient(135deg, var(--color-forest-light) 0%, var(--color-forest-mid) 50%, var(--color-forest) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Стилизация скроллбара */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1A3D2B;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C9A84C;
+}
+
+/* Индикатор фокуса для доступности */
+*:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 4px;
+}
+
+/* Снижение движения (prefers-reduced-motion) */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-delay: 0s !important;
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
 }
