@@ -1,11 +1,11 @@
 "use client";
 
-import { ButtonHTMLAttributes, ReactNode, forwardRef } from "react";
-import { motion } from "framer-motion";
+import { ReactNode, forwardRef } from "react";
+import { motion, HTMLMotionProps } from "framer-motion";
 
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
   children: ReactNode;
-  variant?: "gold" | "green" | "ghost" | "glass";
+  variant?: "gold" | "green" | "ghost" | "glass" | "outline";
   size?: "sm" | "md" | "lg";
   isMagnetic?: boolean;
 }

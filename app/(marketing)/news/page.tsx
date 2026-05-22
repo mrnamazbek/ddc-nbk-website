@@ -24,7 +24,7 @@ export default function NewsPage() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const },
     },
   };
 
@@ -118,7 +118,7 @@ export default function NewsPage() {
             <motion.div key={index} variants={cardVariants} className="h-full">
               <GlassCard className="h-full flex flex-col p-0 border-white/5 hover:border-gold/20 overflow-hidden group">
                 
-                {/* Абстрактное градиентное изображение-подложка */}
+                {/* Abstract gradient cover background */}
                 <div className={`w-full h-48 bg-gradient-to-br ${news.gradient} relative overflow-hidden flex items-center justify-center border-b border-white/5`}>
                   <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:1.5rem_1.5rem]" />
                   <div className="absolute w-32 h-32 rounded-full bg-gold/10 blur-xl group-hover:scale-125 transition-transform duration-700 pointer-events-none" />
