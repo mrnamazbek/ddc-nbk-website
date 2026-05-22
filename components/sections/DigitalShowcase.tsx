@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/Button";
+import GlassCard from "@/components/ui/GlassCard";
 
 interface FeatureTab {
   id: string;
@@ -136,7 +137,10 @@ export default function DigitalShowcase() {
           </div>
 
           {/* Правая сторона: Контент активной вкладки с анимацией смены */}
-          <div className="lg:col-span-8 border border-white/5 bg-white/[0.02] backdrop-blur-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_30px_70px_rgba(0,0,0,0.5)] rounded-2xl p-8 sm:p-12 relative overflow-hidden min-h-[420px] flex flex-col justify-between">
+          <GlassCard
+            hoverAccent={currentTab.hoverAccent}
+            className="lg:col-span-8 p-8 sm:p-12 relative overflow-hidden min-h-[420px] flex flex-col justify-between"
+          >
             {/* Крутящееся кольцо на заднем фоне карточки для создания футуристического объема */}
             <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full border border-brand-blue-light/5 animate-[spin_40s_linear_infinite] pointer-events-none" />
             <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full border-t border-gold/10 animate-[spin_20s_linear_infinite] pointer-events-none" />
@@ -200,7 +204,7 @@ export default function DigitalShowcase() {
                 </div>
               </motion.div>
             </AnimatePresence>
-          </div>
+          </GlassCard>
 
         </div>
 

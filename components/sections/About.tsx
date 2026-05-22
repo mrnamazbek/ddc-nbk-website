@@ -150,11 +150,11 @@ export default function About() {
               />
             </div>
             
-            {/* Передний фон: saka_core_render */}
+            {/* Передний фон: saka_refractive_glass */}
             <div className="absolute bottom-0 left-0 w-2/3 h-2/3 rounded-2xl overflow-hidden border border-gold/20 shadow-[0_8px_30px_rgba(201,168,76,0.2)] z-20 transition-transform duration-700 hover:scale-[1.03] translate-y-4">
               <Image
-                src="/images/saka_core_render.png"
-                alt="Сакский орнамент DDC"
+                src="/images/saka_refractive_glass.png"
+                alt="Жидкое стекло с сакральной геометрией ЦЦР"
                 fill
                 priority
                 sizes="(max-w-768px) 100vw, 50vw"

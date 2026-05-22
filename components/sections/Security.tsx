@@ -90,104 +90,108 @@ export default function Security() {
               whileInView={{ scale: 1, opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full max-w-[400px] aspect-[4/5] relative flex flex-col justify-between p-6 rounded-[24px] border border-white/10 bg-white/[0.02] backdrop-blur-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_30px_70px_rgba(0,0,0,0.5)] overflow-hidden group"
+              className="w-full max-w-[400px] aspect-[4/5] relative"
             >
-              {/* Диагональные линии сканирования */}
-              <div className="absolute inset-0 bg-gradient-to-b from-brand-blue-light/[0.02] via-transparent to-brand-blue-light/[0.02] pointer-events-none" />
-              <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-brand-blue-light/30 to-transparent animate-[scan_6s_linear_infinite]" />
-              
-              {/* Шапка консоли мониторинга */}
-              <div className="flex items-center justify-between border-b border-white/5 pb-4">
-                <div className="flex items-center gap-2.5">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue-light opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-blue-light"></span>
-                  </span>
-                  <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase">
-                    ddc csoc // live status
-                  </span>
-                </div>
-                <div className="px-2 py-0.5 rounded bg-brand-blue/10 border border-brand-blue-light/20 text-[9px] font-mono text-brand-blue-light uppercase tracking-wider">
-                  level 5 secured
-                </div>
-              </div>
-
-              {/* Геометрический Сакский Щит Защиты */}
-              <div className="my-8 flex justify-center items-center relative h-48">
-                {/* Крутящиеся цифровые кольца */}
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
-                  className="absolute w-44 h-44 border border-brand-blue-light/10 rounded-full flex items-center justify-center"
-                />
-                <motion.div
-                  animate={{ rotate: -360 }}
-                  transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-                  className="absolute w-36 h-36 border border-dashed border-gold/15 rounded-full"
-                />
+              <GlassCard
+                hoverAccent="blue"
+                className="w-full h-full relative flex flex-col justify-between p-6 overflow-hidden group"
+              >
+                {/* Диагональные линии сканирования */}
+                <div className="absolute inset-0 bg-gradient-to-b from-brand-blue-light/[0.02] via-transparent to-brand-blue-light/[0.02] pointer-events-none" />
+                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-brand-blue-light/30 to-transparent animate-[scan_6s_linear_infinite]" />
                 
-                {/* 3D Сакский щит с золотой оправой */}
-                <svg
-                  width="110"
-                  height="130"
-                  viewBox="0 0 110 130"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="filter drop-shadow-[0_15px_30px_rgba(0,92,187,0.25)] relative z-10 transition-transform duration-500 group-hover:scale-105"
-                >
-                  <path
-                    d="M55 0L10 17v41c0 34 23 59 45 72 22-13 45-38 45-72V17L55 0Z"
-                    fill="url(#shieldGradDark)"
-                    stroke="url(#shieldBorderGold)"
-                    strokeWidth="3.5"
-                  />
-                  <path
-                    d="M55 14L21 27v31c0 25 17 44 34 54 17-10 34-29 34-54V27L55 14Z"
-                    stroke="url(#shieldInnerStrokeBlue)"
-                    strokeWidth="1"
-                    strokeDasharray="3 3"
-                  />
-                  <defs>
-                    <linearGradient id="shieldGradDark" x1="0" y1="0" x2="110" y2="130" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stopColor="#0b132b" />
-                      <stop offset="100%" stopColor="#02040a" />
-                    </linearGradient>
-                    <linearGradient id="shieldBorderGold" x1="0" y1="0" x2="110" y2="130" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stopColor="#E8C87A" />
-                      <stop offset="50%" stopColor="#C9A84C" />
-                      <stop offset="100%" stopColor="#8B7035" />
-                    </linearGradient>
-                    <linearGradient id="shieldInnerStrokeBlue" x1="0" y1="0" x2="110" y2="130" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stopColor="#38bdf8" />
-                      <stop offset="100%" stopColor="#005cbb" />
-                    </linearGradient>
-                  </defs>
-                </svg>
+                {/* Шапка консоли мониторинга */}
+                <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                  <div className="flex items-center gap-2.5">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue-light opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-blue-light"></span>
+                    </span>
+                    <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase">
+                      ddc csoc // live status
+                    </span>
+                  </div>
+                  <div className="px-2 py-0.5 rounded bg-brand-blue/10 border border-brand-blue-light/20 text-[9px] font-mono text-brand-blue-light uppercase tracking-wider">
+                    level 5 secured
+                  </div>
+                </div>
 
-                {/* Иконка замка в центре щита */}
-                <div className="absolute z-20 text-gold flex items-center justify-center">
-                  <svg viewBox="0 0 24 24" className="w-9 h-9 stroke-[1.5] animate-pulse" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" />
+                {/* Геометрический Сакский Щит Защиты */}
+                <div className="my-8 flex justify-center items-center relative h-48">
+                  {/* Крутящиеся цифровые кольца */}
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
+                    className="absolute w-44 h-44 border border-brand-blue-light/10 rounded-full flex items-center justify-center"
+                  />
+                  <motion.div
+                    animate={{ rotate: -360 }}
+                    transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+                    className="absolute w-36 h-36 border border-dashed border-gold/15 rounded-full"
+                  />
+                  
+                  {/* 3D Сакский щит с золотой оправой */}
+                  <svg
+                    width="110"
+                    height="130"
+                    viewBox="0 0 110 130"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="filter drop-shadow-[0_15px_30px_rgba(0,92,187,0.25)] relative z-10 transition-transform duration-500 group-hover:scale-105"
+                  >
+                    <path
+                      d="M55 0L10 17v41c0 34 23 59 45 72 22-13 45-38 45-72V17L55 0Z"
+                      fill="url(#shieldGradDark)"
+                      stroke="url(#shieldBorderGold)"
+                      strokeWidth="3.5"
+                    />
+                    <path
+                      d="M55 14L21 27v31c0 25 17 44 34 54 17-10 34-29 34-54V27L55 14Z"
+                      stroke="url(#shieldInnerStrokeBlue)"
+                      strokeWidth="1"
+                      strokeDasharray="3 3"
+                    />
+                    <defs>
+                      <linearGradient id="shieldGradDark" x1="0" y1="0" x2="110" y2="130" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stopColor="#0b132b" />
+                        <stop offset="100%" stopColor="#02040a" />
+                      </linearGradient>
+                      <linearGradient id="shieldBorderGold" x1="0" y1="0" x2="110" y2="130" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stopColor="#E8C87A" />
+                        <stop offset="50%" stopColor="#C9A84C" />
+                        <stop offset="100%" stopColor="#8B7035" />
+                      </linearGradient>
+                      <linearGradient id="shieldInnerStrokeBlue" x1="0" y1="0" x2="110" y2="130" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stopColor="#38bdf8" />
+                        <stop offset="100%" stopColor="#005cbb" />
+                      </linearGradient>
+                    </defs>
                   </svg>
-                </div>
-              </div>
 
-              {/* Метрики безопасности на панели */}
-              <div className="space-y-3.5 border-t border-white/5 pt-4">
-                <div className="flex items-center justify-between text-[11px] font-mono">
-                  <span className="text-zinc-500">THREAT MITIGATION RATE</span>
-                  <span className="text-brand-blue-light font-bold">99.9997%</span>
+                  {/* Иконка замка в центре щита */}
+                  <div className="absolute z-20 text-gold flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" className="w-9 h-9 stroke-[1.5] animate-pulse" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" />
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" />
+                    </svg>
+                  </div>
                 </div>
-                <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
-                  <div className="h-full w-[99.9997%] bg-brand-blue-light rounded-full" />
+
+                {/* Метрики безопасности на панели */}
+                <div className="space-y-3.5 border-t border-white/5 pt-4">
+                  <div className="flex items-center justify-between text-[11px] font-mono">
+                    <span className="text-zinc-500">THREAT MITIGATION RATE</span>
+                    <span className="text-brand-blue-light font-bold">99.9997%</span>
+                  </div>
+                  <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-full w-[99.9997%] bg-brand-blue-light rounded-full" />
+                  </div>
+                  <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400">
+                    <span>ACTIVE AES-256 TUNNELS</span>
+                    <span className="text-gold font-bold">14,802 / SEC</span>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400">
-                  <span>ACTIVE AES-256 TUNNELS</span>
-                  <span className="text-gold font-bold">14,802 / SEC</span>
-                </div>
-              </div>
-              
+              </GlassCard>
             </motion.div>
           </div>
 

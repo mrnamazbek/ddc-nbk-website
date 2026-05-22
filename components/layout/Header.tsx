@@ -64,14 +64,14 @@ export default function Header() {
               xmlns="http://www.w3.org/2000/svg"
               className="transition-transform duration-700 group-hover:rotate-[360deg] pointer-events-none"
             >
-              <rect x="10" y="10" width="80" height="80" rx="40" fill="url(#green_grad)" />
+              <rect x="10" y="10" width="80" height="80" rx="40" fill="url(#blue_grad)" />
               <rect x="15" y="15" width="70" height="70" rx="35" stroke="url(#gold_grad)" strokeWidth="2" />
               {/* Геометрия сакского беркута/солнца */}
               <path d="M50 25 L55 45 L75 50 L55 55 L50 75 L45 55 L25 50 L45 45 Z" fill="url(#gold_grad)" />
               <defs>
-                <linearGradient id="green_grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#0F251A" />
-                  <stop offset="1" stopColor="#1A3D2B" />
+                <linearGradient id="blue_grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#001833" />
+                  <stop offset="1" stopColor="#003366" />
                 </linearGradient>
                 <linearGradient id="gold_grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
                   <stop stopColor="#E8C87A" />

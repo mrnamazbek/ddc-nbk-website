@@ -38,8 +38,8 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#0A0A0A] border-t border-white/5 pt-20 pb-12 relative overflow-hidden">
-      {/* Мягкие золотые/зеленые градиентные отблески в углах */}
-      <div className="absolute bottom-0 right-0 w-[40vw] h-[40vh] bg-forest/10 rounded-full blur-[120px] pointer-events-none" />
+      {/* Мягкие золотые/синие градиентные отблески в углах */}
+      <div className="absolute bottom-0 right-0 w-[40vw] h-[40vh] bg-brand-blue-dark/25 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute top-0 left-0 w-[20vw] h-[20vh] bg-gold/5 rounded-full blur-[80px] pointer-events-none" />
 
       <div className="max-w-[1440px] mx-auto px-[clamp(16px,5vw,80px)]">
@@ -49,7 +49,7 @@ export default function Footer() {
           <div className="lg:col-span-2 flex flex-col gap-6">
             <Link href="/" className="flex items-center gap-3 select-none">
               <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="10" y="10" width="80" height="80" rx="40" fill="#1A3D2B" />
+                <rect x="10" y="10" width="80" height="80" rx="40" fill="#001833" />
                 <rect x="15" y="15" width="70" height="70" rx="35" stroke="#C9A84C" strokeWidth="2" />
                 <path d="M50 25 L55 45 L75 50 L55 55 L50 75 L45 55 L25 50 L45 45 Z" fill="#C9A84C" />
               </svg>
