@@ -117,12 +117,14 @@ body {
 .text-gradient-gold {
   background: linear-gradient(135deg, var(--color-gold-light) 0%, var(--color-gold) 50%, var(--color-gold-muted) 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .text-gradient-blue {
   background: linear-gradient(135deg, var(--color-brand-blue-light) 0%, var(--color-brand-blue-mid) 50%, var(--color-brand-blue) 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
