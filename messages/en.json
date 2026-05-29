@@ -1,0 +1,12 @@
+{
+  "Header": {
+    "about": "About Us",
+    "services": "Services",
+    "digital": "Technologies",
+    "security": "Security",
+    "news": "News",
+    "careers": "Careers",
+    "analytics": "Analytics",
+    "contact": "Contact"
+  }
+}

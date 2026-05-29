@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ArrowUpRight } from "lucide-react";
 
 export default function Footer() {
@@ -38,18 +38,18 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#0A0A0A] border-t border-white/5 pt-20 pb-12 relative overflow-hidden">
-      {/* Мягкие золотые/синие градиентные отблески в углах */}
-      <div className="absolute bottom-0 right-0 w-[40vw] h-[40vh] bg-brand-blue-dark/25 rounded-full blur-[120px] pointer-events-none" />
+      {/* Soft gradient glows */}
+      <div className="absolute bottom-0 right-0 w-[40vw] h-[40vh] bg-forest-dark/25 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute top-0 left-0 w-[20vw] h-[20vh] bg-gold/5 rounded-full blur-[80px] pointer-events-none" />
 
       <div className="max-w-[1440px] mx-auto px-[clamp(16px,5vw,80px)]">
-        {/* Верхняя часть подвала */}
+        {/* Top of footer */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
-          {/* Колонка бренда */}
+          {/* Brand column */}
           <div className="lg:col-span-2 flex flex-col gap-6">
             <Link href="/" className="flex items-center gap-3 select-none">
               <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="10" y="10" width="80" height="80" rx="40" fill="#001833" />
+                <rect x="10" y="10" width="80" height="80" rx="40" fill="#0a1a11" />
                 <rect x="15" y="15" width="70" height="70" rx="35" stroke="#C9A84C" strokeWidth="2" />
                 <path d="M50 25 L55 45 L75 50 L55 55 L50 75 L45 55 L25 50 L45 45 Z" fill="#C9A84C" />
               </svg>
@@ -68,7 +68,7 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Секции ссылок */}
+          {/* Links columns */}
           {footerSections.map((section) => (
             <div key={section.title} className="flex flex-col gap-4">
               <h4 className="text-xs font-mono tracking-widest text-gold uppercase">{section.title}</h4>
@@ -89,7 +89,7 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Нижняя часть подвала */}
+        {/* Bottom of footer */}
         <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex flex-col gap-2">
             <span className="text-xs text-gray-light">

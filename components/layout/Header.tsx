@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import { Menu, X, Globe, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "../ui/Button";
@@ -10,7 +10,10 @@ import Button from "../ui/Button";
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [currentLang, setCurrentLang] = useState("RU");
+  
+  const t = useTranslations("Header");
+  const locale = useLocale();
+  const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
@@ -27,20 +30,21 @@ export default function Header() {
   }, []);
 
   const navLinks = [
-    { name: "О нас", href: "/about" },
-    { name: "Услуги", href: "/services" },
-    { name: "Технологии", href: "/digital" },
-    { name: "Безопасность", href: "/security" },
-    { name: "Новости", href: "/news" },
-    { name: "Карьера", href: "/careers" },
+    { name: t("about"), href: "/about" },
+    { name: t("services"), href: "/services" },
+    { name: t("digital"), href: "/digital" },
+    { name: t("security"), href: "/security" },
+    { name: t("analytics"), href: "/analytics" },
+    { name: t("news"), href: "/news" },
+    { name: t("careers"), href: "/careers" },
   ];
 
-  const languages = ["KZ", "RU", "EN"];
+  const languages = ["kz", "ru", "en"];
+  const currentLang = locale.toUpperCase();
 
-  // Переключение языка (демонстрационное)
   const cycleLanguage = () => {
-    const nextIdx = (languages.indexOf(currentLang) + 1) % languages.length;
-    setCurrentLang(languages[nextIdx]);
+    const nextIdx = (languages.indexOf(locale) + 1) % languages.length;
+    router.replace(pathname, { locale: languages[nextIdx] });
   };
 
   return (
@@ -53,9 +57,9 @@ export default function Header() {
         }`}
       >
         <div className="max-w-[1440px] mx-auto px-[clamp(16px,5vw,80px)] flex items-center justify-between">
-          {/* Логотип */}
+          {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group select-none">
-            {/* Гербовый щит в Сакском стиле (абстрактный SVG) */}
+            {/* Heraldic Shield in Saka style (abstract SVG) */}
             <svg
               width="40"
               height="40"
@@ -64,14 +68,14 @@ export default function Header() {
               xmlns="http://www.w3.org/2000/svg"
               className="transition-transform duration-700 group-hover:rotate-[360deg] pointer-events-none"
             >
-              <rect x="10" y="10" width="80" height="80" rx="40" fill="url(#blue_grad)" />
+              <rect x="10" y="10" width="80" height="80" rx="40" fill="url(#forest_grad)" />
               <rect x="15" y="15" width="70" height="70" rx="35" stroke="url(#gold_grad)" strokeWidth="2" />
-              {/* Геометрия сакского беркута/солнца */}
+              {/* Geometry of Saka eagle/sun */}
               <path d="M50 25 L55 45 L75 50 L55 55 L50 75 L45 55 L25 50 L45 45 Z" fill="url(#gold_grad)" />
               <defs>
-                <linearGradient id="blue_grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#001833" />
-                  <stop offset="1" stopColor="#003366" />
+                <linearGradient id="forest_grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#0a1a11" />
+                  <stop offset="1" stopColor="#1A3D2B" />
                 </linearGradient>
                 <linearGradient id="gold_grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
                   <stop stopColor="#E8C87A" />
@@ -88,7 +92,7 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* Десктоп-меню */}
+          {/* Desktop menu */}
           <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
@@ -101,7 +105,7 @@ export default function Header() {
                   }`}
                 >
                   {link.name}
-                  {/* Плавная линия наведения */}
+                  {/* Smooth hover indicator */}
                   {isActive && (
                     <motion.span
                       layoutId="activeNavIndicator"
@@ -113,9 +117,9 @@ export default function Header() {
             })}
           </nav>
 
-          {/* Правая панель действий */}
+          {/* Right action panel */}
           <div className="hidden lg:flex items-center gap-6">
-            {/* Переключатель языка */}
+            {/* Language Switcher */}
             <button
               onClick={cycleLanguage}
               className="flex items-center gap-2 text-xs font-mono font-bold tracking-wider text-gray-light hover:text-gold transition-colors select-none cursor-pointer"
@@ -124,15 +128,15 @@ export default function Header() {
               <span>{currentLang}</span>
             </button>
 
-            {/* Золотая кнопка связи */}
+            {/* Contact Button */}
             <Link href="/contact">
               <Button variant="gold" size="sm">
-                Связаться
+                {t("contact")}
               </Button>
             </Link>
           </div>
 
-          {/* Кнопка мобильного меню */}
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="lg:hidden p-2 text-white hover:text-gold transition-colors"
@@ -143,7 +147,7 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Мобильное меню-оверлей */}
+      {/* Mobile menu overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -153,7 +157,7 @@ export default function Header() {
             transition={{ duration: 0.3 }}
             className="fixed inset-0 z-40 bg-[#0A0A0A] flex flex-col justify-between pt-32 pb-16 px-8 lg:hidden"
           >
-            {/* Ссылки меню */}
+            {/* Menu links */}
             <nav className="flex flex-col gap-6">
               {navLinks.map((link, idx) => {
                 const isActive = pathname === link.href;
@@ -178,7 +182,7 @@ export default function Header() {
               })}
             </nav>
 
-            {/* Нижняя панель действий мобильного меню */}
+            {/* Mobile menu bottom action panel */}
             <div className="flex flex-col gap-6">
               <div className="flex items-center justify-between border-t border-white/10 pt-6">
                 <span className="text-sm text-gray-light">Язык интерфейса:</span>
@@ -193,7 +197,7 @@ export default function Header() {
 
               <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="w-full">
                 <Button variant="gold" size="lg" className="w-full">
-                  Связаться <ArrowRight className="w-4 h-4" />
+                  {t("contact")} <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
             </div>
