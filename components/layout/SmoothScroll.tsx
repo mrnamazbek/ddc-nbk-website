@@ -25,30 +25,24 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     });
 
     // Синхронизация ScrollTrigger с прокруткой Lenis
-    lenis.on("scroll", () => {
+    const updateScrollTrigger = () => {
       ScrollTrigger.update();
-    });
+    };
+    lenis.on("scroll", updateScrollTrigger);
 
     // Настройка GSAP на использование RAF от Lenis
-    gsap.ticker.add((time) => {
+    const updateLenis = (time: number) => {
       lenis.raf(time * 1000);
-    });
+    };
+    gsap.ticker.add(updateLenis);
 
     // Отключение дефолтного лага тикера
     gsap.ticker.lagSmoothing(0);
 
-    let rafId: number;
-    function raf(time: number) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-
-    rafId = requestAnimationFrame(raf);
-
     return () => {
+      lenis.off("scroll", updateScrollTrigger);
       lenis.destroy();
-      cancelAnimationFrame(rafId);
-      gsap.ticker.remove(() => {});
+      gsap.ticker.remove(updateLenis);
     };
   }, []);
 
