@@ -5,7 +5,7 @@ import { motion, HTMLMotionProps } from "framer-motion";
 
 export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
   children: ReactNode;
-  variant?: "gold" | "blue" | "ghost" | "glass" | "outline";
+  variant?: "gold" | "forest" | "ghost" | "glass" | "outline";
   size?: "sm" | "md" | "lg";
   isMagnetic?: boolean;
 }
@@ -18,7 +18,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     // Стили вариантов
     const variants = {
       gold: "bg-gradient-to-r from-gold-light via-gold to-gold-muted text-black font-semibold shadow-gold hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]",
-      blue: "border border-brand-blue text-white bg-transparent hover:bg-brand-blue-dark hover:border-brand-blue-light hover:shadow-blue hover:shadow-md hover:scale-[1.02] active:scale-[0.98]",
+      forest: "border border-forest text-white bg-transparent hover:bg-forest-dark hover:border-forest-light hover:shadow-forest hover:shadow-md hover:scale-[1.02] active:scale-[0.98]",
       ghost: "text-gray-light hover:text-white bg-transparent hover:bg-white/5",
       glass: "glass-panel text-white hover:bg-white/10 border-white/10 hover:border-gold/30 hover:scale-[1.02] active:scale-[0.98]",
       outline: "border border-white/20 text-white bg-transparent hover:bg-white/5 hover:border-white/40 hover:scale-[1.02] active:scale-[0.98]",

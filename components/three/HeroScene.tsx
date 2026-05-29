@@ -29,20 +29,20 @@ export default function HeroScene() {
       >
         <color attach="background" args={["#08080a"]} />
         
-        {/* Освещение для реалистичного преломления стекла */}
+        {/* Real-time glass lighting */}
         <ambientLight intensity={0.4} />
         
         <directionalLight
           position={[5, 5, 5]}
           intensity={1.2}
-          color="#E8C87A" // Золотистый оттенок света
+          color="#E8C87A" // Gold light tint
           castShadow
         />
         
         <directionalLight
           position={[-5, -5, 2]}
           intensity={0.8}
-          color="#38bdf8" // Фирменный бирюзово-голубой свет ЦЦР
+          color="#52B788" // Forest green light tint
         />
 
         <pointLight position={[0, 0, 10]} intensity={1.5} color="#FFFFFF" />
@@ -52,11 +52,11 @@ export default function HeroScene() {
           <SakaGeometry />
         </Suspense>
 
-        {/* Отключаем интерактивное вращение камеры пользователем, так как сцена реагирует на мышь автоматически */}
+        {/* Camera control disabled for mouse tracking */}
         <OrbitControls enableZoom={false} enableRotate={false} enablePan={false} />
       </Canvas>
 
-      {/* Мягкие кинематографичные виньетки для глубины */}
+      {/* Cinematic vignette for depth */}
       <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-[#0A0A0A] opacity-85 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-transparent to-[#0A0A0A] opacity-60 pointer-events-none" />
     </div>

@@ -11,7 +11,7 @@ interface SmoothScrollProps {
 
 export default function SmoothScroll({ children }: SmoothScrollProps) {
   useEffect(() => {
-    // Не запускаем плавный скролл, если пользователь предпочитает уменьшенное движение
+    // Disable smooth scroll if user prefers reduced motion
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;
     }
@@ -24,19 +24,19 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       smoothWheel: true,
     });
 
-    // Синхронизация ScrollTrigger с прокруткой Lenis
+    // Synchronize ScrollTrigger with Lenis scroll events
     const updateScrollTrigger = () => {
       ScrollTrigger.update();
     };
     lenis.on("scroll", updateScrollTrigger);
 
-    // Настройка GSAP на использование RAF от Lenis
+    // Bind GSAP ticker to Lenis requestAnimationFrame
     const updateLenis = (time: number) => {
       lenis.raf(time * 1000);
     };
     gsap.ticker.add(updateLenis);
 
-    // Отключение дефолтного лага тикера
+    // Disable default ticker lag smoothing
     gsap.ticker.lagSmoothing(0);
 
     return () => {
@@ -48,4 +48,3 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
 
   return <>{children}</>;
 }
-

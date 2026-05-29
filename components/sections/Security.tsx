@@ -10,7 +10,7 @@ interface SecurityFeature {
   title: string;
   description: string;
   tag: string;
-  hoverAccent: "gold" | "blue";
+  hoverAccent: "gold" | "forest";
   svgIcon: React.ReactNode;
 }
 
@@ -103,7 +103,7 @@ export default function Security() {
       title: "Круглосуточный CSOC",
       description: "Мониторинг угроз и оперативное реагирование на инциденты безопасности в режиме 24/7/365 на государственном уровне.",
       tag: "Zero Trust",
-      hoverAccent: "blue",
+      hoverAccent: "forest",
       svgIcon: (
         <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="12" cy="12" r="10" stroke="currentColor" />
@@ -133,58 +133,58 @@ export default function Security() {
       ref={containerRef}
       className="relative w-full py-24 sm:py-32 bg-[#08080a] overflow-hidden border-t border-white/5"
     >
-      {/* Текстурная сетка и свечения */}
-      <div className="absolute inset-0 bg-[radial-gradient(rgba(56,189,248,0.03)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
-      <div className="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-brand-blue-mid/5 rounded-full blur-[160px] pointer-events-none transform -translate-y-1/2" />
+      {/* Background grid and glows */}
+      <div className="absolute inset-0 bg-[radial-gradient(rgba(82,183,136,0.03)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[160px] pointer-events-none transform -translate-y-1/2" />
       <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[140px] pointer-events-none transform -translate-y-1/2" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
           
-          {/* Левая сторона: Футуристическая панель мониторинга безопасности */}
+          {/* Futuristic security console */}
           <div className="lg:col-span-5 flex justify-center relative order-last lg:order-first">
             <div
               ref={consoleRef}
               className="w-full max-w-[400px] aspect-[4/5] relative"
             >
               <GlassCard
-                hoverAccent="blue"
+                hoverAccent="forest"
                 className="w-full h-full relative flex flex-col justify-between p-6 overflow-hidden group"
               >
-                {/* Диагональные линии сканирования */}
-                <div className="absolute inset-0 bg-gradient-to-b from-brand-blue-light/[0.02] via-transparent to-brand-blue-light/[0.02] pointer-events-none" />
-                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-brand-blue-light/30 to-transparent animate-[scan_6s_linear_infinite]" />
+                {/* Scanlines */}
+                <div className="absolute inset-0 bg-gradient-to-b from-forest-light/[0.02] via-transparent to-forest-light/[0.02] pointer-events-none" />
+                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-forest-light/30 to-transparent animate-[scan_6s_linear_infinite]" />
                 
-                {/* Шапка консоли мониторинга */}
+                {/* Console header */}
                 <div className="flex items-center justify-between border-b border-white/5 pb-4">
                   <div className="flex items-center gap-2.5">
                     <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue-light opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-blue-light"></span>
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-forest-light opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-forest-light"></span>
                     </span>
                     <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase">
                       ddc csoc // live status
                     </span>
                   </div>
-                  <div className="px-2 py-0.5 rounded bg-brand-blue/10 border border-brand-blue-light/20 text-[9px] font-mono text-brand-blue-light uppercase tracking-wider">
+                  <div className="px-2 py-0.5 rounded bg-forest/10 border border-forest-light/20 text-[9px] font-mono text-forest-light uppercase tracking-wider">
                     level 5 secured
                   </div>
                 </div>
 
-                {/* Геометрический Сакский Щит Защиты */}
+                {/* Saka Shield geometry */}
                 <div className="my-8 flex justify-center items-center relative h-48">
-                  {/* Крутящиеся цифровые кольца */}
-                  <div className="absolute w-44 h-44 border border-brand-blue-light/10 rounded-full flex items-center justify-center animate-spin-slow" />
+                  {/* Rotating tech rings */}
+                  <div className="absolute w-44 h-44 border border-forest-light/10 rounded-full flex items-center justify-center animate-spin-slow" />
                   <div className="absolute w-36 h-36 border border-dashed border-gold/15 rounded-full animate-spin-slow [animation-direction:reverse] [animation-duration:12s]" />
                   
-                  {/* 3D Сакский щит с золотой оправой */}
+                  {/* 3D Saka Shield SVG */}
                   <svg
                     width="110"
                     height="130"
                     viewBox="0 0 110 130"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    className="filter drop-shadow-[0_15px_30px_rgba(0,92,187,0.25)] relative z-10 transition-transform duration-500 group-hover:scale-105"
+                    className="filter drop-shadow-[0_15px_30px_rgba(26,61,43,0.25)] relative z-10 transition-transform duration-500 group-hover:scale-105"
                   >
                     <path
                       d="M55 0L10 17v41c0 34 23 59 45 72 22-13 45-38 45-72V17L55 0Z"
@@ -194,7 +194,7 @@ export default function Security() {
                     />
                     <path
                       d="M55 14L21 27v31c0 25 17 44 34 54 17-10 34-29 34-54V27L55 14Z"
-                      stroke="url(#shieldInnerStrokeBlue)"
+                      stroke="url(#shieldInnerStrokeGreen)"
                       strokeWidth="1"
                       strokeDasharray="3 3"
                     />
@@ -208,14 +208,14 @@ export default function Security() {
                         <stop offset="50%" stopColor="#C9A84C" />
                         <stop offset="100%" stopColor="#8B7035" />
                       </linearGradient>
-                      <linearGradient id="shieldInnerStrokeBlue" x1="0" y1="0" x2="110" y2="130" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stopColor="#38bdf8" />
-                        <stop offset="100%" stopColor="#005cbb" />
+                      <linearGradient id="shieldInnerStrokeGreen" x1="0" y1="0" x2="110" y2="130" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stopColor="#52B788" />
+                        <stop offset="100%" stopColor="#1A3D2B" />
                       </linearGradient>
                     </defs>
                   </svg>
 
-                  {/* Иконка замка в центре щита */}
+                  {/* Lock icon in center */}
                   <div className="absolute z-20 text-gold flex items-center justify-center">
                     <svg viewBox="0 0 24 24" className="w-9 h-9 stroke-[1.5] animate-pulse" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" />
@@ -224,14 +224,14 @@ export default function Security() {
                   </div>
                 </div>
 
-                {/* Метрики безопасности на панели */}
+                {/* Security metrics block */}
                 <div className="space-y-3.5 border-t border-white/5 pt-4">
                   <div className="flex items-center justify-between text-[11px] font-mono">
                     <span className="text-zinc-500">THREAT MITIGATION RATE</span>
-                    <span className="text-brand-blue-light font-bold">99.9997%</span>
+                    <span className="text-forest-light font-bold">99.9997%</span>
                   </div>
                   <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
-                    <div className="h-full w-[99.9997%] bg-brand-blue-light rounded-full" />
+                    <div className="h-full w-[99.9997%] bg-forest-light rounded-full" />
                   </div>
                   <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400">
                     <span>ACTIVE AES-256 TUNNELS</span>
@@ -242,7 +242,7 @@ export default function Security() {
             </div>
           </div>
 
-          {/* Правая сторона: Контент */}
+          {/* Security features content */}
           <div className="lg:col-span-7 flex flex-col justify-center">
             <div ref={headerRef}>
               <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
@@ -260,7 +260,7 @@ export default function Security() {
               className="mb-8"
             />
 
-            {/* Карточки фичей безопасности */}
+            {/* Feature cards stack */}
             <div className="space-y-4">
               {securityFeatures.map((feat, idx) => {
                 return (
@@ -276,7 +276,7 @@ export default function Security() {
                         <div className={`w-11 h-11 rounded-lg flex items-center justify-center ${
                           feat.hoverAccent === "gold"
                             ? "bg-gold/10 border border-gold/20 text-gold"
-                            : "bg-brand-blue/10 border border-brand-blue/20 text-brand-blue-light"
+                            : "bg-forest/10 border border-forest/20 text-forest-light"
                         }`}>
                           {feat.svgIcon}
                         </div>

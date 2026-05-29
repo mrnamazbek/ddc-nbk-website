@@ -12,7 +12,7 @@ const HeroScene = dynamic(() => import("@/components/three/HeroScene"), {
   ssr: false,
   loading: () => (
     <div className="absolute inset-0 bg-[#08080a] flex items-center justify-center">
-      <div className="w-16 h-16 border-2 border-brand-blue-light border-t-gold rounded-full animate-spin" />
+      <div className="w-16 h-16 border-2 border-forest-light border-t-gold rounded-full animate-spin" />
     </div>
   ),
 });
@@ -82,7 +82,7 @@ export default function Hero() {
       <HeroScene />
 
       {/* Мягкие фоновые свечения для премиальной глубины */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-brand-blue/10 blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-forest/15 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[400px] h-[400px] rounded-full bg-gold/5 blur-[100px] pointer-events-none" />
 
       {/* Контентная область поверх 3D — строго асимметричное левое выравнивание */}
@@ -96,9 +96,9 @@ export default function Hero() {
           animate="visible"
           className="max-w-4xl"
         >
-          {/* Надзаголовок-статус с бирюзовым маяком цифровой стабильности */}
+          {/* Надзаголовок-статус с зеленым маяком цифровой стабильности */}
           <motion.div variants={itemVariants} className="inline-flex items-center gap-2 mb-8 bg-white/[0.03] border border-white/[0.08] backdrop-blur-md px-4 py-2 rounded-full">
-            <span className="w-2.5 h-2.5 rounded-full bg-brand-blue-light animate-pulse" />
+            <span className="w-2.5 h-2.5 rounded-full bg-forest-light animate-pulse" />
             <span className="text-[10px] uppercase tracking-[0.25em] text-gold-light font-mono font-medium">
               Digital Development Center • National Bank of Kazakhstan
             </span>
@@ -111,7 +111,7 @@ export default function Hero() {
               className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-light tracking-tight leading-[1.02] text-white"
             >
               Формируя <br />
-              <span className="text-gradient-blue font-medium">цифровое будущее</span> <br />
+              <span className="text-gradient-forest font-medium">цифровое будущее</span> <br />
               финансовой экосистемы
             </motion.h1>
           </div>
@@ -151,7 +151,7 @@ export default function Hero() {
               </svg>
             </ShimmerButton>
             <ShimmerButton
-              variant="blue"
+              variant="forest"
               className="w-full sm:w-auto flex items-center justify-center hover-target"
               onClick={() => {
                 const target = document.getElementById("about");
@@ -169,7 +169,7 @@ export default function Hero() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.2, duration: 0.8 }}
-        className="absolute bottom-10 left-6 sm:left-12 lg:left-16 z-10 flex items-center gap-3 text-zinc-500 cursor-pointer hover:text-brand-blue-light transition-colors duration-300 pointer-events-auto hover-target"
+        className="absolute bottom-10 left-6 sm:left-12 lg:left-16 z-10 flex items-center gap-3 text-zinc-500 cursor-pointer hover:text-forest-light transition-colors duration-300 pointer-events-auto hover-target"
         onClick={() => {
           const target = document.getElementById("stats");
           target?.scrollIntoView({ behavior: "smooth" });

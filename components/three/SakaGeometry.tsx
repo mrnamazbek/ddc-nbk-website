@@ -56,7 +56,7 @@ export default function SakaGeometry() {
 
   return (
     <>
-      {/* Парящий тор (золотое стекло Национального Банка) */}
+      {/* Floating Torus (gold glass) */}
       <mesh ref={torusRef} position={[-3, 1.2, 0]}>
         <torusGeometry args={[1.2, 0.3, 24, 48]} />
         <meshPhysicalMaterial
@@ -65,20 +65,20 @@ export default function SakaGeometry() {
           emissiveIntensity={0.25}
           roughness={0.01}
           metalness={0.25}
-          transmission={0.95} // Эффект стекла
-          thickness={2.2}    // Толщина преломления
-          ior={1.65}          // Индекс преломления света
+          transmission={0.95} // Glass effect
+          thickness={2.2}    // Refraction thickness
+          ior={1.65}          // IOR
           clearcoat={1.0}
           clearcoatRoughness={0.02}
         />
       </mesh>
 
-      {/* Парящий икосаэдр (сапфировое цифровое стекло ЦЦР) */}
+      {/* Floating Icosahedron (emerald glass) */}
       <mesh ref={icoRef} position={[3, -1.5, 0]}>
         <icosahedronGeometry args={[1.3, 0]} />
         <meshPhysicalMaterial
-          color="#005cbb"
-          emissive="#38bdf8"
+          color="#2D6A4F"
+          emissive="#52B788"
           emissiveIntensity={0.35}
           roughness={0.01}
           metalness={0.3}
@@ -90,7 +90,7 @@ export default function SakaGeometry() {
         />
       </mesh>
 
-      {/* Маленький центральный золотой додекаэдр */}
+      {/* Small central gold dodecahedron */}
       <mesh ref={dodecaRef} position={[0, 0, -2.5]}>
         <dodecahedronGeometry args={[0.7, 0]} />
         <meshPhysicalMaterial

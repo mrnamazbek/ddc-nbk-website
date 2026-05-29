@@ -11,7 +11,7 @@ interface FeatureTab {
   badge: string;
   description: string;
   benefits: string[];
-  hoverAccent: "gold" | "blue";
+  hoverAccent: "gold" | "forest";
   svgIcon: React.ReactNode;
 }
 
@@ -42,7 +42,7 @@ export default function DigitalShowcase() {
       title: "Двухуровневые оффлайн-транзакции",
       badge: "ФИНАНСОВАЯ ИНКЛЮЗИВНОСТЬ",
       description: "Обеспечение проведения транзакций в цифровой валюте даже в отдаленных районах без доступа к интернету и мобильной связи, гарантируя непрерывность платежного оборота страны.",
-      hoverAccent: "blue",
+      hoverAccent: "forest",
       benefits: [
         "Независимость от интернет-провайдеров",
         "Аппаратные кошельки на смарт-картах",
@@ -59,7 +59,7 @@ export default function DigitalShowcase() {
       title: "Программируемые смарт-контракты",
       badge: "БУДУЩЕЕ БИЗНЕСА",
       description: "Создание гибкой логики финансовых сделок для коммерческого сектора. Смарт-контракты позволяют автоматизировать расчеты, снижая издержки на посредников и юристов.",
-      hoverAccent: "blue",
+      hoverAccent: "forest",
       benefits: [
         "Безопасные сделки эскроу без посредников",
         "Мгновенный расчет налогов при оплате",
@@ -79,7 +79,7 @@ export default function DigitalShowcase() {
   return (
     <section id="digital" className="relative w-full py-24 sm:py-32 bg-[#08080a] overflow-hidden border-t border-white/5">
       {/* Технологическая подсветка на фоне */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-brand-blue/5 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-forest/5 rounded-full blur-[160px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         
@@ -112,13 +112,13 @@ export default function DigitalShowcase() {
                     isActive
                       ? tab.hoverAccent === "gold"
                         ? "bg-gold/10 border-gold/45 text-white shadow-[0_4px_20px_rgba(201,168,76,0.15)]"
-                        : "bg-brand-blue/15 border-brand-blue-light/45 text-white shadow-[0_4px_20px_rgba(0,92,187,0.15)]"
+                        : "bg-forest/15 border-forest-light/45 text-white shadow-[0_4px_20px_rgba(26,61,43,0.15)]"
                       : "bg-transparent border-white/5 text-zinc-400 hover:border-white/10 hover:text-white"
                   }`}
                 >
                   <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${
                     isActive 
-                      ? tab.hoverAccent === "gold" ? "bg-gold text-black font-bold" : "bg-brand-blue-light text-black font-bold"
+                      ? tab.hoverAccent === "gold" ? "bg-gold text-black font-bold" : "bg-forest-light text-black font-bold"
                       : "bg-white/5 text-gold"
                   }`}>
                     {tab.svgIcon}
@@ -141,8 +141,8 @@ export default function DigitalShowcase() {
             hoverAccent={currentTab.hoverAccent}
             className="lg:col-span-8 p-8 sm:p-12 relative overflow-hidden min-h-[420px] flex flex-col justify-between"
           >
-            {/* Крутящееся кольцо на заднем фоне карточки для создания футуристического объема */}
-            <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full border border-brand-blue-light/5 animate-[spin_40s_linear_infinite] pointer-events-none" />
+            {/* Animated background rings for depth */}
+            <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full border border-forest-light/5 animate-[spin_40s_linear_infinite] pointer-events-none" />
             <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full border-t border-gold/10 animate-[spin_20s_linear_infinite] pointer-events-none" />
 
             <AnimatePresence mode="wait">
@@ -159,7 +159,7 @@ export default function DigitalShowcase() {
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
                       currentTab.hoverAccent === "gold"
                         ? "bg-gold/10 border border-gold/20 text-gold"
-                        : "bg-brand-blue/10 border border-brand-blue/20 text-brand-blue-light"
+                        : "bg-forest/10 border border-forest/20 text-forest-light"
                     }`}>
                       {currentTab.svgIcon}
                     </div>
@@ -182,7 +182,7 @@ export default function DigitalShowcase() {
                     {currentTab.benefits.map((benefit, i) => (
                       <li key={i} className="flex items-center gap-3.5 text-sm text-zinc-400 font-sans font-light">
                         <svg viewBox="0 0 24 24" className={`w-4 h-4 shrink-0 stroke-[2] ${
-                          currentTab.hoverAccent === "gold" ? "text-gold" : "text-brand-blue-light"
+                          currentTab.hoverAccent === "gold" ? "text-gold" : "text-forest-light"
                         }`} fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
                           <path d="M22 4L12 14.01l-3-3" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
@@ -194,7 +194,7 @@ export default function DigitalShowcase() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-white/5">
-                  <Button variant="blue" className="flex items-center justify-center gap-2 group font-medium">
+                  <Button variant="forest" className="flex items-center justify-center gap-2 group font-medium">
                     Техническая спецификация
                     <svg viewBox="0 0 24 24" className="w-4 h-4 stroke-[2] transition-transform duration-300 transform group-hover:translate-x-1" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />

@@ -10,7 +10,7 @@ interface ShimmerButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   borderRadius?: string;
   background?: string;
   className?: string;
-  variant?: "blue" | "gold" | "default";
+  variant?: "forest" | "gold" | "default";
 }
 
 export default function ShimmerButton({
@@ -24,10 +24,10 @@ export default function ShimmerButton({
   variant = "default",
   ...props
 }: ShimmerButtonProps) {
-  // Выбираем цвет шиммера в зависимости от брендового варианта (синий ЦЦР или золото НБК)
+  // Выбираем цвет шиммера в зависимости от брендового варианта (зеленый DDC или золото NBK)
   const defaultShimmerColor =
-    variant === "blue"
-      ? "#38bdf8"
+    variant === "forest"
+      ? "#52B788"
       : variant === "gold"
       ? "#C9A84C"
       : "#FFFFFF";

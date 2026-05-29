@@ -5,17 +5,20 @@
   --background: #08080a;
   --foreground: #FFFFFF;
 
-  /* Дизайн-токены DDC Digital Blue (АО «Центр цифрового развития») */
-  --color-brand-blue: #005cbb;
-  --color-brand-blue-mid: #0077e6;
-  --color-brand-blue-light: #38bdf8;
-  --color-brand-blue-dark: #002d62;
+  /* Дизайн-токены DDC Forest Green (АО «Центр цифрового развития») */
+  --color-forest: #1A3D2B;
+  --color-forest-mid: #2D6A4F;
+  --color-forest-light: #52B788;
+  --color-forest-dark: #0F241A;
 
   /* Дизайн-токены NBK Premium Gold (Национальный Банк Казахстана) */
   --color-gold: #C9A84C;
   --color-gold-light: #E8C87A;
   --color-gold-muted: #8B7035;
   --color-gold-dark: #58461F;
+
+  /* Дополнительный акцент (Contest Accent) */
+  --color-yellow: #F5C518;
 
   --color-charcoal: #141419;
   --color-black: #08080a;
@@ -26,7 +29,7 @@
   --glass-bg: rgba(20, 20, 25, 0.4);
   --glass-border: 1px solid rgba(255, 255, 255, 0.15);
   --glass-border-gold: rgba(201, 168, 76, 0.2);
-  --glass-border-blue: rgba(0, 92, 187, 0.2);
+  --glass-border-forest: rgba(82, 183, 136, 0.2);
   --glass-blur: blur(16px) saturate(180%);
   --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 
@@ -40,19 +43,21 @@
 
   /* Тени */
   --shadow-gold: 0 8px 32px rgba(201, 168, 76, 0.15);
-  --shadow-blue: 0 8px 32px rgba(0, 92, 187, 0.15);
+  --shadow-forest: 0 8px 32px rgba(26, 61, 43, 0.25);
 }
 
 @theme {
-  --color-brand-blue: var(--color-brand-blue);
-  --color-brand-blue-mid: var(--color-brand-blue-mid);
-  --color-brand-blue-light: var(--color-brand-blue-light);
-  --color-brand-blue-dark: var(--color-brand-blue-dark);
+  --color-forest: var(--color-forest);
+  --color-forest-mid: var(--color-forest-mid);
+  --color-forest-light: var(--color-forest-light);
+  --color-forest-dark: var(--color-forest-dark);
 
   --color-gold: var(--color-gold);
   --color-gold-light: var(--color-gold-light);
   --color-gold-muted: var(--color-gold-muted);
   --color-gold-dark: var(--color-gold-dark);
+
+  --color-yellow: var(--color-yellow);
 
   --color-charcoal: var(--color-charcoal);
   --color-offwhite: var(--color-offwhite);
@@ -120,12 +125,12 @@ body {
   box-shadow: var(--glass-shadow);
 }
 
-.glass-panel-blue {
+.glass-panel-forest {
   background: rgba(20, 20, 25, 0.6);
-  border: 1px solid var(--glass-border-blue);
+  border: 1px solid var(--glass-border-forest);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
-  box-shadow: 0 8px 32px rgba(0, 92, 187, 0.05);
+  box-shadow: 0 8px 32px rgba(26, 61, 43, 0.1);
 }
 
 .glass-panel-gold {
@@ -143,8 +148,8 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-.text-gradient-blue {
-  background: linear-gradient(135deg, var(--color-brand-blue-light) 0%, var(--color-brand-blue-mid) 50%, var(--color-brand-blue) 100%);
+.text-gradient-forest {
+  background: linear-gradient(135deg, var(--color-forest-light) 0%, var(--color-forest-mid) 50%, var(--color-forest) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -166,12 +171,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-brand-blue);
+  background: var(--color-forest-mid);
 }
 
 /* Индикатор фокуса для доступности */
 *:focus-visible {
-  outline: 2px solid var(--color-brand-blue-light);
+  outline: 2px solid var(--color-forest-light);
   outline-offset: 4px;
 }
 
@@ -186,7 +191,7 @@ body {
   left: 0;
   width: 32px;
   height: 32px;
-  border: 2px solid var(--color-brand-blue-light);
+  border: 2px solid var(--color-forest-light);
   border-radius: 50%;
   pointer-events: none;
   z-index: 99999;
@@ -206,8 +211,8 @@ body {
 #custom-cursor.hovered {
   width: 64px;
   height: 64px;
-  background-color: rgba(56, 189, 248, 0.1);
-  border-color: rgba(56, 189, 248, 0.8);
+  background-color: rgba(82, 183, 136, 0.1);
+  border-color: rgba(82, 183, 136, 0.8);
 }
 
 #custom-cursor.hovered-gold {
@@ -321,7 +326,7 @@ body {
   pointer-events: none;
   top: -110px;
   right: -80px;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.8) 0%, rgba(56, 189, 248, 0) 68%);
+  background: radial-gradient(circle, rgba(82, 183, 136, 0.8) 0%, rgba(82, 183, 136, 0) 68%);
 }
 
 .clock-liquid__city {
@@ -329,7 +334,7 @@ body {
   font-family: var(--font-mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-brand-blue-light);
+  color: var(--color-forest-light);
 }
 
 .clock-liquid__time {
@@ -351,7 +356,7 @@ body {
   font-size: 0.95rem;
   line-height: 1;
   font-family: var(--font-mono);
-  color: var(--color-brand-blue-light);
+  color: var(--color-forest-light);
   transform: translateY(-6px);
 }
 

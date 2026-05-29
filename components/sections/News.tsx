@@ -11,7 +11,7 @@ interface NewsItem {
   date: string;
   readTime: string;
   gradient: string;
-  hoverAccent: "blue" | "gold";
+  hoverAccent: "forest" | "gold";
 }
 
 export default function News() {
@@ -22,8 +22,8 @@ export default function News() {
       excerpt: "Завершен первый этап тестирования двусторонних оффлайн-платежей на мобильных устройствах и смарт-картах в отдаленных регионах.",
       date: "18 Мая 2026",
       readTime: "5 мин",
-      gradient: "from-brand-blue-dark/50 via-charcoal to-[#08080a]",
-      hoverAccent: "blue",
+      gradient: "from-forest-dark/50 via-charcoal to-[#08080a]",
+      hoverAccent: "forest",
     },
     {
       category: "Интеграция",
@@ -40,8 +40,8 @@ export default function News() {
       excerpt: "Новый документ подробно описывает механизмы смарт-контрактов для маркирования целевых государственных субсидий.",
       date: "22 Апреля 2026",
       readTime: "8 мин",
-      gradient: "from-[#002d62]/50 via-charcoal to-[#08080a]",
-      hoverAccent: "blue",
+      gradient: "from-forest-dark/50 via-charcoal to-[#08080a]",
+      hoverAccent: "forest",
     },
   ];
 
@@ -74,13 +74,13 @@ export default function News() {
 
   return (
     <section id="news" className="relative w-full py-24 sm:py-32 bg-[#08080a] overflow-hidden border-t border-white/5">
-      {/* Декоративное сияние в стиле DDC Digital Blue и NBK Premium Gold */}
-      <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-brand-blue/5 rounded-full blur-[120px] pointer-events-none" />
+      {/* Brand ambient glow */}
+      <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         
-        {/* Шапка секции */}
+        {/* Section header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <motion.div
             initial="hidden"
@@ -121,7 +121,7 @@ export default function News() {
           </motion.div>
         </div>
 
-        {/* Сетка карточек */}
+        {/* Card grid */}
         <motion.div
           variants={containerVariants}
           initial="hidden"

@@ -7,7 +7,7 @@ interface GlassCardProps {
   children: ReactNode;
   className?: string;
   isTiltEnabled?: boolean;
-  hoverAccent?: "gold" | "blue" | "default";
+  hoverAccent?: "gold" | "forest" | "default";
 }
 
 export default function GlassCard({
@@ -57,6 +57,7 @@ export default function GlassCard({
     y.set(mouseY / height);
   }
 
+  // Сброс при уходе мыши
   function handleMouseLeave() {
     x.set(0);
     y.set(0);
@@ -65,14 +66,14 @@ export default function GlassCard({
   // Стили рамок и теней в зависимости от выбранного акцента ховера
   const accentClasses = {
     default: "hover:border-white/30 hover:shadow-[0_8px_32px_rgba(255,255,255,0.05)]",
-    blue: "hover:border-brand-blue-light/30 hover:shadow-[0_8px_32px_rgba(0,92,187,0.15)]",
+    forest: "hover:border-forest-light/30 hover:shadow-[0_8px_32px_rgba(26,61,43,0.25)]",
     gold: "hover:border-gold/30 hover:shadow-[0_8px_32px_rgba(201,168,76,0.15)]",
   };
 
   // Цвет подсветки Spotlight Border (повышенная яркость и радиус для эффекта жидкого стекла)
   const spotlightColor = hoverAccent === "gold"
     ? "radial-gradient(circle, rgba(201, 168, 76, 0.22) 0%, rgba(201, 168, 76, 0) 75%)"
-    : "radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, rgba(56, 189, 248, 0) 75%)";
+    : "radial-gradient(circle, rgba(82, 183, 136, 0.22) 0%, rgba(82, 183, 136, 0) 75%)";
 
   return (
     <motion.div
@@ -84,7 +85,7 @@ export default function GlassCard({
         rotateY,
         transformStyle: "preserve-3d",
       }}
-      data-hover={hoverAccent === "gold" ? "gold" : "blue"}
+      data-hover={hoverAccent === "gold" ? "gold" : "forest"}
       className={`glass-card spotlight-card p-6 ${accentClasses[hoverAccent]} ${className}`}
     >
       {/* Эффект Spotlight Border (светящийся синий или золотой ореол, следующий за мышкой) */}
@@ -99,7 +100,7 @@ export default function GlassCard({
       
       {/* Слой свечения бренда в углу для придания глубины */}
       <div className={`absolute -bottom-20 -left-20 w-40 h-40 rounded-full blur-[60px] pointer-events-none opacity-40 ${
-        hoverAccent === "gold" ? "bg-gold/25" : "bg-brand-blue-mid/25"
+        hoverAccent === "gold" ? "bg-gold/25" : "bg-forest-mid/25"
       }`} />
 
       <div style={{ transform: "translateZ(20px)" }} className="relative z-10">

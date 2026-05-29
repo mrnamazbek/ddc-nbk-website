@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import GlassCard from "@/components/ui/GlassCard";
-import { animate } from "animejs";
+import NumberTicker from "@/components/ui/NumberTicker";
 
 interface Transaction {
   id: string;
@@ -13,31 +13,7 @@ interface Transaction {
   time: string;
 }
 
-function Counter({ target, duration = 2.5 }: { target: number; duration?: number }) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
-  useEffect(() => {
-    if (!isInView) return;
-
-    const obj = { value: 0 };
-    const animation = animate(obj, {
-      value: target,
-      duration: duration * 1000,
-      ease: "outExpo",
-      onUpdate: () => {
-        setCount(Math.round(obj.value));
-      },
-    });
-
-    return () => {
-      animation.pause();
-    };
-  }, [isInView, target, duration]);
-
-  return <span ref={ref}>{count}</span>;
-}
 
 export default function Stats() {
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
@@ -128,11 +104,11 @@ export default function Stats() {
 
   return (
     <section id="stats" className="relative w-full py-24 sm:py-32 bg-[#08080a] overflow-hidden border-t border-white/[0.05]">
-      {/* Декоративная фоновая сетка в синих тонах */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#005cbb04_1px,transparent_1px),linear-gradient(to_bottom,#005cbb04_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
+      {/* Декоративная фоновая сетка в зеленых тонах */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1A3D2B03_1px,transparent_1px),linear-gradient(to_bottom,#1A3D2B03_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
 
-      {/* Премиальное сияние ЦЦР и Нацбанка */}
-      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[550px] h-[550px] bg-brand-blue/5 rounded-full blur-[140px] pointer-events-none" />
+      {/* Премиальное сияние DDC и Нацбанка */}
+      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[550px] h-[550px] bg-forest/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-[450px] h-[450px] bg-gold/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
@@ -145,7 +121,7 @@ export default function Stats() {
         >
           {/* Блок 1 (Bento 2x1): Жидкостные часы Astana Time (UTC+5) + Статус систем */}
           <motion.div variants={cardVariants} className="lg:col-span-2">
-            <GlassCard hoverAccent="blue" className="h-full flex flex-col justify-between p-8" isTiltEnabled={false}>
+            <GlassCard hoverAccent="forest" className="h-full flex flex-col justify-between p-8" isTiltEnabled={false}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center h-full">
                 {/* Жидкостные часы из styles.css пользователя */}
                 <div className="clock-liquid">
@@ -167,22 +143,22 @@ export default function Stats() {
                   <div className="space-y-3">
                     <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-white/[0.05]">
                       <span className="text-sm font-light text-zinc-300">Платформа Цифрового Тенге</span>
-                      <span className="inline-flex items-center gap-1.5 text-xs text-brand-blue-light font-mono bg-brand-blue/10 px-2.5 py-1 rounded-full">
-                        <span className="w-1.5 h-1.5 rounded-full bg-brand-blue-light animate-pulse" />
+                      <span className="inline-flex items-center gap-1.5 text-xs text-forest-light font-mono bg-forest/10 px-2.5 py-1 rounded-full">
+                        <span className="w-1.5 h-1.5 rounded-full bg-forest-light animate-pulse" />
                         Активна
                       </span>
                     </div>
                     <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-white/[0.05]">
                       <span className="text-sm font-light text-zinc-300">Межбанковские Платежи</span>
-                      <span className="inline-flex items-center gap-1.5 text-xs text-brand-blue-light font-mono bg-brand-blue/10 px-2.5 py-1 rounded-full">
-                        <span className="w-1.5 h-1.5 rounded-full bg-brand-blue-light animate-pulse" />
+                      <span className="inline-flex items-center gap-1.5 text-xs text-forest-light font-mono bg-forest/10 px-2.5 py-1 rounded-full">
+                        <span className="w-1.5 h-1.5 rounded-full bg-forest-light animate-pulse" />
                         Стабильно
                       </span>
                     </div>
                     <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-white/[0.05]">
                       <span className="text-sm font-light text-zinc-300">Национальный Шлюз Клиринга</span>
-                      <span className="inline-flex items-center gap-1.5 text-xs text-brand-blue-light font-mono bg-brand-blue/10 px-2.5 py-1 rounded-full">
-                        <span className="w-1.5 h-1.5 rounded-full bg-brand-blue-light animate-pulse" />
+                      <span className="inline-flex items-center gap-1.5 text-xs text-forest-light font-mono bg-forest/10 px-2.5 py-1 rounded-full">
+                        <span className="w-1.5 h-1.5 rounded-full bg-forest-light animate-pulse" />
                         99.99% SLA
                       </span>
                     </div>
@@ -218,7 +194,7 @@ export default function Stats() {
                 <div className="mini-table-caption">Пропускная способность</div>
                 <div className="font-display text-5xl sm:text-6xl font-bold tracking-tight text-white mb-2 flex items-baseline mt-4">
                   <span className="text-gradient-gold">
-                    <Counter target={50} />
+                    <NumberTicker value={50} />
                   </span>
                   <span className="text-gold text-2xl ml-1 font-sans font-light">млн+</span>
                 </div>
@@ -234,7 +210,7 @@ export default function Stats() {
 
           {/* Блок 4 (Bento 2x1): Микро-таблица живой транзакционной активности транзакций */}
           <motion.div variants={cardVariants} className="lg:col-span-2">
-            <GlassCard hoverAccent="blue" className="h-full flex flex-col justify-between p-8" isTiltEnabled={false}>
+            <GlassCard hoverAccent="forest" className="h-full flex flex-col justify-between p-8" isTiltEnabled={false}>
               <div className="w-full">
                 <div className="mini-table-caption">Журнал транзакций Цифрового Тенге (Live Feed)</div>
                 
@@ -265,10 +241,10 @@ export default function Stats() {
                           <div className="mini-table__cell mono text-white">{tx.amount}</div>
                           <div className="mini-table__cell status">
                             <span className={`w-1.5 h-1.5 rounded-full ${
-                              tx.status === "success" ? "bg-brand-blue-light animate-pulse" : "bg-gold animate-pulse"
+                              tx.status === "success" ? "bg-forest-light animate-pulse" : "bg-gold animate-pulse"
                             }`} />
                             <span className={`font-mono text-[10px] uppercase tracking-wider ${
-                              tx.status === "success" ? "text-brand-blue-light" : "text-gold-light"
+                              tx.status === "success" ? "text-forest-light" : "text-gold-light"
                             }`}>
                               {tx.status === "success" ? "Проведено" : "В клиринге"}
                             </span>

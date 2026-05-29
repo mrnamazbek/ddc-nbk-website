@@ -15,19 +15,19 @@ export default function ParticleField() {
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
 
-    const colorBlue = new THREE.Color("#38bdf8"); // Фирменный бирюзово-голубой ЦЦР
-    const colorGold = new THREE.Color("#C9A84C"); // Премиальное золото Нацбанка
+    const colorGreen = new THREE.Color("#52B788"); // Brand forest green
+    const colorGold = new THREE.Color("#C9A84C"); // Premium gold
 
     for (let i = 0; i < count; i++) {
-      // Распределение по спиральному диску (символизирует спирали галактики или финансовые потоки)
+      // Spiral distribution
       const angle = Math.random() * Math.PI * 2;
       const radius = 3 + Math.random() * 12;
       positions[i * 3] = Math.cos(angle) * radius;
       positions[i * 3 + 1] = (Math.random() - 0.5) * 5;
       positions[i * 3 + 2] = Math.sin(angle) * radius;
 
-      // Смешиваем цифровой синий и золотой цвета в пропорции 60/40
-      const mixedColor = Math.random() > 0.4 ? colorBlue : colorGold;
+      // Mix green and gold
+      const mixedColor = Math.random() > 0.4 ? colorGreen : colorGold;
       colors[i * 3] = mixedColor.r;
       colors[i * 3 + 1] = mixedColor.g;
       colors[i * 3 + 2] = mixedColor.b;
@@ -40,7 +40,7 @@ export default function ParticleField() {
     if (!pointsRef.current) return;
     const time = state.clock.getElapsedTime();
 
-    // Медленное величественное вращение
+    // Slow rotation
     pointsRef.current.rotation.y = time * 0.03;
 
     const positionsArray = pointsRef.current.geometry.attributes.position.array as Float32Array;
@@ -50,10 +50,10 @@ export default function ParticleField() {
       const x = positionsArray[idx];
       const z = positionsArray[idx + 2];
 
-      // Добавляем плавную волну по оси Y
+      // Add gentle wave on Y axis
       positionsArray[idx + 1] = Math.sin(time * 0.5 + x * 0.2 + z * 0.2) * 1.5;
 
-      // Сдвиг частиц при приближении курсора мыши
+      // Mouse interactive push
       const targetX = mouse.x * 8;
       const targetY = mouse.y * 5;
 
@@ -62,7 +62,7 @@ export default function ParticleField() {
       const dist = Math.sqrt(dx * dx + dy * dy);
 
       if (dist < 3) {
-        // Выталкиваем частицы наружу при приближении курсора
+        // Push particles away from cursor
         const force = (3 - dist) * 0.05;
         positionsArray[idx + 1] += force;
       }

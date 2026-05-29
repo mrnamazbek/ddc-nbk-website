@@ -9,7 +9,7 @@ interface ServiceItem {
   number: string;
   title: string;
   description: string;
-  hoverAccent: "blue" | "gold";
+  hoverAccent: "forest" | "gold";
   svgIcon: React.ReactNode;
 }
 
@@ -84,7 +84,7 @@ export default function Services() {
       number: "02",
       title: "Система Мгновенных Платежей",
       description: "Высокоскоростная инфраструктура для межбанковских переводов в режиме реального времени 24/7/365 с нулевой задержкой.",
-      hoverAccent: "blue",
+      hoverAccent: "forest",
       svgIcon: (
         <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
@@ -97,7 +97,7 @@ export default function Services() {
       number: "03",
       title: "Межбанковский Клиринг",
       description: "Оптимизация встречных требований и расчетов участников финансового рынка с гарантированной стабильностью системы.",
-      hoverAccent: "blue",
+      hoverAccent: "forest",
       svgIcon: (
         <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M3 21h18M5 21V10m14 11V10M2 10h20M12 3L2 10h20L12 3z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
@@ -122,7 +122,7 @@ export default function Services() {
       number: "05",
       title: "Цифровой Банкинг & Open API",
       description: "Стандартизация интерфейсов прикладного программирования для формирования открытой экосистемы Open Finance.",
-      hoverAccent: "blue",
+      hoverAccent: "forest",
       svgIcon: (
         <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" />
@@ -135,7 +135,7 @@ export default function Services() {
       number: "06",
       title: "Аналитический Финтех-Хаб",
       description: "Продвинутая Big Data аналитика, интеллектуальное прогнозирование финансовых рисков и микроэкономический анализ.",
-      hoverAccent: "blue",
+      hoverAccent: "forest",
       svgIcon: (
         <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M3 3v18h18" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
@@ -152,13 +152,13 @@ export default function Services() {
       ref={containerRef}
       className="relative w-full py-24 sm:py-32 bg-[#08080a] overflow-hidden border-t border-white/5"
     >
-      {/* Декоративный высокотехнологичный бэкграунд */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-blue/5 rounded-full blur-[140px] pointer-events-none" />
+      {/* Tech ambient background glows */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-forest/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gold/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         
-        {/* Заголовок секции */}
+        {/* Section Header */}
         <div
           ref={headerRef}
           className="text-left max-w-4xl mb-20"
@@ -175,7 +175,7 @@ export default function Services() {
           </p>
         </div>
 
-        {/* Сетка услуг Bento Grid с асимметричным дизайном */}
+        {/* Services grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => {
             return (
@@ -189,12 +189,12 @@ export default function Services() {
                   className="h-full flex flex-col p-8 justify-between relative"
                 >
                   <div>
-                    {/* Верхняя строка карточки */}
+                    {/* Card header */}
                     <div className="flex items-center justify-between mb-8">
                       <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
                         service.hoverAccent === "gold"
                           ? "bg-gold/10 border border-gold/20 text-gold group-hover:bg-gold/20 group-hover:scale-110"
-                          : "bg-brand-blue/10 border border-brand-blue/20 text-brand-blue-light group-hover:bg-brand-blue/20 group-hover:scale-110"
+                          : "bg-forest/10 border border-forest/20 text-forest-light group-hover:bg-forest/20 group-hover:scale-110"
                       }`}>
                         {service.svgIcon}
                       </div>
@@ -213,13 +213,13 @@ export default function Services() {
                     </p>
                   </div>
 
-                  {/* Интерактивный футер карты */}
+                  {/* Card footer */}
                   <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between opacity-60 group-hover:opacity-100 transition-all duration-300">
                     <span className="text-xs font-mono tracking-widest text-zinc-500 uppercase">
                       status: operational
                     </span>
                     <svg viewBox="0 0 24 24" className={`w-4 h-4 stroke-[2] transition-transform duration-300 transform group-hover:translate-x-1 ${
-                      service.hoverAccent === "gold" ? "text-gold" : "text-brand-blue-light"
+                      service.hoverAccent === "gold" ? "text-gold" : "text-forest-light"
                     }`} fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
