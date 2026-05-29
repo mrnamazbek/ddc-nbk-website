@@ -62,6 +62,7 @@
   --font-mono: var(--font-mono), monospace;
 
   --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-spin-slow: spin 8s linear infinite;
 }
 
 body {
@@ -89,6 +90,27 @@ body {
 /* ==========================================
    Утилиты и эффекты
    ========================================== */
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-slow {
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee-medium {
+  animation: marquee 20s linear infinite;
+}
+
+.animate-marquee-fast {
+  animation: marquee 10s linear infinite;
+}
 
 .glass-panel {
   background: var(--glass-bg);

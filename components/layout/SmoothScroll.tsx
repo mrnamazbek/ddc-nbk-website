@@ -2,12 +2,14 @@
 
 import { ReactNode, useEffect } from "react";
 import Lenis from "lenis";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import gsap from "@/lib/gsap";
 
 interface SmoothScrollProps {
   children: ReactNode;
 }
 
-export default function SmoothScroll({ children }: { children: ReactNode }) {
+export default function SmoothScroll({ children }: SmoothScrollProps) {
   useEffect(() => {
     // Не запускаем плавный скролл, если пользователь предпочитает уменьшенное движение
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -22,6 +24,19 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
       smoothWheel: true,
     });
 
+    // Синхронизация ScrollTrigger с прокруткой Lenis
+    lenis.on("scroll", () => {
+      ScrollTrigger.update();
+    });
+
+    // Настройка GSAP на использование RAF от Lenis
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+
+    // Отключение дефолтного лага тикера
+    gsap.ticker.lagSmoothing(0);
+
     let rafId: number;
     function raf(time: number) {
       lenis.raf(time);
@@ -33,8 +48,10 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
     return () => {
       lenis.destroy();
       cancelAnimationFrame(rafId);
+      gsap.ticker.remove(() => {});
     };
   }, []);
 
   return <>{children}</>;
 }
+
