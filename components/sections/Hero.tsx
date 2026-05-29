@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import ShimmerButton from "@/components/ui/ShimmerButton";
+import Magnetic from "@/components/motion/Magnetic";
 
 // Динамический импорт 3D-сцены для предотвращения ошибок SSR и повышения производительности при первой загрузке
 const HeroScene = dynamic(() => import("@/components/three/HeroScene"), {
@@ -129,37 +130,41 @@ export default function Hero() {
             variants={itemVariants}
             className="flex flex-col sm:flex-row items-center gap-4 justify-start w-full sm:w-auto"
           >
-            <ShimmerButton
-              variant="gold"
-              className="w-full sm:w-auto flex items-center justify-center gap-2 group hover-target"
-              onClick={() => {
-                const target = document.getElementById("services");
-                target?.scrollIntoView({ behavior: "smooth" });
-              }}
-            >
-              Наши решения
-              <svg 
-                className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 stroke-current" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                strokeWidth="2" 
-                strokeLinecap="round" 
-                strokeLinejoin="round"
+            <Magnetic>
+              <ShimmerButton
+                variant="gold"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 group hover-target"
+                onClick={() => {
+                  const target = document.getElementById("services");
+                  target?.scrollIntoView({ behavior: "smooth" });
+                }}
               >
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
-              </svg>
-            </ShimmerButton>
-            <ShimmerButton
-              variant="forest"
-              className="w-full sm:w-auto flex items-center justify-center hover-target"
-              onClick={() => {
-                const target = document.getElementById("about");
-                target?.scrollIntoView({ behavior: "smooth" });
-              }}
-            >
-              О Центре
-            </ShimmerButton>
+                Наши решения
+                <svg 
+                  className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 stroke-current" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </ShimmerButton>
+            </Magnetic>
+            <Magnetic>
+              <ShimmerButton
+                variant="forest"
+                className="w-full sm:w-auto flex items-center justify-center hover-target"
+                onClick={() => {
+                  const target = document.getElementById("about");
+                  target?.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                О Центре
+              </ShimmerButton>
+            </Magnetic>
           </motion.div>
         </motion.div>
       </div>

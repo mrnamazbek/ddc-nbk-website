@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Menu, X, Globe, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "../ui/Button";
+import Magnetic from "../motion/Magnetic";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -130,9 +131,11 @@ export default function Header() {
 
             {/* Contact Button */}
             <Link href="/contact">
-              <Button variant="gold" size="sm">
-                {t("contact")}
-              </Button>
+              <Magnetic>
+                <Button variant="gold" size="sm">
+                  {t("contact")}
+                </Button>
+              </Magnetic>
             </Link>
           </div>
 

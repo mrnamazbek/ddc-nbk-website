@@ -6,6 +6,7 @@ import gsap from "@/lib/gsap";
 import GlassCard from "@/components/ui/GlassCard";
 import ShimmerButton from "@/components/ui/ShimmerButton";
 import PartnerMarquee from "@/components/ui/PartnerMarquee";
+import Magnetic from "@/components/motion/Magnetic";
 
 export default function CTA() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -94,52 +95,56 @@ export default function CTA() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center relative z-10">
-              <ShimmerButton
-                variant="gold"
-                className="w-full sm:w-auto flex items-center justify-center gap-2 group"
-                onClick={() => {
-                  const target = document.getElementById("contact");
-                  if (target) {
-                    target.scrollIntoView({ behavior: "smooth" });
-                  } else {
-                    window.location.href = "/contact";
-                  }
-                }}
-              >
-                Связаться с нами
-                <svg 
-                  className="w-4 h-4 transition-transform duration-300 group-hover:scale-110 stroke-current" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
+              <Magnetic>
+                <ShimmerButton
+                  variant="gold"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 group"
+                  onClick={() => {
+                    const target = document.getElementById("contact");
+                    if (target) {
+                      target.scrollIntoView({ behavior: "smooth" });
+                    } else {
+                      window.location.href = "/contact";
+                    }
+                  }}
                 >
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                  <polyline points="22,6 12,13 2,6"></polyline>
-                </svg>
-              </ShimmerButton>
+                  Связаться с нами
+                  <svg 
+                    className="w-4 h-4 transition-transform duration-300 group-hover:scale-110 stroke-current" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  >
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                  </svg>
+                </ShimmerButton>
+              </Magnetic>
               
-              <ShimmerButton
-                variant="forest"
-                className="w-full sm:w-auto flex items-center justify-center gap-2 group"
-                onClick={() => {
-                  window.location.href = "/careers";
-                }}
-              >
-                Присоединиться к команде
-                <svg 
-                  className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 stroke-current" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
+              <Magnetic>
+                <ShimmerButton
+                  variant="forest"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 group"
+                  onClick={() => {
+                    window.location.href = "/careers";
+                  }}
                 >
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </ShimmerButton>
+                  Присоединиться к команде
+                  <svg 
+                    className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 stroke-current" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  >
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </ShimmerButton>
+              </Magnetic>
             </div>
           </GlassCard>
         </div>
