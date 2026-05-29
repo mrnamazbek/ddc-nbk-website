@@ -1,7 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "@/lib/gsap";
 import GlassCard from "@/components/ui/GlassCard";
+import TextReveal from "@/components/ui/TextReveal";
 
 interface SecurityFeature {
   title: string;
@@ -12,23 +15,75 @@ interface SecurityFeature {
 }
 
 export default function Security() {
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
+  const containerRef = useRef<HTMLDivElement>(null);
+  const consoleRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const itemsRef = useRef<HTMLDivElement[]>([]);
+
+  itemsRef.current = [];
+
+  const addToRefs = (el: HTMLDivElement | null) => {
+    if (el && !itemsRef.current.includes(el)) {
+      itemsRef.current.push(el);
+    }
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const },
+  useGSAP(
+    () => {
+      // Анимация левой интерактивной консоли при скролле
+      gsap.fromTo(
+        consoleRef.current,
+        { scale: 0.93, opacity: 0 },
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 1.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: consoleRef.current,
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+
+      // Анимация заголовка
+      gsap.fromTo(
+        headerRef.current,
+        { opacity: 0, x: 30 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 1.0,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: headerRef.current,
+            start: "top 85%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+
+      // Плавное появление фичей безопасности по очереди при скролле
+      gsap.fromTo(
+        itemsRef.current,
+        { opacity: 0, y: 25 },
+        {
+          opacity: 1,
+          y: 0,
+          stagger: 0.15,
+          duration: 1.0,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 70%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
     },
-  };
+    { scope: containerRef }
+  );
 
   const securityFeatures: SecurityFeature[] = [
     {
@@ -73,7 +128,11 @@ export default function Security() {
   ];
 
   return (
-    <section id="security" className="relative w-full py-24 sm:py-32 bg-[#08080a] overflow-hidden border-t border-white/5">
+    <section 
+      id="security" 
+      ref={containerRef}
+      className="relative w-full py-24 sm:py-32 bg-[#08080a] overflow-hidden border-t border-white/5"
+    >
       {/* Текстурная сетка и свечения */}
       <div className="absolute inset-0 bg-[radial-gradient(rgba(56,189,248,0.03)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
       <div className="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-brand-blue-mid/5 rounded-full blur-[160px] pointer-events-none transform -translate-y-1/2" />
@@ -84,12 +143,8 @@ export default function Security() {
           
           {/* Левая сторона: Футуристическая панель мониторинга безопасности */}
           <div className="lg:col-span-5 flex justify-center relative order-last lg:order-first">
-            
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            <div
+              ref={consoleRef}
               className="w-full max-w-[400px] aspect-[4/5] relative"
             >
               <GlassCard
@@ -119,16 +174,8 @@ export default function Security() {
                 {/* Геометрический Сакский Щит Защиты */}
                 <div className="my-8 flex justify-center items-center relative h-48">
                   {/* Крутящиеся цифровые кольца */}
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
-                    className="absolute w-44 h-44 border border-brand-blue-light/10 rounded-full flex items-center justify-center"
-                  />
-                  <motion.div
-                    animate={{ rotate: -360 }}
-                    transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-                    className="absolute w-36 h-36 border border-dashed border-gold/15 rounded-full"
-                  />
+                  <div className="absolute w-44 h-44 border border-brand-blue-light/10 rounded-full flex items-center justify-center animate-spin-slow" />
+                  <div className="absolute w-36 h-36 border border-dashed border-gold/15 rounded-full animate-spin-slow [animation-direction:reverse] [animation-duration:12s]" />
                   
                   {/* 3D Сакский щит с золотой оправой */}
                   <svg
@@ -192,35 +239,35 @@ export default function Security() {
                   </div>
                 </div>
               </GlassCard>
-            </motion.div>
+            </div>
           </div>
 
           {/* Правая сторона: Контент */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="lg:col-span-7 flex flex-col justify-center"
-          >
-            <motion.span variants={itemVariants} className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
-              SECURITY & COMPLIANCE
-            </motion.span>
+          <div className="lg:col-span-7 flex flex-col justify-center">
+            <div ref={headerRef}>
+              <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
+                SECURITY & COMPLIANCE
+              </span>
+              
+              <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6 leading-tight">
+                Институциональный класс <br />
+                <span className="text-gradient-gold font-medium">защиты данных</span>
+              </h2>
+            </div>
             
-            <motion.h2 variants={itemVariants} className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-8 leading-tight">
-              Институциональный класс <br />
-              <span className="text-gradient-gold font-medium">защиты данных</span>
-            </motion.h2>
-            
-            <motion.p variants={itemVariants} className="text-base text-zinc-400 font-sans font-light leading-relaxed mb-12">
-              Архитектура систем ЦЦР и Национального Банка РК строится на концепции «нулевого доверия» (Zero Trust). Все транзакции, межсистемные шлюзы и криптографические протоколы соответствуют государственным и международным регламентам информационной безопасности высшего уровня надежности.
-            </motion.p>
+            <TextReveal 
+              text="Архитектура систем ЦЦР и Национального Банка РК строится на концепции «нулевого доверия» (Zero Trust). Все транзакции, межсистемные шлюзы и криптографические протоколы соответствуют государственным и международным регламентам информационной безопасности высшего уровня надежности." 
+              className="mb-8"
+            />
 
             {/* Карточки фичей безопасности */}
             <div className="space-y-4">
               {securityFeatures.map((feat, idx) => {
                 return (
-                  <motion.div key={idx} variants={itemVariants}>
+                  <div 
+                    key={idx} 
+                    ref={addToRefs}
+                  >
                     <GlassCard
                       hoverAccent={feat.hoverAccent}
                       className="p-5 flex items-center justify-between border-white/5"
@@ -247,15 +294,16 @@ export default function Security() {
                         {feat.tag}
                       </span>
                     </GlassCard>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
-          </motion.div>
+          </div>
 
         </div>
       </div>
     </section>
   );
 }
+
 

@@ -2,7 +2,10 @@
 
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import Button from "@/components/ui/Button";
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "@/lib/gsap";
+import ShimmerButton from "@/components/ui/ShimmerButton";
 
 // Динамический импорт 3D-сцены для предотвращения ошибок SSR и повышения производительности при первой загрузке
 const HeroScene = dynamic(() => import("@/components/three/HeroScene"), {
@@ -15,6 +18,26 @@ const HeroScene = dynamic(() => import("@/components/three/HeroScene"), {
 });
 
 export default function Hero() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      // Параллакс-эффект ухода контента под экран при скролле
+      gsap.to(textRef.current, {
+        yPercent: -20,
+        opacity: 0.1,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    },
+    { scope: containerRef }
+  );
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -51,7 +74,10 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative w-full min-h-screen flex flex-col justify-center items-start overflow-hidden bg-[#08080a] pt-20">
+    <section 
+      ref={containerRef}
+      className="relative w-full min-h-screen flex flex-col justify-center items-start overflow-hidden bg-[#08080a] pt-20"
+    >
       {/* 3D Интерактивный бэкграунд */}
       <HeroScene />
 
@@ -60,7 +86,10 @@ export default function Hero() {
       <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[400px] h-[400px] rounded-full bg-gold/5 blur-[100px] pointer-events-none" />
 
       {/* Контентная область поверх 3D — строго асимметричное левое выравнивание */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 w-full text-left flex flex-col justify-center flex-grow py-12 md:py-24">
+      <div 
+        ref={textRef}
+        className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 w-full text-left flex flex-col justify-center flex-grow py-12 md:py-24"
+      >
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -100,9 +129,8 @@ export default function Hero() {
             variants={itemVariants}
             className="flex flex-col sm:flex-row items-center gap-4 justify-start w-full sm:w-auto"
           >
-            <Button
+            <ShimmerButton
               variant="gold"
-              size="lg"
               className="w-full sm:w-auto flex items-center justify-center gap-2 group hover-target"
               onClick={() => {
                 const target = document.getElementById("services");
@@ -121,10 +149,9 @@ export default function Hero() {
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
-            </Button>
-            <Button
+            </ShimmerButton>
+            <ShimmerButton
               variant="blue"
-              size="lg"
               className="w-full sm:w-auto flex items-center justify-center hover-target"
               onClick={() => {
                 const target = document.getElementById("about");
@@ -132,7 +159,7 @@ export default function Hero() {
               }}
             >
               О Центре
-            </Button>
+            </ShimmerButton>
           </motion.div>
         </motion.div>
       </div>
@@ -168,3 +195,4 @@ export default function Hero() {
     </section>
   );
 }
+

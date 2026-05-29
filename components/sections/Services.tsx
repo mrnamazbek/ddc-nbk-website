@@ -1,6 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "@/lib/gsap";
 import GlassCard from "@/components/ui/GlassCard";
 
 interface ServiceItem {
@@ -12,6 +14,58 @@ interface ServiceItem {
 }
 
 export default function Services() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement[]>([]);
+
+  cardsRef.current = [];
+
+  const addToRefs = (el: HTMLDivElement | null) => {
+    if (el && !cardsRef.current.includes(el)) {
+      cardsRef.current.push(el);
+    }
+  };
+
+  useGSAP(
+    () => {
+      // Анимация заголовка при появлении на экране
+      gsap.fromTo(
+        headerRef.current,
+        { opacity: 0, y: 35 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.0,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: headerRef.current,
+            start: "top 85%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+
+      // Плавное стагерное появление карточек услуг при скролле
+      gsap.fromTo(
+        cardsRef.current,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          stagger: 0.12,
+          duration: 1.2,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 75%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    },
+    { scope: containerRef }
+  );
+
   const services: ServiceItem[] = [
     {
       number: "01",
@@ -92,35 +146,12 @@ export default function Services() {
     },
   ];
 
-  const headerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const },
-    },
-  };
-
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const },
-    },
-  };
-
   return (
-    <section id="services" className="relative w-full py-24 sm:py-32 bg-[#08080a] overflow-hidden border-t border-white/5">
+    <section 
+      id="services" 
+      ref={containerRef}
+      className="relative w-full py-24 sm:py-32 bg-[#08080a] overflow-hidden border-t border-white/5"
+    >
       {/* Декоративный высокотехнологичный бэкграунд */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-blue/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gold/5 rounded-full blur-[120px] pointer-events-none" />
@@ -128,11 +159,8 @@ export default function Services() {
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         
         {/* Заголовок секции */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={headerVariants}
+        <div
+          ref={headerRef}
           className="text-left max-w-4xl mb-20"
         >
           <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
@@ -145,19 +173,17 @@ export default function Services() {
           <p className="text-zinc-400 font-sans font-light leading-relaxed max-w-2xl text-lg">
             АО «ЦЦР» формирует устойчивую цифровую экосистему финансового сектора Казахстана, сочетая технологическое превосходство и строгие государственные регламенты.
           </p>
-        </motion.div>
+        </div>
 
         {/* Сетка услуг Bento Grid с асимметричным дизайном */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => {
             return (
-              <motion.div key={index} variants={cardVariants} className="h-full group">
+              <div 
+                key={index} 
+                ref={addToRefs} 
+                className="h-full group"
+              >
                 <GlassCard 
                   hoverAccent={service.hoverAccent}
                   className="h-full flex flex-col p-8 justify-between relative"
@@ -199,10 +225,10 @@ export default function Services() {
                     </svg>
                   </div>
                 </GlassCard>
-              </motion.div>
+              </div>
             );
           })}
-        </motion.div>
+        </div>
         
       </div>
     </section>
