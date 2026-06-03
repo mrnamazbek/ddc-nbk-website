@@ -131,7 +131,7 @@ export default function Security() {
     <section 
       id="security" 
       ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-[#08080a] overflow-hidden border-t border-white/5"
+      className="relative w-full py-24 sm:py-32 bg-[#0E2419]/55 overflow-hidden border-t border-white/5"
     >
       {/* Background grid and glows */}
       <div className="absolute inset-0 bg-[radial-gradient(rgba(82,183,136,0.03)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />

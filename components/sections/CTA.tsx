@@ -51,7 +51,7 @@ export default function CTA() {
   return (
     <section 
       ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-[#08080a] overflow-hidden border-t border-white/5"
+      className="relative w-full py-24 sm:py-32 bg-[#0E2419]/55 overflow-hidden border-t border-white/5"
     >
       {/* Анимированный фоновый градиент (мягкие переливы в лесно-зеленом стиле DDC) */}
       <div className="absolute inset-0 bg-radial-[at_50%_50%] from-[#0F241A]/40 via-[#08080a] to-[#08080a] opacity-60 pointer-events-none" />

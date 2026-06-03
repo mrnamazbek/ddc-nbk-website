@@ -1,22 +1,11 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import ShimmerButton from "@/components/ui/ShimmerButton";
 import Magnetic from "@/components/motion/Magnetic";
-
-// Динамический импорт 3D-сцены для предотвращения ошибок SSR и повышения производительности при первой загрузке
-const HeroScene = dynamic(() => import("@/components/three/HeroScene"), {
-  ssr: false,
-  loading: () => (
-    <div className="absolute inset-0 bg-[#08080a] flex items-center justify-center">
-      <div className="w-16 h-16 border-2 border-forest-light border-t-gold rounded-full animate-spin" />
-    </div>
-  ),
-});
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -77,10 +66,10 @@ export default function Hero() {
   return (
     <section 
       ref={containerRef}
-      className="relative w-full min-h-screen flex flex-col justify-center items-start overflow-hidden bg-[#08080a] pt-20"
+      className="relative w-full min-h-screen flex flex-col justify-center items-start overflow-hidden bg-transparent pt-20"
     >
-      {/* 3D Интерактивный бэкграунд */}
-      <HeroScene />
+      {/* Левый градиент-скрим для читаемости текста поверх живой 3D-сцены */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0E2419]/85 via-[#0E2419]/30 to-transparent pointer-events-none" />
 
       {/* Мягкие фоновые свечения для премиальной глубины */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-forest/15 blur-[120px] pointer-events-none" />

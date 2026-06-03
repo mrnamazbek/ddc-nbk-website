@@ -150,7 +150,7 @@ export default function Services() {
     <section 
       id="services" 
       ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-[#08080a] overflow-hidden border-t border-white/5"
+      className="relative w-full py-24 sm:py-32 bg-[#0E2419]/55 overflow-hidden border-t border-white/5"
     >
       {/* Tech ambient background glows */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-forest/5 rounded-full blur-[140px] pointer-events-none" />

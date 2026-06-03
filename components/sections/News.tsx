@@ -73,7 +73,7 @@ export default function News() {
   };
 
   return (
-    <section id="news" className="relative w-full py-24 sm:py-32 bg-[#08080a] overflow-hidden border-t border-white/5">
+    <section id="news" className="relative w-full py-24 sm:py-32 bg-[#0E2419]/55 overflow-hidden border-t border-white/5">
       {/* Brand ambient glow */}
       <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] pointer-events-none" />

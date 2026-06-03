@@ -103,7 +103,7 @@ export default function Stats() {
   };
 
   return (
-    <section id="stats" className="relative w-full py-24 sm:py-32 bg-[#08080a] overflow-hidden border-t border-white/[0.05]">
+    <section id="stats" className="relative w-full py-24 sm:py-32 bg-[#0E2419]/55 overflow-hidden border-t border-white/[0.05]">
       {/* Декоративная фоновая сетка в зеленых тонах */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#1A3D2B03_1px,transparent_1px),linear-gradient(to_bottom,#1A3D2B03_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
 

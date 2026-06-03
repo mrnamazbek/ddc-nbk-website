@@ -24,6 +24,10 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       smoothWheel: true,
     });
 
+    // Expose the instance for programmatic scroll control (debugging the
+    // scroll-driven 3D acts, deep-linking to a section, etc.). Harmless in prod.
+    (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
+
     // Synchronize ScrollTrigger with Lenis scroll events
     const updateScrollTrigger = () => {
       ScrollTrigger.update();
