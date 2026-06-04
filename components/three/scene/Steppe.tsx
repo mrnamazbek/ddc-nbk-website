@@ -2,6 +2,7 @@
 
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { getScroll } from "@/lib/scrollStore";
 import { ACTS, band, lerp, range, smoothstep } from "@/lib/sceneMath";
@@ -21,45 +22,49 @@ function ridgeGeometry(width: number, peaks: number, height: number, seed: numbe
   return new THREE.ExtrudeGeometry(shape, { depth: 0.1, bevelEnabled: false });
 }
 
-/* ----- The berkut (golden eagle): a stylized flapping silhouette ----- */
+/* ----- The berkut (golden eagle): the AI-rendered gold asset as a luminous
+   additive billboard. Black background drops out automatically under additive
+   blending, so the eagle reads as a glowing apparition gliding over the steppe. */
 function Eagle() {
   const group = useRef<THREE.Group>(null);
-  const lWing = useRef<THREE.Mesh>(null);
-  const rWing = useRef<THREE.Mesh>(null);
-  const mat = useMemo(
-    () =>
-      new THREE.MeshBasicMaterial({ color: "#E8C87A", transparent: true, toneMapped: false, side: THREE.DoubleSide }),
-    []
-  );
-  const wing = useMemo(() => {
-    const s = new THREE.Shape();
-    s.moveTo(0, 0);
-    s.quadraticCurveTo(1.4, 0.5, 2.6, 0.05);
-    s.quadraticCurveTo(1.5, -0.15, 0, -0.2);
-    return new THREE.ShapeGeometry(s);
-  }, []);
+  const tex = useTexture("/images/3d/burkit-eagle-gold.png");
+  const mat = useMemo(() => {
+    tex.colorSpace = THREE.SRGBColorSpace;
+    return new THREE.MeshBasicMaterial({
+      map: tex,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      toneMapped: false,
+      opacity: 0,
+    });
+  }, [tex]);
 
   useFrame((three) => {
-    if (!group.current || !lWing.current || !rWing.current) return;
+    if (!group.current) return;
     const p = getScroll().smooth;
-    // Flies across once during Act 6.
+    const t = three.clock.getElapsedTime();
+    // Glides across once during Act 6.
     const cross = range(p, ACTS.steppe[0] + 0.01, ACTS.steppe[1] - 0.01);
-    const presence = band(p, ACTS.steppe[0], ACTS.steppe[1], 0.04);
-    mat.opacity = presence;
+    const presence = band(p, ACTS.steppe[0], ACTS.steppe[1], 0.05);
+    mat.opacity = presence * 0.95;
     group.current.visible = presence > 0.001;
-    group.current.position.set(lerp(-9, 9, cross), 2.2 + Math.sin(cross * Math.PI) * 1.2, -3);
-    const flap = Math.sin(three.clock.getElapsedTime() * 6) * 0.5;
-    lWing.current.rotation.z = flap;
-    rWing.current.rotation.z = -flap;
+    group.current.position.set(
+      lerp(-10, 10, cross),
+      2.4 + Math.sin(cross * Math.PI) * 1.4,
+      -3
+    );
+    // Gentle "soaring" life: slight bank + breathing scale (static image).
+    group.current.rotation.z = Math.sin(t * 1.5) * 0.06 + (cross - 0.5) * 0.2;
+    const s = 4.4 + Math.sin(t * 2.2) * 0.12;
+    group.current.scale.set(s, s, s);
   });
 
   return (
     <group ref={group} visible={false}>
       <mesh material={mat}>
-        <capsuleGeometry args={[0.12, 0.6, 4, 8]} />
+        <planeGeometry args={[1, 1]} />
       </mesh>
-      <mesh ref={lWing} geometry={wing} material={mat} />
-      <mesh ref={rWing} geometry={wing} material={mat} scale={[-1, 1, 1]} />
     </group>
   );
 }

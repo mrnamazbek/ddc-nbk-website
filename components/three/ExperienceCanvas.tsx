@@ -7,7 +7,8 @@ import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
 
 import { startScrollTracking } from "@/lib/scrollStore";
-import Shanyrak from "./Shanyrak";
+import ShanyrakBillboard from "./scene/ShanyrakBillboard";
+import CoinBillboard from "./scene/CoinBillboard";
 import MorphObjects from "./scene/MorphObjects";
 import Steppe from "./scene/Steppe";
 import GoldDust from "./scene/GoldDust";
@@ -44,7 +45,8 @@ function SceneContents({ quality }: { quality: Quality }) {
       </Environment>
 
       <CameraRig />
-      <Shanyrak />
+      <ShanyrakBillboard />
+      <CoinBillboard />
       <MorphObjects />
       <Steppe />
       <GoldDust count={quality === "low" ? 1400 : 4200} />

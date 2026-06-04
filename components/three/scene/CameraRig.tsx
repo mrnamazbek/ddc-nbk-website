@@ -27,8 +27,10 @@ const KEYS: Key[] = [
   { at: 0.45, pos: [0, 0, 5.5], look: [0, 0, 0] }, // A3: centered, tracking the coin
   { at: 0.6, pos: [0, 1.2, 9], look: [0, 0, 0] }, // A4: pulled back, vault in the hall
   { at: 0.75, pos: [0, 0, 1.5], look: [0, 0, -6] }, // A5: diving through the data stream
-  { at: 0.9, pos: [0, 1.6, 9], look: [0, -1, -6] }, // A6: low, gazing at steppe horizon
-  { at: 1.0, pos: [0, 0, 7], look: [0, 0, 0] }, // A7: settle on the returned shanyrak
+  { at: 0.86, pos: [0, 1.5, 9], look: [0, -0.9, -6] }, // A6: low, gazing at steppe horizon
+  { at: 0.92, pos: [0, 0.6, 8.4], look: [0, -0.2, -2] }, // A6→A7: lifting back toward the crown
+  { at: 0.96, pos: [0, 0.1, 7.3], look: [0, 0, 0] }, // A7: shanyrak centered behind the CTA
+  { at: 1.0, pos: [0, 0, 6.6], look: [0, 0, 0] }, // A7: settled — full glory
 ];
 
 export default function CameraRig() {

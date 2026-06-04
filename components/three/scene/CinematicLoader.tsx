@@ -29,42 +29,46 @@ export default function CinematicLoader() {
   return (
     <div
       aria-hidden
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#0E2419] transition-opacity duration-700"
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#070f0a] transition-opacity duration-700"
       style={{ opacity: done ? 0 : 1, pointerEvents: done ? "none" : "auto" }}
     >
-      <div className="relative w-40 h-40">
-        <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
-          <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(201,168,76,0.15)" strokeWidth="2" />
+      <div className="relative w-52 h-52">
+        {/* The gold shanyrak materialising — brightens + settles as it loads */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/3d/shanyrak-gold.png"
+          alt=""
+          className="absolute inset-0 w-full h-full object-contain"
+          style={{
+            // 'screen' blend drops the asset's black background against the
+            // near-black loader bg, so only the gold crown shows.
+            mixBlendMode: "screen",
+            opacity: 0.2 + (progress / 100) * 0.8,
+            transform: `scale(${0.82 + (progress / 100) * 0.18}) rotate(${(1 - progress / 100) * -25}deg)`,
+            filter: `brightness(${0.85 + (progress / 100) * 0.55}) contrast(1.05)`,
+            transition: "opacity 0.1s linear",
+          }}
+        />
+        {/* Progress ring framing the crown */}
+        <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full -rotate-90">
           <circle
             cx="50"
             cy="50"
-            r="44"
+            r="48"
             fill="none"
             stroke="#C9A84C"
-            strokeWidth="2.5"
+            strokeWidth="0.8"
             strokeLinecap="round"
-            strokeDasharray={2 * Math.PI * 44}
-            strokeDashoffset={2 * Math.PI * 44 * (1 - progress / 100)}
-            style={{ filter: "drop-shadow(0 0 6px rgba(232,200,122,0.8))" }}
+            strokeDasharray={2 * Math.PI * 48}
+            strokeDashoffset={2 * Math.PI * 48 * (1 - progress / 100)}
+            style={{ filter: "drop-shadow(0 0 4px rgba(232,200,122,0.9))" }}
           />
         </svg>
-        {/* radial spokes evoking the shanyrak crown */}
-        <div className="absolute inset-0 flex items-center justify-center rotate-90">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <span
-              key={i}
-              className="absolute w-px h-7 bg-gradient-to-t from-transparent to-gold/60"
-              style={{ transform: `rotate(${i * 30}deg) translateY(-46px)`, opacity: progress / 100 }}
-            />
-          ))}
-        </div>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="font-mono text-gold-light text-lg tracking-widest tabular-nums">{progress}%</span>
-        </div>
       </div>
-      <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.4em] text-gold/50">
-        Formation
-      </p>
+      <div className="mt-8 flex flex-col items-center gap-2">
+        <span className="font-mono text-gold-light text-base tracking-[0.3em] tabular-nums">{progress}%</span>
+        <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-gold/50">Шаңырақ • Formation</p>
+      </div>
     </div>
   );
 }

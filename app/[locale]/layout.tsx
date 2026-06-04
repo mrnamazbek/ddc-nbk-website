@@ -4,6 +4,7 @@ import "../globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import CustomCursor from "@/components/ui/CustomCursor";
+import MatrixCursorTrail from "@/components/ui/MatrixCursorTrail";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin", "cyrillic"],
@@ -51,6 +52,7 @@ export default async function LocaleLayout({
       <body className="min-h-full flex flex-col bg-[#08080a] text-white">
         <NextIntlClientProvider messages={messages}>
           <CustomCursor />
+          <MatrixCursorTrail />
           {children}
         </NextIntlClientProvider>
       </body>
