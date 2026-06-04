@@ -6,6 +6,7 @@ import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { getScroll } from "@/lib/scrollStore";
 import { ACTS, band, lerp, range, smoothstep } from "@/lib/sceneMath";
+import { useBillboardVideo } from "./useBillboardVideo";
 
 /** A single jagged mountain-ridge silhouette as a thin extruded shape. */
 function ridgeGeometry(width: number, peaks: number, height: number, seed: number) {
@@ -28,17 +29,19 @@ function ridgeGeometry(width: number, peaks: number, height: number, seed: numbe
 function Eagle() {
   const group = useRef<THREE.Group>(null);
   const tex = useTexture("/images/3d/burkit-eagle-gold.png");
+  const videoTex = useBillboardVideo("/video/3d/burkit-eagle-gold.mp4");
+
   const mat = useMemo(() => {
     tex.colorSpace = THREE.SRGBColorSpace;
     return new THREE.MeshBasicMaterial({
-      map: tex,
+      map: videoTex || tex,
       transparent: true,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
       toneMapped: false,
       opacity: 0,
     });
-  }, [tex]);
+  }, [tex, videoTex]);
 
   useFrame((three) => {
     if (!group.current) return;

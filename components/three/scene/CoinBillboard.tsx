@@ -6,6 +6,7 @@ import { Billboard, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { getScroll } from "@/lib/scrollStore";
 import { ACTS, band, lerp, range, smoothstep } from "@/lib/sceneMath";
+import { useBillboardVideo } from "./useBillboardVideo";
 
 const SRC = "/images/3d/tenge-coin-gold.png";
 useTexture.preload(SRC);
@@ -19,10 +20,12 @@ export default function CoinBillboard() {
   const group = useRef<THREE.Group>(null);
   const spin = useRef<THREE.Mesh>(null);
   const tex = useTexture(SRC);
+  const videoTex = useBillboardVideo("/video/3d/tenge-coin-gold.mp4");
+
   const mat = useMemo(() => {
     tex.colorSpace = THREE.SRGBColorSpace;
     return new THREE.MeshBasicMaterial({
-      map: tex,
+      map: videoTex || tex,
       transparent: true,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
@@ -30,7 +33,7 @@ export default function CoinBillboard() {
       toneMapped: false,
       opacity: 0,
     });
-  }, [tex]);
+  }, [tex, videoTex]);
 
   useFrame((three) => {
     if (!group.current || !spin.current) return;
@@ -43,10 +46,13 @@ export default function CoinBillboard() {
 
     const grow = smoothstep(range(p, ACTS.coin[0] - 0.04, ACTS.coin[0] + 0.05));
     const breathe = 1 + Math.sin(t * 1.3) * 0.03;
-    group.current.scale.setScalar(lerp(1.2, 4.2, grow) * breathe);
+    // Enlarge the letterboxed video to match the PNG framing (black padding is
+    // invisible under additive blending).
+    const fill = videoTex ? 1.7 : 1;
+    group.current.scale.setScalar(lerp(1.2, 4.2, grow) * breathe * fill);
 
-    // Tumble in-plane + a slow scroll-coupled turn so it "reveals" as you read.
-    spin.current.rotation.z = t * 0.35 + p * 12;
+    // The coin video already tumbles in 3D; only spin the flat plane for the PNG.
+    spin.current.rotation.z = videoTex ? 0 : t * 0.35 + p * 12;
   });
 
   return (

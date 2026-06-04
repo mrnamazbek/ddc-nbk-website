@@ -6,6 +6,7 @@ import { Billboard, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { getScroll } from "@/lib/scrollStore";
 import { ACTS, band, lerp, range, smoothstep, easeOutExpo } from "@/lib/sceneMath";
+import { useBillboardVideo } from "./useBillboardVideo";
 
 const SRC = "/images/3d/shanyrak-gold.png";
 useTexture.preload(SRC);
@@ -22,10 +23,12 @@ export default function ShanyrakBillboard() {
   const group = useRef<THREE.Group>(null);
   const spin = useRef<THREE.Mesh>(null);
   const tex = useTexture(SRC);
+  const videoTex = useBillboardVideo("/video/3d/shanyrak-gold.mp4");
+
   const mat = useMemo(() => {
     tex.colorSpace = THREE.SRGBColorSpace;
     return new THREE.MeshBasicMaterial({
-      map: tex,
+      map: videoTex || tex,
       transparent: true,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
@@ -33,7 +36,7 @@ export default function ShanyrakBillboard() {
       toneMapped: false,
       opacity: 0,
     });
-  }, [tex]);
+  }, [tex, videoTex]);
 
   useFrame((three, dt) => {
     if (!group.current || !spin.current) return;
@@ -64,10 +67,14 @@ export default function ShanyrakBillboard() {
 
     group.current.visible = presence > 0.002;
     group.current.position.set(0, y, 0);
-    group.current.scale.setScalar(5 * scale * breathe);
+    // The video is letterboxed (object ~56% of the square), so enlarge it to
+    // match the PNG's framing; the padding is black → invisible under additive.
+    const fill = videoTex ? 1.7 : 1;
+    group.current.scale.setScalar(5 * scale * breathe * fill);
 
-    // Slow sacred rotation in the view plane + a touch of cursor parallax.
-    spin.current.rotation.z = t * 0.05;
+    // The video already carries baked 3D rotation; only add the flat in-view
+    // spin for the PNG fallback so we don't double up the motion.
+    spin.current.rotation.z = videoTex ? 0 : t * 0.05;
     group.current.position.x = THREE.MathUtils.damp(group.current.position.x, three.pointer.x * 0.5, 3, dt);
   });
 
