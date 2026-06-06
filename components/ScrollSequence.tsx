@@ -43,7 +43,7 @@ export default function ScrollSequence({
   useEffect(() => {
     startScrollTracking();
     const dir = isMobile ? mobileDir : desktopDir;
-    let totalAssets = totalFrames + 3; // Кадры + 3 PNG ассета
+    const totalAssets = totalFrames + 3; // Кадры + 3 PNG ассета
     let loadedCount = 0;
 
     const incrementProgress = () => {
