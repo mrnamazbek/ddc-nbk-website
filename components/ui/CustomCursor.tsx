@@ -9,20 +9,41 @@ export default function CustomCursor() {
   const [isVisible, setIsVisible] = useState(false);
   const [isLowPower, setIsLowPower] = useState(false);
 
+  // Решаем, нужно ли вообще показывать кастомный курсор. Отключаем его на
+  // touch / coarse-устройствах, на узких экранах и — согласно ux-guidelines
+  // #9/#99 — когда пользователь предпочитает уменьшенное движение
+  // (prefers-reduced-motion). В этих случаях возвращаем системный курсор.
   useEffect(() => {
-    // 1. Проверяем режим низкого энергопотребления или слабые мобильные устройства
-    const checkLowPower = () => {
-      const isMobile = window.innerWidth <= 1024 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      const hasCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
-      
-      if (isMobile || hasCoarsePointer) {
-        setIsLowPower(true);
-      }
+    const reduceMq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const coarseMq = window.matchMedia("(pointer: coarse)");
+
+    const detect = () => {
+      const isMobile =
+        window.innerWidth <= 1024 ||
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      setIsLowPower(isMobile || coarseMq.matches || reduceMq.matches);
     };
 
-    checkLowPower();
-    window.addEventListener("resize", checkLowPower);
+    detect();
+    window.addEventListener("resize", detect);
+    reduceMq.addEventListener("change", detect);
+    coarseMq.addEventListener("change", detect);
 
+    return () => {
+      window.removeEventListener("resize", detect);
+      reduceMq.removeEventListener("change", detect);
+      coarseMq.removeEventListener("change", detect);
+    };
+  }, []);
+
+  // Класс .low-power на <body> возвращает нативный курсор (см. globals.css),
+  // чтобы при отключённом кастомном курсоре указатель не пропадал.
+  useEffect(() => {
+    document.body.classList.toggle("low-power", isLowPower);
+    return () => document.body.classList.remove("low-power");
+  }, [isLowPower]);
+
+  useEffect(() => {
     if (isLowPower) return;
 
     // Координаты мыши (текущие и сглаженные для эффекта лерпа/затухания)
@@ -32,20 +53,29 @@ export default function CustomCursor() {
     let cursorY = 0;
     let dotX = 0;
     let dotY = 0;
+    let visible = false;
     let animationFrameId: number;
+
+    const show = () => {
+      if (!visible) {
+        visible = true;
+        setIsVisible(true);
+      }
+    };
 
     const onMouseMove = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      if (!isVisible) setIsVisible(true);
+      show();
     };
 
     const onMouseLeave = () => {
+      visible = false;
       setIsVisible(false);
     };
 
     const onMouseEnter = () => {
-      setIsVisible(true);
+      show();
     };
 
     // Глобальное отслеживание ховера на ссылки и кнопки для изменения размера курсора
@@ -54,7 +84,7 @@ export default function CustomCursor() {
       if (!target) return;
 
       const interactiveEl = target.closest("a, button, select, input, [role='button'], .hover-target");
-      
+
       if (interactiveEl) {
         // Проверяем, имеет ли элемент золотой акцент или специальный класс
         if (
@@ -75,19 +105,19 @@ export default function CustomCursor() {
     // requestAnimationFrame цикл для ультра-плавного движения
     const render = () => {
       // Разная степень сглаживания (lerp) для создания красивого эффекта отставания внешнего кольца
-      const easeOuter = 0.08; 
-      const easeInner = 0.35; 
-      
+      const easeOuter = 0.08;
+      const easeInner = 0.35;
+
       cursorX += (mouseX - cursorX) * easeOuter;
       cursorY += (mouseY - cursorY) * easeOuter;
-      
+
       dotX += (mouseX - dotX) * easeInner;
       dotY += (mouseY - dotY) * easeInner;
 
       if (cursorRef.current) {
         cursorRef.current.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
       }
-      
+
       if (dotRef.current) {
         dotRef.current.style.transform = `translate3d(${dotX}px, ${dotY}px, 0)`;
       }
@@ -108,10 +138,9 @@ export default function CustomCursor() {
       document.removeEventListener("mouseleave", onMouseLeave);
       document.removeEventListener("mouseenter", onMouseEnter);
       window.removeEventListener("mouseover", onMouseOver);
-      window.removeEventListener("resize", checkLowPower);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [isVisible, isLowPower]);
+  }, [isLowPower]);
 
   if (isLowPower) return null;
 
