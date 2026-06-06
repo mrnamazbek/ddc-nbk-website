@@ -15,6 +15,8 @@ import GoldDust from "./scene/GoldDust";
 import CameraRig from "./scene/CameraRig";
 import CinematicLoader from "./scene/CinematicLoader";
 
+import ScrollSequence from "@/components/ScrollSequence";
+
 type Quality = "high" | "low" | "off";
 
 function detectQuality(): Quality {
@@ -49,14 +51,12 @@ function SceneContents({ quality }: { quality: Quality }) {
       <CoinBillboard />
       <MorphObjects />
       <Steppe />
-      <GoldDust count={quality === "low" ? 1400 : 4200} />
+      <GoldDust count={4200} />
 
-      {quality === "high" && (
-        <EffectComposer>
-          <Bloom intensity={1.15} luminanceThreshold={0.55} luminanceSmoothing={0.3} mipmapBlur radius={0.7} />
-          <Vignette eskil={false} offset={0.25} darkness={0.85} />
-        </EffectComposer>
-      )}
+      <EffectComposer>
+        <Bloom intensity={1.15} luminanceThreshold={0.55} luminanceSmoothing={0.3} mipmapBlur radius={0.7} />
+        <Vignette eskil={false} offset={0.25} darkness={0.85} />
+      </EffectComposer>
     </>
   );
 }
@@ -76,13 +76,9 @@ export default function ExperienceCanvas() {
     return <div className="fixed inset-0 z-0 bg-[#0E2419]" />;
   }
 
-  // Reduced-motion: static gold-on-forest hero, no WebGL, no scroll drive.
-  if (quality === "off") {
-    return (
-      <div className="fixed inset-0 z-0 bg-[#0E2419]">
-        <div className="absolute left-1/2 top-1/3 h-[60vh] w-[60vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(201,168,76,0.28),transparent_65%)]" />
-      </div>
-    );
+  // На мобильных (low) или при отключенных анимациях (off) используем оптимизированный 2D ScrollSequence
+  if (quality === "low" || quality === "off") {
+    return <ScrollSequence />;
   }
 
   return (
@@ -90,7 +86,7 @@ export default function ExperienceCanvas() {
       <CinematicLoader />
       <div className="fixed inset-0 z-0 pointer-events-none">
         <Canvas
-          dpr={quality === "low" ? [1, 1.5] : [1, 2]}
+          dpr={[1, 2]}
           camera={{ position: [0, 0, 11], fov: 50 }}
           gl={{ antialias: true, powerPreference: "high-performance" }}
           onCreated={({ gl }) => {

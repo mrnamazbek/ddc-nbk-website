@@ -75,6 +75,7 @@ export default function CTA() {
         >
           <GlassCard 
             hoverAccent="gold"
+            variant="liquid-strong"
             className="border-white/5 p-8 sm:p-16 relative overflow-hidden shadow-2xl"
           >
             {/* Световой блик внутри панели */}

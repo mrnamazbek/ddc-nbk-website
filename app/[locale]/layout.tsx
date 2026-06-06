@@ -53,6 +53,8 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <CustomCursor />
           <MatrixCursorTrail />
+          {/* Faint grain overlay (opacity 0.03) for organic texture */}
+          <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] bg-[url('/images/textures/bg-texture-noise.png')] bg-repeat" />
           {children}
         </NextIntlClientProvider>
       </body>

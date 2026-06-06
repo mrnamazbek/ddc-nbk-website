@@ -8,6 +8,7 @@ interface GlassCardProps {
   className?: string;
   isTiltEnabled?: boolean;
   hoverAccent?: "gold" | "forest" | "default";
+  variant?: "glass" | "liquid" | "liquid-strong";
 }
 
 export default function GlassCard({
@@ -15,6 +16,7 @@ export default function GlassCard({
   className = "",
   isTiltEnabled = true,
   hoverAccent = "default",
+  variant = "liquid",
 }: GlassCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
@@ -75,6 +77,12 @@ export default function GlassCard({
     ? "radial-gradient(circle, rgba(201, 168, 76, 0.22) 0%, rgba(201, 168, 76, 0) 75%)"
     : "radial-gradient(circle, rgba(82, 183, 136, 0.22) 0%, rgba(82, 183, 136, 0) 75%)";
 
+  const glassClass = variant === "liquid-strong" 
+    ? "liquid-glass-strong" 
+    : variant === "liquid" 
+    ? "liquid-glass" 
+    : "glass-card";
+
   return (
     <motion.div
       ref={cardRef}
@@ -86,7 +94,7 @@ export default function GlassCard({
         transformStyle: "preserve-3d",
       }}
       data-hover={hoverAccent === "gold" ? "gold" : "forest"}
-      className={`glass-card spotlight-card p-6 ${accentClasses[hoverAccent]} ${className}`}
+      className={`${glassClass} spotlight-card p-6 ${accentClasses[hoverAccent]} ${className}`}
     >
       {/* Эффект Spotlight Border (светящийся синий или золотой ореол, следующий за мышкой) */}
       <div

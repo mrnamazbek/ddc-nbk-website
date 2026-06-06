@@ -98,10 +98,10 @@ export default function Hero() {
           <div className="overflow-hidden mb-8">
             <motion.h1
               variants={textRowVariants}
-              className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-light tracking-tight leading-[1.02] text-white"
+              className="font-display italic text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-light tracking-tight leading-[1.02] text-white"
             >
               Формируя <br />
-              <span className="text-gradient-forest font-medium">цифровое будущее</span> <br />
+              <span className="text-gradient-forest font-medium not-italic">цифровое будущее</span> <br />
               финансовой экосистемы
             </motion.h1>
           </div>
@@ -109,7 +109,7 @@ export default function Hero() {
           {/* Подзаголовок на Inter */}
           <motion.p
             variants={itemVariants}
-            className="text-base sm:text-lg lg:text-xl text-zinc-400 font-sans font-light leading-relaxed max-w-2xl mb-12"
+            className="text-base sm:text-lg lg:text-xl text-white/70 font-sans font-light leading-relaxed max-w-2xl mb-12"
           >
             Разработка суверенных инфраструктурных решений, внедрение Цифрового Тенге и обеспечение государственной информационной безопасности для процветания Республики Казахстан.
           </motion.p>
