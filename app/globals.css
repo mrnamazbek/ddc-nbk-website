@@ -187,41 +187,71 @@ body {
    ========================================== */
 
 /* CUSTOM CURSOR */
+.custom-cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-forest-light);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 100000;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+  display: none;
+}
+
 #custom-cursor {
   position: fixed;
   top: 0;
   left: 0;
-  width: 32px;
-  height: 32px;
-  border: 2px solid var(--color-forest-light);
-  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  color: var(--color-forest-light);
   pointer-events: none;
   z-index: 99999;
   transform: translate(-50%, -50%);
-  mix-blend-mode: difference;
-  transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s;
   will-change: transform;
   display: none;
 }
 
 @media (min-width: 1025px) {
+  body:not(.low-power) .custom-cursor-dot,
   body:not(.low-power) #custom-cursor {
     display: block;
   }
 }
 
+/* Эффекты при наведении (Hover States) */
+.custom-cursor-dot.hovered {
+  background-color: var(--color-forest-light);
+  transform: translate(-50%, -50%) scale(1.5);
+  box-shadow: 0 0 10px rgba(82, 183, 136, 0.5);
+}
+
+.custom-cursor-dot.hovered-gold {
+  background-color: var(--color-gold);
+  transform: translate(-50%, -50%) scale(1.5);
+  box-shadow: 0 0 10px rgba(201, 168, 76, 0.5);
+}
+
 #custom-cursor.hovered {
   width: 64px;
   height: 64px;
-  background-color: rgba(82, 183, 136, 0.1);
-  border-color: rgba(82, 183, 136, 0.8);
+  color: var(--color-forest-light);
 }
 
 #custom-cursor.hovered-gold {
   width: 64px;
   height: 64px;
-  background-color: rgba(201, 168, 76, 0.1);
-  border-color: rgba(201, 168, 76, 0.8);
+  color: var(--color-gold);
+}
+
+/* Медленное вращение купола шанырака при наведении */
+#custom-cursor.hovered svg,
+#custom-cursor.hovered-gold svg {
+  animation: spin 16s linear infinite;
 }
 
 /* LIQUID GLASS CARD (APPLE LIQUID GLASS & GLASSMOPHISM) */

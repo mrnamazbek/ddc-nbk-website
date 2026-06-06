@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
+  const dotRef = useRef<HTMLDivElement>(null);
   const [hoverState, setHoverState] = useState<"none" | "default" | "gold">("none");
   const [isVisible, setIsVisible] = useState(false);
   const [isLowPower, setIsLowPower] = useState(false);
@@ -29,6 +30,8 @@ export default function CustomCursor() {
     let mouseY = 0;
     let cursorX = 0;
     let cursorY = 0;
+    let dotX = 0;
+    let dotY = 0;
     let animationFrameId: number;
 
     const onMouseMove = (e: MouseEvent) => {
@@ -71,13 +74,22 @@ export default function CustomCursor() {
 
     // requestAnimationFrame цикл для ультра-плавного движения
     const render = () => {
-      // Формула сглаживания (lerp): плавно подтягиваем курсор к мыши
-      const ease = 0.12; 
-      cursorX += (mouseX - cursorX) * ease;
-      cursorY += (mouseY - cursorY) * ease;
+      // Разная степень сглаживания (lerp) для создания красивого эффекта отставания внешнего кольца
+      const easeOuter = 0.08; 
+      const easeInner = 0.35; 
+      
+      cursorX += (mouseX - cursorX) * easeOuter;
+      cursorY += (mouseY - cursorY) * easeOuter;
+      
+      dotX += (mouseX - dotX) * easeInner;
+      dotY += (mouseY - dotY) * easeInner;
 
       if (cursorRef.current) {
         cursorRef.current.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
+      }
+      
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate3d(${dotX}px, ${dotY}px, 0)`;
       }
 
       animationFrameId = requestAnimationFrame(render);
@@ -104,18 +116,46 @@ export default function CustomCursor() {
   if (isLowPower) return null;
 
   return (
-    <div
-      ref={cursorRef}
-      id="custom-cursor"
-      className={`
-        ${hoverState === "default" ? "hovered" : ""}
-        ${hoverState === "gold" ? "hovered-gold" : ""}
-      `}
-      style={{
-        opacity: isVisible ? 1 : 0,
-        display: isVisible ? "block" : "none",
-        transition: "width 0.3s ease, height 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, opacity 0.2s ease"
-      }}
-    />
+    <>
+      {/* Точка-указатель (без задержки для мгновенного отклика) */}
+      <div
+        ref={dotRef}
+        className={`custom-cursor-dot ${
+          hoverState === "default" ? "hovered" : ""
+        } ${hoverState === "gold" ? "hovered-gold" : ""}`}
+        style={{
+          opacity: isVisible ? 1 : 0,
+          display: isVisible ? "block" : "none",
+          transition: "background-color 0.3s ease, scale 0.3s ease, opacity 0.2s ease"
+        }}
+      />
+      {/* Внешний интерактивный Шанырак (с плавным шлейфом/задержкой) */}
+      <div
+        ref={cursorRef}
+        id="custom-cursor"
+        className={`
+          ${hoverState === "default" ? "hovered" : ""}
+          ${hoverState === "gold" ? "hovered-gold" : ""}
+        `}
+        style={{
+          opacity: isVisible ? 1 : 0,
+          display: isVisible ? "block" : "none",
+          transition: "width 0.3s ease, height 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, opacity 0.2s ease"
+        }}
+      >
+        <svg width="100%" height="100%" viewBox="0 0 40 40" className="shanyrak-cursor-svg">
+          {/* Внешний круг шанырака */}
+          <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="1.5" fill="none" />
+          {/* Вертикальная и горизонтальная направляющие */}
+          <path d="M 20 2 L 20 38" stroke="currentColor" strokeWidth="0.8" fill="none" opacity="0.4" />
+          <path d="M 2 20 L 38 20" stroke="currentColor" strokeWidth="0.8" fill="none" opacity="0.4" />
+          {/* Скрещенные изогнутые спицы шанырака (кульдреуши) */}
+          <path d="M 7.27 7.27 C 12 12, 12 28, 7.27 32.73" stroke="currentColor" strokeWidth="0.8" fill="none" opacity="0.35" />
+          <path d="M 32.73 7.27 C 28 12, 28 28, 32.73 32.73" stroke="currentColor" strokeWidth="0.8" fill="none" opacity="0.35" />
+          <path d="M 7.27 7.27 C 12 12, 28 12, 32.73 7.27" stroke="currentColor" strokeWidth="0.8" fill="none" opacity="0.35" />
+          <path d="M 7.27 32.73 C 12 28, 28 28, 32.73 32.73" stroke="currentColor" strokeWidth="0.8" fill="none" opacity="0.35" />
+        </svg>
+      </div>
+    </>
   );
 }

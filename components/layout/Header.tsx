@@ -51,13 +51,13 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1300px] transition-all duration-500 rounded-full ${
           isScrolled
-            ? "liquid-glass border-b border-white/5 py-4"
-            : "bg-transparent py-6"
+            ? "liquid-glass shadow-2xl py-3 px-6 sm:px-8"
+            : "bg-white/[0.01] border border-white/[0.05] py-4 px-6 sm:px-8 backdrop-blur-sm"
         }`}
       >
-        <div className="max-w-[1440px] mx-auto px-[clamp(16px,5vw,80px)] flex items-center justify-between">
+        <div className="w-full flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group select-none">
             {/* Heraldic Shield in Saka style (abstract SVG) */}
@@ -94,23 +94,24 @@ export default function Header() {
           </Link>
 
           {/* Desktop menu */}
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-1 bg-black/20 border border-white/[0.04] p-1 rounded-full backdrop-blur-md relative">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`font-heading text-sm transition-colors relative py-1 hover:text-white ${
-                    isActive ? "text-white font-medium" : "text-gray-light"
+                  className={`font-heading text-sm tracking-wide transition-all duration-300 relative px-4 py-1.5 rounded-full hover:text-white flex items-center justify-center ${
+                    isActive ? "text-white font-medium" : "text-gray-light hover:bg-white/[0.02]"
                   }`}
                 >
-                  {link.name}
-                  {/* Smooth hover indicator */}
+                  <span className="relative z-10">{link.name}</span>
+                  {/* Smooth active glass indicator */}
                   {isActive && (
                     <motion.span
                       layoutId="activeNavIndicator"
-                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-gold to-gold-light"
+                      className="absolute inset-0 liquid-glass rounded-full -z-10 shadow-lg"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}
                 </Link>
