@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Coins, Shield, Layers, Database, RefreshCw, Cpu } from "lucide-react";
+import { Layers, Database, RefreshCw, Cpu } from "lucide-react";
 import GlassCard from "@/components/ui/GlassCard";
 
 export default function DigitalPage() {

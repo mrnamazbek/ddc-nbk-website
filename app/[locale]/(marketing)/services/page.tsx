@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { Coins, Zap, ShieldCheck, Share2, BarChart3, Landmark, CheckCircle2 } from "lucide-react";
-import Button from "@/components/ui/Button";
 
 interface ServiceDetail {
   icon: React.ComponentType<{ className?: string }>;

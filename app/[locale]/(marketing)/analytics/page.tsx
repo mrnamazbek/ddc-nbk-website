@@ -3,8 +3,7 @@
 import { motion } from "framer-motion";
 import FinancialInform from "@/components/ui/FinancialInform";
 import GlassCard from "@/components/ui/GlassCard";
-import Badge from "@/components/ui/Badge";
-import { Database, Cpu, TrendingUp, BarChart3, HelpCircle, Server, Check } from "lucide-react";
+import { Database, Cpu, Server, Check } from "lucide-react";
 
 export default function AnalyticsPage() {
   const containerVariants = {

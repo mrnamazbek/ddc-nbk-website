@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { TrendingUp, TrendingDown, Percent, DollarSign, Calendar, RefreshCw } from "lucide-react";
+import { TrendingUp, TrendingDown, Percent, Calendar, RefreshCw } from "lucide-react";
 import GlassCard from "./GlassCard";
 
 interface RateItem {

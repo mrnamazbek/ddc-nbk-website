@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { getScroll, startScrollTracking } from "@/lib/scrollStore";
-import { band, lerp, range, smoothstep } from "@/lib/sceneMath";
+import { band, lerp, range } from "@/lib/sceneMath";
 
 interface ScrollSequenceProps {
   totalFrames?: number;

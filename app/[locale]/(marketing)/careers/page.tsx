@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
-import { Briefcase, MapPin, Clock, ArrowRight, Zap, CheckCircle2 } from "lucide-react";
+import { MapPin, Clock, ArrowRight, Zap, CheckCircle2 } from "lucide-react";
 
 interface Job {
   title: string;
