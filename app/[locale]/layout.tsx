@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import CustomCursor from "@/components/ui/CustomCursor";
 import MatrixCursorTrail from "@/components/ui/MatrixCursorTrail";
+import PageTransitionProvider from "@/components/motion/PageTransition";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin", "cyrillic"],
@@ -55,7 +56,7 @@ export default async function LocaleLayout({
           <MatrixCursorTrail />
           {/* Faint grain overlay (opacity 0.03) for organic texture */}
           <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] bg-[url('/images/textures/bg-texture-noise.png')] bg-repeat" />
-          {children}
+          <PageTransitionProvider>{children}</PageTransitionProvider>
         </NextIntlClientProvider>
       </body>
     </html>

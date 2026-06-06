@@ -1,17 +1,58 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import { usePathname, useRouter } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { Menu, X, Globe, ArrowRight } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "../ui/Button";
 import Magnetic from "../motion/Magnetic";
+import TransitionLink from "../motion/TransitionLink";
+
+const LANGUAGES = ["kz", "ru", "en"];
+
+// Accessible segmented KZ / RU / EN switcher, styled as a liquid-glass pill.
+// Hoisted to module scope so it isn't re-created on every Header render.
+function LanguageSwitcher({
+  locale,
+  onSwitch,
+  size = "sm",
+}: {
+  locale: string;
+  onSwitch: (lng: string) => void;
+  size?: "sm" | "lg";
+}) {
+  return (
+    <div
+      role="group"
+      aria-label="Тіл / Язык / Language"
+      className="inline-flex items-center gap-0.5 liquid-glass rounded-full p-1"
+    >
+      {LANGUAGES.map((lng) => {
+        const active = locale === lng;
+        return (
+          <button
+            key={lng}
+            type="button"
+            onClick={() => onSwitch(lng)}
+            aria-label={lng.toUpperCase()}
+            aria-pressed={active}
+            className={`font-mono font-bold tracking-wider rounded-full transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 ${
+              size === "lg" ? "px-3.5 py-1.5 text-sm" : "px-2.5 py-1 text-xs"
+            } ${active ? "bg-gold text-black" : "text-gray-light hover:text-gold"}`}
+          >
+            {lng.toUpperCase()}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
+
   const t = useTranslations("Header");
   const locale = useLocale();
   const router = useRouter();
@@ -40,12 +81,9 @@ export default function Header() {
     { name: t("careers"), href: "/careers" },
   ];
 
-  const languages = ["kz", "ru", "en"];
-  const currentLang = locale.toUpperCase();
-
-  const cycleLanguage = () => {
-    const nextIdx = (languages.indexOf(locale) + 1) % languages.length;
-    router.replace(pathname, { locale: languages[nextIdx] });
+  const switchLocale = (lng: string) => {
+    if (lng === locale) return;
+    router.replace(pathname, { locale: lng });
   };
 
   return (
@@ -59,7 +97,7 @@ export default function Header() {
       >
         <div className="w-full flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group select-none">
+          <TransitionLink href="/" className="flex items-center gap-3 group select-none">
             {/* Heraldic Shield in Saka style (abstract SVG) */}
             <svg
               width="40"
@@ -91,14 +129,14 @@ export default function Header() {
                 Subsidiary of NBK
               </span>
             </div>
-          </Link>
+          </TransitionLink>
 
           {/* Desktop menu */}
           <nav className="hidden lg:flex items-center gap-1 bg-black/20 border border-white/[0.04] p-1 rounded-full backdrop-blur-md relative">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
-                <Link
+                <TransitionLink
                   key={link.name}
                   href={link.href}
                   className={`font-heading text-sm tracking-wide transition-all duration-300 relative px-4 py-1.5 rounded-full hover:text-white flex items-center justify-center ${
@@ -114,7 +152,7 @@ export default function Header() {
                       transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}
-                </Link>
+                </TransitionLink>
               );
             })}
           </nav>
@@ -122,22 +160,16 @@ export default function Header() {
           {/* Right action panel */}
           <div className="hidden lg:flex items-center gap-6">
             {/* Language Switcher */}
-            <button
-              onClick={cycleLanguage}
-              className="flex items-center gap-2 text-xs font-mono font-bold tracking-wider text-gray-light hover:text-gold transition-colors select-none cursor-pointer"
-            >
-              <Globe className="w-3.5 h-3.5" />
-              <span>{currentLang}</span>
-            </button>
+            <LanguageSwitcher locale={locale} onSwitch={switchLocale} />
 
             {/* Contact Button */}
-            <Link href="/contact">
+            <TransitionLink href="/contact">
               <Magnetic>
                 <Button variant="gold" size="sm">
                   {t("contact")}
                 </Button>
               </Magnetic>
-            </Link>
+            </TransitionLink>
           </div>
 
           {/* Mobile Menu Button */}
@@ -145,13 +177,14 @@ export default function Header() {
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="lg:hidden p-2 text-white hover:text-gold transition-colors"
             aria-label="Toggle mobile menu"
+            aria-expanded={isMobileMenuOpen}
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </header>
 
-      {/* Mobile menu overlay */}
+      {/* Mobile menu overlay — full-screen liquid glass */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -159,7 +192,9 @@ export default function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 bg-[#0A0A0A] flex flex-col justify-between pt-32 pb-16 px-8 lg:hidden"
+            data-hover="gold"
+            style={{ background: "rgba(8,8,10,0.82)" }}
+            className="fixed inset-0 z-40 liquid-glass-strong rounded-none flex flex-col justify-between pt-32 pb-16 px-8 lg:hidden"
           >
             {/* Menu links */}
             <nav className="flex flex-col gap-6">
@@ -172,7 +207,7 @@ export default function Header() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.05 }}
                   >
-                    <Link
+                    <TransitionLink
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className={`font-heading text-2xl tracking-wide block ${
@@ -180,7 +215,7 @@ export default function Header() {
                       }`}
                     >
                       {link.name}
-                    </Link>
+                    </TransitionLink>
                   </motion.div>
                 );
               })}
@@ -189,21 +224,15 @@ export default function Header() {
             {/* Mobile menu bottom action panel */}
             <div className="flex flex-col gap-6">
               <div className="flex items-center justify-between border-t border-white/10 pt-6">
-                <span className="text-sm text-gray-light">Язык интерфейса:</span>
-                <button
-                  onClick={cycleLanguage}
-                  className="flex items-center gap-2 text-sm font-mono font-bold text-white hover:text-gold"
-                >
-                  <Globe className="w-4 h-4" />
-                  <span>{currentLang}</span>
-                </button>
+                <span className="text-sm text-gray-light">Тіл / Язык:</span>
+                <LanguageSwitcher locale={locale} onSwitch={switchLocale} size="lg" />
               </div>
 
-              <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="w-full">
+              <TransitionLink href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="w-full">
                 <Button variant="gold" size="lg" className="w-full">
                   {t("contact")} <ArrowRight className="w-4 h-4" />
                 </Button>
-              </Link>
+              </TransitionLink>
             </div>
           </motion.div>
         )}
