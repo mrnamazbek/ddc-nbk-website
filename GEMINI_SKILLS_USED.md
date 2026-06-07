@@ -28,6 +28,8 @@ overview was read before mapping.
 | `react-ui-patterns` / `frontend-dev-guidelines` | P5C code quality | 🔖 On deck | Component-structure / hook-pattern references for the deeper quality pass (ref-collection pattern, setState-in-effect cleanups). |
 | `design-taste-frontend` | P3 design research, P8 apply | 🔖 On deck | Taste rubric for evaluating pageflows / dirtylinestudio / etc. inspiration before borrowing. |
 | `swiftui-performance-audit`, `swiftui-ui-patterns` | P4 supporting | 🔖 On deck | Secondary references for how Apple keeps Liquid Glass cheap (blur/saturation budget) — feeds the web `backdrop-filter` budget guidance. |
+| `ui-ux-pro-max` | P5 review, P6 cursor, P7 header/transitions, P8 decisions | ✅ Applied | Design-intelligence DB (99 UX guidelines, 97 palettes, react-performance, 50+ styles). Its CSV guidance drove concrete calls — style #14 Liquid Glass (400–600ms, Framer 10/10) for the page transition, ux #9/#99 reduced-motion, #40 aria-labels, #28 focus, #13 transform-perf, #36 contrast. Cited throughout `DESIGN_DECISIONS.md`. *(Installed via `uipro init --ai antigravity`; note: its `scripts/search.py` is broken on Python <3.12 — I read the CSVs directly.)* |
+| `magic-ui-generator` (21st.dev Magic) | P6/P7 component generation | 🔖 On deck | 21st.dev's premium React/Tailwind component generator. Not invoked this pass (the cursor/header/transition components were authored by hand against our existing tokens); on deck for future bespoke UI blocks. |
 
 ## Applied this session (CI-unblock + assessment phase)
 
