@@ -5,6 +5,7 @@ import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { Menu, X, Globe, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import Button from "../ui/Button";
 import Magnetic from "../motion/Magnetic";
 
@@ -60,31 +61,17 @@ export default function Header() {
         <div className="max-w-[1440px] mx-auto px-[clamp(16px,5vw,80px)] flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group select-none">
-            {/* Heraldic Shield in Saka style (abstract SVG) */}
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 100 100"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="transition-transform duration-700 group-hover:rotate-[360deg] pointer-events-none"
-            >
-              <rect x="10" y="10" width="80" height="80" rx="40" fill="url(#forest_grad)" />
-              <rect x="15" y="15" width="70" height="70" rx="35" stroke="url(#gold_grad)" strokeWidth="2" />
-              {/* Geometry of Saka eagle/sun */}
-              <path d="M50 25 L55 45 L75 50 L55 55 L50 75 L45 55 L25 50 L45 45 Z" fill="url(#gold_grad)" />
-              <defs>
-                <linearGradient id="forest_grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#0a1a11" />
-                  <stop offset="1" stopColor="#1A3D2B" />
-                </linearGradient>
-                <linearGradient id="gold_grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#E8C87A" />
-                  <stop offset="0.5" stopColor="#C9A84C" />
-                  <stop offset="1" stopColor="#8B7035" />
-                </linearGradient>
-              </defs>
-            </svg>
+            {/* Official DDC emblem */}
+            <span className="relative block h-10 w-10 shrink-0 rounded-full ring-1 ring-gold/30 overflow-hidden transition-transform duration-700 group-hover:rotate-[360deg]">
+              <Image
+                src="/images/logo/ddc-emblem.png"
+                alt="DDC"
+                fill
+                sizes="40px"
+                className="object-cover pointer-events-none"
+                priority
+              />
+            </span>
             <div>
               <span className="font-heading font-bold text-xl tracking-wider text-white">DDC</span>
               <span className="block text-[8px] text-gold font-mono tracking-widest leading-none uppercase">

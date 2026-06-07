@@ -1,4 +1,5 @@
 import Hero from "@/components/sections/Hero";
+import ShanyrakSequence from "@/components/sections/ShanyrakSequence";
 import Stats from "@/components/sections/Stats";
 import Services from "@/components/sections/Services";
 import About from "@/components/sections/About";
@@ -11,6 +12,7 @@ export default function MarketingHomePage() {
   return (
     <>
       <Hero />
+      <ShanyrakSequence />
       <Stats />
       <Services />
       <About />

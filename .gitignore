@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# large source media — keep local; optimized versions live in /public/video/3d and /public/sequence
+/public/video/*.mp4
+/public/video/*.webm
+/public/images/Gemini_Generated_Image_*.png
