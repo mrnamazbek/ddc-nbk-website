@@ -2,12 +2,14 @@
 
 import { motion } from "framer-motion";
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import ShimmerButton from "@/components/ui/ShimmerButton";
 import Magnetic from "@/components/motion/Magnetic";
 
 export default function Hero() {
+  const t = useTranslations("Hero");
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
 
@@ -90,7 +92,7 @@ export default function Hero() {
           <motion.div variants={itemVariants} className="inline-flex items-center gap-2 mb-8 bg-white/[0.03] border border-white/[0.08] backdrop-blur-md px-4 py-2 rounded-full">
             <span className="w-2.5 h-2.5 rounded-full bg-forest-light animate-pulse" />
             <span className="text-[10px] uppercase tracking-[0.25em] text-gold-light font-mono font-medium">
-              Digital Development Center • National Bank of Kazakhstan
+              {t("badge")}
             </span>
           </motion.div>
 
@@ -100,9 +102,9 @@ export default function Hero() {
               variants={textRowVariants}
               className="font-display italic text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-light tracking-tight leading-[1.02] text-white"
             >
-              Формируя <br />
-              <span className="text-gradient-forest font-medium not-italic">цифровое будущее</span> <br />
-              финансовой экосистемы
+              {t("titleLine1")} <br />
+              <span className="text-gradient-forest font-medium not-italic">{t("titleAccent")}</span> <br />
+              {t("titleLine2")}
             </motion.h1>
           </div>
 
@@ -111,7 +113,7 @@ export default function Hero() {
             variants={itemVariants}
             className="text-base sm:text-lg lg:text-xl text-white/70 font-sans font-light leading-relaxed max-w-2xl mb-12"
           >
-            Разработка суверенных инфраструктурных решений, внедрение Цифрового Тенге и обеспечение государственной информационной безопасности для процветания Республики Казахстан.
+            {t("subtitle")}
           </motion.p>
 
           {/* Кнопки призыва к действию с тактильным откликом */}
@@ -128,8 +130,8 @@ export default function Hero() {
                   target?.scrollIntoView({ behavior: "smooth" });
                 }}
               >
-                Наши решения
-                <svg 
+                {t("ctaPrimary")}
+                <svg
                   className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 stroke-current" 
                   viewBox="0 0 24 24" 
                   fill="none" 
@@ -151,7 +153,7 @@ export default function Hero() {
                   target?.scrollIntoView({ behavior: "smooth" });
                 }}
               >
-                О Центре
+                {t("ctaSecondary")}
               </ShimmerButton>
             </Magnetic>
           </motion.div>
@@ -169,7 +171,7 @@ export default function Hero() {
           target?.scrollIntoView({ behavior: "smooth" });
         }}
       >
-        <span className="text-[10px] uppercase tracking-[0.2em] font-mono font-medium">Прокрутите вниз</span>
+        <span className="text-[10px] uppercase tracking-[0.2em] font-mono font-medium">{t("scroll")}</span>
         <motion.div
           animate={{ y: [0, 4, 0] }}
           transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}

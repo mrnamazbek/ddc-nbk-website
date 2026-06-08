@@ -1,12 +1,25 @@
 {
   "Header": {
-    "about": "About Us",
+    "home": "Home",
+    "about": "About",
     "services": "Services",
+    "mission": "Mission",
+    "contacts": "Contacts",
     "digital": "Technologies",
     "security": "Security",
     "news": "News",
     "careers": "Careers",
     "analytics": "Analytics",
     "contact": "Contact"
+  },
+  "Hero": {
+    "badge": "Digital Development Center • National Bank of Kazakhstan",
+    "titleLine1": "Digital solutions for the",
+    "titleAccent": "financial stability",
+    "titleLine2": "of the state",
+    "subtitle": "The Digital Development Center of the National Bank of Kazakhstan is the technological core of the country's financial system. For over 20 years we have built and maintained the National Bank's key IT systems.",
+    "ctaPrimary": "Our services",
+    "ctaSecondary": "About the Center",
+    "scroll": "Scroll down"
   }
 }
