@@ -145,7 +145,7 @@ export default function News() {
                   <div className="absolute w-32 h-32 rounded-full bg-gold/10 blur-xl group-hover:scale-125 transition-transform duration-700 pointer-events-none" />
                   
                   {/* Категория (Badge) */}
-                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-wider font-semibold bg-white/10 text-gold-light border border-white/10 px-3 py-1 rounded-md backdrop-blur-md">
+                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-wider font-semibold liquid-glass text-gold-light px-3 py-1 rounded-md">
                     {news.category}
                   </span>
                 </div>

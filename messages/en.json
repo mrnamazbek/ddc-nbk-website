@@ -21,5 +21,46 @@
     "ctaPrimary": "Our services",
     "ctaSecondary": "About the Center",
     "scroll": "Scroll down"
+  },
+  "Services": {
+    "overline": "Digital Development Center • Services",
+    "titleLine1": "Our",
+    "titleAccent": "services & areas",
+    "subtitle": "Key areas of activity of the Digital Development Center of the National Bank of Kazakhstan.",
+    "status": "status: operational",
+    "s1": {
+      "title": "Contact Center 1477",
+      "desc": "The National Bank's unified contact center. Technical and advisory support for administrative reporting and digital services. Free of charge across Kazakhstan."
+    },
+    "s2": {
+      "title": "Procurement Portal Operator",
+      "desc": "Operator of the procurement portal — a single access point for e-procurement by the National Bank and its organizations. In operation since 2020."
+    },
+    "s3": {
+      "title": "Technological Data Operator",
+      "desc": "Professional processing and management of data: database development and support, storage security, and adoption of modern technologies. Operator status since 2021."
+    },
+    "s4": {
+      "title": "Unified IT Services Center",
+      "desc": "Engineering competence center: preparation, integration, installation and support of the National Bank's equipment and systems — from server stations to workstations."
+    },
+    "s5": {
+      "title": "Information Systems Development",
+      "desc": "Full software product lifecycle. Since inception, 50 information systems have been built, 24 of which are in operation today (Agile, Waterfall)."
+    },
+    "s6": {
+      "title": "Information Security",
+      "desc": "Maintenance and management of information security systems since 2022: event monitoring and response, security policy updates, and cyber-awareness training for staff."
+    }
+  },
+  "Stats": {
+    "overline": "Digital development in numbers",
+    "title": "The technological core of the",
+    "titleAccent": "National Bank",
+    "subtitle": "For over two decades we have built and maintained the key information systems of Kazakhstan's financial infrastructure.",
+    "s1": { "value": "1996", "label": "Year founded", "desc": "Over 20 years on the IT-solutions market for the National Bank." },
+    "s2": { "value": "50 / 24", "label": "Information systems", "desc": "50 systems built, 24 of them in operation today." },
+    "s3": { "value": "2020", "label": "Procurement portal", "desc": "Year the unified state procurement portal was launched." },
+    "s4": { "value": "1477", "label": "Contact center", "desc": "Unified toll-free support number across Kazakhstan." }
   }
 }

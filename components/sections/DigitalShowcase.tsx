@@ -108,19 +108,18 @@ export default function DigitalShowcase() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full text-left p-5 rounded-xl border transition-all duration-300 flex items-center gap-4 cursor-pointer group ${
+                  className={`w-full text-left p-5 rounded-xl transition-all duration-300 flex items-center gap-4 cursor-pointer group ${
                     isActive
-                      ? tab.hoverAccent === "gold"
-                        ? "bg-gold/10 border-gold/45 text-white shadow-[0_4px_20px_rgba(201,168,76,0.15)]"
-                        : "bg-forest/15 border-forest-light/45 text-white shadow-[0_4px_20px_rgba(26,61,43,0.15)]"
-                      : "bg-transparent border-white/5 text-zinc-400 hover:border-white/10 hover:text-white"
+                      ? "liquid-glass-strong text-white"
+                      : "liquid-glass text-zinc-400 hover:text-white"
                   }`}
+                  data-hover={tab.hoverAccent}
                 >
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                  <div className={`w-10 h-10 rounded-lg liquid-glass flex items-center justify-center transition-all duration-300 ${
                     isActive 
-                      ? tab.hoverAccent === "gold" ? "bg-gold text-black font-bold" : "bg-forest-light text-black font-bold"
-                      : "bg-white/5 text-gold"
-                  }`}>
+                      ? tab.hoverAccent === "gold" ? "text-gold font-bold" : "text-forest-light font-bold"
+                      : "text-zinc-500"
+                  }`} data-hover={tab.hoverAccent}>
                     {tab.svgIcon}
                   </div>
                   <div>
@@ -156,11 +155,9 @@ export default function DigitalShowcase() {
               >
                 <div>
                   <div className="flex items-center gap-4 mb-6">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                      currentTab.hoverAccent === "gold"
-                        ? "bg-gold/10 border border-gold/20 text-gold"
-                        : "bg-forest/10 border border-forest/20 text-forest-light"
-                    }`}>
+                    <div className={`w-12 h-12 rounded-xl liquid-glass flex items-center justify-center transition-all duration-300 ${
+                      currentTab.hoverAccent === "gold" ? "text-gold group-hover:bg-gold/10" : "text-forest-light group-hover:bg-forest/10"
+                    }`} data-hover={currentTab.hoverAccent}>
                       {currentTab.svgIcon}
                     </div>
                     <div>

@@ -141,23 +141,23 @@ export default function Stats() {
                 <div className="flex flex-col justify-center h-full gap-4">
                   <div className="mini-table-caption">Мониторинг государственных платформ</div>
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-white/[0.05]">
+                    <div className="flex items-center justify-between p-3 rounded-lg liquid-glass">
                       <span className="text-sm font-light text-zinc-300">Платформа Цифрового Тенге</span>
-                      <span className="inline-flex items-center gap-1.5 text-xs text-forest-light font-mono bg-forest/10 px-2.5 py-1 rounded-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs text-forest-light font-mono liquid-glass px-2.5 py-1 rounded-full" data-hover="forest">
                         <span className="w-1.5 h-1.5 rounded-full bg-forest-light animate-pulse" />
                         Активна
                       </span>
                     </div>
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-white/[0.05]">
+                    <div className="flex items-center justify-between p-3 rounded-lg liquid-glass">
                       <span className="text-sm font-light text-zinc-300">Межбанковские Платежи</span>
-                      <span className="inline-flex items-center gap-1.5 text-xs text-forest-light font-mono bg-forest/10 px-2.5 py-1 rounded-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs text-forest-light font-mono liquid-glass px-2.5 py-1 rounded-full" data-hover="forest">
                         <span className="w-1.5 h-1.5 rounded-full bg-forest-light animate-pulse" />
                         Стабильно
                       </span>
                     </div>
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-white/[0.05]">
+                    <div className="flex items-center justify-between p-3 rounded-lg liquid-glass">
                       <span className="text-sm font-light text-zinc-300">Национальный Шлюз Клиринга</span>
-                      <span className="inline-flex items-center gap-1.5 text-xs text-forest-light font-mono bg-forest/10 px-2.5 py-1 rounded-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs text-forest-light font-mono liquid-glass px-2.5 py-1 rounded-full" data-hover="forest">
                         <span className="w-1.5 h-1.5 rounded-full bg-forest-light animate-pulse" />
                         99.99% SLA
                       </span>
@@ -215,7 +215,7 @@ export default function Stats() {
                 <div className="mini-table-caption">Журнал транзакций Цифрового Тенге (Live Feed)</div>
                 
                 {/* Оболочка микро-таблицы из styles.css пользователя */}
-                <div className="mini-table-shell mt-4">
+                <div className="mini-table-shell liquid-glass mt-4">
                   <div className="mini-table-scroll">
                     <div className="mini-table">
                       {/* Шапка таблицы */}
@@ -230,7 +230,7 @@ export default function Stats() {
                       {transactions.map((tx, idx) => (
                         <div
                           key={tx.id}
-                          className={`mini-table__row ${idx === 0 ? "mini-table__row--top" : ""}`}
+                          className={`mini-table__row liquid-glass ${idx === 0 ? "mini-table__row--top" : ""}`}
                           style={{
                             transition: "all 0.5s ease",
                             opacity: 1 - idx * 0.15, // Мягкое угасание старых строк

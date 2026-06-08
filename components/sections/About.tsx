@@ -143,7 +143,7 @@ export default function About() {
                     ref={addToRefs}
                     className="flex gap-6 relative z-10 group animate-hover"
                   >
-                    <div className="w-12 h-12 rounded-full bg-white/[0.03] border border-white/10 flex items-center justify-center text-gold group-hover:border-gold/50 group-hover:bg-brand-blue/20 transition-all duration-300 shrink-0">
+                    <div className="w-12 h-12 rounded-full liquid-glass flex items-center justify-center text-gold group-hover:bg-white/10 transition-all duration-300 shrink-0">
                       {item.svgIcon}
                     </div>
                     <div>

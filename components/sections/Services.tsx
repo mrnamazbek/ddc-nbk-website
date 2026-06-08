@@ -1,19 +1,20 @@
 "use client";
 
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import GlassCard from "@/components/ui/GlassCard";
 
 interface ServiceItem {
   number: string;
-  title: string;
-  description: string;
+  key: string;
   hoverAccent: "forest" | "gold";
   svgIcon: React.ReactNode;
 }
 
 export default function Services() {
+  const t = useTranslations("Services");
   const containerRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
@@ -69,8 +70,7 @@ export default function Services() {
   const services: ServiceItem[] = [
     {
       number: "01",
-      title: "Цифровой Тенге (CBDC)",
-      description: "Проектирование, внедрение и масштабирование платформы национальной валюты третьего поколения для Республики Казахстан.",
+      key: "s1",
       hoverAccent: "gold",
       svgIcon: (
         <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -82,8 +82,7 @@ export default function Services() {
     },
     {
       number: "02",
-      title: "Система Мгновенных Платежей",
-      description: "Высокоскоростная инфраструктура для межбанковских переводов в режиме реального времени 24/7/365 с нулевой задержкой.",
+      key: "s2",
       hoverAccent: "forest",
       svgIcon: (
         <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -95,8 +94,7 @@ export default function Services() {
     },
     {
       number: "03",
-      title: "Межбанковский Клиринг",
-      description: "Оптимизация встречных требований и расчетов участников финансового рынка с гарантированной стабильностью системы.",
+      key: "s3",
       hoverAccent: "forest",
       svgIcon: (
         <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -108,8 +106,7 @@ export default function Services() {
     },
     {
       number: "04",
-      title: "Национальный Удостоверяющий Центр",
-      description: "Криптографическая безопасность государственного масштаба, выпуск регистрационных свидетельств и ключей шифрования.",
+      key: "s4",
       hoverAccent: "gold",
       svgIcon: (
         <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -120,8 +117,7 @@ export default function Services() {
     },
     {
       number: "05",
-      title: "Цифровой Банкинг & Open API",
-      description: "Стандартизация интерфейсов прикладного программирования для формирования открытой экосистемы Open Finance.",
+      key: "s5",
       hoverAccent: "forest",
       svgIcon: (
         <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -133,8 +129,7 @@ export default function Services() {
     },
     {
       number: "06",
-      title: "Аналитический Финтех-Хаб",
-      description: "Продвинутая Big Data аналитика, интеллектуальное прогнозирование финансовых рисков и микроэкономический анализ.",
+      key: "s6",
       hoverAccent: "forest",
       svgIcon: (
         <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -164,14 +159,14 @@ export default function Services() {
           className="text-left max-w-4xl mb-20"
         >
           <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
-            ЦЕНТР ЦИФРОВОГО РАЗВИТИЯ • INFRASTRUCTURE
+            {t("overline")}
           </span>
           <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
-            Национальные финансовые <br />
-            <span className="text-gradient-gold font-medium">технологии и платформы</span>
+            {t("titleLine1")} <br />
+            <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
           </h2>
           <p className="text-zinc-400 font-sans font-light leading-relaxed max-w-2xl text-lg">
-            АО «ЦЦР» формирует устойчивую цифровую экосистему финансового сектора Казахстана, сочетая технологическое превосходство и строгие государственные регламенты.
+            {t("subtitle")}
           </p>
         </div>
 
@@ -191,11 +186,11 @@ export default function Services() {
                   <div>
                     {/* Card header */}
                     <div className="flex items-center justify-between mb-8">
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                      <div className={`w-12 h-12 rounded-xl liquid-glass flex items-center justify-center transition-all duration-300 ${
                         service.hoverAccent === "gold"
-                          ? "bg-gold/10 border border-gold/20 text-gold group-hover:bg-gold/20 group-hover:scale-110"
-                          : "bg-forest/10 border border-forest/20 text-forest-light group-hover:bg-forest/20 group-hover:scale-110"
-                      }`}>
+                          ? "text-gold group-hover:bg-gold/10 group-hover:scale-110"
+                          : "text-forest-light group-hover:bg-forest/10 group-hover:scale-110"
+                      }`} data-hover={service.hoverAccent}>
                         {service.svgIcon}
                       </div>
                       
@@ -205,18 +200,18 @@ export default function Services() {
                     </div>
                     
                     <h3 className="text-xl font-sans font-semibold text-white tracking-wide mb-4 group-hover:text-zinc-100 transition-colors">
-                      {service.title}
+                      {t(`${service.key}.title`)}
                     </h3>
-                    
+
                     <p className="text-sm font-sans font-light text-zinc-400 leading-relaxed group-hover:text-zinc-300 transition-colors">
-                      {service.description}
+                      {t(`${service.key}.desc`)}
                     </p>
                   </div>
 
                   {/* Card footer */}
                   <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between opacity-60 group-hover:opacity-100 transition-all duration-300">
                     <span className="text-xs font-mono tracking-widest text-zinc-500 uppercase">
-                      status: operational
+                      {t("status")}
                     </span>
                     <svg viewBox="0 0 24 24" className={`w-4 h-4 stroke-[2] transition-transform duration-300 transform group-hover:translate-x-1 ${
                       service.hoverAccent === "gold" ? "text-gold" : "text-forest-light"

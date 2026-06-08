@@ -166,7 +166,7 @@ export default function Security() {
                       ddc csoc // live status
                     </span>
                   </div>
-                  <div className="px-2 py-0.5 rounded bg-forest/10 border border-forest-light/20 text-[9px] font-mono text-forest-light uppercase tracking-wider">
+                  <div className="px-2 py-0.5 rounded liquid-glass text-[9px] font-mono text-forest-light uppercase tracking-wider">
                     level 5 secured
                   </div>
                 </div>
@@ -273,11 +273,9 @@ export default function Security() {
                       className="p-5 flex items-center justify-between border-white/5"
                     >
                       <div className="flex items-center gap-6">
-                        <div className={`w-11 h-11 rounded-lg flex items-center justify-center ${
-                          feat.hoverAccent === "gold"
-                            ? "bg-gold/10 border border-gold/20 text-gold"
-                            : "bg-forest/10 border border-forest/20 text-forest-light"
-                        }`}>
+                        <div className={`w-11 h-11 rounded-lg liquid-glass flex items-center justify-center transition-all duration-300 ${
+                          feat.hoverAccent === "gold" ? "text-gold group-hover:bg-gold/10" : "text-forest-light group-hover:bg-forest/10"
+                        }`} data-hover={feat.hoverAccent}>
                           {feat.svgIcon}
                         </div>
                         <div>
@@ -290,7 +288,7 @@ export default function Security() {
                         </div>
                       </div>
                       
-                      <span className="hidden sm:inline-block px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-mono tracking-widest text-zinc-400 uppercase">
+                      <span className="hidden sm:inline-block px-3 py-1 rounded-full liquid-glass text-[9px] font-mono tracking-widest text-zinc-400 uppercase">
                         {feat.tag}
                       </span>
                     </GlassCard>
