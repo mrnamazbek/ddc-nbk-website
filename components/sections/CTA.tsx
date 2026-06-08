@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import GlassCard from "@/components/ui/GlassCard";
@@ -9,6 +10,7 @@ import PartnerMarquee from "@/components/ui/PartnerMarquee";
 import Magnetic from "@/components/motion/Magnetic";
 
 export default function CTA() {
+  const t = useTranslations("CTA");
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -36,16 +38,16 @@ export default function CTA() {
   );
 
   const keywords = [
-    "DIGITAL TENGE",
-    "CBDC",
-    "BLOCKCHAIN",
-    "ZERO TRUST",
+    "DDC",
+    "ЦДО",
     "NATIONAL BANK OF KAZAKHSTAN",
-    "DDC FINTECH",
-    "BIG DATA",
-    "AES-256 CRYPTOGRAPHY",
-    "CYBER SECURITY",
-    "INSTITUTIONAL GRADE",
+    "КОНТАКТ-ЦЕНТР 1477",
+    "ISO 9001",
+    "IT-УСЛУГИ",
+    "ПОРТАЛ ЗАКУПОК",
+    "ИНФОРМАЦИОННАЯ БЕЗОПАСНОСТЬ",
+    "ТЕХНОЛОГИЧЕСКИЙ ОПЕРАТОР ДАННЫХ",
+    "С 1996 ГОДА",
   ];
 
   return (
@@ -83,16 +85,16 @@ export default function CTA() {
             <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-gold/10 rounded-full blur-[80px] pointer-events-none" />
 
             <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-6 block relative z-10">
-              технологическое партнерство
+              {t("overline")}
             </span>
 
             <h2 className="font-display text-3xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-white mb-6 leading-tight relative z-10">
-              Создаем технологический <br className="hidden sm:inline" />
-              <span className="text-gradient-gold font-medium">суверенитет вместе</span>
+              {t("titleLine1")} <br className="hidden sm:inline" />
+              <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
             </h2>
 
             <p className="text-sm sm:text-base text-zinc-400 font-sans font-light leading-relaxed max-w-2xl mx-auto mb-10 relative z-10">
-              Мы открыты к сотрудничеству с финансовыми институтами, финтех-разработчиками и академическими кругами для совместного проектирования будущего платежных экосистем.
+              {t("subtitle")}
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center relative z-10">
@@ -101,15 +103,10 @@ export default function CTA() {
                   variant="gold"
                   className="w-full sm:w-auto flex items-center justify-center gap-2 group"
                   onClick={() => {
-                    const target = document.getElementById("contact");
-                    if (target) {
-                      target.scrollIntoView({ behavior: "smooth" });
-                    } else {
-                      window.location.href = "/contact";
-                    }
+                    window.location.href = "/contact";
                   }}
                 >
-                  Связаться с нами
+                  {t("ctaPrimary")}
                   <svg 
                     className="w-4 h-4 transition-transform duration-300 group-hover:scale-110 stroke-current" 
                     viewBox="0 0 24 24" 
@@ -129,20 +126,19 @@ export default function CTA() {
                   variant="forest"
                   className="w-full sm:w-auto flex items-center justify-center gap-2 group"
                   onClick={() => {
-                    window.location.href = "/careers";
+                    window.location.href = "tel:1477";
                   }}
                 >
-                  Присоединиться к команде
-                  <svg 
-                    className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 stroke-current" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    strokeWidth="2" 
-                    strokeLinecap="round" 
+                  {t("ctaSecondary")}
+                  <svg
+                    className="w-4 h-4 transition-transform duration-300 group-hover:scale-110 stroke-current"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    strokeWidth="2"
+                    strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.81.36 1.6.7 2.34a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.74-1.74a2 2 0 0 1 2.11-.45c.74.34 1.53.57 2.34.7A2 2 0 0 1 22 16.92z"></path>
                   </svg>
                 </ShimmerButton>
               </Magnetic>

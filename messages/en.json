@@ -71,5 +71,13 @@
     "v1": { "title": "Innovation", "text": "Adopting advanced IT solutions that accelerate the National Bank's digital transformation." },
     "v2": { "title": "Quality", "text": "Compliance with the international ISO 9001 standard and high standards of service delivery." },
     "v3": { "title": "Reliability", "text": "Uninterrupted operation of the country's critical financial-infrastructure systems." }
+  },
+  "CTA": {
+    "overline": "Get in touch",
+    "titleLine1": "Ready to answer",
+    "titleAccent": "your questions",
+    "subtitle": "The National Bank's unified contact center and DDC specialists are ready to help with state digital services, reporting, and inquiries.",
+    "ctaPrimary": "Contact us",
+    "ctaSecondary": "Contact center 1477"
   }
 }
