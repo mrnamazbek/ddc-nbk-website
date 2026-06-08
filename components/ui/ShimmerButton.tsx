@@ -19,7 +19,7 @@ export default function ShimmerButton({
   shimmerSize = "0.08em",
   shimmerDuration = "2.5s",
   borderRadius = "9999px",
-  background = "rgba(10, 10, 12, 0.9)",
+  background = "rgba(20, 20, 25, 0.45)",
   className = "",
   variant = "default",
   ...props
@@ -45,6 +45,8 @@ export default function ShimmerButton({
           "--background": background,
           borderRadius,
           background,
+          backdropFilter: "blur(8px) saturate(160%)",
+          WebkitBackdropFilter: "blur(8px) saturate(160%)",
         } as CSSProperties
       }
       className={`group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden border border-white/10 px-6 py-3 text-white transition-all duration-300 hover:scale-105 active:scale-95 ${className}`}
@@ -63,7 +65,7 @@ export default function ShimmerButton({
 
       {/* Внутренняя заливка */}
       <div 
-        className="absolute inset-[1px] z-[-1] transition-colors duration-300 group-hover:bg-black/80"
+        className="absolute inset-[1px] z-[-1] transition-colors duration-300 group-hover:bg-black/60 bg-black/40"
         style={{ borderRadius: `calc(${borderRadius} - 1px)` }}
       />
 
