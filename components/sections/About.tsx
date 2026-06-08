@@ -1,19 +1,19 @@
 "use client";
 
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import Image from "next/image";
 import TextReveal from "@/components/ui/TextReveal";
 
-interface TimelineItem {
-  year: string;
-  title: string;
-  text: string;
+interface ValueItem {
+  key: string;
   svgIcon: React.ReactNode;
 }
 
 export default function About() {
+  const t = useTranslations("About");
   const containerRef = useRef<HTMLDivElement>(null);
   const bgImgRef = useRef<HTMLDivElement>(null);
   const fgImgRef = useRef<HTMLDivElement>(null);
@@ -72,21 +72,9 @@ export default function About() {
     { scope: containerRef }
   );
 
-  const timelineItems: TimelineItem[] = [
+  const valueItems: ValueItem[] = [
     {
-      year: "Миссия",
-      title: "Финансовая стабильность",
-      text: "Разработка технологических систем, формирующих каркас надежности всей платежной инфраструктуры страны.",
-      svgIcon: (
-        <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3 21h18M5 21V10m14 11V10M2 10h20M12 3L2 10h20L12 3z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      ),
-    },
-    {
-      year: "Инновации",
-      title: "Финтех-лидерство",
-      text: "Интеграция передовых решений (блокчейн, смарт-контракты, Big Data) в государственные институты.",
+      key: "v1",
       svgIcon: (
         <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="12" cy="12" r="10" stroke="currentColor" />
@@ -95,9 +83,16 @@ export default function About() {
       ),
     },
     {
-      year: "Стандарты",
-      title: "Абсолютная безопасность",
-      text: "Соответствие жестким требованиям информационной безопасности Республики Казахстан и мировым стандартам.",
+      key: "v2",
+      svgIcon: (
+        <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 11l2 2 4-4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="12" cy="12" r="9" stroke="currentColor" />
+        </svg>
+      ),
+    },
+    {
+      key: "v3",
       svgIcon: (
         <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
@@ -118,28 +113,25 @@ export default function About() {
           {/* Левая сторона: Описание и таймлайн */}
           <div className="lg:col-span-7 flex flex-col justify-center">
             <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
-              о нашей организации
+              {t("overline")}
             </span>
-            
+
             <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6 leading-tight">
-              Центр развития цифровых технологий <br />
-              <span className="text-gradient-gold font-medium">Национального Банка</span>
+              {t("titleLine1")} <br />
+              <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
             </h2>
-            
-            <TextReveal 
-              text="Digital Development Center (DDC) является специализированным технологическим крылом Национального Банка Казахстана. Мы разрабатываем и поддерживаем ключевые государственные финансовые платформы, включая инфраструктуру Цифрового Тенге и межбанковских платежей, обеспечивая интеграцию передовых IT-решений в национальный финансовый сектор." 
-              className="mb-8"
-            />
+
+            <TextReveal text={t("description")} className="mb-8" />
 
             {/* Таймлайн / Принципы */}
             <div className="space-y-8 relative mt-4">
               {/* Золотая линия таймлайна слева */}
               <div className="absolute left-6 top-2 bottom-2 w-[1px] bg-gradient-to-b from-gold via-brand-blue-light to-transparent opacity-30" />
 
-              {timelineItems.map((item, idx) => {
+              {valueItems.map((item) => {
                 return (
                   <div
-                    key={idx}
+                    key={item.key}
                     ref={addToRefs}
                     className="flex gap-6 relative z-10 group animate-hover"
                   >
@@ -147,14 +139,11 @@ export default function About() {
                       {item.svgIcon}
                     </div>
                     <div>
-                      <span className="text-xs font-mono font-bold text-gold tracking-wider uppercase block mb-1">
-                        {item.year}
-                      </span>
                       <h4 className="text-lg font-sans font-semibold text-white mb-2 group-hover:text-zinc-100 transition-colors">
-                        {item.title}
+                        {t(`${item.key}.title`)}
                       </h4>
                       <p className="text-sm font-sans font-light text-zinc-400 leading-relaxed group-hover:text-zinc-300 transition-colors">
-                        {item.text}
+                        {t(`${item.key}.text`)}
                       </p>
                     </div>
                   </div>

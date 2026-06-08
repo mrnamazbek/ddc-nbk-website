@@ -62,5 +62,14 @@
     "s2": { "value": "50 / 24", "label": "Information systems", "desc": "50 systems built, 24 of them in operation today." },
     "s3": { "value": "2020", "label": "Procurement portal", "desc": "Year the unified state procurement portal was launched." },
     "s4": { "value": "1477", "label": "Contact center", "desc": "Unified toll-free support number across Kazakhstan." }
+  },
+  "About": {
+    "overline": "About our organization",
+    "titleLine1": "To be a leader in",
+    "titleAccent": "digital transformation",
+    "description": "The Digital Development Center of the National Bank of Kazakhstan (DDC) is the specialized technological wing of the National Bank. By providing the Bank and its subsidiaries with advanced IT solutions, we accelerate innovation, ensure stability, and comply with the international ISO 9001 standard.",
+    "v1": { "title": "Innovation", "text": "Adopting advanced IT solutions that accelerate the National Bank's digital transformation." },
+    "v2": { "title": "Quality", "text": "Compliance with the international ISO 9001 standard and high standards of service delivery." },
+    "v3": { "title": "Reliability", "text": "Uninterrupted operation of the country's critical financial-infrastructure systems." }
   }
 }
