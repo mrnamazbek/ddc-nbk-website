@@ -91,8 +91,8 @@ export default function Header() {
       <header
         className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1300px] transition-all duration-500 rounded-full ${
           isScrolled
-            ? "liquid-glass shadow-2xl py-3 px-6 sm:px-8"
-            : "bg-white/[0.01] border border-white/[0.05] py-4 px-6 sm:px-8 backdrop-blur-sm"
+            ? "liquid-glass-strong shadow-2xl py-3 px-6 sm:px-8"
+            : "liquid-glass shadow-lg py-4 px-6 sm:px-8"
         }`}
       >
         <div className="w-full flex items-center justify-between">
@@ -175,11 +175,11 @@ export default function Header() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2 text-white hover:text-gold transition-colors"
+            className="lg:hidden p-2 rounded-full liquid-glass text-white hover:text-gold transition-colors focus-visible:outline-none"
             aria-label="Toggle mobile menu"
             aria-expanded={isMobileMenuOpen}
           >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </header>
