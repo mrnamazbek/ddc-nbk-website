@@ -1,20 +1,20 @@
 "use client";
 
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import GlassCard from "@/components/ui/GlassCard";
 import TextReveal from "@/components/ui/TextReveal";
 
 interface SecurityFeature {
-  title: string;
-  description: string;
-  tag: string;
+  key: string;
   hoverAccent: "gold" | "forest";
   svgIcon: React.ReactNode;
 }
 
 export default function Security() {
+  const t = useTranslations("Security");
   const containerRef = useRef<HTMLDivElement>(null);
   const consoleRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -87,9 +87,7 @@ export default function Security() {
 
   const securityFeatures: SecurityFeature[] = [
     {
-      title: "Государственная Криптография",
-      description: "Интеграция национальных стандартов шифрования СТ РК и алгоритмов ГОСТ 34.311 для защиты транзакций.",
-      tag: "СТ РК / ГОСТ",
+      key: "f1",
       hoverAccent: "gold",
       svgIcon: (
         <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -100,9 +98,7 @@ export default function Security() {
       ),
     },
     {
-      title: "Круглосуточный CSOC",
-      description: "Мониторинг угроз и оперативное реагирование на инциденты безопасности в режиме 24/7/365 на государственном уровне.",
-      tag: "Zero Trust",
+      key: "f2",
       hoverAccent: "forest",
       svgIcon: (
         <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -113,9 +109,7 @@ export default function Security() {
       ),
     },
     {
-      title: "Аппаратная Защита HSM",
-      description: "Изолированное выполнение криптографических операций в защищенных аппаратных модулях высшего класса защиты.",
-      tag: "HSM PCI-DSS",
+      key: "f3",
       hoverAccent: "gold",
       svgIcon: (
         <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -224,18 +218,18 @@ export default function Security() {
                   </div>
                 </div>
 
-                {/* Security metrics block */}
+                {/* Security posture block */}
                 <div className="space-y-3.5 border-t border-white/5 pt-4">
                   <div className="flex items-center justify-between text-[11px] font-mono">
-                    <span className="text-zinc-500">THREAT MITIGATION RATE</span>
-                    <span className="text-forest-light font-bold">99.9997%</span>
+                    <span className="text-zinc-500">SECURITY STANDARDS</span>
+                    <span className="text-forest-light font-bold">ISO 9001 · СТ РК</span>
                   </div>
                   <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
-                    <div className="h-full w-[99.9997%] bg-forest-light rounded-full" />
+                    <div className="h-full w-full bg-forest-light rounded-full" />
                   </div>
                   <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400">
-                    <span>ACTIVE AES-256 TUNNELS</span>
-                    <span className="text-gold font-bold">14,802 / SEC</span>
+                    <span>IS MANAGEMENT SINCE</span>
+                    <span className="text-gold font-bold">2022</span>
                   </div>
                 </div>
               </GlassCard>
@@ -246,19 +240,16 @@ export default function Security() {
           <div className="lg:col-span-7 flex flex-col justify-center">
             <div ref={headerRef}>
               <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
-                SECURITY & COMPLIANCE
+                {t("overline")}
               </span>
-              
+
               <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6 leading-tight">
-                Институциональный класс <br />
-                <span className="text-gradient-gold font-medium">защиты данных</span>
+                {t("titleLine1")} <br />
+                <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
               </h2>
             </div>
-            
-            <TextReveal 
-              text="Архитектура систем ЦЦР и Национального Банка РК строится на концепции «нулевого доверия» (Zero Trust). Все транзакции, межсистемные шлюзы и криптографические протоколы соответствуют государственным и международным регламентам информационной безопасности высшего уровня надежности." 
-              className="mb-8"
-            />
+
+            <TextReveal text={t("description")} className="mb-8" />
 
             {/* Feature cards stack */}
             <div className="space-y-4">
@@ -280,16 +271,16 @@ export default function Security() {
                         </div>
                         <div>
                           <h4 className="text-base font-sans font-semibold text-white mb-1">
-                            {feat.title}
+                            {t(`${feat.key}.title`)}
                           </h4>
                           <p className="text-xs font-sans font-light text-zinc-400 leading-relaxed max-w-xl">
-                            {feat.description}
+                            {t(`${feat.key}.desc`)}
                           </p>
                         </div>
                       </div>
-                      
+
                       <span className="hidden sm:inline-block px-3 py-1 rounded-full liquid-glass text-[9px] font-mono tracking-widest text-zinc-400 uppercase">
-                        {feat.tag}
+                        {t(`${feat.key}.tag`)}
                       </span>
                     </GlassCard>
                   </div>

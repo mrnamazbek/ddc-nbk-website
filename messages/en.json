@@ -79,5 +79,25 @@
     "subtitle": "The National Bank's unified contact center and DDC specialists are ready to help with state digital services, reporting, and inquiries.",
     "ctaPrimary": "Contact us",
     "ctaSecondary": "Contact center 1477"
+  },
+  "Security": {
+    "overline": "Information security & compliance",
+    "titleLine1": "Institutional",
+    "titleAccent": "information security",
+    "description": "Since 2022, DDC has maintained and managed the National Bank's information-security systems. We continuously monitor and respond to events, update security policies, and train staff in cyber-awareness, ensuring compliance with national and international standards.",
+    "f1": { "title": "Monitoring & response", "desc": "Continuous monitoring, analysis and response to events in information systems to prevent threats.", "tag": "Since 2022" },
+    "f2": { "title": "Policies & cyber-awareness", "desc": "Managing protective mechanisms, updating security policies, and training staff in cybersecurity fundamentals.", "tag": "ISO 9001" },
+    "f3": { "title": "Compliance & anti-corruption", "desc": "Anti-corruption standards, compliance-risk and conflict-of-interest management. Hotline: +7 (727) 258 49 58.", "tag": "Compliance" }
+  },
+  "Digital": {
+    "overline": "Digital transformation",
+    "titleLine1": "The digital core of the",
+    "titleAccent": "financial system",
+    "subtitle": "Since 2021, DDC has been building the National Bank's digital core — from information-systems development to data management — improving the efficiency and reliability of state processes.",
+    "btnPrimary": "Our services",
+    "btnSecondary": "About the Center",
+    "t1": { "badge": "SINCE 2021", "title": "The National Bank's digital core", "description": "Building the National Bank's 'digital core': digitalizing internal processes and improving the efficiency of staff.", "b1": "Digitalization of internal processes", "b2": "Improved operational efficiency", "b3": "A unified technology platform" },
+    "t2": { "badge": "50 / 24 SYSTEMS", "title": "Information systems development", "description": "Full software product lifecycle. Since inception, 50 information systems have been built, 24 of which are in operation today.", "b1": "Agile and Waterfall methodologies", "b2": "Development, enhancement and support", "b3": "Adapting to changing requirements" },
+    "t3": { "badge": "DATA OPERATOR", "title": "Technological data operator", "description": "Since 2021, DDC is the National Bank's technological data operator: professional processing and management of information in the digital environment.", "b1": "Database development and support", "b2": "Data storage security", "b3": "Adoption of modern technologies" }
   }
 }
