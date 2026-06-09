@@ -1,10 +1,7 @@
-"use client";
-
-import { motion } from "framer-motion";
 import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
-import { MapPin, Clock, ArrowRight, Zap, CheckCircle2 } from "lucide-react";
+import { MapPin, Clock, ArrowRight, CheckCircle2, Award, Zap, Compass, Eye, Shield, Users2, Landmark } from "lucide-react";
 
 interface Job {
   title: string;
@@ -14,93 +11,277 @@ interface Job {
   badgeVariant: "gold" | "green" | "gray";
   salary: string;
   experience: string;
+  published: string;
+  url: string;
 }
 
-export default function CareersPage() {
-  const jobs: Job[] = [
+const FALLBACK_JOBS: Job[] = [
+  {
+    title: "SOC Analyst L1/L2",
+    department: "Информационная безопасность",
+    location: "Астана",
+    type: "Полная занятость",
+    badgeVariant: "green",
+    salary: "Не указана",
+    experience: "1–3 года",
+    published: "5 июня",
+    url: "https://almaty.hh.kz/employer/28161"
+  },
+  {
+    title: "Director of IT Applications",
+    department: "Прикладные ИТ-решения",
+    location: "Астана",
+    type: "Полная занятость",
+    badgeVariant: "gold",
+    salary: "Не указана",
+    experience: "Более 6 лет",
+    published: "3 июня",
+    url: "https://almaty.hh.kz/employer/28161"
+  },
+  {
+    title: "Главный специалист планово-экономического отдела",
+    department: "Планово-экономический отдел",
+    location: "Астана",
+    type: "Полная занятость",
+    badgeVariant: "gray",
+    salary: "Не указана",
+    experience: "3–6 лет",
+    published: "3 июня",
+    url: "https://almaty.hh.kz/employer/28161"
+  },
+  {
+    title: "Главный специалист по компенсациям и льготам (C&B)",
+    department: "Управление персоналом (HR)",
+    location: "Астана",
+    type: "Полная занятость",
+    badgeVariant: "gray",
+    salary: "Не указана",
+    experience: "3–6 лет",
+    published: "26 мая",
+    url: "https://almaty.hh.kz/employer/28161"
+  },
+  {
+    title: "Специалист службы поддержки пользователей (IT Help Desk)",
+    department: "Служба поддержки пользователей",
+    location: "Астана",
+    type: "Полная занятость",
+    badgeVariant: "green",
+    salary: "Не указана",
+    experience: "1–3 года",
+    published: "20 мая",
+    url: "https://almaty.hh.kz/employer/28161"
+  },
+  {
+    title: "Middle DevOps Engineer",
+    department: "Инфраструктура и DevOps",
+    location: "Астана",
+    type: "Полная занятость",
+    badgeVariant: "green",
+    salary: "от 800 000 ₸",
+    experience: "1–3 года",
+    published: "14 мая",
+    url: "https://almaty.hh.kz/employer/28161"
+  },
+  {
+    title: "Senior Data Engineer",
+    department: "Управление данными",
+    location: "Астана",
+    type: "Полная занятость",
+    badgeVariant: "gold",
+    salary: "от 1 000 000 ₸",
+    experience: "3–6 лет",
+    published: "14 мая",
+    url: "https://almaty.hh.kz/employer/28161"
+  },
+  {
+    title: "Middle Data Engineer",
+    department: "Управление данными",
+    location: "Астана",
+    type: "Полная занятость",
+    badgeVariant: "green",
+    salary: "от 600 000 ₸",
+    experience: "1–3 года",
+    published: "14 мая",
+    url: "https://almaty.hh.kz/employer/28161"
+  },
+  {
+    title: "Junior Data Engineer",
+    department: "Управление данными",
+    location: "Астана",
+    type: "Полная занятость",
+    badgeVariant: "gray",
+    salary: "от 400 000 ₸",
+    experience: "Без опыта",
+    published: "14 мая",
+    url: "https://almaty.hh.kz/employer/28161"
+  }
+];
+
+function formatSalary(salary: any) {
+  if (!salary) return "Не указана";
+  const { from, to, currency } = salary;
+  const currSymbol = currency === "RUR" ? "₽" : currency === "KZT" ? "₸" : currency;
+  if (from && to) return `от ${from} до ${to} ${currSymbol}`;
+  if (from) return `от ${from} ${currSymbol}`;
+  if (to) return `до ${to} ${currSymbol}`;
+  return "Не указана";
+}
+
+function formatDate(dateStr: string) {
+  try {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString("ru-RU", { day: "numeric", month: "long" });
+  } catch {
+    return "";
+  }
+}
+
+async function getVacancies(): Promise<Job[]> {
+  try {
+    const res = await fetch("https://api.hh.ru/vacancies?employer_id=28161", {
+      headers: {
+        "User-Agent": "DDC-Website/1.0 (info@bsbnb.kz)",
+        "HH-User-Agent": "DDC-Website/1.0 (info@bsbnb.kz)",
+      },
+      next: { revalidate: 3600 }, // кэш на 1 час (ISR)
+    });
+    if (!res.ok) {
+      throw new Error(`HH API returned status ${res.status}`);
+    }
+    const data = await res.json();
+    if (data && Array.isArray(data.items) && data.items.length > 0) {
+      return data.items.map((item: any) => ({
+        title: item.name,
+        department: item.department?.name || "Центр цифрового развития",
+        location: item.area?.name || "Астана",
+        type: item.employment?.name || "Полная занятость",
+        badgeVariant: (item.name.toLowerCase().includes("senior") || item.name.toLowerCase().includes("director")) 
+          ? ("gold" as const) 
+          : (item.name.toLowerCase().includes("junior") ? ("gray" as const) : ("green" as const)),
+        salary: formatSalary(item.salary),
+        experience: item.experience?.name || "Опыт не указан",
+        published: formatDate(item.published_at),
+        url: item.alternate_url || "https://almaty.hh.kz/employer/28161",
+      }));
+    }
+    return FALLBACK_JOBS;
+  } catch (e) {
+    console.error("Failed to fetch vacancies from HH API, using fallback jobs", e);
+    return FALLBACK_JOBS;
+  }
+}
+
+export default async function CareersPage() {
+  const jobs = await getVacancies();
+
+  const values = [
     {
-      title: "Senior Go Engineer (Blockchain Lab)",
-      department: "Лаборатория DLT",
-      location: "Алматы",
-      type: "Полная занятость",
-      badgeVariant: "gold",
-      salary: "От конкурентная",
-      experience: "От 5 лет",
+      icon: Compass,
+      title: "Инновации",
+      text: "Стремление внедрять передовые технологии и быть лидерами цифровой трансформации финансового сектора."
     },
     {
-      title: "Senior Database Developer (PostgreSQL/Oracle)",
-      department: "Департамент транзакционных систем",
-      location: "Алматы / Гибрид",
-      type: "Полная занятость",
-      badgeVariant: "green",
-      salary: "Конкурентная",
-      experience: "От 4 лет",
+      icon: Users2,
+      title: "Прозрачность",
+      text: "Открытость во внутренних и внешних процессах, честность с клиентами, партнерами и каждым сотрудником."
     },
     {
-      title: "Data Engineer (Big Data Platform)",
-      department: "Отдел анализа финансовых рынков",
-      location: "Астана / Алматы",
-      type: "Полная занятость",
-      badgeVariant: "green",
-      salary: "Конкурентная",
-      experience: "От 3 лет",
+      icon: Award,
+      title: "Качество",
+      text: "Непрерывное совершенствование ИТ-продуктов и процессов для соответствия наивысшим международным стандартам."
     },
     {
-      title: "Junior Database Developer (Стажировка)",
-      department: "Отдел разработки клиринговых систем",
-      location: "Алматы",
-      type: "Стажировка (Оплачиваемая)",
-      badgeVariant: "gray",
-      salary: "Оплачиваемая",
-      experience: "Без опыта",
+      icon: Shield,
+      title: "Надёжность",
+      text: "Гарантия высочайшей отказоустойчивости, безопасности и стабильности всех государственных ИТ-решений."
     },
+    {
+      icon: Landmark,
+      title: "Партнерство",
+      text: "Тесное сотрудничество с Национальным Банком и его дочерними организациями для эффективной реализации проектов."
+    }
   ];
 
-  const coreBenefits = [
-    "Участие в проектах национального масштаба, меняющих финансовый сектор страны",
-    "Официальное оформление, стабильность и престиж работы в структуре Национального Банка РК",
-    "Конкурентная заработная плата и годовые премиальные выплаты по результатам KPI",
-    "Современный технологический стек (без легаси ради легаси, фокус на результат)",
-    "Оплачиваемое обучение, сертификация и участие в международных конференциях",
-    "Комфортные офисы в Алматы и Астане с зонами отдыха и гибким графиком",
+  const whyUsPoints = [
+    "Рабочая среда построена на технологиях Oracle, Sybase, IBM, Microsoft, где ежедневно решаются нетривиальные задачи в системной интеграции и сложной архитектуре.",
+    "Мы сплоченная команда с ясными ценностями и признанной ISO системой качества, где работа — это уровень профессионализма и взаимной поддержки.",
+    "Мы охватываем все уровни ответственности от системной архитектуры до поддержки, обеспечивая сотрудникам гибкий рост и возможность вращаться в разных ролях.",
+    "Вы получите уникальный опыт работы над системными государственными задачами и возможность расти в сложной крупной инфраструктуре Нацбанка РК."
   ];
 
   return (
-    <div className="relative w-full bg-[#0A0A0A] overflow-hidden min-h-screen pt-32 pb-24 font-sans">
-      {/* Мягкие свечения */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] pointer-events-none" />
-
+    <div className="relative w-full bg-black overflow-hidden min-h-screen pt-32 pb-24 font-sans">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         
-        {/* Заголовок */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-3xl mb-20"
-        >
-          <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
-            КАРЬЕРА В DDC
+        {/* Заголовок страницы */}
+        <div className="max-w-3xl mb-16">
+          <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
+            Центр цифрового развития Национального Банка Казахстана
           </span>
           <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
-            Стройте будущее <br />
-            <span className="text-gradient-gold font-medium">вместе с нами</span>
+            Центр в поиске <br />
+            <span className="text-gradient-gold font-medium">новых талантов</span>
           </h1>
-          <p className="text-lg text-zinc-400 font-light leading-relaxed">
-            Мы объединяем сильнейших IT-специалистов Казахстана для разработки передовых финансовых технологий. Наша цель — надежность, безопасность и инновации.
+          <p className="text-base sm:text-lg text-zinc-400 font-light leading-relaxed">
+            АО «Центр цифрового развития Национального Банка Казахстана» — стратегический партнер цифровой трансформации финансового сектора. С 2022 года компания разрабатывает, внедряет и сопровождает государственные информационные системы для Национального Банка и его дочерних организаций.
           </p>
-        </motion.div>
+        </div>
 
-        {/* Секция Культуры / Преимуществ */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center mb-24 pb-12 border-b border-white/5">
+        {/* Миссия и Видение */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20">
+          <GlassCard hoverAccent="gold" variant="liquid" isTiltEnabled={false} className="p-8 border border-white/5">
+            <h3 className="text-xl font-bold text-white mb-4 tracking-wide flex items-center gap-3">
+              <Compass className="w-5 h-5 text-gold" />
+              Миссия
+            </h3>
+            <p className="text-sm text-zinc-400 font-light leading-relaxed">
+              Быть лидером в цифровой трансформации, обеспечивая Национальный Банк и его дочерние структуры передовыми IT-решениями, которые ускоряют инновации, обеспечивают стабильность и устанавливают новые стандарты качества в управлении данными и технологиями.
+            </p>
+          </GlassCard>
+
+          <GlassCard hoverAccent="forest" variant="liquid" isTiltEnabled={false} className="p-8 border border-white/5">
+            <h3 className="text-xl font-bold text-white mb-4 tracking-wide flex items-center gap-3">
+              <Eye className="w-5 h-5 text-forest-light" />
+              Видение
+            </h3>
+            <p className="text-sm text-zinc-400 font-light leading-relaxed">
+              Мы стремимся стать эталоном в области цифровой трансформации, развивая и внедряя передовые IT-решения для Национального Банка и его дочерних структур. Мы видим себя ключевым партнёром, способным обеспечивать инновации, высокую надёжность и эффективность всех технологических процессов, прокладывая путь для других организаций к цифровому будущему.
+            </p>
+          </GlassCard>
+        </div>
+
+        {/* Ценности компании */}
+        <div className="mb-24">
+          <h2 className="font-display text-2xl sm:text-3xl text-white mb-8 font-normal tracking-tight">
+            Наши <span className="text-gradient-gold">ценности</span>
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {values.map((v, idx) => {
+              const Icon = v.icon;
+              return (
+                <GlassCard key={idx} hoverAccent="gold" variant="glass" isTiltEnabled={false} className="p-6 border border-white/5 hover:border-gold/15 flex flex-col justify-between">
+                  <div>
+                    <div className="w-10 h-10 rounded-xl bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold mb-4 shrink-0">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <h4 className="text-base font-bold text-white mb-2 tracking-wide">{v.title}</h4>
+                    <p className="text-xs text-zinc-400 font-light leading-relaxed">{v.text}</p>
+                  </div>
+                </GlassCard>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Почему именно мы? */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24 pb-12 border-b border-white/5">
           <div className="lg:col-span-7">
-            <h3 className="text-2xl font-bold text-white mb-6 tracking-wide">Почему выбирают DDC?</h3>
+            <h3 className="text-2xl font-bold text-white mb-6 tracking-wide">Почему именно мы?</h3>
             <ul className="space-y-4">
-              {coreBenefits.map((benefit, idx) => (
+              {whyUsPoints.map((point, idx) => (
                 <li key={idx} className="flex items-start gap-3.5 text-sm sm:text-base text-zinc-400 font-light leading-relaxed">
                   <CheckCircle2 className="w-5 h-5 text-forest-light shrink-0 mt-0.5" />
-                  <span>{benefit}</span>
+                  <span>{point}</span>
                 </li>
               ))}
             </ul>
@@ -109,26 +290,30 @@ export default function CareersPage() {
           <div className="lg:col-span-5 bg-charcoal/40 border border-white/5 p-8 rounded-2xl relative overflow-hidden">
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-forest/20 rounded-full blur-2xl pointer-events-none" />
             <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
-              <Zap className="w-6 h-6 animate-pulse" />
+              <Zap className="w-6 h-6" />
             </div>
-            <h4 className="text-base font-bold text-white mb-2">Старт для молодых талантов</h4>
+            <h4 className="text-base font-bold text-white mb-2">Начните свой путь в DDC</h4>
             <p className="text-xs text-zinc-400 font-light leading-relaxed mb-6">
-              Мы активно развиваем программы стажировок для Junior-разработчиков баз данных и Data-инженеров. Лучшие стажеры получают оффер в штат по окончании программы.
+              Если вы хотите работать над системными государственными задачами, расти в сложной крупной инфраструктуре и быть частью технологической базы Национального Банка — присоединяйтесь к ЦЦР НБК!
             </p>
-            <Button variant="gold" className="w-full justify-center text-xs" onClick={() => {
-              const target = document.getElementById("jobs-list");
-              target?.scrollIntoView({ behavior: "smooth" });
-            }}>
-              Посмотреть вакансии стажировок
-            </Button>
+            <a href="#jobs-list" className="w-full block">
+              <Button variant="gold" className="w-full justify-center text-xs">
+                Посмотреть вакансии ({jobs.length})
+              </Button>
+            </a>
           </div>
         </div>
 
         {/* Список вакансий */}
-        <div id="jobs-list">
-          <h2 className="font-display text-2xl sm:text-4xl text-white mb-8 font-normal tracking-tight">
-            Открытые <span className="text-gradient-gold">вакансии</span>
-          </h2>
+        <div id="jobs-list" className="scroll-mt-24">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <h2 className="font-display text-2xl sm:text-4xl text-white font-normal tracking-tight">
+              Открытые <span className="text-gradient-gold">вакансии ({jobs.length})</span>
+            </h2>
+            <span className="text-xs text-zinc-500 font-mono">
+              Актуально на: {new Date().toLocaleDateString("ru-RU", { month: "long", year: "numeric" })}
+            </span>
+          </div>
 
           <div className="grid grid-cols-1 gap-6">
             {jobs.map((job, idx) => (
@@ -152,16 +337,24 @@ export default function CareersPage() {
                     {job.title}
                   </h3>
 
-                  <div className="flex gap-6 text-xs text-zinc-500 font-light">
+                  <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-zinc-500 font-light">
                     <span>Опыт работы: <strong className="text-zinc-300 font-semibold">{job.experience}</strong></span>
                     <span>Заработная плата: <strong className="text-gold font-semibold">{job.salary}</strong></span>
+                    {job.published && (
+                      <>
+                        <span className="text-zinc-600">|</span>
+                        <span>Опубликовано: <strong className="text-zinc-400">{job.published}</strong></span>
+                      </>
+                    )}
                   </div>
                 </div>
 
-                <Button variant="outline" className="flex items-center justify-center gap-2 group whitespace-nowrap">
-                  Откликнуться
-                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </Button>
+                <a href={job.url} target="_blank" rel="noopener noreferrer" className="self-start md:self-auto">
+                  <Button variant="outline" className="flex items-center justify-center gap-2 group whitespace-nowrap">
+                    Откликнуться
+                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </Button>
+                </a>
               </GlassCard>
             ))}
           </div>

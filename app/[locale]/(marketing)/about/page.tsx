@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import { Landmark, Users, ArrowUpRight, Compass, ShieldCheck } from "lucide-react";
 import Button from "@/components/ui/Button";
+import Timeline from "@/components/sections/Timeline";
+import Leadership from "@/components/sections/Leadership";
 
 export default function AboutPage() {
   const containerVariants = {
@@ -38,11 +40,7 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="relative w-full bg-[#0A0A0A] overflow-hidden min-h-screen pt-32 pb-24 font-sans">
-      {/* Декоративное свечение */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-1/4 left-0 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] pointer-events-none" />
-
+    <div className="relative w-full bg-black overflow-hidden min-h-screen pt-32 pb-24 font-sans">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         
         {/* Заголовок страницы */}
@@ -65,7 +63,7 @@ export default function AboutPage() {
         </motion.div>
 
         {/* Секция миссии */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24 pb-12 border-b border-white/5">
+        <div id="mission" className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24 pb-12 border-b border-white/5">
           <div className="lg:col-span-7">
             <h3 className="text-2xl font-bold text-white mb-6 tracking-wide">Наша миссия</h3>
             <p className="text-zinc-400 font-light leading-relaxed mb-6">
@@ -133,7 +131,7 @@ export default function AboutPage() {
           <div>
             <h3 className="text-2xl font-bold text-white mb-3 tracking-wide">Развивайте технологии будущего</h3>
             <p className="text-sm text-zinc-400 font-light leading-relaxed max-w-xl">
-              Мы ищем талантливых инженеров, аналитиков и архитекторов, готовых решать сложные задачи национального масштаба в сильной команде.
+              Мы ищем талантливых инженеров, аналитиков и архитекторов, готовых решать сложные задачи государственного масштаба в сильной команде.
             </p>
           </div>
           <Button variant="gold" size="lg" className="shrink-0 flex items-center gap-2 group" onClick={() => window.location.href = "/careers"}>
@@ -143,6 +141,9 @@ export default function AboutPage() {
         </div>
 
       </div>
+
+      <Timeline />
+      <Leadership />
     </div>
   );
 }

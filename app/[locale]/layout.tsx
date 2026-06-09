@@ -1,28 +1,25 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Inter, JetBrains_Mono } from "next/font/google";
+import { Cormorant_Garamond, JetBrains_Mono, Comfortaa } from "next/font/google";
 import "../globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import CustomCursor from "@/components/ui/CustomCursor";
-import MatrixCursorTrail from "@/components/ui/MatrixCursorTrail";
 import PageTransitionProvider from "@/components/motion/PageTransition";
-
+// Font configurations remain as they are for Comfortaa, Cormorant Garamond and JetBrains Mono.
 const cormorant = Cormorant_Garamond({
-  subsets: ["latin", "cyrillic"],
+  subsets: ["latin", "cyrillic", "cyrillic-ext"],
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-cormorant",
   display: "swap",
 });
-
-const inter = Inter({
-  subsets: ["latin", "cyrillic"],
-  variable: "--font-inter",
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin", "cyrillic", "cyrillic-ext"],
+  variable: "--font-mono",
   display: "swap",
 });
 
-const jetbrains = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
+const comfortaa = Comfortaa({
+  subsets: ["latin", "cyrillic", "cyrillic-ext"],
+  variable: "--font-comfortaa",
   display: "swap",
 });
 
@@ -47,13 +44,20 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
-      className={`${cormorant.variable} ${inter.variable} ${jetbrains.variable} h-full antialiased dark`}
+      className={`${cormorant.variable} ${jetbrains.variable} ${comfortaa.variable} h-full antialiased dark`}
       style={{ colorScheme: "dark" }}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-[#08080a] text-white">
+      <head>
+        <link
+          rel="preload"
+          href="https://prod.spline.design/ictKMBv7DsgwCCwp/scene.splinecode"
+          as="fetch"
+          crossOrigin="anonymous"
+        />
+      </head>
+      <body className="min-h-full flex flex-col bg-[#000000] text-white">
         <NextIntlClientProvider messages={messages}>
-          <CustomCursor />
-          <MatrixCursorTrail />
           {/* Faint grain overlay (opacity 0.03) for organic texture */}
           <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] bg-[url('/images/textures/bg-texture-noise.png')] bg-repeat" />
           <PageTransitionProvider>{children}</PageTransitionProvider>

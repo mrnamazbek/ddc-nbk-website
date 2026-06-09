@@ -129,11 +129,11 @@ function DataFlow() {
 
 export default function MorphObjects() {
   // The coin (Act 3) is now the AI PNG billboard (CoinBillboard); this keeps the
-  // procedural vault (Act 4) and data-flow (Act 5) where there is no asset.
+  // procedural vault (Act 4) where there is no asset. DataFlow is disabled to remove distracting yellow circles.
   return (
     <>
       <Vault />
-      <DataFlow />
+      {/* <DataFlow /> */}
     </>
   );
 }

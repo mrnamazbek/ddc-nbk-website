@@ -18,7 +18,7 @@ export default function FadingVideo({
   className = "",
   videoClassName = "",
   fallbackClassName = "",
-  fadeDuration = 500, // FADE_MS = 500
+  fadeDuration = 500,
   autoplay = true,
 }: FadingVideoProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -26,8 +26,29 @@ export default function FadingVideo({
   const [videoOpacity, setVideoOpacity] = useState(0);
   const [fallbackOpacity, setFallbackOpacity] = useState(1);
   const [isVideoReady, setIsVideoReady] = useState(false);
+  const [isIntersecting, setIsIntersecting] = useState(false);
   const animationFrameRef = useRef<number | null>(null);
 
+  // Intersection Observer для отслеживания видимости видео во viewport
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsIntersecting(entry.isIntersecting);
+      },
+      {
+        root: null, // отслеживаем относительно экрана
+        threshold: 0.05, // видео видно хотя бы на 5%
+      }
+    );
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
+  // Кроссфейд при первой загрузке видео
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -36,16 +57,12 @@ export default function FadingVideo({
 
     const startCrossfade = () => {
       setIsVideoReady(true);
-      
-      // Начинаем воспроизведение видео с упреждением (lead ~0.55s / 550ms)
-      video.play().catch(() => {});
 
       const animate = (timestamp: number) => {
         if (!startTime) startTime = timestamp;
         const elapsed = timestamp - startTime;
         const progress = Math.min(elapsed / fadeDuration, 1);
 
-        // Используем плавную функцию сглаживания (ease-in-out)
         const easeProgress = progress < 0.5 
           ? 2 * progress * progress 
           : 1 - Math.pow(-2 * progress + 2, 2) / 2;
@@ -61,7 +78,7 @@ export default function FadingVideo({
         }
       };
 
-      // Задержка перед началом анимации фейда (lead = 0.55s)
+      // Небольшая задержка перед началом анимации
       setTimeout(() => {
         animationFrameRef.current = requestAnimationFrame(animate);
       }, 550);
@@ -71,18 +88,31 @@ export default function FadingVideo({
     video.load();
 
     return () => {
-      if (video) {
-        video.removeEventListener("canplay", startCrossfade);
-        video.pause();
-      }
+      video.removeEventListener("canplay", startCrossfade);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
   }, [src, fadeDuration]);
 
+  // Воспроизведение только когда видео находится на экране
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !autoplay) return;
+
+    if (isIntersecting) {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  }, [isIntersecting, autoplay, src]);
+
   return (
-    <div ref={containerRef} className={`relative overflow-hidden ${className}`}>
+    <div 
+      ref={containerRef} 
+      className={`relative overflow-hidden ${className}`}
+      style={{ backgroundImage: `url(${fallbackSrc})`, backgroundSize: "cover", backgroundPosition: "center" }}
+    >
       {/* Изображение-заглушка (Fallback) */}
       {fallbackOpacity > 0 && (
         <img
@@ -99,6 +129,8 @@ export default function FadingVideo({
         muted
         loop
         playsInline
+        preload="metadata" // Загружаем только метаданные
+        poster={fallbackSrc}
         className={`absolute inset-0 w-full h-full object-cover z-0 ${videoClassName}`}
         style={{ opacity: videoOpacity }}
       >

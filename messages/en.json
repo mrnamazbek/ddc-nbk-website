@@ -10,7 +10,8 @@
     "news": "News",
     "careers": "Careers",
     "analytics": "Analytics",
-    "contact": "Contact"
+    "contact": "Contact",
+    "procurementPortal": "Procurement Portal of NBK"
   },
   "Hero": {
     "badge": "Digital Development Center • National Bank of Kazakhstan",
@@ -99,5 +100,63 @@
     "t1": { "badge": "SINCE 2021", "title": "The National Bank's digital core", "description": "Building the National Bank's 'digital core': digitalizing internal processes and improving the efficiency of staff.", "b1": "Digitalization of internal processes", "b2": "Improved operational efficiency", "b3": "A unified technology platform" },
     "t2": { "badge": "50 / 24 SYSTEMS", "title": "Information systems development", "description": "Full software product lifecycle. Since inception, 50 information systems have been built, 24 of which are in operation today.", "b1": "Agile and Waterfall methodologies", "b2": "Development, enhancement and support", "b3": "Adapting to changing requirements" },
     "t3": { "badge": "DATA OPERATOR", "title": "Technological data operator", "description": "Since 2021, DDC is the National Bank's technological data operator: professional processing and management of information in the digital environment.", "b1": "Database development and support", "b2": "Data storage security", "b3": "Adoption of modern technologies" }
+  },
+  "Timeline": {
+    "overline": "Development History",
+    "titleLine1": "Path of the Center's",
+    "titleAccent": "digital evolution",
+    "subtitle": "From the establishment of a republican state enterprise to the leading technological core of the National Bank of Kazakhstan.",
+    "y1996": {
+      "year": "Year 1996",
+      "title": "Enterprise Creation",
+      "desc": "Establishment of the republican state enterprise to serve the needs of the National Bank of the Republic of Kazakhstan."
+    },
+    "y2003": {
+      "year": "Year 2003",
+      "title": "Quality Management",
+      "desc": "Implementation of the quality management system (QMS) in accordance with international standards."
+    },
+    "y2015": {
+      "year": "Year 2015",
+      "title": "JSC BSB NBK",
+      "desc": "Reorganization into the Joint-Stock Company 'Banking Service Bureau of the National Bank of Kazakhstan'."
+    },
+    "y2017": {
+      "year": "Year 2017",
+      "title": "Center of Competence",
+      "desc": "Transformation from a single-project team into a scale IT competence center of the fintech ecosystem."
+    },
+    "y2020": {
+      "year": "Years 2020-2023",
+      "title": "Services Expansion",
+      "desc": "Launch of the Procurement Portal, maintenance of the Risk Management System, launch of the Contact Center 1477, administration of information security tools, and digital transformation."
+    },
+    "y2025": {
+      "year": "Year 2025",
+      "title": "Digital Development Center",
+      "desc": "Renaming to JSC 'Digital Development Center of the National Bank of Kazakhstan' and scaling target responsibilities."
+    }
+  },
+  "Leadership": {
+    "overline": "Management Team",
+    "titleLine1": "Leadership of",
+    "titleAccent": "our organization",
+    "subtitle": "Professionals in the IT industry ensuring the stability of digital solutions of Kazakhstan's financial system.",
+    "l1": {
+      "name": "Malik A. Amardinov",
+      "role": "Chairman of the Board"
+    },
+    "l2": {
+      "name": "Erlan D. Durmagambetov",
+      "role": "First Deputy Chairman of the Board"
+    },
+    "l3": {
+      "name": "Argyn S. Kentbekov",
+      "role": "Deputy Chairman of the Board"
+    },
+    "l4": {
+      "name": "Bakhytzhan G. Imajanov",
+      "role": "Deputy Chairman of the Board"
+    }
   }
 }

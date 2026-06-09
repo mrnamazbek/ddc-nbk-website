@@ -2,7 +2,7 @@
 
 :root {
   /* Базовый глубокий угольный фон и контрастный белый текст */
-  --background: #08080a;
+  --background: #000000;
   --foreground: #FFFFFF;
 
   /* Дизайн-токены DDC Forest Green (АО «Центр цифрового развития») */
@@ -44,6 +44,11 @@
   /* Тени */
   --shadow-gold: 0 8px 32px rgba(201, 168, 76, 0.15);
   --shadow-forest: 0 8px 32px rgba(26, 61, 43, 0.25);
+
+  /* Текущие активные шрифты дизайн-системы */
+  --font-current-sans: var(--font-comfortaa), sans-serif;
+  --font-current-mono: var(--font-comfortaa), var(--font-mono), monospace;
+  --font-current-display: var(--font-comfortaa), var(--font-cormorant), serif;
 }
 
 @theme {
@@ -62,37 +67,27 @@
   --color-charcoal: var(--color-charcoal);
   --color-offwhite: var(--color-offwhite);
 
-  --font-display: var(--font-display), Georgia, serif;
-  --font-sans: var(--font-heading), system-ui, sans-serif;
-  --font-mono: var(--font-mono), monospace;
+  --font-display: var(--font-current-display), Georgia, serif;
+  --font-sans: var(--font-current-sans), system-ui, sans-serif;
+  --font-mono: var(--font-current-mono), monospace;
 
   --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-spin-slow: spin 8s linear infinite;
 }
 
 body {
-  background-color: #0A0A0A;
-  background-image: radial-gradient(circle at 50% 50%, #0E2419 0%, #0A0A0A 100%);
+  background-color: #000000;
+  background-image: none;
   background-attachment: fixed;
   color: var(--foreground);
-  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-current-sans);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Скрываем дефолтный курсор на десктопах для активации интерактивного курсора */
-@media (min-width: 1025px) {
-  body:not(.low-power) {
-    cursor: none;
-  }
-  body:not(.low-power) a,
-  body:not(.low-power) button,
-  body:not(.low-power) [role="button"],
-  body:not(.low-power) select,
-  body:not(.low-power) input {
-    cursor: none !important;
-  }
-}
+
+
+
 
 /* ==========================================
    Утилиты и эффекты
@@ -186,73 +181,7 @@ body {
    Элементы из стилей пользователя (styles.css)
    ========================================== */
 
-/* CUSTOM CURSOR */
-.custom-cursor-dot {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 6px;
-  height: 6px;
-  background-color: var(--color-forest-light);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 100000;
-  transform: translate(-50%, -50%);
-  will-change: transform;
-  display: none;
-}
 
-#custom-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 40px;
-  height: 40px;
-  color: var(--color-forest-light);
-  pointer-events: none;
-  z-index: 99999;
-  transform: translate(-50%, -50%);
-  will-change: transform;
-  display: none;
-}
-
-@media (min-width: 1025px) {
-  body:not(.low-power) .custom-cursor-dot,
-  body:not(.low-power) #custom-cursor {
-    display: block;
-  }
-}
-
-/* Эффекты при наведении (Hover States) */
-.custom-cursor-dot.hovered {
-  background-color: var(--color-forest-light);
-  transform: translate(-50%, -50%) scale(1.5);
-  box-shadow: 0 0 10px rgba(82, 183, 136, 0.5);
-}
-
-.custom-cursor-dot.hovered-gold {
-  background-color: var(--color-gold);
-  transform: translate(-50%, -50%) scale(1.5);
-  box-shadow: 0 0 10px rgba(201, 168, 76, 0.5);
-}
-
-#custom-cursor.hovered {
-  width: 64px;
-  height: 64px;
-  color: var(--color-forest-light);
-}
-
-#custom-cursor.hovered-gold {
-  width: 64px;
-  height: 64px;
-  color: var(--color-gold);
-}
-
-/* Медленное вращение купола шанырака при наведении */
-#custom-cursor.hovered svg,
-#custom-cursor.hovered-gold svg {
-  animation: spin 16s linear infinite;
-}
 
 /* LIQUID GLASS CARD (APPLE LIQUID GLASS & GLASSMOPHISM) */
 .glass-card,
@@ -299,9 +228,9 @@ body {
 
 /* 1. Классическая стеклянная карта (Glass Card) */
 .glass-card {
-  background: rgba(10, 10, 12, 0.45);
-  backdrop-filter: blur(28px) saturate(210%);
-  -webkit-backdrop-filter: blur(28px) saturate(210%);
+  background: rgba(10, 15, 12, 0.75);
+  backdrop-filter: blur(32px) saturate(210%);
+  -webkit-backdrop-filter: blur(32px) saturate(210%);
   box-shadow: 
     inset 0 1px 1px rgba(255, 255, 255, 0.15),
     inset 0 -1px 1px rgba(0, 0, 0, 0.2),
@@ -310,19 +239,19 @@ body {
 
 /* 2. Жидкое стекло (Liquid Glass - легкое размытие) */
 .liquid-glass {
-  background: rgba(255, 255, 255, 0.01);
+  background: rgba(8, 20, 14, 0.7);
   background-blend-mode: luminosity;
-  backdrop-filter: blur(8px) saturate(180%);
-  -webkit-backdrop-filter: blur(8px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
 }
 
 /* 3. Сильное жидкое стекло (Liquid Glass Strong - глубокое размытие для CTA) */
 .liquid-glass-strong {
-  background: rgba(255, 255, 255, 0.015);
+  background: rgba(6, 16, 11, 0.82);
   background-blend-mode: luminosity;
-  backdrop-filter: blur(50px) saturate(220%);
-  -webkit-backdrop-filter: blur(50px) saturate(220%);
+  backdrop-filter: blur(60px) saturate(220%);
+  -webkit-backdrop-filter: blur(60px) saturate(220%);
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.15);
   --glass-border-gradient: linear-gradient(180deg,
     rgba(255, 255, 255, 0.5) 0%,
@@ -773,4 +702,17 @@ body {
     transition-duration: 0s !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Скрытие вотермарки "Built with Spline" */
+a[href*="spline.design"],
+#spline-logo,
+.spline-watermark,
+[class*="spline"] a,
+spline-viewer #logo,
+spline-viewer shadow-root #logo {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }

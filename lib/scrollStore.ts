@@ -28,14 +28,15 @@ let last = 0;
  * section is on screen regardless of section height.
  */
 const ACT_RANGES: [number, number][] = [
-  [0.0, 0.1], // Hero      → Formation
-  [0.1, 0.25], // Stats     → Expansion
-  [0.25, 0.45], // Services  → Coin
-  [0.45, 0.6], // Security  → Vault
-  [0.6, 0.75], // Digital   → Data Flow
-  [0.75, 0.9], // About     → Steppe
-  [0.9, 0.95], // News      → Return (rising)
-  [0.95, 1.0], // CTA       → Return (full glory)
+  [0.0, 0.1], // Hero         → Formation
+  [0.1, 0.25], // Stats        → Expansion
+  [0.25, 0.45], // Services     → Coin
+  [0.45, 0.6], // Digital      → Vault / Data Flow (inverted index)
+  [0.6, 0.75], // Security     → Vault / Data Flow (inverted index)
+  [0.75, 0.9], // About        → Steppe
+  [0.9, 0.93], // Timeline     → Return (rising)
+  [0.93, 0.96], // Leadership   → Return (rising)
+  [0.96, 1.0], // CTA          → Return (full glory)
 ];
 
 let sections: { top: number; height: number }[] = [];

@@ -126,7 +126,7 @@ export default function ScrollSequence({
       const t = performance.now() / 1000;
 
       // Расчет видимости (presence) каждого ассета на основе таймлайна (Acts)
-      const shanyrakPresence = band(p, -0.05, 0.26, 0.05) + band(p, 0.88, 1.05, 0.05);
+      const shanyrakPresence = band(p, -0.05, 0.26, 0.05) + band(p, 0.95, 1.05, 0.02);
       const coinPresence = band(p, 0.25, 0.62, 0.05);
       const eaglePresence = band(p, 0.72, 0.90, 0.05);
 

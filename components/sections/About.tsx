@@ -105,16 +105,29 @@ export default function About() {
     <section 
       id="about" 
       ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-[#0E2419]/55 overflow-hidden border-t border-white/5"
+      className="relative w-full py-24 sm:py-32 bg-black overflow-hidden border-t border-white/5"
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
           
           {/* Левая сторона: Описание и таймлайн */}
           <div className="lg:col-span-7 flex flex-col justify-center">
-            <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
-              {t("overline")}
-            </span>
+            <div className="flex items-center gap-3 mb-4">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 100 100"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect x="10" y="10" width="80" height="80" rx="40" fill="#0a1a11" />
+                <rect x="15" y="15" width="70" height="70" rx="35" stroke="#E8C87A" strokeWidth="2" />
+                <path d="M50 25 L55 45 L75 50 L55 55 L50 75 L45 55 L25 50 L45 45 Z" fill="#E8C87A" />
+              </svg>
+              <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium block">
+                {t("overline")}
+              </span>
+            </div>
 
             <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6 leading-tight">
               {t("titleLine1")} <br />
@@ -169,14 +182,14 @@ export default function About() {
               />
             </div>
             
-            {/* Передний фон: saka_refractive_glass */}
+            {/* Передний фон: liquid_glass_flow */}
             <div 
               ref={fgImgRef}
               className="absolute bottom-0 left-0 w-2/3 h-2/3 rounded-2xl overflow-hidden border border-gold/20 shadow-[0_8px_30px_rgba(201,168,76,0.2)] z-20 transition-transform duration-700 hover:scale-[1.03]"
             >
               <Image
-                src="/images/saka_refractive_glass.png"
-                alt="Жидкое стекло с сакральной геометрией ЦЦР"
+                src="/images/backgrounds/liquid_glass_flow.png"
+                alt="Жидкое стекло с национальным орнаментом ЦЦР"
                 fill
                 priority
                 sizes="(max-w-768px) 100vw, 50vw"

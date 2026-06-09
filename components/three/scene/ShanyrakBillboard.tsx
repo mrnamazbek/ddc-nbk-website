@@ -46,7 +46,7 @@ export default function ShanyrakBillboard() {
     // Visible Formation→Expansion, gone while it becomes the coin/vault/data,
     // reborn for Steppe (rising sun) and Return.
     const intro = band(p, -0.03, 0.27, 0.06);
-    const outro = band(p, 0.72, 1.03, 0.05);
+    const outro = band(p, 0.95, 1.05, 0.02); // Появляется только в финальной CTA-секции
     const presence = Math.max(intro, outro);
 
     // Act 1 assembly → Act 6/7 rebirth scaling.

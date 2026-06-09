@@ -35,7 +35,7 @@ export default function NewsPage() {
       excerpt: "Завершен первый этап тестирования двусторонних оффлайн-платежей на мобильных устройствах и смарт-картах в отдаленных регионах.",
       date: "18 Мая 2026",
       readTime: "5 мин",
-      gradient: "from-[#1A3D2B] via-[#0F251A] to-[#0A0A0A]",
+      gradient: "from-[#1A3D2B] via-[#0F251A] to-[#000000]",
     },
     {
       category: "Интеграция",
@@ -43,7 +43,7 @@ export default function NewsPage() {
       excerpt: "Внедрение единых стандартов открытого банкинга позволяет автоматизировать мгновенный межбанковский обмен информацией.",
       date: "04 Мая 2026",
       readTime: "4 мин",
-      gradient: "from-[#8B7035] via-[#58461F] to-[#0A0A0A]",
+      gradient: "from-[#8B7035] via-[#58461F] to-[#000000]",
     },
     {
       category: "Релиз",
@@ -51,7 +51,7 @@ export default function NewsPage() {
       excerpt: "Новый документ подробно описывает механизмы смарт-контрактов для маркирования целевых государственных субсидий.",
       date: "22 Апреля 2026",
       readTime: "8 мин",
-      gradient: "from-[#2D6A4F] via-[#102A1E] to-[#0A0A0A]",
+      gradient: "from-[#2D6A4F] via-[#102A1E] to-[#000000]",
     },
     {
       category: "События",
@@ -59,7 +59,7 @@ export default function NewsPage() {
       excerpt: "Руководители Центра представили промежуточные результаты интеграции цифрового тенге в сектор розничных платежей.",
       date: "15 Апреля 2026",
       readTime: "3 мин",
-      gradient: "from-[#1A3D2B] via-[#8B7035] to-[#0A0A0A]",
+      gradient: "from-[#1A3D2B] via-[#8B7035] to-[#000000]",
     },
     {
       category: "Образование",
@@ -67,7 +67,7 @@ export default function NewsPage() {
       excerpt: "Совместно с Национальным Банком открыт набор на оплачиваемую годовую стажировку в лабораторию кибербезопасности DDC.",
       date: "02 Апреля 2026",
       readTime: "6 мин",
-      gradient: "from-[#52B788] via-[#1A3D2B] to-[#0A0A0A]",
+      gradient: "from-[#52B788] via-[#1A3D2B] to-[#000000]",
     },
     {
       category: "Технологии",
@@ -75,12 +75,12 @@ export default function NewsPage() {
       excerpt: "Обновление архитектуры кеширования позволило сократить время подтверждения транзакций до 1.2 секунды под пиковой нагрузкой.",
       date: "20 Марта 2026",
       readTime: "7 мин",
-      gradient: "from-[#8B7035] via-[#2D6A4F] to-[#0A0A0A]",
+      gradient: "from-[#8B7035] via-[#2D6A4F] to-[#000000]",
     },
   ];
 
   return (
-    <div className="relative w-full bg-[#0A0A0A] overflow-hidden min-h-screen pt-32 pb-24 font-sans">
+    <div className="relative w-full bg-black overflow-hidden min-h-screen pt-32 pb-24 font-sans">
       {/* Мягкие свечения */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] pointer-events-none" />

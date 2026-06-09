@@ -11,9 +11,9 @@ import ShanyrakBillboard from "./scene/ShanyrakBillboard";
 import CoinBillboard from "./scene/CoinBillboard";
 import MorphObjects from "./scene/MorphObjects";
 import Steppe from "./scene/Steppe";
-import GoldDust from "./scene/GoldDust";
 import CameraRig from "./scene/CameraRig";
 import CinematicLoader from "./scene/CinematicLoader";
+import Timeline3D from "./scene/Timeline3D";
 
 import ScrollSequence from "@/components/ScrollSequence";
 
@@ -51,7 +51,7 @@ function SceneContents({ quality }: { quality: Quality }) {
       <CoinBillboard />
       <MorphObjects />
       <Steppe />
-      <GoldDust count={4200} />
+      <Timeline3D />
 
       <EffectComposer>
         <Bloom intensity={1.15} luminanceThreshold={0.55} luminanceSmoothing={0.3} mipmapBlur radius={0.7} />

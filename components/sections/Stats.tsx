@@ -30,11 +30,9 @@ export default function Stats() {
   return (
     <section
       id="stats"
-      className="relative w-full py-24 sm:py-32 bg-[#0E2419]/55 overflow-hidden border-t border-white/[0.05]"
+      className="relative w-full py-24 sm:py-32 bg-black overflow-hidden border-t border-white/[0.05]"
     >
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#1A3D2B03_1px,transparent_1px),linear-gradient(to_bottom,#1A3D2B03_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
-      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[550px] h-[550px] bg-forest/5 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[450px] h-[450px] bg-gold/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         {/* Section header */}

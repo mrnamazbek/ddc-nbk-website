@@ -89,8 +89,19 @@ export default function Hero() {
           className="max-w-4xl"
         >
           {/* Надзаголовок-статус с зеленым маяком цифровой стабильности */}
-          <motion.div variants={itemVariants} className="inline-flex items-center gap-2 mb-8 bg-white/[0.03] border border-white/[0.08] backdrop-blur-md px-4 py-2 rounded-full">
-            <span className="w-2.5 h-2.5 rounded-full bg-forest-light animate-pulse" />
+          <motion.div variants={itemVariants} className="inline-flex items-center gap-3 mb-8 bg-white/[0.03] border border-white/[0.08] backdrop-blur-md px-4 py-2 rounded-full">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 100 100"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect x="10" y="10" width="80" height="80" rx="40" fill="#0a1a11" />
+              <rect x="15" y="15" width="70" height="70" rx="35" stroke="#E8C87A" strokeWidth="2" />
+              <path d="M50 25 L55 45 L75 50 L55 55 L50 75 L45 55 L25 50 L45 45 Z" fill="#E8C87A" />
+            </svg>
+            <span className="w-1.5 h-1.5 rounded-full bg-forest-light animate-pulse" />
             <span className="text-[10px] uppercase tracking-[0.25em] text-gold-light font-mono font-medium">
               {t("badge")}
             </span>

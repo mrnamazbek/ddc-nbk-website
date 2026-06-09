@@ -73,11 +73,7 @@ export default function News() {
   };
 
   return (
-    <section id="news" className="relative w-full py-24 sm:py-32 bg-[#0E2419]/55 overflow-hidden border-t border-white/5">
-      {/* Brand ambient glow */}
-      <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] pointer-events-none" />
-
+    <section id="news" className="relative w-full py-24 sm:py-32 bg-black overflow-hidden border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         
         {/* Section header */}

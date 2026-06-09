@@ -53,10 +53,8 @@ export default function CTA() {
   return (
     <section 
       ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-[#0E2419]/55 overflow-hidden border-t border-white/5"
+      className="relative w-full py-24 sm:py-32 bg-black overflow-hidden border-t border-white/5"
     >
-      {/* Анимированный фоновый градиент (мягкие переливы в лесно-зеленом стиле DDC) */}
-      <div className="absolute inset-0 bg-radial-[at_50%_50%] from-[#0F241A]/40 via-[#08080a] to-[#08080a] opacity-60 pointer-events-none" />
       
       {/* Декоративные вращающиеся круги на фоне */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-forest-light/5 animate-[spin_60s_linear_infinite] pointer-events-none" />
@@ -83,6 +81,22 @@ export default function CTA() {
             {/* Световой блик внутри панели */}
             <div className="absolute -top-40 -left-40 w-80 h-80 bg-forest/20 rounded-full blur-[80px] pointer-events-none" />
             <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-gold/10 rounded-full blur-[80px] pointer-events-none" />
+
+            {/* Company Logo in Saka style */}
+            <div className="flex justify-center mb-6 relative z-10">
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 100 100"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="transition-transform duration-[2s] hover:rotate-[360deg]"
+              >
+                <rect x="10" y="10" width="80" height="80" rx="40" fill="#0a1a11" />
+                <rect x="15" y="15" width="70" height="70" rx="35" stroke="#E8C87A" strokeWidth="2" />
+                <path d="M50 25 L55 45 L75 50 L55 55 L50 75 L45 55 L25 50 L45 45 Z" fill="#E8C87A" />
+              </svg>
+            </div>
 
             <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-6 block relative z-10">
               {t("overline")}

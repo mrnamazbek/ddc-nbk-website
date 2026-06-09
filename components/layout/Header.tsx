@@ -72,13 +72,13 @@ export default function Header() {
   }, []);
 
   const navLinks = [
+    { name: t("home"), href: "/" },
     { name: t("about"), href: "/about" },
     { name: t("services"), href: "/services" },
-    { name: t("digital"), href: "/digital" },
-    { name: t("security"), href: "/security" },
-    { name: t("analytics"), href: "/analytics" },
+    { name: t("mission"), href: "/about#mission" },
     { name: t("news"), href: "/news" },
     { name: t("careers"), href: "/careers" },
+    { name: t("contacts"), href: "/contact" },
   ];
 
   const switchLocale = (lng: string) => {
@@ -132,14 +132,14 @@ export default function Header() {
           </TransitionLink>
 
           {/* Desktop menu */}
-          <nav className="hidden lg:flex items-center gap-1 bg-black/20 border border-white/[0.04] p-1 rounded-full backdrop-blur-md relative">
+          <nav className="hidden xl:flex items-center gap-0.5 xl:gap-1 bg-black/20 border border-white/[0.04] p-1 rounded-full backdrop-blur-md relative">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <TransitionLink
                   key={link.name}
                   href={link.href}
-                  className={`font-heading text-sm tracking-wide transition-all duration-300 relative px-4 py-1.5 rounded-full hover:text-white flex items-center justify-center ${
+                  className={`font-heading text-xs xl:text-sm tracking-wide transition-all duration-300 relative px-3 py-1 xl:px-4 xl:py-1.5 rounded-full hover:text-white flex items-center justify-center ${
                     isActive ? "text-white font-medium" : "text-gray-light hover:bg-white/[0.02]"
                   }`}
                 >
@@ -158,24 +158,24 @@ export default function Header() {
           </nav>
 
           {/* Right action panel */}
-          <div className="hidden lg:flex items-center gap-6">
+          <div className="hidden xl:flex items-center gap-4">
             {/* Language Switcher */}
             <LanguageSwitcher locale={locale} onSwitch={switchLocale} />
 
-            {/* Contact Button */}
-            <TransitionLink href="/contact">
+            {/* Procurement Portal Button */}
+            <a href="https://zakup.nationalbank.kz" target="_blank" rel="noopener noreferrer">
               <Magnetic>
                 <Button variant="gold" size="sm">
-                  {t("contact")}
+                  {t("procurementPortal")}
                 </Button>
               </Magnetic>
-            </TransitionLink>
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2 rounded-full liquid-glass text-white hover:text-gold transition-colors focus-visible:outline-none"
+            className="xl:hidden p-2 rounded-full liquid-glass text-white hover:text-gold transition-colors focus-visible:outline-none"
             aria-label="Toggle mobile menu"
             aria-expanded={isMobileMenuOpen}
           >
@@ -194,7 +194,7 @@ export default function Header() {
             transition={{ duration: 0.3 }}
             data-hover="gold"
             style={{ background: "rgba(8,8,10,0.82)" }}
-            className="fixed inset-0 z-40 liquid-glass-strong rounded-none flex flex-col justify-between pt-32 pb-16 px-8 lg:hidden"
+            className="fixed inset-0 z-40 liquid-glass-strong rounded-none flex flex-col justify-between pt-32 pb-16 px-8 xl:hidden"
           >
             {/* Menu links */}
             <nav className="flex flex-col gap-6">
@@ -228,11 +228,11 @@ export default function Header() {
                 <LanguageSwitcher locale={locale} onSwitch={switchLocale} size="lg" />
               </div>
 
-              <TransitionLink href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="w-full">
+              <a href="https://zakup.nationalbank.kz" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="w-full">
                 <Button variant="gold" size="lg" className="w-full">
-                  {t("contact")} <ArrowRight className="w-4 h-4" />
+                  {t("procurementPortal")} <ArrowRight className="w-4 h-4" />
                 </Button>
-              </TransitionLink>
+              </a>
             </div>
           </motion.div>
         )}

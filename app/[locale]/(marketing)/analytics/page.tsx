@@ -36,7 +36,7 @@ export default function AnalyticsPage() {
   ];
 
   return (
-    <div className="relative w-full bg-[#0A0A0A] overflow-hidden min-h-screen pt-32 pb-24 font-sans">
+    <div className="relative w-full bg-black overflow-hidden min-h-screen pt-32 pb-24 font-sans">
       {/* Background decorations */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-forest/5 rounded-full blur-[160px] pointer-events-none" />
       <div className="absolute bottom-1/4 left-0 w-[450px] h-[450px] bg-gold/5 rounded-full blur-[120px] pointer-events-none" />
