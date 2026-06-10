@@ -4,9 +4,6 @@ import "../globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import PageTransitionProvider from "@/components/motion/PageTransition";
-import CustomCursor from "@/components/ui/CustomCursor";
-import MatrixCursorTrail from "@/components/ui/MatrixCursorTrail";
-import InteractiveDotGrid from "@/components/ui/InteractiveDotGrid";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin", "cyrillic", "cyrillic-ext"],
@@ -63,8 +60,6 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           {/* Faint grain overlay (opacity 0.03) for organic texture */}
           <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] bg-[url('/images/textures/bg-texture-noise.png')] bg-repeat" />
-          <CustomCursor />
-          <MatrixCursorTrail />
           <PageTransitionProvider>{children}</PageTransitionProvider>
         </NextIntlClientProvider>
       </body>
