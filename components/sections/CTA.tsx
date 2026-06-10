@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
+import Image from "next/image";
 import GlassCard from "@/components/ui/GlassCard";
 import ShimmerButton from "@/components/ui/ShimmerButton";
 import PartnerMarquee from "@/components/ui/PartnerMarquee";
@@ -84,18 +85,14 @@ export default function CTA() {
 
             {/* Company Logo in Saka style */}
             <div className="flex justify-center mb-6 relative z-10">
-              <svg
-                width="48"
-                height="48"
-                viewBox="0 0 100 100"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="transition-transform duration-[2s] hover:rotate-[360deg]"
-              >
-                <rect x="10" y="10" width="80" height="80" rx="40" fill="#0a1a11" />
-                <rect x="15" y="15" width="70" height="70" rx="35" stroke="#E8C87A" strokeWidth="2" />
-                <path d="M50 25 L55 45 L75 50 L55 55 L50 75 L45 55 L25 50 L45 45 Z" fill="#E8C87A" />
-              </svg>
+              <Image
+                src="/images/logo/ddc-logo.svg"
+                alt="DDC"
+                width={48}
+                height={48}
+                priority
+                className="pointer-events-none transition-transform duration-[2s] hover:rotate-[360deg]"
+              />
             </div>
 
             <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-6 block relative z-10">

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { Menu, X, ArrowRight, Home, Building2, LayoutGrid, Target, Newspaper, Briefcase, Mail, type LucideIcon } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "../ui/Button";
 import Magnetic from "../motion/Magnetic";
@@ -72,15 +73,44 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks: { name: string; href: string; icon: LucideIcon }[] = [
-    { name: t("home"), href: "/", icon: Home },
-    { name: t("about"), href: "/about", icon: Building2 },
-    { name: t("services"), href: "/services", icon: LayoutGrid },
-    { name: t("mission"), href: "/about#mission", icon: Target },
-    { name: t("news"), href: "/news", icon: Newspaper },
-    { name: t("careers"), href: "/careers", icon: Briefcase },
-    { name: t("contacts"), href: "/contact", icon: Mail },
+  const navLinks: { name: string; href: string }[] = [
+    { name: t("home"), href: "/" },
+    { name: t("about"), href: "/about" },
+    { name: t("services"), href: "/services" },
+    { name: t("mission"), href: "/about#mission" },
+    { name: t("news"), href: "/news" },
+    { name: t("careers"), href: "/careers" },
+    { name: t("contacts"), href: "/contact" },
   ];
+
+  // Sliding "cursor" pill for the desktop nav: follows hover, and rests on the
+  // active route when the pointer leaves. Adapted to the liquid-glass design.
+  const navListRef = useRef<HTMLUListElement>(null);
+  const tabRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const [pill, setPill] = useState({ left: 0, width: 0, opacity: 0 });
+
+  const movePillTo = (el: HTMLLIElement | null) => {
+    if (!el) return;
+    setPill({ left: el.offsetLeft, width: el.offsetWidth, opacity: 1 });
+  };
+
+  const restPill = () => {
+    const activeIdx = navLinks.findIndex(
+      (l) => l.href === pathname || (l.href !== "/" && pathname.startsWith(l.href.split("#")[0]))
+    );
+    if (activeIdx >= 0 && tabRefs.current[activeIdx]) {
+      movePillTo(tabRefs.current[activeIdx]);
+    } else {
+      setPill((p) => ({ ...p, opacity: 0 }));
+    }
+  };
+
+  // Park the pill on the active route on mount and whenever the route changes.
+  useEffect(() => {
+    const id = requestAnimationFrame(restPill);
+    return () => cancelAnimationFrame(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   const switchLocale = (lng: string) => {
     if (lng === locale) return;
@@ -99,31 +129,14 @@ export default function Header() {
         <div className="w-full flex items-center justify-between">
           {/* Logo */}
           <TransitionLink href="/" className="flex items-center gap-3 group select-none">
-            {/* Heraldic Shield in Saka style (abstract SVG) */}
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 100 100"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="transition-transform duration-700 group-hover:rotate-[360deg] pointer-events-none"
-            >
-              <rect x="10" y="10" width="80" height="80" rx="40" fill="url(#forest_grad)" />
-              <rect x="15" y="15" width="70" height="70" rx="35" stroke="url(#gold_grad)" strokeWidth="2" />
-              {/* Geometry of Saka eagle/sun */}
-              <path d="M50 25 L55 45 L75 50 L55 55 L50 75 L45 55 L25 50 L45 45 Z" fill="url(#gold_grad)" />
-              <defs>
-                <linearGradient id="forest_grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#0a1a11" />
-                  <stop offset="1" stopColor="#1A3D2B" />
-                </linearGradient>
-                <linearGradient id="gold_grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#E8C87A" />
-                  <stop offset="0.5" stopColor="#C9A84C" />
-                  <stop offset="1" stopColor="#8B7035" />
-                </linearGradient>
-              </defs>
-            </svg>
+            <Image
+              src="/images/logo/ddc-logo.svg"
+              alt="DDC — Центр цифрового развития НБК"
+              width={42}
+              height={42}
+              priority
+              className="transition-transform duration-700 group-hover:rotate-[120deg] pointer-events-none"
+            />
             <div>
               <span className="font-heading font-bold text-xl tracking-wider text-white">DDC</span>
               <span className="block text-[8px] text-gold font-mono tracking-widest leading-none uppercase">
@@ -132,38 +145,45 @@ export default function Header() {
             </div>
           </TransitionLink>
 
-          {/* Desktop menu — glass pill with icon-above-label items */}
-          <nav className="hidden xl:flex items-center gap-1 liquid-glass border border-white/10 p-1.5 rounded-[30px] relative shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-            {navLinks.map((link) => {
-              const Icon = link.icon;
-              const isActive = pathname === link.href;
+          {/* Desktop menu — liquid-glass pill with a sliding cursor highlight */}
+          <ul
+            ref={navListRef}
+            onMouseLeave={restPill}
+            className="hidden xl:flex items-center relative liquid-glass border border-white/10 p-1.5 rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+          >
+            {navLinks.map((link, idx) => {
+              const isActive =
+                link.href === pathname ||
+                (link.href !== "/" && pathname.startsWith(link.href.split("#")[0]));
               return (
-                <TransitionLink
+                <li
                   key={link.name}
-                  href={link.href}
-                  className={`group relative flex flex-col items-center justify-center gap-1 px-3.5 py-2 rounded-[22px] transition-colors duration-300 ${
-                    isActive ? "text-white" : "text-gray-light hover:text-white"
-                  }`}
+                  ref={(el) => {
+                    tabRefs.current[idx] = el;
+                  }}
+                  onMouseEnter={(e) => movePillTo(e.currentTarget)}
+                  className="relative z-10"
                 >
-                  <Icon
-                    className="w-[18px] h-[18px] relative z-10 transition-transform duration-300 group-hover:-translate-y-0.5"
-                    strokeWidth={1.75}
-                  />
-                  <span className="relative z-10 text-[10px] font-medium tracking-wide leading-none">
+                  <TransitionLink
+                    href={link.href}
+                    className={`relative block px-4 py-2 rounded-full text-[13px] font-medium tracking-wide transition-colors duration-300 ${
+                      isActive ? "text-gold" : "text-gray-light hover:text-white"
+                    }`}
+                  >
                     {link.name}
-                  </span>
-                  {/* Smooth active glass indicator that slides between items */}
-                  {isActive && (
-                    <motion.span
-                      layoutId="activeNavIndicator"
-                      className="absolute inset-0 rounded-[22px] bg-white/[0.08] border border-gold/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                    />
-                  )}
-                </TransitionLink>
+                  </TransitionLink>
+                </li>
               );
             })}
-          </nav>
+
+            {/* Sliding glass cursor */}
+            <motion.li
+              aria-hidden
+              animate={pill}
+              transition={{ type: "spring", stiffness: 400, damping: 32 }}
+              className="absolute inset-y-1.5 z-0 rounded-full bg-white/[0.1] border border-gold/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]"
+            />
+          </ul>
 
           {/* Right action panel */}
           <div className="hidden xl:flex items-center gap-4">

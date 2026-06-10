@@ -28,6 +28,28 @@ export default function TransitionLink({ href, onClick, ...rest }: LinkProps) {
       return;
     }
     if (typeof href === "string") {
+      try {
+        const url = new URL(href, window.location.href);
+        const isSamePage = url.pathname === window.location.pathname;
+        const hash = url.hash;
+
+        if (isSamePage && hash) {
+          e.preventDefault();
+          const targetElement = document.querySelector(hash);
+          if (targetElement) {
+            const lenis = (window as any).__lenis;
+            if (lenis) {
+              lenis.scrollTo(targetElement);
+            } else {
+              targetElement.scrollIntoView({ behavior: "smooth" });
+            }
+          }
+          return;
+        }
+      } catch (err) {
+        // Fallback for relative paths or invalid URL formats
+      }
+
       e.preventDefault();
       navigate(href);
     }

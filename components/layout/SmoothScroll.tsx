@@ -4,12 +4,34 @@ import { ReactNode, useEffect } from "react";
 import Lenis from "lenis";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import gsap from "@/lib/gsap";
+import { usePathname } from "@/i18n/navigation";
 
 interface SmoothScrollProps {
   children: ReactNode;
 }
 
 export default function SmoothScroll({ children }: SmoothScrollProps) {
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // Smooth scroll to hash anchor after page navigation
+    if (typeof window !== "undefined" && window.location.hash) {
+      const hash = window.location.hash;
+      const targetElement = document.querySelector(hash);
+      if (targetElement) {
+        const timer = setTimeout(() => {
+          const lenis = (window as any).__lenis;
+          if (lenis) {
+            lenis.scrollTo(targetElement);
+          } else {
+            targetElement.scrollIntoView({ behavior: "smooth" });
+          }
+        }, 400); // Wait for transition and mounting to complete
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [pathname]);
+
   useEffect(() => {
     // Disable smooth scroll if user prefers reduced motion
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {

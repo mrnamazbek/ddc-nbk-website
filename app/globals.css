@@ -119,21 +119,72 @@ html.light .border-white\/\[0\.05\],
 html.light .border-white\/10 {
   border-color: rgba(15, 36, 26, 0.12) !important;
 }
-/* Стеклянные поверхности (навбар, карточки) в светлой теме */
+/* Стеклянные поверхности (навбар, карточки) в светлой теме:
+   чистое матовое белое стекло с тонкой тёмно-зелёной гранью и мягкой тенью. */
 html.light .liquid-glass,
-html.light .liquid-glass-strong {
-  background: rgba(255, 255, 255, 0.72) !important;
-  border-color: rgba(15, 36, 26, 0.1) !important;
-}
+html.light .liquid-glass-strong,
 html.light .glass-panel,
 html.light .glass-card {
-  background: rgba(255, 255, 255, 0.7) !important;
+  background: rgba(255, 255, 255, 0.78) !important;
+  background-blend-mode: normal !important;
   border-color: rgba(15, 36, 26, 0.1) !important;
+  box-shadow: 0 4px 24px rgba(15, 36, 26, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9) !important;
+}
+/* Псевдо-грань карточек: в светлой теме делаем её мягкой тёмно-зелёной,
+   а не белой (иначе грань сливается с белым фоном). */
+html.light .glass-card::before,
+html.light .liquid-glass::before,
+html.light .liquid-glass-strong::before {
+  --glass-border-gradient: linear-gradient(
+    180deg,
+    rgba(15, 36, 26, 0.16) 0%,
+    rgba(15, 36, 26, 0.04) 35%,
+    rgba(15, 36, 26, 0.04) 65%,
+    rgba(15, 36, 26, 0.16) 100%
+  ) !important;
+  background: var(--glass-border-gradient) !important;
+}
+/* Подсветка-блик внутри карточек в светлой теме приглушаем */
+html.light .spotlight-glow {
+  opacity: 0.25 !important;
 }
 /* Точечный/нав-текст и подзаголовки */
 html.light .text-zinc-500,
 html.light .text-white\/60 {
   color: #6b7280 !important;
+}
+html.light .bg-charcoal\/20 {
+  background-color: rgba(15, 36, 26, 0.04) !important;
+}
+html.light .bg-charcoal\/30 {
+  background-color: rgba(15, 36, 26, 0.06) !important;
+}
+html.light .bg-charcoal\/40 {
+  background-color: rgba(15, 36, 26, 0.08) !important;
+}
+html.light .bg-charcoal {
+  background-color: rgba(15, 36, 26, 0.03) !important;
+}
+html.light .border-white\/5,
+html.light .border-white\/\[0\.05\] {
+  border-color: rgba(15, 36, 26, 0.06) !important;
+}
+html.light .border-white\/10,
+html.light .border-white\/\[0\.08\] {
+  border-color: rgba(15, 36, 26, 0.1) !important;
+}
+html.light .border-white\/20 {
+  border-color: rgba(15, 36, 26, 0.16) !important;
+}
+html.light .bg-white\/10 {
+  background-color: rgba(15, 36, 26, 0.06) !important;
+}
+html.light .bg-white\/\[0\.03\] {
+  background-color: rgba(15, 36, 26, 0.02) !important;
+}
+html.light .bg-white\/\[0\.08\] {
+  background-color: rgba(15, 36, 26, 0.05) !important;
 }
 
 

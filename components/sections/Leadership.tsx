@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import Image from "next/image";
-import GlassCard from "@/components/ui/GlassCard";
+import { CometCard } from "@/components/ui/comet-card";
 
 interface Leader {
   key: string;
@@ -117,29 +117,29 @@ export default function Leadership() {
           {/* Chairman (Top Centered) */}
           <div className="flex justify-center">
             <div ref={addToRefs} className="w-full max-w-sm">
-              <GlassCard
-                hoverAccent={leaders[0].accent}
-                isTiltEnabled={true}
-                variant="liquid-strong"
-                className="w-full text-center group"
-              >
-                <div className="relative w-36 h-36 mx-auto mb-6 rounded-full overflow-hidden border-2 border-gold/40 shadow-[0_0_20px_rgba(232,200,122,0.15)] group-hover:border-gold/80 transition-colors duration-300">
-                  <Image
-                    src={leaders[0].img}
-                    alt={t(`${leaders[0].key}.name`)}
-                    fill
-                    priority
-                    sizes="144px"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
+              <CometCard className="p-4 flex flex-col items-stretch group cursor-pointer">
+                <div className="mx-2 flex-1">
+                  <div className="relative mt-2 aspect-[3/4] w-full rounded-[16px] overflow-hidden border border-white/10 bg-[#000000]">
+                    <Image
+                      src={leaders[0].img}
+                      alt={t(`${leaders[0].key}.name`)}
+                      fill
+                      priority
+                      sizes="(max-width: 768px) 100vw, 384px"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105 saturate-[0.85] group-hover:saturate-100 contrast-[0.95]"
+                    />
+                  </div>
                 </div>
-                <h3 className="text-lg font-sans font-semibold text-white mb-2 transition-colors group-hover:text-gold">
-                  {t(`${leaders[0].key}.name`)}
-                </h3>
-                <p className="text-xs uppercase font-mono tracking-wider text-zinc-400">
-                  {t(`${leaders[0].key}.role`)}
-                </p>
-              </GlassCard>
+                <div className="mt-4 flex flex-col gap-2 p-4">
+                  <h3 className="text-lg font-sans font-bold text-white tracking-wide transition-colors duration-300 group-hover:text-gold">
+                    {t(`${leaders[0].key}.name`)}
+                  </h3>
+                  <div className="flex justify-between items-center font-mono text-[10px] text-zinc-500">
+                    <span className="uppercase tracking-wider leading-none">{t(`${leaders[0].key}.role`)}</span>
+                    <span className="text-gold/60 leading-none">#CHAIRMAN</span>
+                  </div>
+                </div>
+              </CometCard>
             </div>
           </div>
 
@@ -147,34 +147,28 @@ export default function Leadership() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
             {leaders.slice(1).map((leader) => (
               <div key={leader.key} ref={addToRefs} className="w-full">
-                <GlassCard
-                  hoverAccent={leader.accent}
-                  isTiltEnabled={true}
-                  variant="liquid"
-                  className="w-full text-center group h-full flex flex-col justify-between"
-                >
-                  <div>
-                    <div className={`relative w-28 h-28 mx-auto mb-6 rounded-full overflow-hidden border-2 ${
-                      leader.accent === "gold" 
-                        ? "border-gold/30 shadow-[0_0_15px_rgba(232,200,122,0.1)] group-hover:border-gold/60" 
-                        : "border-forest-light/30 shadow-[0_0_15px_rgba(82,183,136,0.1)] group-hover:border-forest-light/60"
-                    } transition-colors duration-300`}>
+                <CometCard className="p-4 flex flex-col items-stretch group cursor-pointer h-full justify-between">
+                  <div className="mx-2 flex-1">
+                    <div className="relative mt-2 aspect-[3/4] w-full rounded-[16px] overflow-hidden border border-white/10 bg-[#000000]">
                       <Image
                         src={leader.img}
                         alt={t(`${leader.key}.name`)}
                         fill
-                        sizes="112px"
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, 300px"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105 saturate-[0.85] group-hover:saturate-100 contrast-[0.95]"
                       />
                     </div>
-                    <h3 className="text-base font-sans font-semibold text-white mb-2 transition-colors group-hover:text-gold">
+                  </div>
+                  <div className="mt-4 flex flex-col gap-2 p-4">
+                    <h3 className="text-base font-sans font-bold text-white tracking-wide transition-colors duration-300 group-hover:text-gold leading-snug">
                       {t(`${leader.key}.name`)}
                     </h3>
+                    <div className="flex justify-between items-center font-mono text-[10px] text-zinc-500 mt-1">
+                      <span className="uppercase tracking-wider leading-none line-clamp-1">{t(`${leader.key}.role`)}</span>
+                      <span className="text-gold/60 leading-none">#DEPUTY</span>
+                    </div>
                   </div>
-                  <p className="text-[11px] uppercase font-mono tracking-wider text-zinc-500 mt-2">
-                    {t(`${leader.key}.role`)}
-                  </p>
-                </GlassCard>
+                </CometCard>
               </div>
             ))}
           </div>

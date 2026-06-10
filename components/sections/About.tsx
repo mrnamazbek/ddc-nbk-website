@@ -113,17 +113,14 @@ export default function About() {
           {/* Левая сторона: Описание и таймлайн */}
           <div className="lg:col-span-7 flex flex-col justify-center">
             <div className="flex items-center gap-3 mb-4">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 100 100"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect x="10" y="10" width="80" height="80" rx="40" fill="#0a1a11" />
-                <rect x="15" y="15" width="70" height="70" rx="35" stroke="#E8C87A" strokeWidth="2" />
-                <path d="M50 25 L55 45 L75 50 L55 55 L50 75 L45 55 L25 50 L45 45 Z" fill="#E8C87A" />
-              </svg>
+              <Image
+                src="/images/logo/ddc-logo.svg"
+                alt="DDC"
+                width={24}
+                height={24}
+                priority
+                className="pointer-events-none"
+              />
               <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium block">
                 {t("overline")}
               </span>

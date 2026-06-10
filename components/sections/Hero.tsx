@@ -2,12 +2,14 @@
 
 import { motion } from "framer-motion";
 import { useRef } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import ShimmerButton from "@/components/ui/ShimmerButton";
 import Magnetic from "@/components/motion/Magnetic";
 import { SplineScene } from "@/components/ui/splite";
+import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
 
 const ROBOT_SCENE = "https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode";
 
@@ -56,17 +58,14 @@ export default function Hero() {
     },
   };
 
-  const textRowVariants = {
-    hidden: { opacity: 0, x: -30 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 1.2,
-        ease: [0.16, 1, 0.3, 1] as const,
-      },
-    },
-  };
+  // Split translated title strings into array of word objects for localized Typewriter animation
+  const title1Words = t("titleLine1").split(" ").filter(Boolean).map(w => ({ text: w }));
+  const titleAccentWords = t("titleAccent").split(" ").filter(Boolean).map(w => ({
+    text: w,
+    className: "text-gradient-gold not-italic font-medium"
+  }));
+  const title2Words = t("titleLine2").split(" ").filter(Boolean).map(w => ({ text: w }));
+  const typewriterWords = [...title1Words, ...titleAccentWords, ...title2Words];
 
   return (
     <section 
@@ -84,7 +83,7 @@ export default function Hero() {
           Фон — глобальный интерактивный dot-shader (InteractiveDotGrid в page.tsx). */}
       <div
         ref={textRef}
-        className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 w-full grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-6 items-center flex-grow py-12 md:py-24"
+        className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 w-full grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 items-center flex-grow py-12 md:py-24"
       >
         <motion.div
           variants={containerVariants}
@@ -94,33 +93,29 @@ export default function Hero() {
         >
           {/* Надзаголовок-статус с зеленым маяком цифровой стабильности */}
           <motion.div variants={itemVariants} className="inline-flex items-center gap-3 mb-8 bg-white/[0.03] border border-white/[0.08] backdrop-blur-md px-4 py-2 rounded-full">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 100 100"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect x="10" y="10" width="80" height="80" rx="40" fill="#0a1a11" />
-              <rect x="15" y="15" width="70" height="70" rx="35" stroke="#E8C87A" strokeWidth="2" />
-              <path d="M50 25 L55 45 L75 50 L55 55 L50 75 L45 55 L25 50 L45 45 Z" fill="#E8C87A" />
-            </svg>
+            <Image
+              src="/images/logo/ddc-logo.svg"
+              alt="DDC"
+              width={16}
+              height={16}
+              priority
+              className="pointer-events-none"
+            />
             <span className="w-1.5 h-1.5 rounded-full bg-forest-light animate-pulse" />
             <span className="text-[10px] uppercase tracking-[0.25em] text-gold-light font-mono font-medium">
               {t("badge")}
             </span>
           </motion.div>
 
-          {/* Заголовок на Cormorant Garamond с кинетическим эффектом появления */}
-          <div className="overflow-hidden mb-8">
-            <motion.h1
-              variants={textRowVariants}
-              className="font-display italic text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-light tracking-tight leading-[1.02] text-white"
-            >
-              {t("titleLine1")} <br />
-              <span className="text-gradient-forest font-medium not-italic">{t("titleAccent")}</span> <br />
-              {t("titleLine2")}
-            </motion.h1>
+          {/* Заголовок на Cormorant Garamond с плавным Typewriter-эффектом */}
+          <div className="mb-4">
+            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light tracking-tight leading-tight text-white">
+              <TypewriterEffectSmooth
+                words={typewriterWords}
+                className="justify-start my-0 py-0 flex-wrap"
+                cursorClassName="h-8 sm:h-12 lg:h-16 bg-gold"
+              />
+            </h1>
           </div>
 
           {/* Подзаголовок на Inter */}
@@ -180,9 +175,16 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="relative hidden md:block h-[420px] lg:h-[600px] w-full pointer-events-auto"
+          className="relative hidden md:block h-[460px] lg:h-[680px] w-full pointer-events-auto overflow-visible"
         >
-          <SplineScene scene={ROBOT_SCENE} className="w-full h-full" />
+          {/* Slightly oversized so the robot's arms/hands are never cropped by
+              the column bounds — matches the framing of the source scene. */}
+          <div className="absolute top-0 bottom-0 left-[-15%] right-[-15%] w-[130%] h-full">
+            <SplineScene
+              scene={ROBOT_SCENE}
+              className="w-full h-full [&_canvas]:!h-full [&_canvas]:!w-full"
+            />
+          </div>
         </motion.div>
       </div>
 

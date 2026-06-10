@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { ArrowUpRight } from "lucide-react";
 
@@ -48,11 +49,13 @@ export default function Footer() {
           {/* Brand column */}
           <div className="lg:col-span-2 flex flex-col gap-6">
             <Link href="/" className="flex items-center gap-3 select-none">
-              <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="10" y="10" width="80" height="80" rx="40" fill="#0a1a11" />
-                <rect x="15" y="15" width="70" height="70" rx="35" stroke="#C9A84C" strokeWidth="2" />
-                <path d="M50 25 L55 45 L75 50 L55 55 L50 75 L45 55 L25 50 L45 45 Z" fill="#C9A84C" />
-              </svg>
+              <Image
+                src="/images/logo/ddc-logo.svg"
+                alt="DDC — Центр цифрового развития НБК"
+                width={36}
+                height={36}
+                className="pointer-events-none"
+              />
               <div>
                 <span className="font-heading font-bold text-lg tracking-wider text-white">DDC</span>
                 <span className="block text-[7px] text-gold font-mono tracking-widest leading-none uppercase">
