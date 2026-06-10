@@ -31,12 +31,31 @@
   --color-foreground: var(--foreground);
   --color-border: var(--border-primary);
 
+  --color-glass: var(--glass-bg);
+  --color-glass-border: var(--glass-border);
+  --color-muted: var(--text-secondary);
+
+  --radius-button: var(--radius-button);
+  --radius-card: var(--radius-card);
+  --radius-pill: var(--radius-pill);
+
+  --shadow-button: var(--shadow-button);
+  --shadow-card: var(--shadow-card);
+  --shadow-glass: var(--glass-shadow);
+
   --font-display: var(--font-current-display), Georgia, serif;
   --font-sans: var(--font-current-sans), system-ui, sans-serif;
   --font-mono: var(--font-current-mono), monospace;
 
   --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-spin-slow: spin 8s linear infinite;
+
+  /* Fluid typography for headings */
+  --text-4xl: clamp(1.75rem, 3.5vw + 1rem, 2.25rem);
+  --text-5xl: clamp(2rem, 4vw + 1rem, 3rem);
+  --text-6xl: clamp(2.25rem, 5vw + 1rem, 3.75rem);
+  --text-7xl: clamp(2.75rem, 6vw + 1rem, 4.5rem);
+  --text-8xl: clamp(3.25rem, 7vw + 1rem, 6rem);
 }
 
 body {

@@ -40,9 +40,9 @@ function LanguageSwitcher({
             onClick={() => onSwitch(lng)}
             aria-label={lng.toUpperCase()}
             aria-pressed={active}
-            className={`font-mono font-bold tracking-wider rounded-full transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 ${
-              size === "lg" ? "px-3.5 py-1.5 text-sm" : "px-2.5 py-1 text-xs"
-            } ${active ? "bg-gold text-black" : "text-gray-light hover:text-gold"}`}
+            className={`font-mono font-bold tracking-wider rounded-full transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 flex items-center justify-center ${
+              size === "lg" ? "px-4 min-h-[44px] min-w-[44px] text-sm" : "px-3 py-1.5 min-h-[32px] min-w-[32px] text-xs"
+            } ${active ? "bg-gold text-black" : "text-muted hover:text-gold"}`}
           >
             {lng.toUpperCase()}
           </button>
@@ -125,7 +125,7 @@ export default function Header() {
       <header
         className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1300px] transition-all duration-500 rounded-full ${
           isScrolled
-            ? "liquid-glass-strong shadow-2xl py-3 px-6 sm:px-8"
+            ? "liquid-glass-strong shadow-card py-3 px-6 sm:px-8"
             : "liquid-glass shadow-lg py-4 px-6 sm:px-8"
         }`}
       >
@@ -141,9 +141,9 @@ export default function Header() {
               className="transition-transform duration-700 group-hover:rotate-[120deg] pointer-events-none"
             />
             <div>
-              <span className="font-heading font-bold text-xl tracking-wider text-white">DDC</span>
+              <span className="font-heading font-bold text-xl tracking-wider text-foreground">DDC</span>
               <span className="block text-[8px] text-gold font-mono tracking-widest leading-none uppercase">
-                Subsidiary of NBK
+                {t("subsidiaryOfNBK")}
               </span>
             </div>
           </TransitionLink>
@@ -152,7 +152,7 @@ export default function Header() {
           <ul
             ref={navListRef}
             onMouseLeave={restPill}
-            className="hidden xl:flex items-center relative liquid-glass border border-white/10 p-1.5 rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+            className="hidden xl:flex items-center relative liquid-glass border border-glass-border p-1.5 rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
           >
             {navLinks.map((link, idx) => {
               const isActive =
@@ -170,7 +170,7 @@ export default function Header() {
                   <TransitionLink
                     href={link.href}
                     className={`relative block px-3 py-2 rounded-full text-[13px] font-medium tracking-wide whitespace-nowrap transition-colors duration-300 ${
-                      isActive ? "text-gold" : "text-gray-light hover:text-white"
+                      isActive ? "text-gold" : "text-muted hover:text-foreground"
                     }`}
                   >
                     {link.name}
@@ -209,7 +209,7 @@ export default function Header() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="xl:hidden p-2 rounded-full liquid-glass text-white hover:text-gold transition-colors focus-visible:outline-none"
+            className="xl:hidden flex items-center justify-center min-w-[44px] min-h-[44px] rounded-full liquid-glass text-foreground hover:text-gold transition-colors focus-visible:outline-none"
             aria-label="Toggle mobile menu"
             aria-expanded={isMobileMenuOpen}
           >
@@ -245,7 +245,7 @@ export default function Header() {
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className={`font-heading text-2xl tracking-wide block ${
-                        isActive ? "text-gold font-semibold" : "text-white"
+                        isActive ? "text-gold font-semibold" : "text-foreground"
                       }`}
                     >
                       {link.name}
@@ -257,8 +257,8 @@ export default function Header() {
 
             {/* Mobile menu bottom action panel */}
             <div className="flex flex-col gap-6">
-              <div className="flex items-center justify-between border-t border-white/10 pt-6">
-                <span className="text-sm text-gray-light">Тіл / Язык:</span>
+              <div className="flex items-center justify-between border-t border-glass-border pt-6">
+                <span className="text-sm text-muted">{t("language")}</span>
                 <LanguageSwitcher locale={locale} onSwitch={switchLocale} size="lg" />
               </div>
 
