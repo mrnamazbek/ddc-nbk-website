@@ -10,6 +10,7 @@ import Button from "../ui/Button";
 import Magnetic from "../motion/Magnetic";
 import TransitionLink from "../motion/TransitionLink";
 import CinematicThemeSwitcher from "../ui/cinematic-theme-switcher";
+import { LiquidButton } from "../ui/liquid-glass-button";
 
 const LANGUAGES = ["kz", "ru", "en"];
 
@@ -198,9 +199,9 @@ export default function Header() {
             {/* Procurement Portal Button */}
             <a href="https://zakup.nationalbank.kz" target="_blank" rel="noopener noreferrer">
               <Magnetic>
-                <Button variant="gold" size="sm">
+                <LiquidButton className="text-gold font-medium px-4 py-2 text-xs">
                   {t("procurementPortal")}
-                </Button>
+                </LiquidButton>
               </Magnetic>
             </a>
           </div>
@@ -262,9 +263,9 @@ export default function Header() {
               </div>
 
               <a href="https://zakup.nationalbank.kz" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="w-full">
-                <Button variant="gold" size="lg" className="w-full">
+                <LiquidButton className="w-full text-gold font-medium py-3 justify-center flex items-center gap-2">
                   {t("procurementPortal")} <ArrowRight className="w-4 h-4" />
-                </Button>
+                </LiquidButton>
               </a>
             </div>
           </motion.div>

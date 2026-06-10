@@ -2,6 +2,7 @@
 
 import { useScroll, useTransform, motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
+import { CometCard } from "./comet-card";
 
 export interface TimelineEntry {
   title: string;
@@ -57,9 +58,9 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
               <h3 className="md:hidden block text-2xl mb-4 text-left font-bold text-gradient-gold">
                 {item.title}
               </h3>
-              <div className="liquid-glass border border-white/5 p-6 md:p-8 rounded-2xl shadow-xl">
+              <CometCard className="p-6 md:p-8 text-left">
                 {item.content}
-              </div>
+              </CometCard>
             </div>
           </div>
         ))}

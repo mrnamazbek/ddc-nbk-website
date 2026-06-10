@@ -10,6 +10,7 @@ import ShimmerButton from "@/components/ui/ShimmerButton";
 import Magnetic from "@/components/motion/Magnetic";
 import { SplineScene } from "@/components/ui/splite";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
+import { MetalButton } from "@/components/ui/liquid-glass-button";
 
 const ROBOT_SCENE = "https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode";
 
@@ -132,7 +133,7 @@ export default function Hero() {
             className="flex flex-col sm:flex-row items-center gap-4 justify-start w-full sm:w-auto"
           >
             <Magnetic>
-              <ShimmerButton
+              <MetalButton
                 variant="gold"
                 className="w-full sm:w-auto flex items-center justify-center gap-2 group hover-target"
                 onClick={() => {
@@ -152,11 +153,11 @@ export default function Hero() {
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
-              </ShimmerButton>
+              </MetalButton>
             </Magnetic>
             <Magnetic>
-              <ShimmerButton
-                variant="forest"
+              <MetalButton
+                variant="success"
                 className="w-full sm:w-auto flex items-center justify-center hover-target"
                 onClick={() => {
                   const target = document.getElementById("about");
@@ -164,7 +165,7 @@ export default function Hero() {
                 }}
               >
                 {t("ctaSecondary")}
-              </ShimmerButton>
+              </MetalButton>
             </Magnetic>
           </motion.div>
         </motion.div>

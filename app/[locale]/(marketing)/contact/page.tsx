@@ -4,11 +4,16 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion } from "framer-motion";
-import Button from "@/components/ui/Button";
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 
-// Схема валидации Zod для защиты формы и обеспечения качества входящих данных
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { LiquidButton } from "@/components/ui/liquid-glass-button";
+import { cn } from "@/lib/utils";
+
+// Validation schema for quality inbound messages
 const contactSchema = z.object({
   name: z.string().min(2, { message: "Пожалуйста, введите ваше имя (минимум 2 символа)" }),
   email: z.string().email({ message: "Некорректный адрес электронной почты" }),
@@ -17,6 +22,20 @@ const contactSchema = z.object({
 });
 
 type ContactFormValues = z.infer<typeof contactSchema>;
+
+const LabelInputContainer = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  return (
+    <div className={cn("flex w-full flex-col space-y-2", className)}>
+      {children}
+    </div>
+  );
+};
 
 export default function ContactPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -31,22 +50,22 @@ export default function ContactPage() {
   });
 
   const onSubmit = async (data: ContactFormValues) => {
-    // Имитация отправки данных на сервер
+    // Simulate server request
     await new Promise((resolve) => setTimeout(resolve, 1500));
-    console.log("Отправленные данные формы:", data);
+    console.log("Form Submitted:", data);
     setIsSubmitted(true);
     reset();
   };
 
   return (
     <div className="relative w-full bg-black overflow-hidden min-h-screen pt-32 pb-24 font-sans">
-      {/* Мягкие свечения */}
+      {/* Background ambient glows */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         
-        {/* Заголовок */}
+        {/* Title Heading */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -67,7 +86,7 @@ export default function ContactPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
           
-          {/* Левая сторона: Контактная информация */}
+          {/* Left: Contact Info */}
           <div className="lg:col-span-5 space-y-10">
             <div>
               <h3 className="text-xl font-bold text-white mb-6 tracking-wide">Главный офис в Алматы</h3>
@@ -125,7 +144,7 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Официальная плашка */}
+            {/* Status Plate */}
             <div className="p-6 rounded-2xl bg-charcoal/30 border border-white/5">
               <span className="text-[10px] uppercase text-gold font-semibold tracking-wider block mb-2">Статус обращения</span>
               <p className="text-xs text-zinc-500 font-light leading-relaxed">
@@ -134,13 +153,13 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Правая сторона: Форма обратной связи */}
+          {/* Right: Contact Form */}
           <div className="lg:col-span-7 bg-charcoal/20 border border-white/5 rounded-3xl p-8 sm:p-12 relative overflow-hidden">
             {isSubmitted ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-16 flex flex-col items-center justify-center"
+                className="text-center py-16 flex flex-col items-center justify-center pointer-events-auto"
               >
                 <div className="w-16 h-16 rounded-full bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
                   <CheckCircle2 className="w-8 h-8" />
@@ -149,95 +168,79 @@ export default function ContactPage() {
                 <p className="text-sm text-zinc-400 font-light leading-relaxed max-w-md mx-auto mb-8">
                   Спасибо! Ваше обращение успешно зарегистрировано. Мы свяжемся с вами в течение 2 рабочих дней.
                 </p>
-                <Button variant="outline" onClick={() => setIsSubmitted(false)}>
+                <LiquidButton variant="default" size="lg" className="h-10 text-gold bg-transparent" onClick={() => setIsSubmitted(false)}>
                   Отправить еще одно сообщение
-                </Button>
+                </LiquidButton>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="name" className="block text-xs uppercase tracking-wider text-zinc-400 font-semibold mb-2">
-                      Имя и фамилия
-                    </label>
-                    <input
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pointer-events-auto">
+                <div className="flex flex-col space-y-6 sm:space-y-0 sm:flex-row sm:space-x-6">
+                  <LabelInputContainer>
+                    <Label htmlFor="name">Имя и фамилия</Label>
+                    <Input
                       id="name"
                       type="text"
                       {...register("name")}
-                      className={`w-full bg-[#0A0A0A] border rounded-lg px-4 py-3 text-sm text-white font-light focus:outline-none transition-all duration-300 ${
-                        errors.name ? "border-red-500 focus:border-red-500" : "border-white/10 focus:border-gold/50 focus:shadow-gold focus:shadow-[0_0_8px_rgba(201,168,76,0.15)]"
-                      }`}
                       placeholder="Иван Иванов"
+                      className={errors.name ? "ring-1 ring-red-500" : ""}
                     />
                     {errors.name && (
-                      <p className="text-xs text-red-500 mt-1.5 font-light">{errors.name.message}</p>
+                      <p className="text-xs text-red-500 mt-1 font-light">{errors.name.message}</p>
                     )}
-                  </div>
+                  </LabelInputContainer>
 
-                  <div>
-                    <label htmlFor="email" className="block text-xs uppercase tracking-wider text-zinc-400 font-semibold mb-2">
-                      Электронная почта
-                    </label>
-                    <input
+                  <LabelInputContainer>
+                    <Label htmlFor="email">Электронная почта</Label>
+                    <Input
                       id="email"
                       type="email"
                       {...register("email")}
-                      className={`w-full bg-[#0A0A0A] border rounded-lg px-4 py-3 text-sm text-white font-light focus:outline-none transition-all duration-300 ${
-                        errors.email ? "border-red-500 focus:border-red-500" : "border-white/10 focus:border-gold/50 focus:shadow-gold focus:shadow-[0_0_8px_rgba(201,168,76,0.15)]"
-                      }`}
                       placeholder="example@mail.com"
+                      className={errors.email ? "ring-1 ring-red-500" : ""}
                     />
                     {errors.email && (
-                      <p className="text-xs text-red-500 mt-1.5 font-light">{errors.email.message}</p>
+                      <p className="text-xs text-red-500 mt-1 font-light">{errors.email.message}</p>
                     )}
-                  </div>
+                  </LabelInputContainer>
                 </div>
 
-                <div>
-                  <label htmlFor="organization" className="block text-xs uppercase tracking-wider text-zinc-400 font-semibold mb-2">
-                    Организация
-                  </label>
-                  <input
+                <LabelInputContainer>
+                  <Label htmlFor="organization">Организация</Label>
+                  <Input
                     id="organization"
                     type="text"
                     {...register("organization")}
-                    className={`w-full bg-[#0A0A0A] border rounded-lg px-4 py-3 text-sm text-white font-light focus:outline-none transition-all duration-300 ${
-                      errors.organization ? "border-red-500 focus:border-red-500" : "border-white/10 focus:border-gold/50 focus:shadow-gold focus:shadow-[0_0_8px_rgba(201,168,76,0.15)]"
-                    }`}
                     placeholder="АО 'Банк Казахстана'"
+                    className={errors.organization ? "ring-1 ring-red-500" : ""}
                   />
                   {errors.organization && (
-                    <p className="text-xs text-red-500 mt-1.5 font-light">{errors.organization.message}</p>
+                    <p className="text-xs text-red-500 mt-1 font-light">{errors.organization.message}</p>
                   )}
-                </div>
+                </LabelInputContainer>
 
-                <div>
-                  <label htmlFor="message" className="block text-xs uppercase tracking-wider text-zinc-400 font-semibold mb-2">
-                    Текст обращения
-                  </label>
-                  <textarea
+                <LabelInputContainer>
+                  <Label htmlFor="message">Текст обращения</Label>
+                  <Textarea
                     id="message"
                     rows={6}
                     {...register("message")}
-                    className={`w-full bg-[#0A0A0A] border rounded-lg px-4 py-3 text-sm text-white font-light focus:outline-none transition-all duration-300 resize-none ${
-                      errors.message ? "border-red-500 focus:border-red-500" : "border-white/10 focus:border-gold/50 focus:shadow-gold focus:shadow-[0_0_8px_rgba(201,168,76,0.15)]"
-                    }`}
                     placeholder="Опишите цель вашего обращения или предложение о сотрудничестве..."
+                    className={errors.message ? "ring-1 ring-red-500" : ""}
                   />
                   {errors.message && (
-                    <p className="text-xs text-red-500 mt-1.5 font-light">{errors.message.message}</p>
+                    <p className="text-xs text-red-500 mt-1 font-light">{errors.message.message}</p>
                   )}
-                </div>
+                </LabelInputContainer>
 
-                <Button
+                <LiquidButton
                   type="submit"
-                  variant="gold"
+                  variant="default"
                   disabled={isSubmitting}
-                  className="w-full justify-center flex items-center gap-2"
+                  className="w-full justify-center flex items-center gap-2 py-4 h-12 text-gold font-medium bg-transparent hover:scale-[1.02] transition duration-300"
                 >
                   {isSubmitting ? "Отправка..." : "Отправить обращение"}
                   <Send className="w-4 h-4" />
-                </Button>
+                </LiquidButton>
               </form>
             )}
           </div>
