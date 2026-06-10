@@ -76,13 +76,64 @@
 }
 
 body {
-  background-color: #000000;
+  background-color: var(--background);
   background-image: none;
   background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-current-sans);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   Светлая тема — переключатель cinematic-theme-switcher (next-themes).
+   ВНИМАНИЕ: тёмная тема остаётся по умолчанию (ThemeProvider defaultTheme="dark"),
+   продакшн-вид не меняется. Это базовый уровень светлого режима: фон страницы,
+   текст и самые частые литеральные тёмные классы. Полная адаптация каждой
+   секции (стекло, градиенты, бордеры) — отдельный следующий этап.
+   ============================================================ */
+html.dark {
+  color-scheme: dark;
+}
+html.light {
+  --background: #f5f5f0;
+  --foreground: #0f241a;
+  color-scheme: light;
+}
+html.light body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+html.light .bg-black,
+html.light .bg-\[\#000000\] {
+  background-color: var(--background) !important;
+}
+html.light .text-white {
+  color: var(--foreground) !important;
+}
+html.light .text-zinc-400,
+html.light .text-white\/70 {
+  color: #4b5563 !important;
+}
+html.light .border-white\/\[0\.05\],
+html.light .border-white\/10 {
+  border-color: rgba(15, 36, 26, 0.12) !important;
+}
+/* Стеклянные поверхности (навбар, карточки) в светлой теме */
+html.light .liquid-glass,
+html.light .liquid-glass-strong {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border-color: rgba(15, 36, 26, 0.1) !important;
+}
+html.light .glass-panel,
+html.light .glass-card {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border-color: rgba(15, 36, 26, 0.1) !important;
+}
+/* Точечный/нав-текст и подзаголовки */
+html.light .text-zinc-500,
+html.light .text-white\/60 {
+  color: #6b7280 !important;
 }
 
 

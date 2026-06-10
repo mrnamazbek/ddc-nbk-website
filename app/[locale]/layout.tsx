@@ -4,6 +4,7 @@ import "../globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import PageTransitionProvider from "@/components/motion/PageTransition";
+import ThemeProvider from "@/components/theme/ThemeProvider";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin", "cyrillic", "cyrillic-ext"],
@@ -44,24 +45,25 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
-      className={`${cormorant.variable} ${jetbrains.variable} ${comfortaa.variable} h-full antialiased dark`}
-      style={{ colorScheme: "dark" }}
+      className={`${cormorant.variable} ${jetbrains.variable} ${comfortaa.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
         <link
           rel="preload"
-          href="https://prod.spline.design/ictKMBv7DsgwCCwp/scene.splinecode"
+          href="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
           as="fetch"
           crossOrigin="anonymous"
         />
       </head>
-      <body className="min-h-full flex flex-col bg-[#000000] text-white">
-        <NextIntlClientProvider messages={messages}>
-          {/* Faint grain overlay (opacity 0.03) for organic texture */}
-          <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] bg-[url('/images/textures/bg-texture-noise.png')] bg-repeat" />
-          <PageTransitionProvider>{children}</PageTransitionProvider>
-        </NextIntlClientProvider>
+      <body className="min-h-full flex flex-col text-white">
+        <ThemeProvider>
+          <NextIntlClientProvider messages={messages}>
+            {/* Faint grain overlay (opacity 0.03) for organic texture */}
+            <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] bg-[url('/images/textures/bg-texture-noise.png')] bg-repeat" />
+            <PageTransitionProvider>{children}</PageTransitionProvider>
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

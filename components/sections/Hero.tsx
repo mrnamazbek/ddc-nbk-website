@@ -7,6 +7,9 @@ import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import ShimmerButton from "@/components/ui/ShimmerButton";
 import Magnetic from "@/components/motion/Magnetic";
+import { SplineScene } from "@/components/ui/splite";
+
+const ROBOT_SCENE = "https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode";
 
 export default function Hero() {
   const t = useTranslations("Hero");
@@ -77,16 +80,17 @@ export default function Hero() {
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-forest/15 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[400px] h-[400px] rounded-full bg-gold/5 blur-[100px] pointer-events-none" />
 
-      {/* Контентная область поверх 3D — строго асимметричное левое выравнивание */}
-      <div 
+      {/* Контентная область поверх 3D: текст слева, интерактивный 3D-робот справа.
+          Фон — глобальный интерактивный dot-shader (InteractiveDotGrid в page.tsx). */}
+      <div
         ref={textRef}
-        className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 w-full text-left flex flex-col justify-center flex-grow py-12 md:py-24"
+        className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 w-full grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-6 items-center flex-grow py-12 md:py-24"
       >
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="max-w-4xl"
+          className="max-w-2xl text-left"
         >
           {/* Надзаголовок-статус с зеленым маяком цифровой стабильности */}
           <motion.div variants={itemVariants} className="inline-flex items-center gap-3 mb-8 bg-white/[0.03] border border-white/[0.08] backdrop-blur-md px-4 py-2 rounded-full">
@@ -168,6 +172,17 @@ export default function Hero() {
               </ShimmerButton>
             </Magnetic>
           </motion.div>
+        </motion.div>
+
+        {/* Правая колонка: интерактивный 3D-робот поверх dot-shader.
+            Робот реагирует на курсор. Скрыт на узких экранах ради читаемости. */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.92 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="relative hidden md:block h-[420px] lg:h-[600px] w-full pointer-events-auto"
+        >
+          <SplineScene scene={ROBOT_SCENE} className="w-full h-full" />
         </motion.div>
       </div>
 

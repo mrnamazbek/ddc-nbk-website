@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Button from "../ui/Button";
 import Magnetic from "../motion/Magnetic";
 import TransitionLink from "../motion/TransitionLink";
+import CinematicThemeSwitcher from "../ui/cinematic-theme-switcher";
 
 const LANGUAGES = ["kz", "ru", "en"];
 
@@ -166,6 +167,9 @@ export default function Header() {
 
           {/* Right action panel */}
           <div className="hidden xl:flex items-center gap-4">
+            {/* Theme Switcher */}
+            <CinematicThemeSwitcher />
+
             {/* Language Switcher */}
             <LanguageSwitcher locale={locale} onSwitch={switchLocale} />
 

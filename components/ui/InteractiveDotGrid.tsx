@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTheme } from "next-themes";
 
 interface InteractiveDotGridProps {
   dotSize?: number;
@@ -21,6 +22,13 @@ export default function InteractiveDotGrid({
   animationSpeed = 0.08,
   backgroundColor = "#000000",
 }: InteractiveDotGridProps) {
+  const { resolvedTheme } = useTheme();
+  const isLight = resolvedTheme === "light";
+  // Фон и базовый цвет точек зависят от темы: тёмная → чёрный фон + средне-зелёные
+  // точки; светлая → офф-уайт фон + насыщенные тёмно-зелёные точки.
+  const bg = isLight ? "#f5f5f0" : backgroundColor;
+  const restDotColor = isLight ? "rgba(26, 61, 43, 0.55)" : "rgba(40, 110, 70, 0.45)";
+
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const mousePos = useRef({ x: -10000, y: -10000 });
   const dotsRef = useRef<
@@ -60,7 +68,7 @@ export default function InteractiveDotGrid({
             currentY: y,
             vx: 0,
             vy: 0,
-            color: "rgba(40, 110, 70, 0.45)",
+            color: restDotColor,
             size: dotSize,
           });
         }
@@ -100,13 +108,15 @@ export default function InteractiveDotGrid({
     window.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseleave", handleMouseLeave);
 
-    const GREEN = { r: 40, g: 110, b: 70, a: 0.35 }; // Forest Green
+    const GREEN = isLight
+      ? { r: 26, g: 61, b: 43, a: 0.55 } // тёмно-зелёный для светлого фона
+      : { r: 40, g: 110, b: 70, a: 0.35 }; // Forest Green
     const GOLD = { r: 232, g: 200, b: 122, a: 0.95 }; // Gold
 
     let animationFrameId: number;
 
     const animate = () => {
-      ctx.fillStyle = backgroundColor;
+      ctx.fillStyle = bg;
       ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr);
 
       const dots = dotsRef.current;
@@ -191,13 +201,13 @@ export default function InteractiveDotGrid({
       document.removeEventListener("mouseleave", handleMouseLeave);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [dotSize, maxDotSize, dotSpacing, distortionRadius, distortionStrength, animationSpeed, backgroundColor]);
+  }, [dotSize, maxDotSize, dotSpacing, distortionRadius, distortionStrength, animationSpeed, bg, restDotColor]);
 
   return (
     <canvas
       ref={canvasRef}
       className="fixed inset-0 w-full h-screen -z-10 block pointer-events-none"
-      style={{ background: backgroundColor }}
+      style={{ background: bg }}
     />
   );
 }

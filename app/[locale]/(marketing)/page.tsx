@@ -4,6 +4,7 @@ import Stats from "@/components/sections/Stats";
 import Services from "@/components/sections/Services";
 import About from "@/components/sections/About";
 import CTA from "@/components/sections/CTA";
+import Showcase from "@/components/sections/Showcase";
 
 export default function MarketingHomePage() {
   return (
@@ -15,6 +16,8 @@ export default function MarketingHomePage() {
         <Hero />
         <Stats />
         <Services />
+        {/* Parallax showcase of real DDC assets (3D renders, NBK architecture, team) */}
+        <Showcase />
         <About />
         <CTA />
       </div>
