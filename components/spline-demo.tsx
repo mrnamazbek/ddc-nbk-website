@@ -27,8 +27,10 @@ export function SplineSceneBasic() {
         {/* Right content */}
         <div className="flex-1 relative">
           <SplineScene 
-            scene="https://prod.spline.design/B6sU8aK49uDPNzXL/scene.splinecode"
+            scene="/spline/scene.splinecode"
             className="w-full h-full"
+            logoImg="/spline/ddc_logo_rm_bckgrnd.png"
+            logoTarget="Body"
           />
         </div>
       </div>

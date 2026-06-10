@@ -14,7 +14,7 @@ import { MetalButton } from "@/components/ui/liquid-glass-button";
 
 import { SplineScene } from "@/components/ui/splite";
 
-const ROBOT_SCENE = "https://prod.spline.design/B6sU8aK49uDPNzXL/scene.splinecode";
+const ROBOT_SCENE = "/spline/scene.splinecode";
 
 export default function Hero() {
   const t = useTranslations("Hero");
@@ -199,6 +199,8 @@ export default function Hero() {
               <SplineScene
                 scene={ROBOT_SCENE}
                 className="w-full h-full [&_canvas]:!h-full [&_canvas]:!w-full"
+                logoImg="/spline/ddc_logo_rm_bckgrnd.png"
+                logoTarget="Body"
               />
             )}
           </div>
