@@ -105,12 +105,14 @@ export default function Header() {
     }
   };
 
-  // Park the pill on the active route on mount and whenever the route changes.
+  // Park the pill on the active route on mount and whenever the route, locale or scroll state changes.
   useEffect(() => {
-    const id = requestAnimationFrame(restPill);
-    return () => cancelAnimationFrame(id);
+    const timer = setTimeout(() => {
+      restPill();
+    }, 50);
+    return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  }, [pathname, locale, isScrolled]);
 
   const switchLocale = (lng: string) => {
     if (lng === locale) return;
@@ -166,7 +168,7 @@ export default function Header() {
                 >
                   <TransitionLink
                     href={link.href}
-                    className={`relative block px-4 py-2 rounded-full text-[13px] font-medium tracking-wide transition-colors duration-300 ${
+                    className={`relative block px-3 py-2 rounded-full text-[13px] font-medium tracking-wide whitespace-nowrap transition-colors duration-300 ${
                       isActive ? "text-gold" : "text-gray-light hover:text-white"
                     }`}
                   >

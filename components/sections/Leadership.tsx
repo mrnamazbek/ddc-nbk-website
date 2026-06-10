@@ -1,31 +1,49 @@
 "use client";
 
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { CometCard } from "@/components/ui/comet-card";
 
 interface Leader {
   key: string;
   img: string;
-  accent: "gold" | "forest";
+  linkedin: string;
 }
 
 export default function Leadership() {
   const t = useTranslations("Leadership");
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement[]>([]);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  cardsRef.current = [];
-
-  const addToRefs = (el: HTMLDivElement | null) => {
-    if (el && !cardsRef.current.includes(el)) {
-      cardsRef.current.push(el);
-    }
-  };
+  const leaders: Leader[] = [
+    {
+      key: "l1",
+      img: "/images/team/Amardinov.jpg",
+      linkedin: "https://www.linkedin.com/in/malik-amardinov-23945a165",
+    },
+    {
+      key: "l2",
+      img: "/images/team/Durmagambetov.jpg",
+      linkedin: "https://www.linkedin.com/in/erlan-durmagambetov",
+    },
+    {
+      key: "l3",
+      img: "/images/team/Kentbekov.jpg",
+      linkedin: "https://www.linkedin.com",
+    },
+    {
+      key: "l4",
+      img: "/images/team/Imajanov.jpg",
+      linkedin: "https://www.linkedin.com",
+    },
+  ];
 
   useGSAP(
     () => {
@@ -46,14 +64,13 @@ export default function Leadership() {
         }
       );
 
-      // Staggered cards fade-in
+      // Fade-in carousel
       gsap.fromTo(
-        cardsRef.current,
-        { opacity: 0, y: 40 },
+        carouselRef.current,
+        { opacity: 0, y: 30 },
         {
           opacity: 1,
           y: 0,
-          stagger: 0.15,
           duration: 1.0,
           ease: "power2.out",
           scrollTrigger: {
@@ -67,28 +84,13 @@ export default function Leadership() {
     { scope: containerRef }
   );
 
-  const leaders: Leader[] = [
-    {
-      key: "l1",
-      img: "/images/team/Amardinov.jpg",
-      accent: "gold",
-    },
-    {
-      key: "l2",
-      img: "/images/team/Durmagambetov.jpg",
-      accent: "forest",
-    },
-    {
-      key: "l3",
-      img: "/images/team/Kentbekov.jpg",
-      accent: "gold",
-    },
-    {
-      key: "l4",
-      img: "/images/team/Imajanov.jpg",
-      accent: "forest",
-    },
-  ];
+  const handleNext = () =>
+    setCurrentIndex((index) => (index + 1) % leaders.length);
+  
+  const handlePrevious = () =>
+    setCurrentIndex((index) => (index - 1 + leaders.length) % leaders.length);
+
+  const currentLeader = leaders[currentIndex];
 
   return (
     <section
@@ -112,65 +114,203 @@ export default function Leadership() {
           </p>
         </div>
 
-        {/* Leadership Grid */}
-        <div className="flex flex-col gap-6">
-          {/* Chairman (Top Centered) */}
-          <div className="flex justify-center">
-            <div ref={addToRefs} className="w-full max-w-sm">
-              <CometCard className="p-4 flex flex-col items-stretch group cursor-pointer">
-                <div className="mx-2 flex-1">
-                  <div className="relative mt-2 aspect-[3/4] w-full rounded-[16px] overflow-hidden border border-white/10 bg-[#000000]">
-                    <Image
-                      src={leaders[0].img}
-                      alt={t(`${leaders[0].key}.name`)}
-                      fill
-                      priority
-                      sizes="(max-width: 768px) 100vw, 384px"
-                      className="object-cover transition-transform duration-700 group-hover:scale-105 saturate-[0.85] group-hover:saturate-100 contrast-[0.95]"
-                    />
-                  </div>
-                </div>
-                <div className="mt-4 flex flex-col gap-2 p-4">
-                  <h3 className="text-lg font-sans font-bold text-white tracking-wide transition-colors duration-300 group-hover:text-gold">
-                    {t(`${leaders[0].key}.name`)}
-                  </h3>
-                  <div className="flex justify-between items-center font-mono text-[10px] text-zinc-500">
-                    <span className="uppercase tracking-wider leading-none">{t(`${leaders[0].key}.role`)}</span>
-                    <span className="text-gold/60 leading-none">#CHAIRMAN</span>
-                  </div>
-                </div>
-              </CometCard>
+        {/* Carousel Container */}
+        <div ref={carouselRef} className="w-full max-w-5xl mx-auto">
+          {/* Desktop Layout (md and up) */}
+          <div className="hidden md:flex relative items-center justify-center">
+            {/* Avatar Photo */}
+            <div className="w-[380px] h-[380px] lg:w-[450px] lg:h-[450px] rounded-3xl overflow-hidden bg-neutral-900 flex-shrink-0 relative border border-white/10 shadow-2xl z-0">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentLeader.img}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  className="w-full h-full relative"
+                >
+                  <Image
+                    src={currentLeader.img}
+                    alt={t(`${currentLeader.key}.name`)}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 450px"
+                    className="object-cover saturate-[0.85] contrast-[1.05]"
+                    draggable={false}
+                    priority
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Content overlay card (CometCard) */}
+            <div className="ml-[-60px] lg:ml-[-85px] z-10 max-w-xl flex-1">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentLeader.key}
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -30 }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                >
+                  <CometCard className="p-8 sm:p-10 flex flex-col justify-between min-h-[340px] shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+                    <div>
+                      <div className="flex justify-between items-center mb-4">
+                        <span className="text-[10px] font-mono tracking-[0.2em] text-gold uppercase">
+                          {currentLeader.key === "l1" ? "#CHAIRMAN" : "#DEPUTY"}
+                        </span>
+                      </div>
+                      
+                      <h3 className="text-xl sm:text-2xl lg:text-3xl font-sans font-bold text-white mb-2 tracking-wide leading-tight transition-colors duration-300 hover:text-gold">
+                        {t(`${currentLeader.key}.name`)}
+                      </h3>
+                      
+                      <p className="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-6">
+                        {t(`${currentLeader.key}.role`)}
+                      </p>
+                      
+                      <p className="text-sm sm:text-base text-zinc-300 font-sans font-light leading-relaxed mb-6">
+                        {t(`${currentLeader.key}.desc`)}
+                      </p>
+                    </div>
+
+                    {/* Social links */}
+                    <div className="flex space-x-4 pt-5 border-t border-white/5">
+                      <a
+                        href={currentLeader.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-10 h-10 bg-white/[0.03] border border-white/10 hover:border-gold/50 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105 cursor-pointer text-zinc-400 hover:text-gold"
+                        aria-label="LinkedIn"
+                      >
+                        <svg
+                          className="w-4 h-4 fill-current"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                        </svg>
+                      </a>
+                    </div>
+                  </CometCard>
+                </motion.div>
+              </AnimatePresence>
             </div>
           </div>
 
-          {/* Deputies Row */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
-            {leaders.slice(1).map((leader) => (
-              <div key={leader.key} ref={addToRefs} className="w-full">
-                <CometCard className="p-4 flex flex-col items-stretch group cursor-pointer h-full justify-between">
-                  <div className="mx-2 flex-1">
-                    <div className="relative mt-2 aspect-[3/4] w-full rounded-[16px] overflow-hidden border border-white/10 bg-[#000000]">
-                      <Image
-                        src={leader.img}
-                        alt={t(`${leader.key}.name`)}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 300px"
-                        className="object-cover transition-transform duration-700 group-hover:scale-105 saturate-[0.85] group-hover:saturate-100 contrast-[0.95]"
-                      />
+          {/* Mobile Layout (below md) */}
+          <div className="md:hidden max-w-sm mx-auto text-center bg-transparent">
+            {/* Avatar Photo */}
+            <div className="w-full aspect-square bg-neutral-900 rounded-3xl overflow-hidden mb-6 relative border border-white/10">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentLeader.img}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  className="w-full h-full relative"
+                >
+                  <Image
+                    src={currentLeader.img}
+                    alt={t(`${currentLeader.key}.name`)}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 320px"
+                    className="object-cover saturate-[0.85] contrast-[1.05]"
+                    draggable={false}
+                    priority
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Mobile Content (CometCard) */}
+            <div className="px-2">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentLeader.key}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                >
+                  <CometCard className="p-6 text-left flex flex-col justify-between shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+                    <div>
+                      <span className="text-[9px] font-mono tracking-[0.2em] text-gold uppercase mb-1.5 block">
+                        {currentLeader.key === "l1" ? "#CHAIRMAN" : "#DEPUTY"}
+                      </span>
+                      
+                      <h3 className="text-lg font-sans font-bold text-white mb-1.5 tracking-wide">
+                        {t(`${currentLeader.key}.name`)}
+                      </h3>
+                      
+                      <p className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider mb-4">
+                        {t(`${currentLeader.key}.role`)}
+                      </p>
+                      
+                      <p className="text-xs sm:text-sm text-zinc-300 font-sans font-light leading-relaxed mb-4">
+                        {t(`${currentLeader.key}.desc`)}
+                      </p>
                     </div>
-                  </div>
-                  <div className="mt-4 flex flex-col gap-2 p-4">
-                    <h3 className="text-base font-sans font-bold text-white tracking-wide transition-colors duration-300 group-hover:text-gold leading-snug">
-                      {t(`${leader.key}.name`)}
-                    </h3>
-                    <div className="flex justify-between items-center font-mono text-[10px] text-zinc-500 mt-1">
-                      <span className="uppercase tracking-wider leading-none line-clamp-1">{t(`${leader.key}.role`)}</span>
-                      <span className="text-gold/60 leading-none">#DEPUTY</span>
+
+                    {/* Social links */}
+                    <div className="flex space-x-3 pt-4 border-t border-white/5">
+                      <a
+                        href={currentLeader.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-8 h-8 bg-white/[0.03] border border-white/10 hover:border-gold/50 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105 cursor-pointer text-zinc-400 hover:text-gold"
+                        aria-label="LinkedIn"
+                      >
+                        <svg
+                          className="w-3.5 h-3.5 fill-current"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                        </svg>
+                      </a>
                     </div>
-                  </div>
-                </CometCard>
-              </div>
-            ))}
+                  </CometCard>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Navigation Controls */}
+          <div className="flex justify-center items-center gap-6 mt-12">
+            {/* Prev Button */}
+            <button
+              onClick={handlePrevious}
+              aria-label="Previous manager"
+              className="w-12 h-12 rounded-full liquid-glass border border-white/10 hover:border-gold/40 shadow-md flex items-center justify-center hover:bg-white/[0.08] transition-colors cursor-pointer text-zinc-400 hover:text-white"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+
+            {/* Navigation Dots */}
+            <div className="flex gap-2">
+              {leaders.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentIndex(idx)}
+                  className={`w-2.5 h-2.5 rounded-full transition-colors cursor-pointer ${
+                    idx === currentIndex
+                      ? "bg-gold"
+                      : "bg-zinc-600 hover:bg-zinc-400"
+                  }`}
+                  aria-label={`Go to slide ${idx + 1}`}
+                />
+              ))}
+            </div>
+
+            {/* Next Button */}
+            <button
+              onClick={handleNext}
+              aria-label="Next manager"
+              className="w-12 h-12 rounded-full liquid-glass border border-white/10 hover:border-gold/40 shadow-md flex items-center justify-center hover:bg-white/[0.08] transition-colors cursor-pointer text-zinc-400 hover:text-white"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
           </div>
 
         </div>

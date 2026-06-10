@@ -144,19 +144,23 @@
     "subtitle": "Professionals in the IT industry ensuring the stability of digital solutions of Kazakhstan's financial system.",
     "l1": {
       "name": "Malik A. Amardinov",
-      "role": "Chairman of the Board"
+      "role": "Chairman of the Board",
+      "desc": "Our goal is to create a reliable, scalable, and secure digital ecosystem for the financial sector of Kazakhstan that meets the best global standards."
     },
     "l2": {
       "name": "Erlan D. Durmagambetov",
-      "role": "First Deputy Chairman of the Board"
+      "role": "First Deputy Chairman of the Board",
+      "desc": "Digital transformation of the National Bank requires synergy of advanced technologies, a strong engineering team, and strict quality standards."
     },
     "l3": {
       "name": "Argyn S. Kentbekov",
-      "role": "Deputy Chairman of the Board"
+      "role": "Deputy Chairman of the Board",
+      "desc": "We ensure the uninterrupted operation of key IT systems and the development of the state procurement portal, increasing process transparency."
     },
     "l4": {
       "name": "Bakhytzhan G. Imajanov",
-      "role": "Deputy Chairman of the Board"
+      "role": "Deputy Chairman of the Board",
+      "desc": "Information security and cyber resilience are the foundation of the digital development of our country's financial infrastructure."
     }
   }
 }
