@@ -4,7 +4,10 @@ import "../globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import PageTransitionProvider from "@/components/motion/PageTransition";
-// Font configurations remain as they are for Comfortaa, Cormorant Garamond and JetBrains Mono.
+import CustomCursor from "@/components/ui/CustomCursor";
+import MatrixCursorTrail from "@/components/ui/MatrixCursorTrail";
+import InteractiveDotGrid from "@/components/ui/InteractiveDotGrid";
+
 const cormorant = Cormorant_Garamond({
   subsets: ["latin", "cyrillic", "cyrillic-ext"],
   weight: ["300", "400", "500", "600", "700"],
@@ -60,6 +63,8 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           {/* Faint grain overlay (opacity 0.03) for organic texture */}
           <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] bg-[url('/images/textures/bg-texture-noise.png')] bg-repeat" />
+          <CustomCursor />
+          <MatrixCursorTrail />
           <PageTransitionProvider>{children}</PageTransitionProvider>
         </NextIntlClientProvider>
       </body>

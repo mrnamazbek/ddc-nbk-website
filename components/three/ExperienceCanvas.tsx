@@ -30,8 +30,7 @@ function detectQuality(): Quality {
 function SceneContents({ quality }: { quality: Quality }) {
   return (
     <>
-      <color attach="background" args={["#0E2419"]} />
-      <fog attach="fog" args={["#0E2419", 10, 32]} />
+      <fog attach="fog" args={["#000000", 10, 32]} />
 
       {/* Lighting rig: warm gold key, cool forest fill, rim. */}
       <ambientLight intensity={0.35} />
@@ -73,7 +72,7 @@ export default function ExperienceCanvas() {
   }, []);
 
   if (!ready) {
-    return <div className="fixed inset-0 z-0 bg-[#0E2419]" />;
+  return <div className="fixed inset-0 z-0 bg-black" />;
   }
 
   // На мобильных (low) или при отключенных анимациях (off) используем оптимизированный 2D ScrollSequence
