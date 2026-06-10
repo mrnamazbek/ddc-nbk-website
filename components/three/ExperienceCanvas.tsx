@@ -28,8 +28,7 @@ function detectQuality(): Quality {
 function SceneContents({ quality }: { quality: Quality }) {
   return (
     <>
-      <color attach="background" args={["#0E2419"]} />
-      <fog attach="fog" args={["#0E2419", 10, 32]} />
+      <fog attach="fog" args={["#000000", 10, 32]} />
 
       {/* Lighting rig: warm gold key, cool forest fill, rim. */}
       <ambientLight intensity={0.35} />
@@ -49,7 +48,6 @@ function SceneContents({ quality }: { quality: Quality }) {
       <CoinBillboard />
       <MorphObjects />
       <Steppe />
-      <GoldDust count={quality === "low" ? 1400 : 4200} />
 
       {quality === "high" && (
         <EffectComposer>
@@ -73,13 +71,13 @@ export default function ExperienceCanvas() {
   }, []);
 
   if (!ready) {
-    return <div className="fixed inset-0 z-0 bg-[#0E2419]" />;
+  return <div className="fixed inset-0 z-0 bg-black" />;
   }
 
   // Reduced-motion: static gold-on-forest hero, no WebGL, no scroll drive.
   if (quality === "off") {
     return (
-      <div className="fixed inset-0 z-0 bg-[#0E2419]">
+    <div className="fixed inset-0 z-0 bg-black">
         <div className="absolute left-1/2 top-1/3 h-[60vh] w-[60vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(201,168,76,0.28),transparent_65%)]" />
       </div>
     );
