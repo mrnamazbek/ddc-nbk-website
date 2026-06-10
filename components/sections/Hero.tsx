@@ -6,13 +6,21 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
+import dynamic from "next/dynamic";
 import ShimmerButton from "@/components/ui/ShimmerButton";
 import Magnetic from "@/components/motion/Magnetic";
-import { SplineScene } from "@/components/ui/splite";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 import { MetalButton } from "@/components/ui/liquid-glass-button";
 
-const ROBOT_SCENE = "https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode";
+// 3D logo medallion — heavy (R3F/WebGL), so lazy-load it client-side only.
+const Hero3D = dynamic(() => import("@/components/three/Hero3D"), {
+  ssr: false,
+  loading: () => (
+    <div className="absolute inset-0 flex items-center justify-center">
+      <span className="loader" />
+    </div>
+  ),
+});
 
 export default function Hero() {
   const t = useTranslations("Hero");
@@ -183,24 +191,26 @@ export default function Hero() {
           </motion.div>
         </motion.div>
 
-        {/* Правая колонка: интерактивный 3D-робот поверх dot-shader.
-            Робот реагирует на курсор. Скрыт на узких экранах ради читаемости. */}
+        {/* Правая колонка: интерактивный 3D-медальон с логотипом DDC поверх
+            dot-shader. На мобильных / при prefers-reduced-motion — статичный
+            постер вместо WebGL. */}
         <motion.div
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="relative hidden md:block h-[520px] lg:h-[820px] w-full pointer-events-auto overflow-visible"
+          transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="relative hidden md:block h-[520px] lg:h-[640px] w-full pointer-events-auto"
         >
-          {/* Slightly oversized so the robot's arms/hands are never cropped by
-              the column bounds — matches the framing of the source scene. */}
-          <div className="absolute top-0 bottom-0 left-[-25%] right-[-25%] w-[150%] h-full">
-            {!isMobileDevice && (
-              <SplineScene
-                scene={ROBOT_SCENE}
-                className="w-full h-full [&_canvas]:!h-full [&_canvas]:!w-full"
-              />
-            )}
-          </div>
+          {isMobileDevice ? (
+            <Image
+              src="/images/medallion-poster.png"
+              alt="DDC — золотой медальон с логотипом"
+              fill
+              priority
+              className="object-contain"
+            />
+          ) : (
+            <Hero3D />
+          )}
         </motion.div>
       </div>
 

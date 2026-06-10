@@ -49,11 +49,14 @@ export default async function LocaleLayout({
       suppressHydrationWarning
     >
       <head>
+        {/* Google Fonts (Instrument Serif / Barlow / JetBrains Mono) used by the
+            design tokens. Loaded via <link> rather than CSS @import because
+            Tailwind v4 + Lightning CSS rejects url() @import. */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          rel="preload"
-          href="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
-          as="fetch"
-          crossOrigin="anonymous"
+          href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Barlow:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+          rel="stylesheet"
         />
       </head>
       <body className="min-h-full flex flex-col text-white">

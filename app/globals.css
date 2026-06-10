@@ -1,5 +1,8 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
+/* Instrument Serif / Barlow / JetBrains Mono are loaded via <link> in the
+   document <head> (app/[locale]/layout.tsx) — Tailwind v4 + Lightning CSS
+   rejects url() @import after the tailwindcss import, so do NOT re-add it here. */
 
 :root {
   /* Текущие активные шрифты дизайн-системы */
