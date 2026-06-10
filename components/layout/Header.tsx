@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { Menu, X, ArrowRight } from "lucide-react";
+import { Menu, X, ArrowRight, Home, Building2, LayoutGrid, Target, Newspaper, Briefcase, Mail, type LucideIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "../ui/Button";
 import Magnetic from "../motion/Magnetic";
@@ -71,14 +71,14 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks = [
-    { name: t("home"), href: "/" },
-    { name: t("about"), href: "/about" },
-    { name: t("services"), href: "/services" },
-    { name: t("mission"), href: "/about#mission" },
-    { name: t("news"), href: "/news" },
-    { name: t("careers"), href: "/careers" },
-    { name: t("contacts"), href: "/contact" },
+  const navLinks: { name: string; href: string; icon: LucideIcon }[] = [
+    { name: t("home"), href: "/", icon: Home },
+    { name: t("about"), href: "/about", icon: Building2 },
+    { name: t("services"), href: "/services", icon: LayoutGrid },
+    { name: t("mission"), href: "/about#mission", icon: Target },
+    { name: t("news"), href: "/news", icon: Newspaper },
+    { name: t("careers"), href: "/careers", icon: Briefcase },
+    { name: t("contacts"), href: "/contact", icon: Mail },
   ];
 
   const switchLocale = (lng: string) => {
@@ -131,24 +131,31 @@ export default function Header() {
             </div>
           </TransitionLink>
 
-          {/* Desktop menu */}
-          <nav className="hidden xl:flex items-center gap-0.5 xl:gap-1 bg-black/20 border border-white/[0.04] p-1 rounded-full backdrop-blur-md relative">
+          {/* Desktop menu — glass pill with icon-above-label items */}
+          <nav className="hidden xl:flex items-center gap-1 liquid-glass border border-white/10 p-1.5 rounded-[30px] relative shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
             {navLinks.map((link) => {
+              const Icon = link.icon;
               const isActive = pathname === link.href;
               return (
                 <TransitionLink
                   key={link.name}
                   href={link.href}
-                  className={`font-heading text-xs xl:text-sm tracking-wide transition-all duration-300 relative px-3 py-1 xl:px-4 xl:py-1.5 rounded-full hover:text-white flex items-center justify-center ${
-                    isActive ? "text-white font-medium" : "text-gray-light hover:bg-white/[0.02]"
+                  className={`group relative flex flex-col items-center justify-center gap-1 px-3.5 py-2 rounded-[22px] transition-colors duration-300 ${
+                    isActive ? "text-white" : "text-gray-light hover:text-white"
                   }`}
                 >
-                  <span className="relative z-10">{link.name}</span>
-                  {/* Smooth active glass indicator */}
+                  <Icon
+                    className="w-[18px] h-[18px] relative z-10 transition-transform duration-300 group-hover:-translate-y-0.5"
+                    strokeWidth={1.75}
+                  />
+                  <span className="relative z-10 text-[10px] font-medium tracking-wide leading-none">
+                    {link.name}
+                  </span>
+                  {/* Smooth active glass indicator that slides between items */}
                   {isActive && (
                     <motion.span
                       layoutId="activeNavIndicator"
-                      className="absolute inset-0 liquid-glass rounded-full -z-10 shadow-lg"
+                      className="absolute inset-0 rounded-[22px] bg-white/[0.08] border border-gold/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]"
                       transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}
