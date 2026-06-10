@@ -1,17 +1,54 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Button from "@/components/ui/Button";
 import { ArrowLeft, Home } from "lucide-react";
 import "./globals.css";
 
+const translations = {
+  ru: {
+    title: "Страница не найдена или перемещена",
+    desc: "Запрашиваемый адрес отсутствует. Возможно, ссылка устарела или в адресе допущена опечатка. Попробуйте вернуться на главную страницу DDC.",
+    home: "На главную",
+    back: "Назад",
+  },
+  en: {
+    title: "Page Not Found or Moved",
+    desc: "The requested address does not exist. The link may be outdated or there is a typo in the address. Try returning to the DDC home page.",
+    home: "Home",
+    back: "Back",
+  },
+  kz: {
+    title: "Бет табылмады немесе көшірілді",
+    desc: "Сұралған мекенжай жоқ. Сілтеме ескірген болуы мүмкін немесе мекенжайда қате жіберілген. DDC басты бетіне оралып көріңіз.",
+    home: "Басты бетке",
+    back: "Артқа",
+  },
+};
+
 export default function NotFound() {
+  const [locale, setLocale] = useState<"ru" | "en" | "kz">("ru");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const path = window.location.pathname;
+      const pathParts = path.split("/");
+      const detectedLocale = pathParts[1];
+      if (detectedLocale === "en" || detectedLocale === "kz" || detectedLocale === "ru") {
+        setLocale(detectedLocale);
+      }
+    }
+  }, []);
+
+  const t = translations[locale];
+
   return (
-    <html lang="ru" className="dark h-full">
-      <body className="min-h-full bg-[#000000] text-white">
+    <html lang={locale} className="h-full">
+      <body className="min-h-full bg-background text-foreground transition-colors duration-300">
         <div className="relative w-full min-h-screen overflow-hidden flex flex-col justify-center items-center font-sans px-6 text-center">
           {/* Мягкие бэкграунд-эффекты */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full border border-forest-light/5 animate-[spin_80s_linear_infinite] pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full border border-border animate-[spin_80s_linear_infinite] pointer-events-none" />
 
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -23,12 +60,12 @@ export default function NotFound() {
               404
             </span>
 
-            <h1 className="text-2xl sm:text-4xl font-sans font-bold text-white tracking-wide mb-6">
-              Страница не найдена или перемещена
+            <h1 className="text-2xl sm:text-4xl font-display font-normal text-foreground tracking-wide mb-6">
+              {t.title}
             </h1>
 
-            <p className="text-sm sm:text-base text-zinc-400 font-light leading-relaxed max-w-md mx-auto mb-12">
-              Запрашиваемый адрес отсутствует. Возможно, ссылка устарела или в адресе допущена опечатка. Попробуйте вернуться на главную страницу DDC.
+            <p className="text-sm sm:text-base text-text-secondary font-light leading-relaxed max-w-md mx-auto mb-12">
+              {t.desc}
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center">
@@ -36,10 +73,10 @@ export default function NotFound() {
                 variant="gold"
                 size="md"
                 className="w-full sm:w-auto flex items-center justify-center gap-2 group"
-                onClick={() => window.location.href = "/"}
+                onClick={() => window.location.href = `/${locale}`}
               >
                 <Home className="w-4 h-4" />
-                На главную
+                {t.home}
               </Button>
               
               <Button
@@ -49,7 +86,7 @@ export default function NotFound() {
                 onClick={() => window.history.back()}
               >
                 <ArrowLeft className="w-4 h-4" />
-                Назад
+                {t.back}
               </Button>
             </div>
           </motion.div>

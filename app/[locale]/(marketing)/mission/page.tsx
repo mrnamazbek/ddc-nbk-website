@@ -2,8 +2,15 @@
 
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { FeatureCarousel, type Step } from "@/components/ui/feature-carousel";
 import { cn } from "@/lib/utils";
+import dynamic from "next/dynamic";
+
+const FeatureCarousel = dynamic(
+  () => import("@/components/ui/feature-carousel").then((mod) => mod.FeatureCarousel),
+  { ssr: false }
+);
+
+import type { Step } from "@/components/ui/feature-carousel";
 
 export default function MissionPage() {
   const t = useTranslations("Mission");
@@ -37,7 +44,7 @@ export default function MissionPage() {
   ];
 
   return (
-    <div className="relative w-full bg-black overflow-hidden min-h-screen pt-32 pb-24 font-sans flex items-center">
+    <div className="relative w-full bg-background overflow-hidden min-h-screen pt-32 pb-24 font-sans flex items-center">
       {/* Background radial/gradient flows to maintain premium design */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-forest/10 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[400px] h-[400px] rounded-full bg-gold/5 blur-[100px] pointer-events-none" />
@@ -54,14 +61,14 @@ export default function MissionPage() {
           <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
             {t("overline")}
           </span>
-          <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
+          <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
             {t("titleLine1")}{" "}
             <span className="text-gradient-gold font-medium">
               {t("titleAccent")}
             </span>{" "}
             {t("titleLine2")}
           </h1>
-          <p className="text-lg text-zinc-400 font-light leading-relaxed">
+          <p className="text-lg text-text-secondary font-light leading-relaxed">
             {t("subtitle")}
           </p>
         </motion.div>
@@ -73,38 +80,38 @@ export default function MissionPage() {
           transition={{ duration: 1.0, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           className="w-full max-w-5xl mx-auto pointer-events-auto"
         >
-          <div className="rounded-[34px] bg-neutral-800/40 p-2 border border-white/5 backdrop-blur-xl">
-            <div className="relative z-10 grid w-full gap-8 rounded-[28px] bg-neutral-950 p-2">
+          <div className="rounded-[34px] bg-charcoal/30 p-2 border border-border backdrop-blur-xl">
+            <div className="relative z-10 grid w-full gap-8 rounded-[28px] bg-background p-2">
               <FeatureCarousel
                 title={t("titleLine1") + " " + t("titleAccent")}
                 description={t("subtitle")}
                 steps={steps}
                 step1img1Class={cn(
-                  "pointer-events-none w-[50%] border border-white/5 transition-all duration-500 rounded-[24px] absolute",
+                  "pointer-events-none w-[50%] border border-border transition-all duration-500 rounded-[24px] absolute",
                   "max-md:scale-[130%] max-md:rounded-[16px] rounded-[24px] left-[10%] top-[45%] md:left-[35px] md:top-[15%]",
                   "md:group-hover:translate-y-2 object-cover aspect-[4/3] shadow-2xl"
                 )}
                 step1img2Class={cn(
-                  "pointer-events-none w-[55%] border border-white/5 transition-all duration-500 overflow-hidden absolute",
+                  "pointer-events-none w-[55%] border border-border transition-all duration-500 overflow-hidden absolute",
                   "max-md:scale-[130%] rounded-[24px] max-md:rounded-[16px] left-[55%] top-[35%] md:top-[5%] md:left-[calc(45%+35px+1rem)]",
                   "md:group-hover:-translate-y-6 object-cover aspect-[4/3] shadow-2xl"
                 )}
                 step2img1Class={cn(
-                  "pointer-events-none w-[45%] rounded-[24px] overflow-hidden border border-white/5 transition-all duration-500 absolute",
+                  "pointer-events-none w-[45%] rounded-[24px] overflow-hidden border border-border transition-all duration-500 absolute",
                   "max-md:scale-[130%] left-[10%] top-[50%] md:left-[35px] md:top-[12%]",
                   "md:group-hover:translate-y-2 object-cover aspect-[4/3] shadow-2xl"
                 )}
                 step2img2Class={cn(
-                  "pointer-events-none w-[45%] rounded-[24px] border border-white/5 transition-all duration-500 overflow-hidden absolute",
+                  "pointer-events-none w-[45%] rounded-[24px] border border-border transition-all duration-500 overflow-hidden absolute",
                   "max-md:scale-[120%] left-[55%] top-[30%] md:top-[8%] md:left-[calc(45%+27px+1rem)]",
                   "md:group-hover:-translate-y-6 object-cover aspect-[4/3] shadow-2xl"
                 )}
                 step3imgClass={cn(
-                  "pointer-events-none w-[80%] md:w-[70%] border border-white/5 rounded-[24px] transition-all duration-500 overflow-hidden absolute",
+                  "pointer-events-none w-[80%] md:w-[70%] border border-border rounded-[24px] transition-all duration-500 overflow-hidden absolute",
                   "left-[10%] top-[25%] md:top-[10%] md:left-[15%] shadow-2xl aspect-[16/9] object-cover"
                 )}
                 step4imgClass={cn(
-                  "pointer-events-none w-[80%] md:w-[70%] border border-white/5 rounded-[24px] transition-all duration-500 overflow-hidden absolute",
+                  "pointer-events-none w-[80%] md:w-[70%] border border-border rounded-[24px] transition-all duration-500 overflow-hidden absolute",
                   "left-[10%] top-[25%] md:top-[10%] md:left-[15%] shadow-2xl aspect-[16/9] object-cover"
                 )}
                 image={{
@@ -116,7 +123,7 @@ export default function MissionPage() {
                   step4light: "/images/backgrounds/glass-card-bg.png",
                   alt: t("step1Name"),
                 }}
-                bgClass="bg-gradient-to-tr from-neutral-950/80 to-neutral-900/40"
+                bgClass="bg-gradient-to-tr from-background to-charcoal/20"
               />
             </div>
           </div>

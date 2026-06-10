@@ -35,12 +35,12 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         onMouseMove={handleMouseMove}
         onMouseEnter={() => setVisible(true)}
         onMouseLeave={() => setVisible(false)}
-        className="p-[1px] rounded-lg transition duration-300 group/input bg-zinc-800/40 border border-white/5"
+        className="p-[1px] rounded-[var(--radius-input)] transition duration-300 group/input bg-charcoal border border-border"
       >
         <textarea
           className={cn(
-            `flex w-full border-none bg-zinc-950 text-white shadow-input rounded-md px-3 py-2 text-sm 
-            placeholder:text-zinc-500 focus-visible:outline-none 
+            `flex w-full border-none bg-background text-foreground shadow-input rounded-[calc(var(--radius-input)-1px)] px-3 py-2 text-sm 
+            placeholder:text-foreground/40 focus-visible:outline-none 
             disabled:cursor-not-allowed disabled:opacity-50 transition duration-300 resize-none`,
             className
           )}

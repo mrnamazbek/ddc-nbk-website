@@ -4,29 +4,29 @@
 
 :root {
   /* ==========================================
-     1. Цветовая система (Color System)
+     1. Базовая палитра (Base Colors)
      ========================================== */
   
-  /* Первичная палитра (DDC Forest Green - АО «Центр цифрового развития») */
-  --color-forest: #1A3D2B;           /* Фирменный глубокий лесной зеленый ЦЦР */
-  --color-forest-mid: #2D6A4F;       /* Средний зеленый - кнопки, акценты */
-  --color-forest-light: #52B788;     /* Светлый зеленый - индикаторы, ховеры */
-  --color-forest-dark: #0F241A;      /* Глубокий темный зеленый */
+  /* Первичная палитра (DDC Forest Green) */
+  --color-forest: #1A3D2B;
+  --color-forest-mid: #2D6A4F;
+  --color-forest-light: #52B788;
+  --color-forest-dark: #0F241A;
 
   /* Золотая палитра (Premium Gold) */
-  --color-gold: #C9A84C;         /* Благородное золото - премиальные акценты */
-  --color-gold-light: #E8C87A;   /* Светлое золото - ховеры, активные рамки */
-  --color-gold-muted: #8B7035;   /* Глубокое темное золото - тени, подложки */
-  --color-gold-dark: #58461F;    /* Ультра-темное золото */
+  --color-gold: #C9A84C;
+  --color-gold-light: #E8C87A;
+  --color-gold-muted: #8B7035;
+  --color-gold-dark: #58461F;
 
   /* Нейтральная палитра (Neutral System) */
-  --color-black: #0A0A0A;        /* Иссиня-черный базовый фон */
-  --color-charcoal: #1C1C1E;     /* Угольный серый - карточки, секции */
-  --color-gray-dark: #3A3A3C;    /* Темно-серый */
-  --color-gray-mid: #636366;     /* Средне-серый */
-  --color-gray-light: #AEAEB2;   /* Светло-серый */
-  --color-white: #FFFFFF;        /* Чистый белый */
-  --color-offwhite: #F5F5F0;     /* Теплый молочно-белый для контрастных фонов */
+  --color-black: #0A0A0A;
+  --color-charcoal: #1C1C1E;
+  --color-gray-dark: #3A3A3C;
+  --color-gray-mid: #636366;
+  --color-gray-light: #AEAEB2;
+  --color-white: #FFFFFF;
+  --color-offwhite: #F5F5F0;
 
   /* Семантические цвета */
   --color-success: #52B788;
@@ -34,25 +34,64 @@
   --color-error: #E63946;
   --color-info: #457B9D;
 
-  /* Стеклянные эффекты (Glassmorphism) */
+  /* ==========================================
+     2. Семантические цвета Темной темы (Default Dark Theme)
+     ========================================== */
+  --background: #08080a;
+  --foreground: #FFFFFF;
+  --surface: #141419;
+  
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-tertiary: rgba(255, 255, 255, 0.45);
+  
+  --accent-gold: #C9A84C;
+  --accent-gold-hover: #E8C87A;
+  
+  --border-primary: rgba(255, 255, 255, 0.08);
+  --border-secondary: rgba(255, 255, 255, 0.15);
+
   --glass-bg: rgba(20, 20, 25, 0.4);
-  --glass-border: 1px solid rgba(255, 255, 255, 0.15);
-  --glass-border-gold: rgba(201, 168, 76, 0.15);
-  --glass-border-forest: rgba(82, 183, 136, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-border-gold: rgba(201, 168, 76, 0.2);
+  --glass-border-forest: rgba(82, 183, 136, 0.2);
   --glass-blur: blur(16px) saturate(180%);
   --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 
   /* ==========================================
-     2. Типографика (Typography System)
+     3. Геометрия и отступы (Layout & Radius Tokens)
      ========================================== */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-2xl: 32px;
+  --radius-pill: 9999px;
+
+  /* Единые токены элементов */
+  --radius-button: var(--radius-md); /* 8px */
+  --radius-card: var(--radius-xl);     /* 22px */
+  --radius-input: var(--radius-md);    /* 8px */
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.5);
   
-  /* Шрифтовые гарнитуры */
+  --shadow-gold: 0 8px 32px rgba(201, 168, 76, 0.15);
+  --shadow-green: 0 8px 32px rgba(26, 61, 43, 0.25);
+  
+  --shadow-button: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-card: var(--shadow-lg);
+
+  /* ==========================================
+     4. Типографика (Typography System)
+     ========================================== */
   --font-display: 'Instrument Serif', Georgia, serif;
   --font-heading: 'Barlow', system-ui, -apple-system, sans-serif;
   --font-body: 'Barlow', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Адаптивный размер шрифтов (clamp-based) */
   --text-xs: clamp(0.75rem, 1.2vw + 0.1rem, 0.875rem);
   --text-sm: clamp(0.875rem, 1.4vw + 0.1rem, 1rem);
   --text-base: clamp(1rem, 1.6vw + 0.1rem, 1.125rem);
@@ -63,24 +102,20 @@
   --text-4xl: clamp(2.5rem, 4.5vw + 0.1rem, 4rem);
   --text-hero: clamp(3.5rem, 7.5vw + 0.5rem, 7.5rem);
 
-  /* Вес шрифтов */
   --weight-light: 300;
   --weight-regular: 400;
   --weight-medium: 500;
   --weight-semibold: 600;
   --weight-bold: 700;
 
-  /* Высота строк (Line Heights) */
   --leading-tight: 1.15;
   --leading-snug: 1.35;
   --leading-normal: 1.6;
   --leading-loose: 1.8;
 
   /* ==========================================
-     3. Сетка и Отступы (Spacing & Layout)
+     5. Отступы (Spacing)
      ========================================== */
-  
-  /* Отступы на базе 4px */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -92,50 +127,48 @@
   --space-24: 96px;
   --space-32: 128px;
 
-  /* Контейнер */
   --layout-max-width: 1440px;
   --layout-gutter: clamp(16px, 3vw, 32px);
   --layout-margin: clamp(16px, 5vw, 80px);
   --section-padding-y: clamp(80px, 8vw + 10px, 160px);
 
   /* ==========================================
-     4. Глубина и Тени (Shadows & Depth)
+     6. Анимационные токены (Transitions)
      ========================================== */
-  
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.4);
-  --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.5);
-  
-  --shadow-gold: 0 8px 32px rgba(201, 168, 76, 0.15);
-  --shadow-green: 0 8px 32px rgba(26, 61, 43, 0.25);
-  --shadow-inner: inset 0 2px 4px rgba(255, 255, 255, 0.05);
-
-  /* ==========================================
-     5. Скругления углов (Border Radius)
-     ========================================== */
-  
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
-  --radius-2xl: 32px;
-  --radius-pill: 9999px;
-
-  /* ==========================================
-     6. Анимационные токены (Animation Tokens)
-     ========================================== */
-  
-  /* Временные функции */
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);   /* Премиальный ховер */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-expo: cubic-bezier(0.7, 0, 0.84, 0);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* Эффект пружины */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Длительность */
   --duration-fast: 200ms;
   --duration-base: 350ms;
   --duration-slow: 600ms;
-  --duration-slower: 900ms;
-  --duration-cinematic: 1200ms;
+}
+
+/* ==========================================
+   7. Семантические цвета Светлой темы (Light Theme)
+   ========================================== */
+html.light {
+  --background: #F5F5F0;
+  --foreground: #0E2419;
+  --surface: #FFFFFF;
+  
+  --text-primary: #0E2419;
+  --text-secondary: rgba(14, 36, 25, 0.75);
+  --text-tertiary: rgba(14, 36, 25, 0.5);
+  
+  --accent-gold: #8B7035; /* Темно-золотой с контрастом > 4.5:1 */
+  --accent-gold-hover: #58461F;
+  
+  --border-primary: rgba(14, 36, 25, 0.1);
+  --border-secondary: rgba(14, 36, 25, 0.18);
+
+  --glass-bg: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(14, 36, 25, 0.1);
+  --glass-border-gold: rgba(139, 112, 53, 0.2);
+  --glass-border-forest: rgba(26, 61, 43, 0.15);
+  --glass-shadow: 0 4px 24px rgba(14, 36, 25, 0.06);
+  
+  --shadow-button: 0 4px 12px rgba(14, 36, 25, 0.08);
+  --shadow-card: 0 16px 48px rgba(14, 36, 25, 0.05);
 }

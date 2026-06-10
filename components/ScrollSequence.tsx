@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { getScroll, startScrollTracking } from "@/lib/scrollStore";
 import { band, lerp, range } from "@/lib/sceneMath";
+import { useTranslations } from "next-intl";
 
 interface ScrollSequenceProps {
   totalFrames?: number;
@@ -17,6 +18,7 @@ export default function ScrollSequence({
   mobileDir = "/sequence/mobile",
   className = "",
 }: ScrollSequenceProps) {
+  const t = useTranslations("Common");
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -261,7 +263,7 @@ export default function ScrollSequence({
             />
           </div>
           <span className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">
-            Загрузка сцены • {loadingProgress}%
+            {t("loading")} • {loadingProgress}%
           </span>
         </div>
       )}

@@ -13,7 +13,7 @@ export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children">
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ children, variant = "gold", size = "md", isMagnetic = false, className = "", ...props }, ref) => {
     // Базовые стили
-    const baseStyles = "inline-flex items-center justify-center font-medium transition-all duration-300 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer";
+    const baseStyles = "inline-flex items-center justify-center font-medium transition-all duration-300 rounded-[var(--radius-button)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer";
 
     // Стили вариантов
     let variantClass = "";
@@ -25,9 +25,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     // Стили размеров
     const sizes = {
-      sm: "px-4 py-2 text-xs",
-      md: "px-6 py-3 text-sm",
-      lg: "px-8 py-4 text-base",
+      sm: "px-4 py-2 text-xs min-h-[36px]",
+      md: "px-6 py-3 text-sm min-h-[44px]",
+      lg: "px-8 py-4 text-base min-h-[52px]",
     };
 
     const combinedClassName = `${baseStyles} ${variantClass} ${sizes[size]} ${className}`;

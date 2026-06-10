@@ -3,8 +3,11 @@
 import { motion } from "framer-motion";
 import { ShieldCheck, Lock, ShieldAlert, Key, Globe, Eye } from "lucide-react";
 import GlassCard from "@/components/ui/GlassCard";
+import { useTranslations } from "next-intl";
 
 export default function SecurityPage() {
+  const t = useTranslations("SecurityPage");
+
   const containerVariants = {
     hidden: {},
     visible: { transition: { staggerChildren: 0.15 } },
@@ -22,38 +25,38 @@ export default function SecurityPage() {
   const pillars = [
     {
       icon: ShieldCheck,
-      title: "Zero Trust Architecture",
-      description: "Все сервисы и запросы к API проходят обязательную взаимную проверку подлинности (mTLS) и авторизацию на каждом шаге.",
+      title: t("p1Title"),
+      description: t("p1Desc"),
     },
     {
       icon: Lock,
-      title: "Стандарты ГОСТ СТ РК",
-      description: "Применение государственных стандартов шифрования и хэширования гарантирует защиту от несанкционированного доступа.",
+      title: t("p2Title"),
+      description: t("p2Desc"),
     },
     {
       icon: ShieldAlert,
-      title: "Непрерывный пентестинг",
-      description: "Ежегодный независимый аудит безопасности и регулярные учения по кибербезопасности для выявления потенциальных уязвимостей.",
+      title: t("p3Title"),
+      description: t("p3Desc"),
     },
     {
       icon: Key,
-      title: "Аппаратный слой HSM",
-      description: "Криптографические ключи и корневые сертификаты систем хранятся на специализированном оборудовании, исключающем копирование.",
+      title: t("p4Title"),
+      description: t("p4Desc"),
     },
     {
       icon: Globe,
-      title: "ISO/IEC 27001",
-      description: "Соответствие международным стандартам информационной безопасности и управления операционными рисками.",
+      title: t("p5Title"),
+      description: t("p5Desc"),
     },
     {
       icon: Eye,
-      title: "Полный аудит логов",
-      description: "Использование систем SIEM для централизованного сбора и анализа событий безопасности в режиме реального времени.",
+      title: t("p6Title"),
+      description: t("p6Desc"),
     },
   ];
 
   return (
-    <div className="relative w-full bg-black overflow-hidden min-h-screen pt-32 pb-24 font-sans">
+    <div className="relative w-full bg-background overflow-hidden min-h-screen pt-32 pb-24 font-sans">
       {/* Мягкие свечения */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] pointer-events-none" />
@@ -68,14 +71,14 @@ export default function SecurityPage() {
           className="max-w-3xl mb-20"
         >
           <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
-            БЕЗОПАСНОСТЬ И КОМПЛАЕНС
+            {t("overline")}
           </span>
-          <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
-            Защита критической <br />
-            <span className="text-gradient-gold font-medium">инфраструктуры</span>
+          <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
+            {t("titleLine1")} <br />
+            <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
           </h1>
-          <p className="text-lg text-zinc-400 font-light leading-relaxed">
-            Политика кибербезопасности DDC объединяет государственную строгость с передовыми международными практиками защиты финансовых данных.
+          <p className="text-lg text-text-secondary font-light leading-relaxed">
+            {t("description")}
           </p>
         </motion.div>
 
@@ -91,16 +94,16 @@ export default function SecurityPage() {
             const PillarIcon = pillar.icon;
             return (
               <motion.div key={idx} variants={itemVariants} className="h-full">
-                <GlassCard className="h-full flex flex-col p-8 border-white/5 hover:border-gold/20">
+                <GlassCard className="h-full flex flex-col p-8 border-border hover:border-gold/20">
                   <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6 shrink-0">
                     <PillarIcon className="w-6 h-6" />
                   </div>
                   
-                  <h3 className="text-lg font-sans font-semibold text-white tracking-wide mb-3">
+                  <h3 className="text-lg font-sans font-semibold text-foreground tracking-wide mb-3">
                     {pillar.title}
                   </h3>
                   
-                  <p className="text-sm font-sans font-light text-zinc-400 leading-relaxed">
+                  <p className="text-sm font-sans font-light text-text-secondary leading-relaxed">
                     {pillar.description}
                   </p>
                 </GlassCard>
@@ -110,24 +113,24 @@ export default function SecurityPage() {
         </motion.div>
 
         {/* Сертификация */}
-        <div className="mt-24 bg-charcoal/30 border border-white/5 rounded-3xl p-8 sm:p-12 text-center lg:text-left">
+        <div className="mt-24 bg-charcoal/30 border border-border rounded-3xl p-8 sm:p-12 text-center lg:text-left">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-8">
-              <h3 className="text-xl font-bold text-white mb-4 tracking-wide">
-                Соответствие государственным регуляторным требованиям
+              <h3 className="text-xl font-bold text-foreground mb-4 tracking-wide">
+                {t("certTitle")}
               </h3>
-              <p className="text-sm text-zinc-400 font-light leading-relaxed">
-                Информационные системы DDC проходят обязательную государственную экспертизу на соответствие требованиям информационной безопасности Республики Казахстан. Мы тесно сотрудничаем с Государственной Технической Службой (ГТС КНБ РК) для мониторинга угроз и защиты каналов связи.
+              <p className="text-sm text-text-secondary font-light leading-relaxed">
+                {t("certDesc")}
               </p>
             </div>
             <div className="lg:col-span-4 flex justify-center gap-6">
               <div className="border border-gold/30 bg-gold/5 px-6 py-4 rounded-xl text-center">
-                <span className="text-xs uppercase text-gold font-semibold tracking-wider block mb-1">класс защиты</span>
-                <span className="text-2xl font-bold text-white font-mono">1Г (Высший)</span>
+                <span className="text-xs uppercase text-gold font-semibold tracking-wider block mb-1">{t("certClassLabel")}</span>
+                <span className="text-2xl font-bold text-foreground font-mono">{t("certClassValue")}</span>
               </div>
               <div className="border border-forest-light/30 bg-forest/5 px-6 py-4 rounded-xl text-center">
-                <span className="text-xs uppercase text-forest-light font-semibold tracking-wider block mb-1">Стандарт</span>
-                <span className="text-2xl font-bold text-white font-mono">ISO 27001</span>
+                <span className="text-xs uppercase text-forest-light font-semibold tracking-wider block mb-1">{t("certStandardLabel")}</span>
+                <span className="text-2xl font-bold text-foreground font-mono">{t("certStandardValue")}</span>
               </div>
             </div>
           </div>

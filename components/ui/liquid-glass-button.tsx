@@ -57,7 +57,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = "Button";
 
 const liquidbuttonVariants = cva(
-  "inline-flex items-center transition-colors justify-center cursor-pointer gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-[color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex items-center transition-colors justify-center cursor-pointer gap-2 whitespace-nowrap rounded-[var(--radius-button)] text-sm font-medium transition-[color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
   {
     variants: {
       variant: {
@@ -72,12 +72,12 @@ const liquidbuttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 text-xs gap-1.5 px-4 has-[>svg]:px-4",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-        xl: "h-12 rounded-md px-8 has-[>svg]:px-6",
-        xxl: "h-14 rounded-md px-10 has-[>svg]:px-8",
-        icon: "size-9",
+        default: "h-11 px-6 py-2 has-[>svg]:px-4",
+        sm: "h-9 text-xs gap-1.5 px-4 has-[>svg]:px-3",
+        lg: "h-11 rounded-[var(--radius-button)] px-6 has-[>svg]:px-4",
+        xl: "h-12 rounded-[var(--radius-button)] px-8 has-[>svg]:px-6",
+        xxl: "h-14 rounded-[var(--radius-button)] px-10 has-[>svg]:px-8",
+        icon: "size-11",
       },
     },
     defaultVariants: {
@@ -242,7 +242,7 @@ const metalButtonVariants = (
 
   return {
     wrapper: cn(
-      "relative inline-flex transform-gpu rounded-md p-[1.25px] will-change-transform",
+      "relative inline-flex transform-gpu rounded-[var(--radius-button)] p-[1.25px] will-change-transform",
       colors.outer
     ),
     wrapperStyle: {
@@ -258,7 +258,7 @@ const metalButtonVariants = (
       transformOrigin: "center center",
     },
     inner: cn(
-      "absolute inset-[1px] transform-gpu rounded-lg will-change-transform",
+      "absolute inset-[1px] transform-gpu rounded-[calc(var(--radius-button)-1px)] will-change-transform",
       colors.inner
     ),
     innerStyle: {
@@ -268,7 +268,7 @@ const metalButtonVariants = (
         isHovered && !isPressed && !isTouchDevice ? "brightness(1.05)" : "none",
     },
     button: cn(
-      "relative z-10 m-[1px] rounded-md inline-flex h-11 transform-gpu cursor-pointer items-center justify-center overflow-hidden rounded-md px-6 py-2 text-sm leading-none font-semibold will-change-transform outline-none",
+      "relative z-10 m-[1px] rounded-[calc(var(--radius-button)-1px)] inline-flex h-11 transform-gpu cursor-pointer items-center justify-center overflow-hidden px-6 py-2 text-sm leading-none font-semibold will-change-transform outline-none",
       colors.button,
       colors.textColor,
       colors.textShadow

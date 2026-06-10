@@ -1,50 +1,7 @@
 @import "tailwindcss";
+@import "../styles/tokens.css";
 
 :root {
-  /* Базовый глубокий угольный фон и контрастный белый текст */
-  --background: #000000;
-  --foreground: #FFFFFF;
-
-  /* Дизайн-токены DDC Forest Green (АО «Центр цифрового развития») */
-  --color-forest: #1A3D2B;
-  --color-forest-mid: #2D6A4F;
-  --color-forest-light: #52B788;
-  --color-forest-dark: #0F241A;
-
-  /* Дизайн-токены NBK Premium Gold (Национальный Банк Казахстана) */
-  --color-gold: #C9A84C;
-  --color-gold-light: #E8C87A;
-  --color-gold-muted: #8B7035;
-  --color-gold-dark: #58461F;
-
-  /* Дополнительный акцент (Contest Accent) */
-  --color-yellow: #F5C518;
-
-  --color-charcoal: #141419;
-  --color-black: #08080a;
-  --color-white: #FFFFFF;
-  --color-offwhite: #F5F5F0;
-
-  /* Стеклянные эффекты (Glassmorphism) */
-  --glass-bg: rgba(20, 20, 25, 0.4);
-  --glass-border: 1px solid rgba(255, 255, 255, 0.15);
-  --glass-border-gold: rgba(201, 168, 76, 0.2);
-  --glass-border-forest: rgba(82, 183, 136, 0.2);
-  --glass-blur: blur(16px) saturate(180%);
-  --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-
-  /* Скругления углов */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 16px;
-  --radius-xl: 22px; /* Из личного стиля пользователя */
-  --radius-2xl: 32px;
-  --radius-pill: 9999px;
-
-  /* Тени */
-  --shadow-gold: 0 8px 32px rgba(201, 168, 76, 0.15);
-  --shadow-forest: 0 8px 32px rgba(26, 61, 43, 0.25);
-
   /* Текущие активные шрифты дизайн-системы */
   --font-current-sans: var(--font-comfortaa), sans-serif;
   --font-current-mono: var(--font-comfortaa), var(--font-mono), monospace;
@@ -57,15 +14,19 @@
   --color-forest-light: var(--color-forest-light);
   --color-forest-dark: var(--color-forest-dark);
 
-  --color-gold: var(--color-gold);
-  --color-gold-light: var(--color-gold-light);
+  --color-gold: var(--accent-gold);
+  --color-gold-light: var(--accent-gold-hover);
   --color-gold-muted: var(--color-gold-muted);
   --color-gold-dark: var(--color-gold-dark);
 
   --color-yellow: var(--color-yellow);
 
-  --color-charcoal: var(--color-charcoal);
+  --color-charcoal: var(--surface);
   --color-offwhite: var(--color-offwhite);
+  
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-border: var(--border-primary);
 
   --font-display: var(--font-current-display), Georgia, serif;
   --font-sans: var(--font-current-sans), system-ui, sans-serif;
@@ -83,21 +44,16 @@ body {
   font-family: var(--font-current-sans);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1), color 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ============================================================
    Светлая тема — переключатель cinematic-theme-switcher (next-themes).
-   ВНИМАНИЕ: тёмная тема остаётся по умолчанию (ThemeProvider defaultTheme="dark"),
-   продакшн-вид не меняется. Это базовый уровень светлого режима: фон страницы,
-   текст и самые частые литеральные тёмные классы. Полная адаптация каждой
-   секции (стекло, градиенты, бордеры) — отдельный следующий этап.
    ============================================================ */
 html.dark {
   color-scheme: dark;
 }
 html.light {
-  --background: #f5f5f0;
-  --foreground: #0f241a;
   color-scheme: light;
 }
 html.light body {
@@ -290,10 +246,10 @@ html.light .bg-white\/\[0\.08\] {
 .liquid-glass,
 .liquid-glass-strong {
   border: none !important; /* Убираем стандартную рамку во избежание наложения */
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-card);
   position: relative;
   overflow: hidden;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), background-color 300ms cubic-bezier(0.4, 0, 0.2, 1), border-color 300ms cubic-bezier(0.4, 0, 0.2, 1);
   --glass-border-gradient: linear-gradient(180deg,
     rgba(255, 255, 255, 0.45) 0%,
     rgba(255, 255, 255, 0.15) 20%,
@@ -522,7 +478,7 @@ html.light .bg-white\/\[0\.08\] {
   position: relative;
   overflow: hidden;
   border: none !important;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-button);
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(8px) saturate(160%);
   -webkit-backdrop-filter: blur(8px) saturate(160%);
@@ -649,7 +605,7 @@ html.light .bg-white\/\[0\.08\] {
 .clock-liquid__hero {
   position: relative;
   overflow: hidden;
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-card);
   border: 1px solid rgba(255, 255, 255, 0.16);
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
   backdrop-filter: blur(26px) saturate(170%);

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
@@ -18,6 +18,19 @@ export default function Hero() {
   const t = useTranslations("Hero");
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
+  
+  const [isMobileDevice, setIsMobileDevice] = useState(true);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+      const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      setIsMobileDevice(window.innerWidth < 768 || isCoarse || isReduced);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useGSAP(
     () => {
@@ -181,10 +194,12 @@ export default function Hero() {
           {/* Slightly oversized so the robot's arms/hands are never cropped by
               the column bounds — matches the framing of the source scene. */}
           <div className="absolute top-0 bottom-0 left-[-25%] right-[-25%] w-[150%] h-full">
-            <SplineScene
-              scene={ROBOT_SCENE}
-              className="w-full h-full [&_canvas]:!h-full [&_canvas]:!w-full"
-            />
+            {!isMobileDevice && (
+              <SplineScene
+                scene={ROBOT_SCENE}
+                className="w-full h-full [&_canvas]:!h-full [&_canvas]:!w-full"
+              />
+            )}
           </div>
         </motion.div>
       </div>
