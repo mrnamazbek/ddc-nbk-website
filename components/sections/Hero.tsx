@@ -9,7 +9,7 @@ import gsap from "@/lib/gsap";
 import ShimmerButton from "@/components/ui/ShimmerButton";
 import Magnetic from "@/components/motion/Magnetic";
 import { SplineScene } from "@/components/ui/splite";
-import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
+import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 
 const ROBOT_SCENE = "https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode";
 
@@ -109,11 +109,11 @@ export default function Hero() {
 
           {/* Заголовок на Cormorant Garamond с плавным Typewriter-эффектом */}
           <div className="mb-4">
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light tracking-tight leading-tight text-white">
-              <TypewriterEffectSmooth
+            <h1 className="font-display text-white">
+              <TypewriterEffect
                 words={typewriterWords}
-                className="justify-start my-0 py-0 flex-wrap"
-                cursorClassName="h-8 sm:h-12 lg:h-16 bg-gold"
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light tracking-tight leading-tight justify-start my-0 py-0 text-left flex flex-wrap"
+                cursorClassName="h-8 sm:h-12 lg:h-16 bg-gold align-middle"
               />
             </h1>
           </div>

@@ -162,5 +162,24 @@
       "role": "Deputy Chairman of the Board",
       "desc": "Information security and cyber resilience are the foundation of the digital development of our country's financial infrastructure."
     }
+  },
+  "Mission": {
+    "overline": "DDC Guidelines",
+    "titleLine1": "Our mission &",
+    "titleAccent": "strategic targets",
+    "titleLine2": "of development",
+    "subtitle": "We ensure the stability of the financial architecture of Kazakhstan through innovation, security, and advanced technology management standards.",
+    "step1Name": "Mission & Vision",
+    "step1Title": "To be the benchmark of digital transformation",
+    "step1Desc": "Our mission is to provide the National Bank of Kazakhstan and its subsidiaries with cutting-edge IT solutions that accelerate innovation, ensure the stability of the financial system, and set new quality standards in data and infrastructure management.",
+    "step2Name": "Core Directions",
+    "step2Title": "Development and maintenance of critical systems",
+    "step2Desc": "DDC has developed over 50 and actively operates 24 information systems of the National Bank (Agile, Waterfall). We serve as a Unified IT Services Center, supporting the entire infrastructure from servers to workstations, and manage the 1477 contact center, providing free tech support in Kazakhstan.",
+    "step3Name": "Security & Data",
+    "step3Title": "Information security and data operations",
+    "step3Desc": "Since 2022, DDC has been maintaining information security systems, performing continuous monitoring of events and preventing cyber threats. Since 2021, we also act as the technological data operator of the NBK, ensuring secure storage, process optimization, and database protection.",
+    "step4Name": "Compliance",
+    "step4Title": "Compliance control and anti-corruption",
+    "step4Desc": "DDC adheres to strict anti-corruption standards and compliance principles. Our compliance controller identifies, assesses, and prevents risks, monitoring adherence to corporate ethics, quality standards, and the legal requirements of the Republic of Kazakhstan."
   }
 }

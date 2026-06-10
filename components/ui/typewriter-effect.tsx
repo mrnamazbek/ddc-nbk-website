@@ -29,7 +29,7 @@ export const TypewriterEffect = ({
   useEffect(() => {
     if (isInView) {
       animate(
-        "span",
+        ".char",
         {
           display: "inline-block",
           opacity: 1,
@@ -57,7 +57,7 @@ export const TypewriterEffect = ({
                   }}
                   key={`char-${index}`}
                   className={cn(
-                    `text-white opacity-0`,
+                    `char text-white opacity-0`,
                     word.className
                   )}
                 >

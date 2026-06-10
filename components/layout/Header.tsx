@@ -77,7 +77,7 @@ export default function Header() {
     { name: t("home"), href: "/" },
     { name: t("about"), href: "/about" },
     { name: t("services"), href: "/services" },
-    { name: t("mission"), href: "/about#mission" },
+    { name: t("mission"), href: "/mission" },
     { name: t("news"), href: "/news" },
     { name: t("careers"), href: "/careers" },
     { name: t("contacts"), href: "/contact" },
