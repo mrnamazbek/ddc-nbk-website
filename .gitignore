@@ -44,5 +44,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# claude local
+# local development
 /.claude
+/.idea
+/.agent

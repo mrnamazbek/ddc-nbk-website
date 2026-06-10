@@ -13,11 +13,11 @@ interface InteractiveDotGridProps {
 }
 
 export default function InteractiveDotGrid({
-  dotSize = 1.8,
-  maxDotSize = 6.0,
+  dotSize = 1.0,
+  maxDotSize = 4.0,
   dotSpacing = 30,
-  distortionRadius = 180,
-  distortionStrength = 55,
+  distortionRadius = 120,
+  distortionStrength = 40,
   animationSpeed = 0.08,
   backgroundColor = "#000000",
 }: InteractiveDotGridProps) {
@@ -44,7 +44,6 @@ export default function InteractiveDotGrid({
 
     let dpr = 1;
     
-    // Инициализация точек на основе размеров холста
     const initializeDots = (width: number, height: number) => {
       const cols = Math.ceil(width / dotSpacing) + 1;
       const rows = Math.ceil(height / dotSpacing) + 1;
@@ -86,7 +85,6 @@ export default function InteractiveDotGrid({
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    // Глобальное отслеживание мыши по всему окну
     const handleMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       mousePos.current = {
@@ -102,14 +100,12 @@ export default function InteractiveDotGrid({
     window.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseleave", handleMouseLeave);
 
-    // Фирменные цвета DDC для интерполяции
-    const GREEN = { r: 40, g: 110, b: 70, a: 0.35 }; // Глубокий лесной зеленый
-    const GOLD = { r: 232, g: 200, b: 122, a: 0.95 }; // Золотой #E8C87A
+    const GREEN = { r: 40, g: 110, b: 70, a: 0.35 }; // Forest Green
+    const GOLD = { r: 232, g: 200, b: 122, a: 0.95 }; // Gold
 
     let animationFrameId: number;
 
     const animate = () => {
-      // Полная очистка холста строго черным фоном
       ctx.fillStyle = backgroundColor;
       ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr);
 
@@ -117,11 +113,10 @@ export default function InteractiveDotGrid({
       const mx = mousePos.current.x;
       const my = mousePos.current.y;
 
-      // 1. Рисуем мягкое фоновое свечение под курсором для создания эффекта линзы
       if (mx !== -10000 && my !== -10000) {
         const glowGrad = ctx.createRadialGradient(mx, my, 2, mx, my, distortionRadius * 1.3);
-        glowGrad.addColorStop(0, "rgba(26, 80, 46, 0.28)"); // мягкий лесной зеленый в центре
-        glowGrad.addColorStop(0.3, "rgba(232, 200, 122, 0.08)"); // золотистый ореол
+        glowGrad.addColorStop(0, "rgba(26, 80, 46, 0.28)");
+        glowGrad.addColorStop(0.3, "rgba(232, 200, 122, 0.08)");
         glowGrad.addColorStop(0.6, "rgba(26, 80, 46, 0.02)");
         glowGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
         
@@ -133,7 +128,6 @@ export default function InteractiveDotGrid({
         ctx.restore();
       }
 
-      // 2. Отрисовываем сетку точек с физикой упругой линзы и быстрым свечением
       for (let i = 0; i < dots.length; i++) {
         const dot = dots[i];
         const dx = mx - dot.originalX;
@@ -145,20 +139,17 @@ export default function InteractiveDotGrid({
         let force = 0;
 
         if (distance < distortionRadius) {
-          // Вычисление силы сферического 3D выдавливания (полусфера)
           const normDist = distance / distortionRadius;
-          force = Math.sqrt(1 - normDist * normDist); // сферический купол
+          force = Math.sqrt(1 - normDist * normDist);
           
           const angle = Math.atan2(dot.originalY - my, dot.originalX - mx);
 
-          // Точка сдвигается по вектору отталкивания с учетом сферического купола
           targetX = dot.originalX + Math.cos(angle) * force * distortionStrength;
           targetY = dot.originalY + Math.sin(angle) * force * distortionStrength;
         }
 
-        // Упругая физика пружины (Spring Physics) для живой и плавной анимации
-        const springK = 0.06; // жесткость пружины
-        const damping = 0.82; // затухание скорости
+        const springK = 0.06;
+        const damping = 0.82;
         
         const ax = (targetX - dot.currentX) * springK;
         const ay = (targetY - dot.currentY) * springK;
@@ -169,7 +160,6 @@ export default function InteractiveDotGrid({
         dot.currentX += dot.vx;
         dot.currentY += dot.vy;
 
-        // Интерполяция цвета и размера в зависимости от силы воздействия
         const r = Math.round(GREEN.r + (GOLD.r - GREEN.r) * force);
         const g = Math.round(GREEN.g + (GOLD.g - GREEN.g) * force);
         const b = Math.round(GREEN.b + (GOLD.b - GREEN.b) * force);
@@ -177,8 +167,6 @@ export default function InteractiveDotGrid({
         
         const size = dotSize + (maxDotSize - dotSize) * force;
 
-        // Рисуем мягкое неоновое свечение (ореол) под точкой, если она близко к мыши.
-        // Это заменяет медленный shadowBlur и работает на 60 FPS.
         if (force > 0.02) {
           ctx.beginPath();
           ctx.arc(dot.currentX, dot.currentY, size * 2.8, 0, Math.PI * 2);
@@ -186,7 +174,6 @@ export default function InteractiveDotGrid({
           ctx.fill();
         }
 
-        // Рисуем саму точку (ядро)
         ctx.beginPath();
         ctx.arc(dot.currentX, dot.currentY, size / 2, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
