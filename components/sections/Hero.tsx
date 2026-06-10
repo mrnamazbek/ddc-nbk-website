@@ -176,11 +176,11 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="relative hidden md:block h-[460px] lg:h-[680px] w-full pointer-events-auto overflow-visible"
+          className="relative hidden md:block h-[520px] lg:h-[820px] w-full pointer-events-auto overflow-visible"
         >
           {/* Slightly oversized so the robot's arms/hands are never cropped by
               the column bounds — matches the framing of the source scene. */}
-          <div className="absolute top-0 bottom-0 left-[-15%] right-[-15%] w-[130%] h-full">
+          <div className="absolute top-0 bottom-0 left-[-25%] right-[-25%] w-[150%] h-full">
             <SplineScene
               scene={ROBOT_SCENE}
               className="w-full h-full [&_canvas]:!h-full [&_canvas]:!w-full"

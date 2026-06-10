@@ -48,6 +48,7 @@ export const TypewriterEffect = ({
     return (
       <motion.span ref={scope} className="inline">
         {wordsArray.map((word, idx) => {
+          const isLastWord = idx === wordsArray.length - 1;
           return (
             <span key={`word-${idx}`} className="inline-block whitespace-nowrap">
               {word.text.map((char, index) => (
@@ -64,7 +65,26 @@ export const TypewriterEffect = ({
                   {char}
                 </motion.span>
               ))}
-              &nbsp;
+              {!isLastWord && <>&nbsp;</>}
+              {isLastWord && (
+                <motion.span
+                  initial={{
+                    opacity: 0,
+                  }}
+                  animate={{
+                    opacity: 1,
+                  }}
+                  transition={{
+                    duration: 0.8,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                  }}
+                  className={cn(
+                    "inline-block rounded-sm w-[4px] h-4 md:h-6 lg:h-10 bg-gold translate-y-1 ml-1",
+                    cursorClassName
+                  )}
+                />
+              )}
             </span>
           );
         })}
@@ -79,23 +99,6 @@ export const TypewriterEffect = ({
       )}
     >
       {renderWords()}
-      <motion.span
-        initial={{
-          opacity: 0,
-        }}
-        animate={{
-          opacity: 1,
-        }}
-        transition={{
-          duration: 0.8,
-          repeat: Infinity,
-          repeatType: "reverse",
-        }}
-        className={cn(
-          "inline-block rounded-sm w-[4px] h-4 md:h-6 lg:h-10 bg-gold translate-y-1 ml-0.5",
-          cursorClassName
-        )}
-      />
     </span>
   );
 };
@@ -124,6 +127,7 @@ export const TypewriterEffectSmooth = ({
     return (
       <span className="inline">
         {wordsArray.map((word, idx) => {
+          const isLastWord = idx === wordsArray.length - 1;
           return (
             <span key={`word-${idx}`} className="inline-block whitespace-nowrap">
               {word.text.map((char, index) => (
@@ -134,7 +138,26 @@ export const TypewriterEffectSmooth = ({
                   {char}
                 </span>
               ))}
-              &nbsp;
+              {!isLastWord && <>&nbsp;</>}
+              {isLastWord && (
+                <motion.span
+                  initial={{
+                    opacity: 0,
+                  }}
+                  animate={{
+                    opacity: 1,
+                  }}
+                  transition={{
+                    duration: 0.8,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                  }}
+                  className={cn(
+                    "inline-block rounded-sm w-[4px] h-4 sm:h-6 xl:h-12 bg-gold translate-y-0.5 ml-1",
+                    cursorClassName
+                  )}
+                />
+              )}
             </span>
           );
         })}
@@ -165,26 +188,9 @@ export const TypewriterEffectSmooth = ({
             whiteSpace: "nowrap",
           }}
         >
-          {renderWords()}{" "}
-        </span>{" "}
+          {renderWords()}
+        </span>
       </motion.div>
-      <motion.span
-        initial={{
-          opacity: 0,
-        }}
-        animate={{
-          opacity: 1,
-        }}
-        transition={{
-          duration: 0.8,
-          repeat: Infinity,
-          repeatType: "reverse",
-        }}
-        className={cn(
-          "block rounded-sm w-[4px] h-4 sm:h-6 xl:h-12 bg-gold",
-          cursorClassName
-        )}
-      />
     </div>
   );
 };
