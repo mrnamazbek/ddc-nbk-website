@@ -14,10 +14,10 @@ interface InteractiveDotGridProps {
 
 export default function InteractiveDotGrid({
   dotSize = 1.0,
-  maxDotSize = 4.0,
-  dotSpacing = 30,
-  distortionRadius = 120,
-  distortionStrength = 40,
+  maxDotSize = 2.3,
+  dotSpacing = 26,
+  distortionRadius = 150,
+  distortionStrength = 30,
   animationSpeed = 0.08,
   backgroundColor = "#000000",
 }: InteractiveDotGridProps) {
