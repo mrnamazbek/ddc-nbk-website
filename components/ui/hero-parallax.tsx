@@ -114,14 +114,14 @@ export const Header = ({
 }) => {
   return (
     <div className="max-w-7xl relative mx-auto py-20 md:py-40 px-4 w-full  left-0 top-0">
-      <h1 className="font-display text-3xl md:text-6xl font-medium tracking-tight text-white">
+      <h1 className="font-display text-3xl md:text-6xl font-medium tracking-tight text-foreground">
         {title ?? (
           <>
             The Ultimate <br /> development studio
           </>
         )}
       </h1>
-      <div className="max-w-2xl text-base md:text-xl mt-8 text-white/70 font-light">
+      <div className="max-w-2xl text-base md:text-xl mt-8 text-foreground/70 font-light">
         {subtitle}
       </div>
     </div>
@@ -148,7 +148,7 @@ export const ProductCard = ({
         y: -20,
       }}
       key={product.title}
-      className="group/product h-96 w-[30rem] relative shrink-0 rounded-[24px] overflow-hidden border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.25)] bg-[#0c0e0d] transition-shadow duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.45)]"
+      className="group/product h-96 w-[30rem] relative shrink-0 rounded-[24px] overflow-hidden border border-glass-border shadow-[0_8px_30px_rgba(0,0,0,0.25)] bg-[#0c0e0d] transition-shadow duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.45)]"
     >
       <Link
         href={product.link}
@@ -162,8 +162,8 @@ export const ProductCard = ({
           alt={product.title}
         />
       </Link>
-      <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-80 bg-black pointer-events-none rounded-[24px]"></div>
-      <h2 className="absolute bottom-6 left-6 opacity-0 group-hover/product:opacity-100 text-white font-sans text-sm tracking-wider uppercase font-medium">
+      <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-80 bg-background pointer-events-none rounded-[24px]"></div>
+      <h2 className="absolute bottom-6 left-6 opacity-0 group-hover/product:opacity-100 text-foreground font-sans text-sm tracking-wider uppercase font-medium">
         {product.title}
       </h2>
     </motion.div>

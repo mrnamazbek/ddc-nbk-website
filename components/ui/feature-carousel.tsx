@@ -303,7 +303,7 @@ function FeatureCard({
     >
       <div
         className={clsx(
-          "group relative w-full overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-neutral-900/90 to-stone-800 transition duration-300 dark:from-neutral-950/90 dark:to-neutral-800/90",
+          "group relative w-full overflow-hidden rounded-card border border-glass-border bg-gradient-to-b from-neutral-900/90 to-stone-800 transition duration-300 dark:from-neutral-950/90 dark:to-neutral-800/90",
           "md:hover:border-transparent",
           bgClass
         )}
@@ -322,7 +322,7 @@ function FeatureCard({
               }}
             >
               <motion.h2
-                className="text-xl font-bold tracking-tight text-white md:text-2xl"
+                className="text-xl font-bold tracking-tight text-foreground md:text-2xl"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{
@@ -342,7 +342,7 @@ function FeatureCard({
                   ease: [0.23, 1, 0.32, 1],
                 }}
               >
-                <div className="text-sm leading-relaxed text-neutral-300 sm:text-base dark:text-zinc-400">
+                <div className="text-sm leading-relaxed text-neutral-300 sm:text-base dark:text-muted">
                   <Balancer>{steps[step]?.description}</Balancer>
                 </div>
               </motion.div>
@@ -404,7 +404,7 @@ function Steps({
                     }}
                     className={cn(
                       "flex h-4 w-4 shrink-0 items-center justify-center rounded-full duration-300",
-                      isCompleted && "bg-forest-light text-white",
+                      isCompleted && "bg-forest-light text-foreground",
                       isCurrent && "bg-gold text-black",
                       isFuture && "bg-neutral-500/20"
                     )}
@@ -419,7 +419,7 @@ function Steps({
                           damping: 20,
                         }}
                       >
-                        <IconCheck className="h-3 w-3 stroke-white stroke-[3] text-white dark:stroke-black" />
+                        <IconCheck className="h-3 w-3 stroke-white stroke-[3] text-foreground dark:stroke-black" />
                       </motion.div>
                     ) : (
                       <span
@@ -456,17 +456,17 @@ function Steps({
 
 const defaultClasses = {
   step1img1:
-    "pointer-events-none w-[50%] border border-stone-100/10 transition-all duration-500 dark:border-stone-700/50 rounded-2xl",
+    "pointer-events-none w-[50%] border border-stone-100/10 transition-all duration-500 dark:border-stone-700/50 rounded-card",
   step1img2:
-    "pointer-events-none w-[60%] border border-stone-100/10 dark:border-stone-700/50 transition-all duration-500 overflow-hidden rounded-2xl",
+    "pointer-events-none w-[60%] border border-stone-100/10 dark:border-stone-700/50 transition-all duration-500 overflow-hidden rounded-card",
   step2img1:
-    "pointer-events-none w-[50%] border border-stone-100/10 transition-all duration-500 dark:border-stone-700 rounded-2xl overflow-hidden",
+    "pointer-events-none w-[50%] border border-stone-100/10 transition-all duration-500 dark:border-stone-700 rounded-card overflow-hidden",
   step2img2:
-    "pointer-events-none w-[40%] border border-stone-100/10 dark:border-stone-700 transition-all duration-500 rounded-2xl overflow-hidden",
+    "pointer-events-none w-[40%] border border-stone-100/10 dark:border-stone-700 transition-all duration-500 rounded-card overflow-hidden",
   step3img:
-    "pointer-events-none w-[90%] border border-stone-100/10 dark:border-stone-700 rounded-2xl transition-all duration-500 overflow-hidden",
+    "pointer-events-none w-[90%] border border-stone-100/10 dark:border-stone-700 rounded-card transition-all duration-500 overflow-hidden",
   step4img:
-    "pointer-events-none w-[90%] border border-stone-100/10 dark:border-stone-700 rounded-2xl transition-all duration-500 overflow-hidden",
+    "pointer-events-none w-[90%] border border-stone-100/10 dark:border-stone-700 rounded-card transition-all duration-500 overflow-hidden",
 } as const;
 
 export const FeatureCarousel = ({
@@ -525,13 +525,13 @@ export const FeatureCarousel = ({
             >
               <AnimatedStepImage
                 alt={image.alt}
-                className={clsx(step2img1Class, "rounded-2xl")}
+                className={clsx(step2img1Class, "rounded-card")}
                 src={image.step2light1}
                 preset="fadeInScale"
               />
               <AnimatedStepImage
                 alt={image.alt}
-                className={clsx(step2img2Class, "rounded-2xl")}
+                className={clsx(step2img2Class, "rounded-card")}
                 src={image.step2light2}
                 preset="fadeInScale"
                 delay={0.1}
@@ -542,7 +542,7 @@ export const FeatureCarousel = ({
           return (
             <AnimatedStepImage
               alt={image.alt}
-              className={clsx(step3imgClass, "rounded-2xl")}
+              className={clsx(step3imgClass, "rounded-card")}
               src={image.step3light}
               preset="fadeInScale"
               onAnimationComplete={handleAnimationComplete}
@@ -552,7 +552,7 @@ export const FeatureCarousel = ({
           return (
             <AnimatedStepImage
               alt={image.alt}
-              className={clsx(step4imgClass, "rounded-2xl")}
+              className={clsx(step4imgClass, "rounded-card")}
               src={image.step4light}
               preset="fadeInScale"
               onAnimationComplete={handleAnimationComplete}

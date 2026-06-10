@@ -30,7 +30,7 @@ export default function Stats() {
   return (
     <section
       id="stats"
-      className="relative w-full py-24 sm:py-32 bg-black overflow-hidden border-t border-white/[0.05]"
+      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden border-t border-white/[0.05]"
     >
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#1A3D2B03_1px,transparent_1px),linear-gradient(to_bottom,#1A3D2B03_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
 
@@ -40,11 +40,11 @@ export default function Stats() {
           <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
             {t("overline")}
           </span>
-          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-normal tracking-tight text-white mb-6">
+          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-normal tracking-tight text-foreground mb-6">
             {t("title")}{" "}
             <span className="text-gradient-forest font-medium">{t("titleAccent")}</span>
           </h2>
-          <p className="text-zinc-400 font-sans font-light leading-relaxed text-lg">
+          <p className="text-muted font-sans font-light leading-relaxed text-lg">
             {t("subtitle")}
           </p>
         </div>
@@ -67,10 +67,10 @@ export default function Stats() {
                 >
                   {t(`${s.key}.value`)}
                 </div>
-                <h3 className="text-base font-sans font-semibold text-white tracking-wide mb-2">
+                <h3 className="text-base font-sans font-semibold text-foreground tracking-wide mb-2">
                   {t(`${s.key}.label`)}
                 </h3>
-                <p className="text-sm font-sans font-light text-zinc-400 leading-relaxed">
+                <p className="text-sm font-sans font-light text-muted leading-relaxed">
                   {t(`${s.key}.desc`)}
                 </p>
               </GlassCard>

@@ -23,7 +23,7 @@ export function SplineScene({ scene, className }: SplineSceneProps) {
 
   if (!shouldLoad) {
     return (
-      <div className="w-full h-full flex items-center justify-center bg-black/10 animate-pulse rounded-2xl">
+      <div className="w-full h-full flex items-center justify-center bg-background/10 animate-pulse rounded-card">
         <span className="loader border-gold"></span>
       </div>
     );

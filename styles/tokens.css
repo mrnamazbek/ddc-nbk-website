@@ -69,8 +69,8 @@
   --radius-pill: 9999px;
 
   /* Единые токены элементов */
-  --radius-button: var(--radius-md); /* 8px */
-  --radius-card: var(--radius-xl);     /* 22px */
+  --radius-button: var(--radius-pill); /* 9999px by default for buttons */
+  --radius-card: 24px;                 /* 24px for all cards/surfaces */
   --radius-input: var(--radius-md);    /* 8px */
 
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);

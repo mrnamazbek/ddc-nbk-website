@@ -1,10 +1,12 @@
 "use client";
 
 import { Suspense, useMemo, useRef, useState, useEffect } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { Environment, Lightformer, Sparkles, AdaptiveDpr } from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
+import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
+import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
 /* ──────────────────────────────────────────────────────────────────────────
    DDC 3D logo medallion + gold particle field.

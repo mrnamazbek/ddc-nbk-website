@@ -51,7 +51,7 @@ export default function DigitalShowcase() {
   const currentTab = tabs.find((t) => t.id === activeTab) || tabs[0];
 
   return (
-    <section id="digital" className="relative w-full py-24 sm:py-32 bg-[#0E2419]/55 overflow-hidden border-t border-white/5">
+    <section id="digital" className="relative w-full py-24 sm:py-32 bg-[#0E2419]/55 overflow-hidden border-t border-glass-border">
       {/* Технологическая подсветка на фоне */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-forest/5 rounded-full blur-[160px] pointer-events-none" />
 
@@ -62,11 +62,11 @@ export default function DigitalShowcase() {
           <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
             {t("overline")}
           </span>
-          <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
+          <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6">
             {t("titleLine1")} <br />
             <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
           </h2>
-          <p className="text-zinc-400 font-sans font-light leading-relaxed text-lg">
+          <p className="text-muted font-sans font-light leading-relaxed text-lg">
             {t("subtitle")}
           </p>
         </div>
@@ -84,8 +84,8 @@ export default function DigitalShowcase() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`w-full text-left p-5 rounded-xl transition-all duration-300 flex items-center gap-4 cursor-pointer group ${
                     isActive
-                      ? "liquid-glass-strong text-white"
-                      : "liquid-glass text-zinc-400 hover:text-white"
+                      ? "liquid-glass-strong text-foreground"
+                      : "liquid-glass text-muted hover:text-foreground"
                   }`}
                   data-hover={tab.hoverAccent}
                 >
@@ -139,20 +139,20 @@ export default function DigitalShowcase() {
                         <span className="text-[10px] font-mono tracking-widest text-gold block mb-1">
                           {t(`${currentTab.id}.badge`)}
                         </span>
-                        <h3 className="text-xl sm:text-2xl font-sans font-bold text-white tracking-wide">
+                        <h3 className="text-xl sm:text-2xl font-sans font-bold text-foreground tracking-wide">
                           {t(`${currentTab.id}.title`)}
                         </h3>
                       </div>
                     </div>
 
-                    <p className="text-zinc-300 font-sans font-light leading-relaxed mb-8 text-base">
+                    <p className="text-muted font-sans font-light leading-relaxed mb-8 text-base">
                       {t(`${currentTab.id}.description`)}
                     </p>
 
                     {/* Список преимуществ */}
                     <ul className="space-y-3.5">
                       {["b1", "b2", "b3"].map((b) => (
-                        <li key={b} className="flex items-center gap-3.5 text-sm text-zinc-400 font-sans font-light">
+                        <li key={b} className="flex items-center gap-3.5 text-sm text-muted font-sans font-light">
                           <svg viewBox="0 0 24 24" className={`w-4 h-4 shrink-0 stroke-[2] ${
                             currentTab.hoverAccent === "gold" ? "text-gold" : "text-forest-light"
                           }`} fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -165,7 +165,7 @@ export default function DigitalShowcase() {
                     </ul>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-white/5">
+                  <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-glass-border">
                     <Button variant="forest" className="flex items-center justify-center gap-2 group font-medium" onClick={() => { document.getElementById("services")?.scrollIntoView({ behavior: "smooth" }); }}>
                       {t("btnPrimary")}
                       <svg viewBox="0 0 24 24" className="w-4 h-4 stroke-[2] transition-transform duration-300 transform group-hover:translate-x-1" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -176,7 +176,7 @@ export default function DigitalShowcase() {
                   </div>
                 </div>
 
-                <div className="md:col-span-5 flex items-center justify-center relative min-h-[300px] bg-black/10 rounded-2xl border border-white/5 overflow-hidden group">
+                <div className="md:col-span-5 flex items-center justify-center relative min-h-[300px] bg-background/10 rounded-card border border-glass-border overflow-hidden group">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
                   
                   {activeTab === "t1" && (

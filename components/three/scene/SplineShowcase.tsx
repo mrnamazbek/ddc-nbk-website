@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 const Spline = dynamic(() => import("@splinetool/react-spline"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full flex items-center justify-center bg-black/40 backdrop-blur-md rounded-2xl border border-white/5 text-zinc-400 font-mono text-xs min-h-[300px]">
+    <div className="w-full h-full flex items-center justify-center bg-background/40 backdrop-blur-md rounded-card border border-glass-border text-muted font-mono text-xs min-h-[300px]">
       Loading 3D Showcase...
     </div>
   ),
@@ -120,7 +120,7 @@ export default function SplineShowcase({ activeTab }: SplineShowcaseProps) {
   return (
     <div
       ref={containerRef}
-      className="w-full h-full min-h-[300px] relative rounded-2xl overflow-hidden bg-black/20 backdrop-blur-md border border-white/5 shadow-2xl"
+      className="w-full h-full min-h-[300px] relative rounded-card overflow-hidden bg-background/20 backdrop-blur-md border border-glass-border shadow-card"
     >
       {isVisible ? (
         <Spline
@@ -129,7 +129,7 @@ export default function SplineShowcase({ activeTab }: SplineShowcaseProps) {
           style={{ width: "100%", height: "100%" }}
         />
       ) : (
-        <div className="w-full h-full flex items-center justify-center bg-black/40 backdrop-blur-md rounded-2xl border border-white/5 text-zinc-400 font-mono text-xs min-h-[300px]">
+        <div className="w-full h-full flex items-center justify-center bg-background/40 backdrop-blur-md rounded-card border border-glass-border text-muted font-mono text-xs min-h-[300px]">
           Loading 3D Showcase...
         </div>
       )}

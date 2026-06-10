@@ -256,7 +256,7 @@ export default function ScrollSequence({
       {/* Прогресс-бар загрузки кадров */}
       {!isLoaded && (
         <div className="absolute inset-0 flex flex-col justify-center items-center bg-[#0A0A0A] z-50 transition-opacity duration-500">
-          <div className="w-48 h-1 bg-white/10 rounded-full overflow-hidden mb-4">
+          <div className="w-48 h-1 bg-glass rounded-full overflow-hidden mb-4">
             <div
               className="h-full bg-gold transition-all duration-300 ease-out"
               style={{ width: `${loadingProgress}%` }}

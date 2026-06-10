@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { TrendingUp, TrendingDown, Percent, Calendar, RefreshCw } from "lucide-react";
 import GlassCard from "./GlassCard";
 
@@ -14,19 +15,20 @@ interface RateItem {
 }
 
 export default function FinancialInform() {
+  const t = useTranslations("FinancialInform");
   const [rates, setRates] = useState<RateItem[]>([]);
   const [baseRate, setBaseRate] = useState({ value: 14.75, change: -0.25, history: [16.0, 15.75, 15.25, 15.0, 14.75] });
   const [inflation, setInflation] = useState({ value: 8.4, change: -0.3, history: [9.8, 9.3, 8.9, 8.6, 8.4] });
   const [lastUpdated, setLastUpdated] = useState<string>("");
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(true);
 
-  const generateData = () => {
-    setIsRefreshing(true);
+  const generateData = (manual = false) => {
+    if (manual) setIsRefreshing(true);
     setTimeout(() => {
       const mockRates: RateItem[] = [
         {
           code: "USD",
-          name: "Доллар США",
+          name: t("usd"),
           value: 448.25 + (Math.random() * 2 - 1),
           change: 0.15 + (Math.random() * 0.4 - 0.2),
           trend: Math.random() > 0.5 ? "up" : "down",
@@ -34,7 +36,7 @@ export default function FinancialInform() {
         },
         {
           code: "EUR",
-          name: "Евро",
+          name: t("eur"),
           value: 485.4 + (Math.random() * 2 - 1),
           change: -0.32 + (Math.random() * 0.4 - 0.2),
           trend: Math.random() > 0.5 ? "down" : "up",
@@ -42,7 +44,7 @@ export default function FinancialInform() {
         },
         {
           code: "RUB",
-          name: "Российский Рубль",
+          name: t("rub"),
           value: 4.95 + (Math.random() * 0.1 - 0.05),
           change: 0.02 + (Math.random() * 0.04 - 0.02),
           trend: Math.random() > 0.5 ? "up" : "stable",
@@ -59,7 +61,7 @@ export default function FinancialInform() {
 
   useEffect(() => {
     generateData();
-    const interval = setInterval(generateData, 15000);
+    const interval = setInterval(() => generateData(), 15000);
     return () => clearInterval(interval);
   }, []);
 
@@ -98,17 +100,17 @@ export default function FinancialInform() {
         <div className="flex items-center justify-between mb-8">
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-mono tracking-widest text-gold uppercase">
-              Макроэкономический монитор
+              {t("title")}
             </span>
-            <h3 className="text-xl font-bold text-white tracking-wide">
-              Финансовые индикаторы РК
+            <h3 className="text-xl font-bold text-foreground tracking-wide">
+              {t("subtitle")}
             </h3>
           </div>
           <button
-            onClick={generateData}
+            onClick={() => generateData(true)}
             disabled={isRefreshing}
-            className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-gold hover:bg-white/10 active:scale-95 transition-all duration-300 disabled:opacity-50 select-none cursor-pointer"
-            title="Обновить показатели"
+            className="w-8 h-8 rounded-full bg-glass border border-glass-border flex items-center justify-center text-muted hover:text-gold hover:bg-glass active:scale-95 transition-all duration-300 disabled:opacity-50 select-none cursor-pointer"
+            title={t("refreshBtn")}
           >
             <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin text-gold" : ""}`} />
           </button>
@@ -120,13 +122,13 @@ export default function FinancialInform() {
           <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-gold/25 transition-colors duration-300 relative overflow-hidden group">
             <div className="absolute -top-10 -right-10 w-20 h-20 bg-gold/5 rounded-full blur-xl pointer-events-none group-hover:bg-gold/10 transition-colors duration-500" />
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs text-zinc-400 font-light">Базовая ставка НБК</span>
+              <span className="text-xs text-muted font-light">{t("baseRate")}</span>
               <div className="w-8 h-8 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center text-gold">
                 <Percent className="w-4 h-4" />
               </div>
             </div>
             <div className="flex items-baseline gap-2 mb-2">
-              <span className="text-2xl sm:text-3xl font-display font-bold text-white">
+              <span className="text-2xl sm:text-3xl font-display font-bold text-foreground">
                 {baseRate.value.toFixed(2)}%
               </span>
               <span className={`text-xs font-mono font-medium flex items-center gap-0.5 ${
@@ -137,7 +139,7 @@ export default function FinancialInform() {
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-[10px] text-zinc-500 font-light">Тренд за 5 заседаний</span>
+              <span className="text-[10px] text-zinc-500 font-light">{t("baseRateTrend")}</span>
               {renderSparkline(baseRate.history, "text-gold")}
             </div>
           </div>
@@ -146,13 +148,13 @@ export default function FinancialInform() {
           <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-forest/25 transition-colors duration-300 relative overflow-hidden group">
             <div className="absolute -top-10 -right-10 w-20 h-20 bg-forest/5 rounded-full blur-xl pointer-events-none group-hover:bg-forest/10 transition-colors duration-500" />
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs text-zinc-400 font-light">Годовая инфляция</span>
+              <span className="text-xs text-muted font-light">{t("inflation")}</span>
               <div className="w-8 h-8 rounded-lg bg-forest/20 border border-forest-light/20 flex items-center justify-center text-forest-light">
                 <TrendingDown className="w-4 h-4" />
               </div>
             </div>
             <div className="flex items-baseline gap-2 mb-2">
-              <span className="text-2xl sm:text-3xl font-display font-bold text-white">
+              <span className="text-2xl sm:text-3xl font-display font-bold text-foreground">
                 {inflation.value.toFixed(1)}%
               </span>
               <span className="text-xs font-mono font-medium text-forest-light flex items-center gap-0.5">
@@ -161,7 +163,7 @@ export default function FinancialInform() {
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-[10px] text-zinc-500 font-light">Снижение темпов</span>
+              <span className="text-[10px] text-zinc-500 font-light">{t("inflationTrend")}</span>
               {renderSparkline(inflation.history, "text-forest-light")}
             </div>
           </div>
@@ -170,19 +172,19 @@ export default function FinancialInform() {
         {/* Таблица официальных курсов валют */}
         <div className="space-y-3">
           <span className="text-[10px] font-mono tracking-widest text-zinc-500 uppercase block mb-1">
-            Официальные курсы валют (KZT)
+            {t("exchangeRates")}
           </span>
           {rates.map((rate) => (
             <div
               key={rate.code}
-              className="flex items-center justify-between p-3.5 rounded-xl bg-white/[0.01] border border-white/[0.03] hover:bg-white/[0.03] hover:border-white/10 transition-all duration-300"
+              className="flex items-center justify-between p-3.5 rounded-xl bg-white/[0.01] border border-white/[0.03] hover:bg-white/[0.03] hover:border-glass-border transition-all duration-300"
             >
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white font-mono text-xs font-semibold">
+                <div className="w-9 h-9 rounded-lg bg-glass border border-glass-border flex items-center justify-center text-foreground font-mono text-xs font-semibold">
                   {rate.code}
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-white tracking-wide leading-tight">
+                  <h4 className="text-sm font-semibold text-foreground tracking-wide leading-tight">
                     {rate.code} / KZT
                   </h4>
                   <span className="text-[10px] text-zinc-500 font-light">
@@ -194,7 +196,7 @@ export default function FinancialInform() {
               <div className="flex items-center gap-6">
                 {renderSparkline(rate.history, rate.trend === "up" ? "text-forest-light" : "text-gold")}
                 <div className="text-right">
-                  <span className="text-sm font-mono font-bold text-white block">
+                  <span className="text-sm font-mono font-bold text-foreground block">
                     {rate.value.toFixed(2)} ₸
                   </span>
                   <span className={`text-[10px] font-mono font-medium flex items-center justify-end gap-0.5 ${
@@ -210,14 +212,14 @@ export default function FinancialInform() {
       </div>
 
       {/* Футер дашборда со статусом обновления */}
-      <div className="flex items-center justify-between border-t border-white/5 pt-6 mt-8">
+      <div className="flex items-center justify-between border-t border-glass-border pt-6 mt-8">
         <span className="text-[10px] font-mono text-zinc-500 flex items-center gap-1.5">
           <Calendar className="w-3.5 h-3.5" />
-          Обновлено: {lastUpdated || "загрузка..."}
+          {t("updated")}: {lastUpdated || t("loading")}
         </span>
         <span className="inline-flex items-center gap-1 text-[10px] font-mono text-gold-light">
           <span className="w-1.5 h-1.5 rounded-full bg-gold animate-ping" />
-          Live feed Нацбанка
+          {t("liveFeed")}
         </span>
       </div>
     </GlassCard>

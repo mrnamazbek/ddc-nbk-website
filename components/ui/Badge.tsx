@@ -14,7 +14,7 @@ export default function Badge({ children, variant = "gold", className = "" }: Ba
   const variants = {
     gold: "bg-gold/10 text-gold-light border-gold/20",
     green: "bg-forest-mid/10 text-forest-light border-forest-mid/20",
-    gray: "bg-white/5 text-gray-light border-white/10",
+    gray: "bg-glass text-muted border-glass-border",
   };
 
   return (

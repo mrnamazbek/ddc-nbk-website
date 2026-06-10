@@ -38,7 +38,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-[#0A0A0A] border-t border-white/5 pt-20 pb-12 relative overflow-hidden">
+    <footer className="bg-[#0A0A0A] border-t border-glass-border pt-20 pb-12 relative overflow-hidden">
       {/* Soft gradient glows */}
       <div className="absolute bottom-0 right-0 w-[40vw] h-[40vh] bg-forest-dark/25 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute top-0 left-0 w-[20vw] h-[20vh] bg-gold/5 rounded-full blur-[80px] pointer-events-none" />
@@ -57,13 +57,13 @@ export default function Footer() {
                 className="pointer-events-none"
               />
               <div>
-                <span className="font-heading font-bold text-lg tracking-wider text-white">DDC</span>
+                <span className="font-heading font-bold text-lg tracking-wider text-foreground">DDC</span>
                 <span className="block text-[7px] text-gold font-mono tracking-widest leading-none uppercase">
                   Digital Development Center
                 </span>
               </div>
             </Link>
-            <p className="text-sm text-gray-light max-w-sm leading-relaxed">
+            <p className="text-sm text-muted max-w-sm leading-relaxed">
               Официальный технологический партнер и дочерняя организация Национального Банка Республики Казахстан. Мы строим устойчивую цифровую финансовую экосистему будущего.
             </p>
             <div className="text-xs text-gold/80 font-mono tracking-wide">
@@ -80,7 +80,7 @@ export default function Footer() {
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-sm text-gray-light hover:text-white transition-colors flex items-center gap-1 group"
+                      className="text-sm text-muted hover:text-foreground transition-colors flex items-center gap-1 group"
                     >
                       {link.name}
                       <ArrowUpRight className="w-3 h-3 opacity-0 -translate-y-0.5 translate-x-0.5 group-hover:opacity-100 transition-all duration-300" />
@@ -93,9 +93,9 @@ export default function Footer() {
         </div>
 
         {/* Bottom of footer */}
-        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="border-t border-glass-border pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex flex-col gap-2">
-            <span className="text-xs text-gray-light">
+            <span className="text-xs text-muted">
               © {currentYear} ТОО «Центр цифрового развития Национального Банка РК» (DDC). Все права защищены.
             </span>
             <span className="text-[10px] text-gray-mid leading-relaxed">
@@ -103,7 +103,7 @@ export default function Footer() {
             </span>
           </div>
 
-          <div className="flex gap-6 text-xs text-gray-light">
+          <div className="flex gap-6 text-xs text-muted">
             <Link href="/security" className="hover:text-gold transition-colors">
               Конфиденциальность
             </Link>

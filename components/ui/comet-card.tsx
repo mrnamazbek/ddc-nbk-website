@@ -16,7 +16,7 @@ export function CometCard({
 }: CometCardProps) {
   return (
     <div
-      className={`relative p-[1.5px] overflow-hidden rounded-[20px] bg-zinc-900/40 backdrop-blur-md border border-white/10 ${containerClassName}`}
+      className={`relative p-[1.5px] overflow-hidden rounded-[20px] bg-zinc-900/40 backdrop-blur-md border border-glass-border ${containerClassName}`}
       style={{
         transformStyle: "preserve-3d",
       }}

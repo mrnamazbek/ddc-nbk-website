@@ -21,7 +21,7 @@ export function NavHeader() {
 
   return (
     <ul
-      className="relative mx-auto flex w-fit rounded-full border border-white/10 bg-black/40 backdrop-blur-md p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+      className="relative mx-auto flex w-fit rounded-full border border-glass-border bg-background/40 backdrop-blur-md p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
       onMouseLeave={() => setPosition((pv) => ({ ...pv, opacity: 0 }))}
     >
       <Tab setPosition={setPosition}>Home</Tab>
@@ -51,7 +51,7 @@ const Tab = ({ children, setPosition }: TabProps) => {
           left: ref.current.offsetLeft,
         });
       }}
-      className="relative z-10 block cursor-pointer px-4 py-2 text-xs md:text-sm font-medium tracking-wide text-zinc-300 hover:text-white transition-colors duration-300"
+      className="relative z-10 block cursor-pointer px-4 py-2 text-xs md:text-sm font-medium tracking-wide text-muted hover:text-foreground transition-colors duration-300"
     >
       {children}
     </li>

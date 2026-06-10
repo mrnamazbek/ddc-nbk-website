@@ -145,7 +145,7 @@ export default function Services() {
     <section 
       id="services" 
       ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-black overflow-hidden border-t border-white/5"
+      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden border-t border-glass-border"
     >
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
@@ -158,11 +158,11 @@ export default function Services() {
           <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
             {t("overline")}
           </span>
-          <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
+          <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6">
             {t("titleLine1")} <br />
             <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
           </h2>
-          <p className="text-zinc-400 font-sans font-light leading-relaxed max-w-2xl text-lg">
+          <p className="text-muted font-sans font-light leading-relaxed max-w-2xl text-lg">
             {t("subtitle")}
           </p>
         </div>
@@ -191,22 +191,22 @@ export default function Services() {
                         {service.svgIcon}
                       </div>
                       
-                      <span className="text-sm font-mono font-bold text-zinc-600 group-hover:text-zinc-400 transition-colors">
+                      <span className="text-sm font-mono font-bold text-zinc-600 group-hover:text-muted transition-colors">
                         {service.number}
                       </span>
                     </div>
                     
-                    <h3 className="text-xl font-sans font-semibold text-white tracking-wide mb-4 group-hover:text-zinc-100 transition-colors">
+                    <h3 className="text-xl font-sans font-semibold text-foreground tracking-wide mb-4 group-hover:text-zinc-100 transition-colors">
                       {t(`${service.key}.title`)}
                     </h3>
 
-                    <p className="text-sm font-sans font-light text-zinc-400 leading-relaxed group-hover:text-zinc-300 transition-colors">
+                    <p className="text-sm font-sans font-light text-muted leading-relaxed group-hover:text-muted transition-colors">
                       {t(`${service.key}.desc`)}
                     </p>
                   </div>
 
                   {/* Card footer */}
-                  <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between opacity-60 group-hover:opacity-100 transition-all duration-300">
+                  <div className="mt-8 pt-6 border-t border-glass-border flex items-center justify-between opacity-60 group-hover:opacity-100 transition-all duration-300">
                     <span className="text-xs font-mono tracking-widest text-zinc-500 uppercase">
                       {t("status")}
                     </span>

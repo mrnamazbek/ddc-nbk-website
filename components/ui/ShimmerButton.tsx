@@ -49,7 +49,7 @@ export default function ShimmerButton({
           WebkitBackdropFilter: "blur(8px) saturate(160%)",
         } as CSSProperties
       }
-      className={`group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden border border-white/10 px-6 py-3 text-white transition-all duration-300 hover:scale-105 active:scale-95 ${className}`}
+      className={`group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden border border-glass-border px-6 py-3 text-foreground transition-all duration-300 hover:scale-105 active:scale-95 ${className}`}
       {...props}
     >
       {/* Эффект мерцающего свечения (Шиммер) */}
@@ -65,7 +65,7 @@ export default function ShimmerButton({
 
       {/* Внутренняя заливка */}
       <div 
-        className="absolute inset-[1px] z-[-1] transition-colors duration-300 group-hover:bg-black/60 bg-black/40"
+        className="absolute inset-[1px] z-[-1] transition-colors duration-300 group-hover:bg-background/60 bg-background/40"
         style={{ borderRadius: `calc(${borderRadius} - 1px)` }}
       />
 

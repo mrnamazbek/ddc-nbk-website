@@ -48,10 +48,10 @@ export default function Timeline() {
     title: t(`${m.key}.year`),
     content: (
       <div className="flex flex-col gap-2">
-        <h4 className="text-lg sm:text-xl md:text-2xl font-semibold text-white tracking-wide transition-colors duration-300 hover:text-gold">
+        <h4 className="text-lg sm:text-xl md:text-2xl font-semibold text-foreground tracking-wide transition-colors duration-300 hover:text-gold">
           {t(`${m.key}.title`)}
         </h4>
-        <p className="text-zinc-400 text-xs sm:text-sm md:text-base font-light leading-relaxed">
+        <p className="text-muted text-xs sm:text-sm md:text-base font-light leading-relaxed">
           {t(`${m.key}.desc`)}
         </p>
       </div>
@@ -62,7 +62,7 @@ export default function Timeline() {
     <section
       id="timeline"
       ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-black overflow-hidden border-t border-white/5"
+      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden border-t border-glass-border"
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         
@@ -71,11 +71,11 @@ export default function Timeline() {
           <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
             {t("overline")}
           </span>
-          <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6 leading-tight">
+          <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
             {t("titleLine1")} <br />
             <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
           </h2>
-          <p className="text-sm sm:text-base font-sans font-light text-zinc-400 leading-relaxed">
+          <p className="text-sm sm:text-base font-sans font-light text-muted leading-relaxed">
             {t("subtitle")}
           </p>
         </div>

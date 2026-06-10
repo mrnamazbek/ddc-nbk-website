@@ -45,7 +45,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
           <div key={index} className="flex justify-start pt-10 md:pt-32 md:gap-10">
             {/* Year dot and sticky label */}
             <div className="sticky flex flex-col md:flex-row z-30 items-center top-40 self-start max-w-xs lg:max-w-sm md:w-full">
-              <div className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-black flex items-center justify-center border border-white/10 shadow-[0_0_10px_rgba(232,200,122,0.15)]">
+              <div className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-background flex items-center justify-center border border-glass-border shadow-[0_0_10px_rgba(232,200,122,0.15)]">
                 <div className="h-3 w-3 rounded-full bg-gold border border-gold-light" />
               </div>
               <h3 className="hidden md:block text-xl md:pl-20 md:text-5xl font-bold text-gradient-gold">

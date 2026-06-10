@@ -73,7 +73,7 @@ export default function News() {
   };
 
   return (
-    <section id="news" className="relative w-full py-24 sm:py-32 bg-black overflow-hidden border-t border-white/5">
+    <section id="news" className="relative w-full py-24 sm:py-32 bg-background overflow-hidden border-t border-glass-border">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         
         {/* Section header */}
@@ -88,7 +88,7 @@ export default function News() {
             <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
               пресс-центр ddc
             </span>
-            <h2 className="font-display text-3xl sm:text-5xl font-normal tracking-tight text-white leading-tight">
+            <h2 className="font-display text-3xl sm:text-5xl font-normal tracking-tight text-foreground leading-tight">
               Последние события <br />
               <span className="text-gradient-gold font-medium">и технологические релизы</span>
             </h2>
@@ -129,11 +129,11 @@ export default function News() {
             <motion.div key={index} variants={cardVariants} className="h-full">
               <GlassCard 
                 hoverAccent={news.hoverAccent}
-                className="h-full flex flex-col p-0 border-white/5 overflow-hidden group"
+                className="h-full flex flex-col p-0 border-glass-border overflow-hidden group"
               >
                 
                 {/* Abstract gradient cover background in card header */}
-                <div className={`w-full h-48 bg-gradient-to-br ${news.gradient} relative overflow-hidden flex items-center justify-center border-b border-white/5`}>
+                <div className={`w-full h-48 bg-gradient-to-br ${news.gradient} relative overflow-hidden flex items-center justify-center border-b border-glass-border`}>
                   {/* Тонкие геометрические паттерны линий для эффекта ценных бумаг/технологий */}
                   <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:1.5rem_1.5rem]" />
                   
@@ -171,11 +171,11 @@ export default function News() {
                       <span>{news.readTime} чтения</span>
                     </div>
 
-                    <h3 className="text-lg font-sans font-bold text-white tracking-wide mb-3 line-clamp-2 group-hover:text-gold transition-colors duration-300">
+                    <h3 className="text-lg font-sans font-bold text-foreground tracking-wide mb-3 line-clamp-2 group-hover:text-gold transition-colors duration-300">
                       {news.title}
                     </h3>
                     
-                    <p className="text-sm font-sans font-light text-zinc-400 leading-relaxed line-clamp-3 mb-6">
+                    <p className="text-sm font-sans font-light text-muted leading-relaxed line-clamp-3 mb-6">
                       {news.excerpt}
                     </p>
                   </div>

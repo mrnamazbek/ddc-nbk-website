@@ -96,7 +96,7 @@ export default function Leadership() {
     <section
       id="leadership"
       ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-black overflow-hidden border-t border-white/5"
+      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden border-t border-glass-border"
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         
@@ -105,11 +105,11 @@ export default function Leadership() {
           <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
             {t("overline")}
           </span>
-          <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6 leading-tight">
+          <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
             {t("titleLine1")} <br />
             <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
           </h2>
-          <p className="text-sm sm:text-base font-sans font-light text-zinc-400 leading-relaxed">
+          <p className="text-sm sm:text-base font-sans font-light text-muted leading-relaxed">
             {t("subtitle")}
           </p>
         </div>
@@ -119,7 +119,7 @@ export default function Leadership() {
           {/* Desktop Layout (md and up) */}
           <div className="hidden md:flex relative items-center justify-center">
             {/* Avatar Photo */}
-            <div className="w-[380px] h-[380px] lg:w-[450px] lg:h-[450px] rounded-3xl overflow-hidden bg-neutral-900 flex-shrink-0 relative border border-white/10 shadow-2xl z-0">
+            <div className="w-[380px] h-[380px] lg:w-[450px] lg:h-[450px] rounded-card overflow-hidden bg-neutral-900 flex-shrink-0 relative border border-glass-border shadow-card z-0">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentLeader.img}
@@ -160,7 +160,7 @@ export default function Leadership() {
                         </span>
                       </div>
                       
-                      <h3 className="text-xl sm:text-2xl lg:text-3xl font-sans font-bold text-white mb-2 tracking-wide leading-tight transition-colors duration-300 hover:text-gold">
+                      <h3 className="text-xl sm:text-2xl lg:text-3xl font-sans font-bold text-foreground mb-2 tracking-wide leading-tight transition-colors duration-300 hover:text-gold">
                         {t(`${currentLeader.key}.name`)}
                       </h3>
                       
@@ -168,18 +168,18 @@ export default function Leadership() {
                         {t(`${currentLeader.key}.role`)}
                       </p>
                       
-                      <p className="text-sm sm:text-base text-zinc-300 font-sans font-light leading-relaxed mb-6">
+                      <p className="text-sm sm:text-base text-muted font-sans font-light leading-relaxed mb-6">
                         {t(`${currentLeader.key}.desc`)}
                       </p>
                     </div>
 
                     {/* Social links */}
-                    <div className="flex space-x-4 pt-5 border-t border-white/5">
+                    <div className="flex space-x-4 pt-5 border-t border-glass-border">
                       <a
                         href={currentLeader.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-10 h-10 bg-white/[0.03] border border-white/10 hover:border-gold/50 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105 cursor-pointer text-zinc-400 hover:text-gold"
+                        className="w-10 h-10 bg-white/[0.03] border border-glass-border hover:border-gold/50 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105 cursor-pointer text-muted hover:text-gold"
                         aria-label="LinkedIn"
                       >
                         <svg
@@ -200,7 +200,7 @@ export default function Leadership() {
           {/* Mobile Layout (below md) */}
           <div className="md:hidden max-w-sm mx-auto text-center bg-transparent">
             {/* Avatar Photo */}
-            <div className="w-full aspect-square bg-neutral-900 rounded-3xl overflow-hidden mb-6 relative border border-white/10">
+            <div className="w-full aspect-square bg-neutral-900 rounded-card overflow-hidden mb-6 relative border border-glass-border">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentLeader.img}
@@ -239,7 +239,7 @@ export default function Leadership() {
                         {currentLeader.key === "l1" ? "#CHAIRMAN" : "#DEPUTY"}
                       </span>
                       
-                      <h3 className="text-lg font-sans font-bold text-white mb-1.5 tracking-wide">
+                      <h3 className="text-lg font-sans font-bold text-foreground mb-1.5 tracking-wide">
                         {t(`${currentLeader.key}.name`)}
                       </h3>
                       
@@ -247,18 +247,18 @@ export default function Leadership() {
                         {t(`${currentLeader.key}.role`)}
                       </p>
                       
-                      <p className="text-xs sm:text-sm text-zinc-300 font-sans font-light leading-relaxed mb-4">
+                      <p className="text-xs sm:text-sm text-muted font-sans font-light leading-relaxed mb-4">
                         {t(`${currentLeader.key}.desc`)}
                       </p>
                     </div>
 
                     {/* Social links */}
-                    <div className="flex space-x-3 pt-4 border-t border-white/5">
+                    <div className="flex space-x-3 pt-4 border-t border-glass-border">
                       <a
                         href={currentLeader.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-8 h-8 bg-white/[0.03] border border-white/10 hover:border-gold/50 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105 cursor-pointer text-zinc-400 hover:text-gold"
+                        className="w-8 h-8 bg-white/[0.03] border border-glass-border hover:border-gold/50 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105 cursor-pointer text-muted hover:text-gold"
                         aria-label="LinkedIn"
                       >
                         <svg
@@ -282,7 +282,7 @@ export default function Leadership() {
             <button
               onClick={handlePrevious}
               aria-label="Previous manager"
-              className="w-12 h-12 rounded-full liquid-glass border border-white/10 hover:border-gold/40 shadow-md flex items-center justify-center hover:bg-white/[0.08] transition-colors cursor-pointer text-zinc-400 hover:text-white"
+              className="w-12 h-12 rounded-full liquid-glass border border-glass-border hover:border-gold/40 shadow-md flex items-center justify-center hover:bg-white/[0.08] transition-colors cursor-pointer text-muted hover:text-foreground"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -307,7 +307,7 @@ export default function Leadership() {
             <button
               onClick={handleNext}
               aria-label="Next manager"
-              className="w-12 h-12 rounded-full liquid-glass border border-white/10 hover:border-gold/40 shadow-md flex items-center justify-center hover:bg-white/[0.08] transition-colors cursor-pointer text-zinc-400 hover:text-white"
+              className="w-12 h-12 rounded-full liquid-glass border border-glass-border hover:border-gold/40 shadow-md flex items-center justify-center hover:bg-white/[0.08] transition-colors cursor-pointer text-muted hover:text-foreground"
             >
               <ChevronRight className="w-5 h-5" />
             </button>

@@ -51,7 +51,7 @@ export default function CinematicThemeSwitcher() {
   if (!mounted) {
     return (
       <div className="relative inline-block">
-        <div className="relative flex h-[44px] w-[72px] items-center rounded-full bg-white/5" />
+        <div className="relative flex h-[44px] w-[72px] items-center rounded-full bg-glass" />
       </div>
     );
   }

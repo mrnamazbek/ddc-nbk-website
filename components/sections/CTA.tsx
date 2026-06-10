@@ -54,7 +54,7 @@ export default function CTA() {
   return (
     <section 
       ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-black overflow-hidden border-t border-white/5"
+      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden border-t border-glass-border"
     >
       
       {/* Декоративные вращающиеся круги на фоне */}
@@ -77,7 +77,7 @@ export default function CTA() {
           <GlassCard 
             hoverAccent="gold"
             variant="liquid-strong"
-            className="border-white/5 p-8 sm:p-16 relative overflow-hidden shadow-2xl"
+            className="border-glass-border p-8 sm:p-16 relative overflow-hidden shadow-card"
           >
             {/* Световой блик внутри панели */}
             <div className="absolute -top-40 -left-40 w-80 h-80 bg-forest/20 rounded-full blur-[80px] pointer-events-none" />
@@ -99,12 +99,12 @@ export default function CTA() {
               {t("overline")}
             </span>
 
-            <h2 className="font-display text-3xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-white mb-6 leading-tight relative z-10">
+            <h2 className="font-display text-3xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight relative z-10">
               {t("titleLine1")} <br className="hidden sm:inline" />
               <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
             </h2>
 
-            <p className="text-sm sm:text-base text-zinc-400 font-sans font-light leading-relaxed max-w-2xl mx-auto mb-10 relative z-10">
+            <p className="text-sm sm:text-base text-muted font-sans font-light leading-relaxed max-w-2xl mx-auto mb-10 relative z-10">
               {t("subtitle")}
             </p>
 

@@ -18,7 +18,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     // Стили вариантов
     let variantClass = "";
     if (variant === "ghost") {
-      variantClass = "text-gray-light hover:text-white bg-transparent hover:bg-white/5";
+      variantClass = "text-muted hover:text-foreground bg-transparent hover:bg-glass";
     } else {
       variantClass = "liquid-glass-button font-semibold";
     }

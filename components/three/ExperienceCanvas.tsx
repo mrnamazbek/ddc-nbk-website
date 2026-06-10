@@ -72,7 +72,7 @@ export default function ExperienceCanvas() {
   }, []);
 
   if (!ready) {
-  return <div className="fixed inset-0 z-0 bg-black" />;
+  return <div className="fixed inset-0 z-0 bg-background" />;
   }
 
   // На мобильных (low) или при отключенных анимациях (off) используем оптимизированный 2D ScrollSequence

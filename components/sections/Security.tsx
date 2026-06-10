@@ -125,7 +125,7 @@ export default function Security() {
     <section 
       id="security" 
       ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-[#0E2419]/55 overflow-hidden border-t border-white/5"
+      className="relative w-full py-24 sm:py-32 bg-[#0E2419]/55 overflow-hidden border-t border-glass-border"
     >
       {/* Background grid and glows */}
       <div className="absolute inset-0 bg-[radial-gradient(rgba(82,183,136,0.03)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
@@ -150,13 +150,13 @@ export default function Security() {
                 <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-forest-light/30 to-transparent animate-[scan_6s_linear_infinite]" />
                 
                 {/* Console header */}
-                <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                <div className="flex items-center justify-between border-b border-glass-border pb-4">
                   <div className="flex items-center gap-2.5">
                     <span className="relative flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-forest-light opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-forest-light"></span>
                     </span>
-                    <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase">
+                    <span className="text-[10px] font-mono tracking-widest text-muted uppercase">
                       ddc csoc // live status
                     </span>
                   </div>
@@ -219,15 +219,15 @@ export default function Security() {
                 </div>
 
                 {/* Security posture block */}
-                <div className="space-y-3.5 border-t border-white/5 pt-4">
+                <div className="space-y-3.5 border-t border-glass-border pt-4">
                   <div className="flex items-center justify-between text-[11px] font-mono">
                     <span className="text-zinc-500">SECURITY STANDARDS</span>
                     <span className="text-forest-light font-bold">ISO 9001 · СТ РК</span>
                   </div>
-                  <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                  <div className="w-full h-1 bg-glass rounded-full overflow-hidden">
                     <div className="h-full w-full bg-forest-light rounded-full" />
                   </div>
-                  <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400">
+                  <div className="flex items-center justify-between text-[10px] font-mono text-muted">
                     <span>IS MANAGEMENT SINCE</span>
                     <span className="text-gold font-bold">2022</span>
                   </div>
@@ -243,7 +243,7 @@ export default function Security() {
                 {t("overline")}
               </span>
 
-              <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6 leading-tight">
+              <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
                 {t("titleLine1")} <br />
                 <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
               </h2>
@@ -261,7 +261,7 @@ export default function Security() {
                   >
                     <GlassCard
                       hoverAccent={feat.hoverAccent}
-                      className="p-5 flex items-center justify-between border-white/5"
+                      className="p-5 flex items-center justify-between border-glass-border"
                     >
                       <div className="flex items-center gap-6">
                         <div className={`w-11 h-11 rounded-lg liquid-glass flex items-center justify-center transition-all duration-300 ${
@@ -270,16 +270,16 @@ export default function Security() {
                           {feat.svgIcon}
                         </div>
                         <div>
-                          <h4 className="text-base font-sans font-semibold text-white mb-1">
+                          <h4 className="text-base font-sans font-semibold text-foreground mb-1">
                             {t(`${feat.key}.title`)}
                           </h4>
-                          <p className="text-xs font-sans font-light text-zinc-400 leading-relaxed max-w-xl">
+                          <p className="text-xs font-sans font-light text-muted leading-relaxed max-w-xl">
                             {t(`${feat.key}.desc`)}
                           </p>
                         </div>
                       </div>
 
-                      <span className="hidden sm:inline-block px-3 py-1 rounded-full liquid-glass text-[9px] font-mono tracking-widest text-zinc-400 uppercase">
+                      <span className="hidden sm:inline-block px-3 py-1 rounded-full liquid-glass text-[9px] font-mono tracking-widest text-muted uppercase">
                         {t(`${feat.key}.tag`)}
                       </span>
                     </GlassCard>

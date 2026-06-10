@@ -105,7 +105,7 @@ export default function About() {
     <section 
       id="about" 
       ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-black overflow-hidden border-t border-white/5"
+      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden border-t border-glass-border"
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
@@ -126,7 +126,7 @@ export default function About() {
               </span>
             </div>
 
-            <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6 leading-tight">
+            <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
               {t("titleLine1")} <br />
               <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
             </h2>
@@ -145,14 +145,14 @@ export default function About() {
                     ref={addToRefs}
                     className="flex gap-6 relative z-10 group animate-hover"
                   >
-                    <div className="w-12 h-12 rounded-full liquid-glass flex items-center justify-center text-gold group-hover:bg-white/10 transition-all duration-300 shrink-0">
+                    <div className="w-12 h-12 rounded-full liquid-glass flex items-center justify-center text-gold group-hover:bg-glass transition-all duration-300 shrink-0">
                       {item.svgIcon}
                     </div>
                     <div>
-                      <h4 className="text-lg font-sans font-semibold text-white mb-2 group-hover:text-zinc-100 transition-colors">
+                      <h4 className="text-lg font-sans font-semibold text-foreground mb-2 group-hover:text-zinc-100 transition-colors">
                         {t(`${item.key}.title`)}
                       </h4>
-                      <p className="text-sm font-sans font-light text-zinc-400 leading-relaxed group-hover:text-zinc-300 transition-colors">
+                      <p className="text-sm font-sans font-light text-muted leading-relaxed group-hover:text-muted transition-colors">
                         {t(`${item.key}.text`)}
                       </p>
                     </div>
@@ -167,7 +167,7 @@ export default function About() {
             {/* Задний фон: nbk_architecture */}
             <div 
               ref={bgImgRef}
-              className="absolute top-0 right-0 w-4/5 h-4/5 rounded-2xl overflow-hidden border border-white/10 shadow-2xl transition-transform duration-700 hover:scale-[1.02]"
+              className="absolute top-0 right-0 w-4/5 h-4/5 rounded-card overflow-hidden border border-glass-border shadow-card transition-transform duration-700 hover:scale-[1.02]"
             >
               <Image
                 src="/images/nbk_architecture.png"
@@ -182,7 +182,7 @@ export default function About() {
             {/* Передний фон: liquid_glass_flow */}
             <div 
               ref={fgImgRef}
-              className="absolute bottom-0 left-0 w-2/3 h-2/3 rounded-2xl overflow-hidden border border-gold/20 shadow-[0_8px_30px_rgba(201,168,76,0.2)] z-20 transition-transform duration-700 hover:scale-[1.03]"
+              className="absolute bottom-0 left-0 w-2/3 h-2/3 rounded-card overflow-hidden border border-gold/20 shadow-[0_8px_30px_rgba(201,168,76,0.2)] z-20 transition-transform duration-700 hover:scale-[1.03]"
             >
               <Image
                 src="/images/backgrounds/liquid_glass_flow.png"

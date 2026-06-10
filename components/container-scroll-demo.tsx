@@ -9,7 +9,7 @@ export function HeroScrollDemo() {
       <ContainerScroll
         titleComponent={
           <>
-            <h1 className="text-4xl font-semibold text-black dark:text-white">
+            <h1 className="text-4xl font-semibold text-black dark:text-foreground">
               Unleash the power of <br />
               <span className="text-4xl md:text-[6rem] font-bold mt-1 leading-none">
                 Scroll Animations
@@ -23,7 +23,7 @@ export function HeroScrollDemo() {
           alt="hero"
           height={720}
           width={1400}
-          className="mx-auto rounded-2xl object-cover h-full object-left-top"
+          className="mx-auto rounded-card object-cover h-full object-left-top"
           draggable={false}
         />
       </ContainerScroll>

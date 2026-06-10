@@ -58,6 +58,12 @@ export default async function LocaleLayout({
           href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Barlow:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
           rel="stylesheet"
         />
+        <link
+          rel="preload"
+          href="https://prod.spline.design/B6sU8aK49uDPNzXL/scene.splinecode"
+          as="fetch"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className="min-h-full flex flex-col text-white">
         <ThemeProvider>

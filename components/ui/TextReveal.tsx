@@ -48,7 +48,7 @@ export default function TextReveal({ text, className = "" }: TextRevealProps) {
 
   return (
     <div ref={containerRef} className={`relative z-10 py-4 ${className}`}>
-      <p className="flex flex-wrap gap-x-2 gap-y-1 font-display text-2xl md:text-3xl lg:text-4xl font-light text-white leading-relaxed">
+      <p className="flex flex-wrap gap-x-2 gap-y-1 font-display text-2xl md:text-3xl lg:text-4xl font-light text-foreground leading-relaxed">
         {words.map((word, idx) => (
           <span
             key={idx}

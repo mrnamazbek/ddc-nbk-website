@@ -12,15 +12,9 @@ import Magnetic from "@/components/motion/Magnetic";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 import { MetalButton } from "@/components/ui/liquid-glass-button";
 
-// 3D logo medallion — heavy (R3F/WebGL), so lazy-load it client-side only.
-const Hero3D = dynamic(() => import("@/components/three/Hero3D"), {
-  ssr: false,
-  loading: () => (
-    <div className="absolute inset-0 flex items-center justify-center">
-      <span className="loader" />
-    </div>
-  ),
-});
+import { SplineScene } from "@/components/ui/splite";
+
+const ROBOT_SCENE = "https://prod.spline.design/B6sU8aK49uDPNzXL/scene.splinecode";
 
 export default function Hero() {
   const t = useTranslations("Hero");
@@ -131,7 +125,7 @@ export default function Hero() {
 
           {/* Заголовок на Cormorant Garamond с плавным Typewriter-эффектом */}
           <div className="mb-4">
-            <h1 className="font-display text-white">
+            <h1 className="font-display text-foreground">
               <TypewriterEffect
                 words={typewriterWords}
                 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light tracking-tight leading-tight justify-start my-0 py-0 text-left flex flex-wrap"
@@ -143,7 +137,7 @@ export default function Hero() {
           {/* Подзаголовок на Inter */}
           <motion.p
             variants={itemVariants}
-            className="text-base sm:text-lg lg:text-xl text-white/70 font-sans font-light leading-relaxed max-w-2xl mb-12"
+            className="text-base sm:text-lg lg:text-xl text-foreground/70 font-sans font-light leading-relaxed max-w-2xl mb-12"
           >
             {t("subtitle")}
           </motion.p>
@@ -197,20 +191,17 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="relative hidden md:block h-[520px] lg:h-[640px] w-full pointer-events-auto"
+          transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="relative hidden md:block h-[520px] lg:h-[820px] w-full pointer-events-auto overflow-visible"
         >
-          {isMobileDevice ? (
-            <Image
-              src="/images/medallion-poster.png"
-              alt="DDC — золотой медальон с логотипом"
-              fill
-              priority
-              className="object-contain"
-            />
-          ) : (
-            <Hero3D />
-          )}
+          <div className="absolute top-0 bottom-0 left-[-25%] right-[-25%] w-[150%] h-full">
+            {!isMobileDevice && (
+              <SplineScene
+                scene={ROBOT_SCENE}
+                className="w-full h-full [&_canvas]:!h-full [&_canvas]:!w-full"
+              />
+            )}
+          </div>
         </motion.div>
       </div>
 

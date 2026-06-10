@@ -11,7 +11,9 @@
     "careers": "Мансап",
     "analytics": "Аналитика",
     "contact": "Байланысу",
-    "procurementPortal": "ҚРҰБ Сатып алу порталы"
+    "procurementPortal": "ҚРҰБ Сатып алу порталы",
+    "subsidiaryOfNBK": "ҚҰБ еншілес ұйымы",
+    "language": "Тіл:"
   },
   "Hero": {
     "badge": "Цифрлық даму орталығы • Қазақстан Ұлттық Банкі",
@@ -296,5 +298,21 @@
   },
   "Common": {
     "loading": "Сахнаны жүктеу"
+  },
+  "FinancialInform": {
+    "title": "Макроэкономикалық монитор",
+    "subtitle": "ҚР қаржы индикаторлары",
+    "refreshBtn": "Көрсеткіштерді жаңарту",
+    "baseRate": "ҚҰБ базалық мөлшерлемесі",
+    "baseRateTrend": "5 отырыстағы тренд",
+    "inflation": "Жылдық инфляция",
+    "inflationTrend": "Қарқынның төмендеуі",
+    "exchangeRates": "Ресми валюта бағамдары (KZT)",
+    "usd": "АҚШ доллары",
+    "eur": "Еуро",
+    "rub": "Ресей рублі",
+    "updated": "Жаңартылды",
+    "loading": "жүктелуде...",
+    "liveFeed": "ҚҰБ Live feed"
   }
 }
