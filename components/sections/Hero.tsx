@@ -194,7 +194,7 @@ export default function Hero() {
           transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
           className="relative hidden md:block h-[520px] lg:h-[820px] w-full pointer-events-auto overflow-visible"
         >
-          <div className="absolute top-0 bottom-0 left-[-25%] right-[-25%] w-[150%] h-full">
+          <div className="absolute top-0 bottom-0 left-[-20%] right-[-20%] w-[140%] h-full scale-[1.2] lg:scale-[1.35] origin-center">
             {!isMobileDevice && (
               <SplineScene
                 scene={ROBOT_SCENE}
