@@ -86,29 +86,29 @@ export default function Hero() {
   return (
     <section 
       ref={containerRef}
-      className="relative w-full min-h-screen flex flex-col justify-center items-start overflow-hidden bg-transparent pt-20"
+      className="relative w-full min-h-screen lg:h-screen lg:max-h-[820px] xl:max-h-[880px] flex flex-col justify-center items-start overflow-hidden bg-transparent pt-16"
     >
       {/* Левый градиент-скрим для читаемости текста поверх живой 3D-сцены */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0E2419]/85 via-[#0E2419]/30 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0E2419]/90 via-[#0E2419]/45 to-transparent pointer-events-none z-5" />
 
       {/* Мягкие фоновые свечения для премиальной глубины */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-forest/15 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[400px] h-[400px] rounded-full bg-gold/5 blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-forest/15 blur-[120px] pointer-events-none z-0" />
+      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[400px] h-[400px] rounded-full bg-gold/5 blur-[100px] pointer-events-none z-0" />
 
       {/* Контентная область поверх 3D: текст слева, интерактивный 3D-робот справа.
           Фон — глобальный интерактивный dot-shader (InteractiveDotGrid в page.tsx). */}
       <div
         ref={textRef}
-        className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 w-full grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 items-center flex-grow py-12 md:py-24"
+        className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 w-full flex flex-col justify-center items-start flex-grow py-6 md:py-10"
       >
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="max-w-2xl text-left"
+          className="max-w-2xl text-left relative z-10"
         >
           {/* Надзаголовок-статус с зеленым маяком цифровой стабильности */}
-          <motion.div variants={itemVariants} className="inline-flex items-center gap-3 mb-8 bg-white/[0.03] border border-white/[0.08] backdrop-blur-md px-4 py-2 rounded-full">
+          <motion.div variants={itemVariants} className="inline-flex items-center gap-3 mb-4 bg-white/[0.03] border border-white/[0.08] backdrop-blur-md px-4 py-2 rounded-full">
             <Image
               src="/images/logo/ddc-logo.svg"
               alt="DDC"
@@ -124,12 +124,12 @@ export default function Hero() {
           </motion.div>
 
           {/* Заголовок на Cormorant Garamond с плавным Typewriter-эффектом */}
-          <div className="mb-4">
+          <div className="mb-3">
             <h1 className="font-display text-foreground">
               <TypewriterEffect
                 words={typewriterWords}
-                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light tracking-tight leading-tight justify-start my-0 py-0 text-left flex flex-wrap"
-                cursorClassName="h-8 sm:h-12 lg:h-16 bg-gold align-middle"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-light tracking-tight leading-tight justify-start my-0 py-0 text-left flex flex-wrap"
+                cursorClassName="h-6 sm:h-8 lg:h-12 bg-gold align-middle"
               />
             </h1>
           </div>
@@ -137,7 +137,7 @@ export default function Hero() {
           {/* Подзаголовок на Inter */}
           <motion.p
             variants={itemVariants}
-            className="text-base sm:text-lg lg:text-xl text-foreground/70 font-sans font-light leading-relaxed max-w-2xl mb-12"
+            className="text-sm sm:text-base lg:text-lg text-foreground/70 font-sans font-light leading-relaxed max-w-2xl mb-6"
           >
             {t("subtitle")}
           </motion.p>
@@ -185,20 +185,19 @@ export default function Hero() {
           </motion.div>
         </motion.div>
 
-        {/* Правая колонка: интерактивный 3D-медальон с логотипом DDC поверх
-            dot-shader. На мобильных / при prefers-reduced-motion — статичный
-            постер вместо WebGL. */}
+        {/* Фоновый 3D-робот с логотипом DDC поверх dot-shader.
+            На мобильных / при prefers-reduced-motion — статичный постер. */}
         <motion.div
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="relative hidden md:block h-[520px] lg:h-[820px] w-full pointer-events-auto overflow-visible"
+          className="absolute top-1/2 right-0 -translate-y-1/2 w-full md:w-[60%] lg:w-[55%] h-[80%] md:h-[95%] pointer-events-none z-0 overflow-visible opacity-35 md:opacity-75 mix-blend-screen"
         >
-          <div className="absolute top-0 bottom-0 left-[-20%] right-[-20%] w-[140%] h-full scale-[1.2] lg:scale-[1.35] origin-center">
+          <div className="absolute top-0 bottom-0 left-[-20%] right-[-20%] w-[140%] h-full scale-[1.1] md:scale-[1.2] origin-center">
             {!isMobileDevice && (
               <SplineScene
                 scene={ROBOT_SCENE}
-                className="w-full h-full [&_canvas]:!h-full [&_canvas]:!w-full"
+                className="w-full h-full [&_canvas]:!h-full [&_canvas]:!w-full pointer-events-none"
                 logoImg="/spline/ddc_logo_rm_bckgrnd.png"
                 logoTarget="Body"
               />
@@ -212,7 +211,7 @@ export default function Hero() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.2, duration: 0.8 }}
-        className="absolute bottom-10 left-6 sm:left-12 lg:left-16 z-10 flex items-center gap-3 text-zinc-500 cursor-pointer hover:text-forest-light transition-colors duration-300 pointer-events-auto hover-target"
+        className="absolute bottom-6 left-6 sm:left-12 lg:left-16 z-10 flex items-center gap-3 text-zinc-500 cursor-pointer hover:text-forest-light transition-colors duration-300 pointer-events-auto hover-target"
         onClick={() => {
           const target = document.getElementById("stats");
           target?.scrollIntoView({ behavior: "smooth" });
