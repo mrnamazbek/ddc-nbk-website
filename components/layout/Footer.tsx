@@ -50,7 +50,7 @@ export default function Footer() {
           <div className="lg:col-span-2 flex flex-col gap-6">
             <Link href="/" className="flex items-center gap-3 select-none">
               <Image
-                src="/images/logo/ddc-logo.svg"
+                src="/images/logo/ddc_logo_for_dark_theme.png"
                 alt="DDC — Центр цифрового развития НБК"
                 width={36}
                 height={36}

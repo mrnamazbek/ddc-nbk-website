@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 import TextReveal from "@/components/ui/TextReveal";
 
 interface ValueItem {
@@ -15,6 +16,16 @@ interface ValueItem {
 export default function About() {
   const t = useTranslations("About");
   const containerRef = useRef<HTMLDivElement>(null);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const logoSrc = mounted && resolvedTheme === "light"
+    ? "/images/logo/ddc_logo_light_theme.png"
+    : "/images/logo/ddc_logo_for_dark_theme.png";
   const bgImgRef = useRef<HTMLDivElement>(null);
   const fgImgRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
@@ -114,7 +125,7 @@ export default function About() {
           <div className="lg:col-span-7 flex flex-col justify-center">
             <div className="flex items-center gap-3 mb-4">
               <Image
-                src="/images/logo/ddc-logo.svg"
+                src={logoSrc}
                 alt="DDC"
                 width={24}
                 height={24}

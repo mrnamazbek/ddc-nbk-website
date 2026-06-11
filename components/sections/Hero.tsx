@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
@@ -20,6 +21,16 @@ export default function Hero() {
   const t = useTranslations("Hero");
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const logoSrc = mounted && resolvedTheme === "light"
+    ? "/images/logo/ddc_logo_light_theme.png"
+    : "/images/logo/ddc_logo_for_dark_theme.png";
   
   const [isMobileDevice, setIsMobileDevice] = useState(true);
 
@@ -110,7 +121,7 @@ export default function Hero() {
           {/* Надзаголовок-статус с зеленым маяком цифровой стабильности */}
           <motion.div variants={itemVariants} className="inline-flex items-center gap-3 mb-4 bg-white/[0.03] border border-white/[0.08] backdrop-blur-md px-4 py-2 rounded-full">
             <Image
-              src="/images/logo/ddc-logo.svg"
+              src={logoSrc}
               alt="DDC"
               width={16}
               height={16}

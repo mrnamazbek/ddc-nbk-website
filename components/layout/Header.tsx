@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { Menu, X, ArrowRight } from "lucide-react";
@@ -55,6 +56,16 @@ function LanguageSwitcher({
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const logoSrc = mounted && resolvedTheme === "light"
+    ? "/images/logo/ddc_logo_light_theme.png"
+    : "/images/logo/ddc_logo_for_dark_theme.png";
 
   const t = useTranslations("Header");
   const locale = useLocale();
@@ -133,7 +144,7 @@ export default function Header() {
           {/* Logo */}
           <TransitionLink href="/" className="flex items-center gap-3 group select-none">
             <Image
-              src="/images/logo/ddc-logo.svg"
+              src={logoSrc}
               alt="DDC — Центр цифрового развития НБК"
               width={42}
               height={42}
