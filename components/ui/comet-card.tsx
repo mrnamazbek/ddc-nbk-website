@@ -1,45 +1,86 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useRef } from "react";
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 
 interface CometCardProps {
   children: React.ReactNode;
   className?: string;
   containerClassName?: string;
+  /** Depth of the 3D rotation on mouse move. Higher = more dramatic tilt. */
+  rotateDepth?: number;
+  /** Depth of the translation (parallax) on mouse move. */
+  translateDepth?: number;
 }
 
+/**
+ * Comet Card — a perspective 3D tilt card (as seen on Perplexity Comet's site).
+ * Tracks the cursor over the card and applies rotateX/rotateY + a parallax
+ * translate, with a soft specular glare that follows the pointer. Returns to
+ * rest on mouse leave. `className` styles the tilting surface; `containerClassName`
+ * styles the perspective wrapper.
+ */
 export function CometCard({
   children,
   className = "",
   containerClassName = "",
+  rotateDepth = 17.5,
+  translateDepth = 20,
 }: CometCardProps) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 120, damping: 18, mass: 0.6 });
+  const sy = useSpring(y, { stiffness: 120, damping: 18, mass: 0.6 });
+
+  const rotateX = useTransform(sy, [-0.5, 0.5], [`${rotateDepth}deg`, `-${rotateDepth}deg`]);
+  const rotateY = useTransform(sx, [-0.5, 0.5], [`-${rotateDepth}deg`, `${rotateDepth}deg`]);
+  const tX = useTransform(sx, [-0.5, 0.5], [-translateDepth, translateDepth]);
+  const tY = useTransform(sy, [-0.5, 0.5], [translateDepth, -translateDepth]);
+
+  const glareX = useTransform(sx, [-0.5, 0.5], ["0%", "100%"]);
+  const glareY = useTransform(sy, [-0.5, 0.5], ["0%", "100%"]);
+  const glare = useMotionTemplate`radial-gradient(circle at ${glareX} ${glareY}, rgba(232,200,122,0.28), rgba(255,255,255,0) 55%)`;
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    x.set((e.clientX - rect.left) / rect.width - 0.5);
+    y.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
   return (
     <div
-      className={`relative p-[1.5px] overflow-hidden rounded-[20px] bg-zinc-900/40 backdrop-blur-md border border-glass-border ${containerClassName}`}
-      style={{
-        transformStyle: "preserve-3d",
-      }}
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className={containerClassName}
+      style={{ perspective: "1000px" }}
     >
-      {/* Dynamic Comet rotating border effect */}
-      <div className="absolute inset-0 z-0">
-        <motion.div
-          animate={{
-            rotate: [0, 360],
-          }}
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[180%] h-[180%] origin-center bg-[conic-gradient(from_0deg,transparent_30%,#C9A84C_50%,#52B788_70%,transparent_90%)] opacity-80 pointer-events-none"
-        />
-      </div>
-
-      {/* Inner premium liquid glass card panel */}
-      <div className={`relative z-10 w-full h-full rounded-[19px] bg-[#0A0C0B]/90 backdrop-blur-xl transition-all duration-300 ${className}`}>
+      <motion.div
+        style={{ rotateX, rotateY, x: tX, y: tY, transformStyle: "preserve-3d" }}
+        className={`relative will-change-transform ${className}`}
+      >
         {children}
-      </div>
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-[inherit] mix-blend-soft-light"
+          style={{ background: glare }}
+        />
+      </motion.div>
     </div>
   );
 }

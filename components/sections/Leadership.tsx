@@ -1,96 +1,243 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { useTranslations } from "next-intl";
+import { useRef, useEffect } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { CometCard } from "@/components/ui/comet-card";
 
 interface Leader {
-  key: string;
+  id: string;
+  name: { ru: string; en: string; kz: string };
+  role: { ru: string; en: string; kz: string };
   img: string;
-  linkedin: string;
+  desc?: { ru: string; en: string; kz: string };
 }
 
 export default function Leadership() {
   const t = useTranslations("Leadership");
+  const locale = useLocale() as "ru" | "en" | "kz";
   const containerRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const leaders: Leader[] = [
+  
+  // Данные для Совета директоров
+  const boardOfDirectors: Leader[] = [
     {
-      key: "l1",
+      id: "b1",
+      name: {
+        ru: "Жаленов Бинур Муратович",
+        en: "Binur M. Zhalenov",
+        kz: "Жәленов Бинұр Мұратұлы",
+      },
+      role: {
+        ru: "Председатель Совета директоров Общества, Заместитель Председателя Национального Банка Республики Казахстан",
+        en: "Chairman of the Board of Directors, Deputy Governor of the National Bank of Kazakhstan",
+        kz: "Қоғамның Директорлар кеңесінің төрағасы, Қазақстан Республикасы Ұлттық Банкі Төрағасының орынбасары",
+      },
+      img: "/images/team/Zhalenov_Binur.jpg",
+    },
+    {
+      id: "b2",
+      name: {
+        ru: "Узбеков Асхат Архатович",
+        en: "Askhat A. Uzbekov",
+        kz: "Өзбеков Асхат Архатұлы",
+      },
+      role: {
+        ru: "Член Совета директоров, Директор департамента информационных технологий Национального Банка Республики Казахстан",
+        en: "Member of the Board of Directors, Director of the IT Department of the National Bank of Kazakhstan",
+        kz: "Директорлар кеңесінің мүшесі, Қазақстан Республикасы Ұлттық Банкінің Ақпараттық технологиялар департаментінің директоры",
+      },
+      img: "/images/team/Uzbekov_Askhat.png",
+    },
+    {
+      id: "b3",
+      name: {
+        ru: "Конирбаев Баян Кайратович",
+        en: "Bayan K. Konirbayev",
+        kz: "Қоңырбаев Баян Қайратұлы",
+      },
+      role: {
+        ru: "Член Совета директоров Общества - независимый директор",
+        en: "Member of the Board of Directors - Independent Director",
+        kz: "Қоғамның Директорлар кеңесінің мүшесі - тәуелсіз директор",
+      },
+      img: "/images/team/Bayan_Kb.png",
+    },
+    {
+      id: "b4",
+      name: {
+        ru: "Аринова Айжан Бейбытовна",
+        en: "Aizhan B. Arinova",
+        kz: "Аринова Айжан Бейбітқызы",
+      },
+      role: {
+        ru: "Член Совета директоров, Директор Департамента цифровой трансформации",
+        en: "Member of the Board of Directors, Director of the Digital Transformation Department",
+        kz: "Директорлар кеңесінің мүшесі, Сандық трансформация департаментінің директоры",
+      },
+      img: "/images/team/Arinova_Aizhan.jpg",
+    },
+    {
+      id: "b5",
+      name: {
+        ru: "Алпамысов Абай Абдисаметович",
+        en: "Abai A. Alpamysov",
+        kz: "Алпамысов Абай Әбдісаметұлы",
+      },
+      role: {
+        ru: "Член Совета директоров Общества - независимый директор",
+        en: "Member of the Board of Directors - Independent Director",
+        kz: "Қоғамның Директорлар кеңесінің мүшесі - тәуелсіз директор",
+      },
+      img: "/images/team/Alpamysov_Abai.png",
+    },
+    {
+      id: "b6",
+      name: {
+        ru: "Амардинов Малик Алимжанович",
+        en: "Malik A. Amardinov",
+        kz: "Амардинов Мәлік Әлімжанұлы",
+      },
+      role: {
+        ru: "Член Совета директоров Общества - Председатель Правления",
+        en: "Member of the Board of Directors - Chairman of the Management Board",
+        kz: "Қоғамның Директорлар кеңесінің мүшесі - Басқарма төрағасы",
+      },
       img: "/images/team/Amardinov.jpg",
-      linkedin: "https://www.linkedin.com/in/malik-amardinov-23945a165",
     },
     {
-      key: "l2",
+      id: "b7",
+      name: {
+        ru: "Марат Аскар",
+        en: "Askar Marat",
+        kz: "Марат Асқар",
+      },
+      role: {
+        ru: "Член Совета директоров Общества - независимый директор",
+        en: "Member of the Board of Directors - Independent Director",
+        kz: "Қоғамның Директорлар кеңесінің мүшесі - тәуелсіз директор",
+      },
+      img: "/images/team/Marat_Askar.png",
+    },
+  ];
+
+  // Данные для Правления
+  const managementBoard: Leader[] = [
+    {
+      id: "m1",
+      name: {
+        ru: "Амардинов Малик Алимжанович",
+        en: "Malik A. Amardinov",
+        kz: "Амардинов Мәлік Әлімжанұлы",
+      },
+      role: {
+        ru: "Председатель Правления",
+        en: "Chairman of the Management Board",
+        kz: "Басқарма Төрағасы",
+      },
+      img: "/images/team/Amardinov.jpg",
+      desc: {
+        ru: "Я рад приветствовать вас на официальном сайте ЦЦР! Более 20 лет ЦЦР успешно осуществляет свою деятельность на рынке ИТ-услуг, что позволило сформировать внушительный портфель сложных, но успешно реализованных ИТ-проектов для Национального Банка. Каждый сотрудник нашей компании обладает профессионализмом, стремлением работать и желанием постоянно развиваться.",
+        en: "I am pleased to welcome you to the official DDC website! For over 20 years, DDC has been successfully operating in the IT services market, building a strong portfolio of complex IT projects for the National Bank. Every employee of our company possesses professionalism, drive, and a commitment to continuous growth.",
+        kz: "Сіздерді ЦЦР-дың ресми сайтында қарсы алуға қуаныштымын! 20 жылдан астам уақыт бойы ЦЦР АТ-қызмет көрсету нарығында табысты жұмыс істеп келеді, бұл Ұлттық Банк үшін күрделі де маңызды жобалардың үлкен портфелін қалыптастыруға мүмкіндік берді. Біздің әрбір қызметкеріміз кәсібилігімен және үнемі дамуға деген ұмтылысымен ерекшеленеді.",
+      },
+    },
+    {
+      id: "m2",
+      name: {
+        ru: "Дурмагамбетов Ерлан Дмитриевич",
+        en: "Erlan D. Durmagambetov",
+        kz: "Дүрмағамбетов Ерлан Дмитриевич",
+      },
+      role: {
+        ru: "Первый заместитель Председателя Правления Общества",
+        en: "First Deputy Chairman of the Management Board",
+        kz: "Қоғам Басқармасы Төрағасының бірінші орынбасары",
+      },
       img: "/images/team/Durmagambetov.jpg",
-      linkedin: "https://www.linkedin.com/in/erlan-durmagambetov",
     },
     {
-      key: "l3",
+      id: "m3",
+      name: {
+        ru: "Кентбеков Аргын Салаватович",
+        en: "Argyn S. Kentbekov",
+        kz: "Кентбеков Арғын Салауатұлы",
+      },
+      role: {
+        ru: "Заместитель Председателя Правления Общества",
+        en: "Deputy Chairman of the Management Board",
+        kz: "Қоғам Басқармасы Төрағасының орынбасары",
+      },
       img: "/images/team/Kentbekov.jpg",
-      linkedin: "https://www.linkedin.com",
     },
     {
-      key: "l4",
+      id: "m4",
+      name: {
+        ru: "Имажанов Бахытжан Гылымбекович",
+        en: "Bakhytzhan G. Imajanov",
+        kz: "Имажанов Бақытжан Ғылымбекұлы",
+      },
+      role: {
+        ru: "Заместитель Председателя Правления Общества",
+        en: "Deputy Chairman of the Management Board",
+        kz: "Қоғам Басқармасы Төрағасының орынбасары",
+      },
       img: "/images/team/Imajanov.jpg",
-      linkedin: "https://www.linkedin.com",
     },
   ];
 
   useGSAP(
     () => {
-      // Fade-in title
+      // Анимация центрального ствола (вертикальной линии)
       gsap.fromTo(
-        titleRef.current,
-        { opacity: 0, y: 20 },
+        ".tree-spine",
+        { scaleY: 0 },
         {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: "power2.out",
+          scaleY: 1,
+          ease: "none",
+          transformOrigin: "top center",
           scrollTrigger: {
-            trigger: containerRef.current,
+            trigger: ".tree-container",
+            start: "top 40%",
+            end: "bottom 80%",
+            scrub: true,
+          },
+        }
+      );
+
+      // Анимация горизонтальных ветвей и карточек
+      const cardElements = gsap.utils.toArray(".tree-node");
+      cardElements.forEach((node: any) => {
+        const branch = node.querySelector(".tree-branch");
+        const card = node.querySelector(".tree-card-wrapper");
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: node,
             start: "top 80%",
             toggleActions: "play none none none",
           },
-        }
-      );
+        });
 
-      // Fade-in carousel
-      gsap.fromTo(
-        carouselRef.current,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.0,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 70%",
-            toggleActions: "play none none none",
-          },
+        if (branch) {
+          tl.fromTo(
+            branch,
+            { scaleX: 0 },
+            { scaleX: 1, duration: 0.4, ease: "power2.out" }
+          );
         }
-      );
+
+        tl.fromTo(
+          card,
+          { opacity: 0, scale: 0.9, y: 20 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "back.out(1.2)" },
+          "-=0.2"
+        );
+      });
     },
     { scope: containerRef }
   );
-
-  const handleNext = () =>
-    setCurrentIndex((index) => (index + 1) % leaders.length);
-  
-  const handlePrevious = () =>
-    setCurrentIndex((index) => (index - 1 + leaders.length) % leaders.length);
-
-  const currentLeader = leaders[currentIndex];
 
   return (
     <section
@@ -98,10 +245,13 @@ export default function Leadership() {
       ref={containerRef}
       className="relative w-full py-24 sm:py-32 bg-background overflow-hidden border-t border-glass-border"
     >
+      {/* Декоративные свечения */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-forest/5 blur-[120px] pointer-events-none" />
+      
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         
-        {/* Title area */}
-        <div ref={titleRef} className="max-w-3xl mb-16 sm:mb-20">
+        {/* Заголовок секции */}
+        <div className="max-w-3xl mb-20">
           <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
             {t("overline")}
           </span>
@@ -114,203 +264,196 @@ export default function Leadership() {
           </p>
         </div>
 
-        {/* Carousel Container */}
-        <div ref={carouselRef} className="w-full max-w-5xl mx-auto">
-          {/* Desktop Layout (md and up) */}
-          <div className="hidden md:flex relative items-center justify-center">
-            {/* Avatar Photo */}
-            <div className="w-[380px] h-[380px] lg:w-[450px] lg:h-[450px] rounded-card overflow-hidden bg-neutral-900 flex-shrink-0 relative border border-glass-border shadow-card z-0">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentLeader.img}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.4, ease: "easeInOut" }}
-                  className="w-full h-full relative"
-                >
-                  <Image
-                    src={currentLeader.img}
-                    alt={t(`${currentLeader.key}.name`)}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 450px"
-                    className="object-cover saturate-[0.85] contrast-[1.05]"
-                    draggable={false}
-                    priority
-                  />
-                </motion.div>
-              </AnimatePresence>
+        {/* Интерактивное иерархическое дерево */}
+        <div className="tree-container relative w-full flex flex-col items-center">
+          
+          {/* Ствол дерева (вертикальная направляющая линия) */}
+          <div className="tree-spine hidden md:block absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[2px] bg-gradient-to-b from-forest-light via-gold/60 to-forest-dark z-0" />
+
+          {/* ==========================================================
+              РАЗДЕЛ 1: СОВЕТ ДИРЕКТОРОВ (Board of Directors)
+              ========================================================== */}
+          <div className="w-full mb-28 relative z-10">
+            <div className="flex justify-center mb-16">
+              <h3 className="px-6 py-2.5 rounded-full bg-forest-dark/40 border border-forest-light/30 backdrop-blur-md text-gold text-xs font-mono tracking-[0.2em] uppercase shadow-lg shadow-black/30">
+                {locale === "en"
+                  ? "Board of Directors"
+                  : locale === "kz"
+                  ? "Директорлар кеңесі"
+                  : "Совет директоров"}
+              </h3>
             </div>
 
-            {/* Content overlay card (CometCard) */}
-            <div className="ml-[-60px] lg:ml-[-85px] z-10 max-w-xl flex-1">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentLeader.key}
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -30 }}
-                  transition={{ duration: 0.4, ease: "easeInOut" }}
-                >
-                  <CometCard className="p-8 sm:p-10 flex flex-col justify-between min-h-[340px] shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-                    <div>
-                      <div className="flex justify-between items-center mb-4">
-                        <span className="text-[10px] font-mono tracking-[0.2em] text-gold uppercase">
-                          {currentLeader.key === "l1" ? "#CHAIRMAN" : "#DEPUTY"}
-                        </span>
+            <div className="flex flex-col gap-12 md:gap-4 w-full">
+              {/* 1. Председатель Совета Директоров (по центру) */}
+              <div className="tree-node w-full flex flex-col items-center mb-6">
+                <div className="tree-card-wrapper w-full max-w-[340px]">
+                  <CometCard className="p-4 bg-charcoal/40 border border-glass-border rounded-[16px] shadow-xl">
+                    <div className="relative aspect-[3/4] w-full rounded-[12px] overflow-hidden bg-neutral-900 border border-white/5 mb-4">
+                      <Image
+                        src={boardOfDirectors[0].img}
+                        alt={boardOfDirectors[0].name[locale]}
+                        fill
+                        sizes="320px"
+                        className="object-cover saturate-[0.85] contrast-[1.05]"
+                      />
+                    </div>
+                    <div className="font-sans">
+                      <h4 className="text-base font-bold text-foreground mb-1 leading-tight">
+                        {boardOfDirectors[0].name[locale]}
+                      </h4>
+                      <p className="text-[10px] text-gold font-mono uppercase tracking-wider leading-relaxed">
+                        {boardOfDirectors[0].role[locale]}
+                      </p>
+                    </div>
+                  </CometCard>
+                </div>
+              </div>
+
+              {/* Остальные члены Совета директоров в шахматном порядке */}
+              {boardOfDirectors.slice(1).map((leader, index) => {
+                const isLeft = index % 2 === 0;
+                return (
+                  <div
+                    key={leader.id}
+                    className={`tree-node w-full flex flex-col md:flex-row items-center justify-center relative ${
+                      isLeft ? "md:pr-[50%]" : "md:pl-[50%]"
+                    }`}
+                  >
+                    {/* Горизонтальная ветвь дерева */}
+                    <div
+                      className={`tree-branch hidden md:block absolute top-1/2 -translate-y-1/2 h-[2px] bg-gradient-to-r ${
+                        isLeft
+                          ? "from-transparent to-gold/30 left-[15%] w-[35%] origin-right"
+                          : "from-gold/30 to-transparent right-[15%] w-[35%] origin-left"
+                      }`}
+                    />
+
+                    {/* Точка соединения со стволом */}
+                    <div className="hidden md:block absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-gold border border-black z-20" />
+
+                    <div className="tree-card-wrapper w-full max-w-[340px] relative z-10">
+                      <CometCard className="p-4 bg-charcoal/40 border border-glass-border rounded-[16px] shadow-xl">
+                        <div className="relative aspect-[3/4] w-full rounded-[12px] overflow-hidden bg-neutral-900 border border-white/5 mb-4">
+                          <Image
+                            src={leader.img}
+                            alt={leader.name[locale]}
+                            fill
+                            sizes="320px"
+                            className="object-cover saturate-[0.85] contrast-[1.05]"
+                          />
+                        </div>
+                        <div className="font-sans">
+                          <h4 className="text-base font-bold text-foreground mb-1 leading-tight">
+                            {leader.name[locale]}
+                          </h4>
+                          <p className="text-[10px] text-zinc-400 font-mono uppercase tracking-wider leading-relaxed">
+                            {leader.role[locale]}
+                          </p>
+                        </div>
+                      </CometCard>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ==========================================================
+              РАЗДЕЛ 2: ПРАВЛЕНИЕ (Management Board)
+              ========================================================== */}
+          <div className="w-full relative z-10">
+            <div className="flex justify-center mb-16">
+              <h3 className="px-6 py-2.5 rounded-full bg-forest-dark/40 border border-forest-light/30 backdrop-blur-md text-gold text-xs font-mono tracking-[0.2em] uppercase shadow-lg shadow-black/30">
+                {locale === "en"
+                  ? "Management Board"
+                  : locale === "kz"
+                  ? "Басқарма"
+                  : "Правление"}
+              </h3>
+            </div>
+
+            {/* 1. Председатель Правления (Карточка + Обращение) */}
+            <div className="tree-node w-full flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 mb-24 max-w-5xl mx-auto">
+              <div className="tree-card-wrapper w-full max-w-[360px] flex-shrink-0">
+                <CometCard className="p-5 bg-charcoal/50 border border-gold/20 rounded-[16px] shadow-2xl">
+                  <div className="relative aspect-[3/4] w-full rounded-[12px] overflow-hidden bg-neutral-900 border border-white/5 mb-4">
+                    <Image
+                      src={managementBoard[0].img}
+                      alt={managementBoard[0].name[locale]}
+                      fill
+                      sizes="360px"
+                      className="object-cover saturate-[0.9] contrast-[1.05]"
+                    />
+                  </div>
+                  <div className="font-sans">
+                    <div className="text-[9px] font-mono tracking-[0.2em] text-gold uppercase mb-1">
+                      #CHAIRMAN
+                    </div>
+                    <h4 className="text-lg font-bold text-foreground mb-1 leading-tight">
+                      {managementBoard[0].name[locale]}
+                    </h4>
+                    <p className="text-xs text-zinc-400 font-mono uppercase tracking-wider">
+                      {managementBoard[0].role[locale]}
+                    </p>
+                  </div>
+                </CometCard>
+              </div>
+
+              {/* Обращение Председателя */}
+              <div className="flex-1 max-w-xl text-left bg-charcoal/20 border border-glass-border rounded-[24px] p-6 sm:p-8 backdrop-blur-md shadow-lg relative">
+                {/* Декоративная кавычка */}
+                <span className="absolute top-2 right-6 text-7xl font-serif text-gold/15 select-none pointer-events-none">“</span>
+                <h4 className="text-lg font-display text-gold font-medium mb-4">
+                  {locale === "en"
+                    ? "Welcome Message"
+                    : locale === "kz"
+                    ? "Басқарма Төрағасының үндеуі"
+                    : "Обращение Председателя"}
+                </h4>
+                <p className="text-sm sm:text-base font-sans font-light text-foreground/80 leading-relaxed mb-6 italic">
+                  {managementBoard[0].desc?.[locale]}
+                </p>
+                <div className="border-t border-glass-border pt-4">
+                  <span className="text-xs text-zinc-400 uppercase tracking-widest font-mono block">
+                    {managementBoard[0].name[locale]}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* 2. Заместители Председателя Правления (В ряд/Сетка) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {managementBoard.slice(1).map((leader) => (
+                <div key={leader.id} className="tree-node flex flex-col items-center">
+                  <div className="tree-card-wrapper w-full max-w-[320px]">
+                    <CometCard className="p-4 bg-charcoal/40 border border-glass-border rounded-[16px] shadow-xl">
+                      <div className="relative aspect-[3/4] w-full rounded-[12px] overflow-hidden bg-neutral-900 border border-white/5 mb-4">
+                        <Image
+                          src={leader.img}
+                          alt={leader.name[locale]}
+                          fill
+                          sizes="320px"
+                          className="object-cover saturate-[0.85] contrast-[1.05]"
+                        />
                       </div>
-                      
-                      <h3 className="text-xl sm:text-2xl lg:text-3xl font-sans font-bold text-foreground mb-2 tracking-wide leading-tight transition-colors duration-300 hover:text-gold">
-                        {t(`${currentLeader.key}.name`)}
-                      </h3>
-                      
-                      <p className="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-6">
-                        {t(`${currentLeader.key}.role`)}
-                      </p>
-                      
-                      <p className="text-sm sm:text-base text-muted font-sans font-light leading-relaxed mb-6">
-                        {t(`${currentLeader.key}.desc`)}
-                      </p>
-                    </div>
-
-                    {/* Social links */}
-                    <div className="flex space-x-4 pt-5 border-t border-glass-border">
-                      <a
-                        href={currentLeader.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-10 h-10 bg-white/[0.03] border border-glass-border hover:border-gold/50 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105 cursor-pointer text-muted hover:text-gold"
-                        aria-label="LinkedIn"
-                      >
-                        <svg
-                          className="w-4 h-4 fill-current"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                        </svg>
-                      </a>
-                    </div>
-                  </CometCard>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </div>
-
-          {/* Mobile Layout (below md) */}
-          <div className="md:hidden max-w-sm mx-auto text-center bg-transparent">
-            {/* Avatar Photo */}
-            <div className="w-full aspect-square bg-neutral-900 rounded-card overflow-hidden mb-6 relative border border-glass-border">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentLeader.img}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.4, ease: "easeInOut" }}
-                  className="w-full h-full relative"
-                >
-                  <Image
-                    src={currentLeader.img}
-                    alt={t(`${currentLeader.key}.name`)}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 320px"
-                    className="object-cover saturate-[0.85] contrast-[1.05]"
-                    draggable={false}
-                    priority
-                  />
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* Mobile Content (CometCard) */}
-            <div className="px-2">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentLeader.key}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.4, ease: "easeInOut" }}
-                >
-                  <CometCard className="p-6 text-left flex flex-col justify-between shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-                    <div>
-                      <span className="text-[9px] font-mono tracking-[0.2em] text-gold uppercase mb-1.5 block">
-                        {currentLeader.key === "l1" ? "#CHAIRMAN" : "#DEPUTY"}
-                      </span>
-                      
-                      <h3 className="text-lg font-sans font-bold text-foreground mb-1.5 tracking-wide">
-                        {t(`${currentLeader.key}.name`)}
-                      </h3>
-                      
-                      <p className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider mb-4">
-                        {t(`${currentLeader.key}.role`)}
-                      </p>
-                      
-                      <p className="text-xs sm:text-sm text-muted font-sans font-light leading-relaxed mb-4">
-                        {t(`${currentLeader.key}.desc`)}
-                      </p>
-                    </div>
-
-                    {/* Social links */}
-                    <div className="flex space-x-3 pt-4 border-t border-glass-border">
-                      <a
-                        href={currentLeader.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-8 h-8 bg-white/[0.03] border border-glass-border hover:border-gold/50 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105 cursor-pointer text-muted hover:text-gold"
-                        aria-label="LinkedIn"
-                      >
-                        <svg
-                          className="w-3.5 h-3.5 fill-current"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                        </svg>
-                      </a>
-                    </div>
-                  </CometCard>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </div>
-
-          {/* Navigation Controls */}
-          <div className="flex justify-center items-center gap-6 mt-12">
-            {/* Prev Button */}
-            <button
-              onClick={handlePrevious}
-              aria-label="Previous manager"
-              className="w-12 h-12 rounded-full liquid-glass border border-glass-border hover:border-gold/40 shadow-md flex items-center justify-center hover:bg-white/[0.08] transition-colors cursor-pointer text-muted hover:text-foreground"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-
-            {/* Navigation Dots */}
-            <div className="flex gap-2">
-              {leaders.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setCurrentIndex(idx)}
-                  className={`w-2.5 h-2.5 rounded-full transition-colors cursor-pointer ${
-                    idx === currentIndex
-                      ? "bg-gold"
-                      : "bg-zinc-600 hover:bg-zinc-400"
-                  }`}
-                  aria-label={`Go to slide ${idx + 1}`}
-                />
+                      <div className="font-sans">
+                        <div className="text-[9px] font-mono tracking-[0.2em] text-zinc-500 uppercase mb-1">
+                          #DEPUTY
+                        </div>
+                        <h4 className="text-base font-bold text-foreground mb-1 leading-tight">
+                          {leader.name[locale]}
+                        </h4>
+                        <p className="text-[10px] text-zinc-400 font-mono uppercase tracking-wider leading-relaxed">
+                          {leader.role[locale]}
+                        </p>
+                      </div>
+                    </CometCard>
+                  </div>
+                </div>
               ))}
             </div>
 
-            {/* Next Button */}
-            <button
-              onClick={handleNext}
-              aria-label="Next manager"
-              className="w-12 h-12 rounded-full liquid-glass border border-glass-border hover:border-gold/40 shadow-md flex items-center justify-center hover:bg-white/[0.08] transition-colors cursor-pointer text-muted hover:text-foreground"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
           </div>
 
         </div>
