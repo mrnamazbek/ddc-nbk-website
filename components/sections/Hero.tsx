@@ -191,13 +191,13 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute top-1/2 right-0 -translate-y-1/2 w-full md:w-[60%] lg:w-[55%] h-[80%] md:h-[95%] pointer-events-none z-0 overflow-visible opacity-35 md:opacity-75 mix-blend-screen"
+          className="absolute top-1/2 right-0 -translate-y-1/2 w-full md:w-[60%] lg:w-[55%] h-[80%] md:h-[95%] pointer-events-auto z-0 overflow-visible opacity-35 md:opacity-75 mix-blend-screen"
         >
           <div className="absolute top-0 bottom-0 left-[-20%] right-[-20%] w-[140%] h-full scale-[1.1] md:scale-[1.2] origin-center">
             {!isMobileDevice && (
               <SplineScene
                 scene={ROBOT_SCENE}
-                className="w-full h-full [&_canvas]:!h-full [&_canvas]:!w-full pointer-events-none"
+                className="w-full h-full [&_canvas]:!h-full [&_canvas]:!w-full"
                 logoImg="/spline/ddc_logo_rm_bckgrnd.png"
                 logoTarget="Body"
               />
