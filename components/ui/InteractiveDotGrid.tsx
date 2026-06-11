@@ -1,33 +1,79 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 
-interface InteractiveDotGridProps {
-  dotSize?: number;
-  maxDotSize?: number;
-  dotSpacing?: number;
-  distortionRadius?: number;
-  distortionStrength?: number;
-  animationSpeed?: number;
-  backgroundColor?: string;
+type PresetName = "default" | "triangles" | "treeline" | "wallpaper";
+
+interface PresetConfig {
+  shape: "circle" | "triangle" | "diamond";
+  dotSpacingX: number;
+  dotSpacingY: number;
+  dotSize: number;
+  maxDotSize: number;
+  distortionRadius: number;
+  distortionStrength: number;
+  colorRest: { r: number; g: number; b: number; a: number };
+  colorActive: { r: number; g: number; b: number; a: number };
+  randomSizeRange?: number;
 }
 
-export default function InteractiveDotGrid({
-  dotSize = 1.0,
-  maxDotSize = 2.3,
-  dotSpacing = 26,
-  distortionRadius = 150,
-  distortionStrength = 30,
-  animationSpeed = 0.08,
-  backgroundColor = "#000000",
-}: InteractiveDotGridProps) {
+export default function InteractiveDotGrid() {
   const { resolvedTheme } = useTheme();
   const isLight = resolvedTheme === "light";
-  // Фон и базовый цвет точек зависят от темы: тёмная → чёрный фон + средне-зелёные
-  // точки; светлая → офф-уайт фон + насыщенные тёмно-зелёные точки.
-  const bg = isLight ? "#f5f5f0" : backgroundColor;
-  const restDotColor = isLight ? "rgba(26, 61, 43, 0.55)" : "rgba(40, 110, 70, 0.45)";
+
+  const [activePreset, setActivePreset] = useState<PresetName>("default");
+  
+  // Конфигурации пресетов в стиле Shaders.com
+  const presets: Record<PresetName, PresetConfig> = {
+    default: {
+      shape: "circle",
+      dotSpacingX: 26,
+      dotSpacingY: 26,
+      dotSize: 1.0,
+      maxDotSize: 2.3,
+      distortionRadius: 150,
+      distortionStrength: 30,
+      colorRest: isLight ? { r: 26, g: 61, b: 43, a: 0.55 } : { r: 40, g: 110, b: 70, a: 0.35 },
+      colorActive: { r: 232, g: 200, b: 122, a: 0.95 }, // Gold
+    },
+    triangles: {
+      shape: "triangle",
+      dotSpacingX: 32,
+      dotSpacingY: 32,
+      dotSize: 2.5,
+      maxDotSize: 4.5,
+      distortionRadius: 160,
+      distortionStrength: 25,
+      colorRest: isLight ? { r: 100, g: 100, b: 100, a: 0.4 } : { r: 130, g: 130, b: 130, a: 0.35 },
+      colorActive: isLight ? { r: 0, g: 0, b: 0, a: 0.85 } : { r: 255, g: 255, b: 255, a: 0.9 }, // Серый в белый/черный
+    },
+    treeline: {
+      shape: "circle",
+      dotSpacingX: 18,
+      dotSpacingY: 70, // Сближены по горизонтали, отдалены по вертикали
+      dotSize: 1.2,
+      maxDotSize: 3.5,
+      distortionRadius: 180,
+      distortionStrength: 40,
+      colorRest: isLight ? { r: 15, g: 46, b: 25, a: 0.6 } : { r: 34, g: 197, b: 94, a: 0.3 }, // Лесной зеленый
+      colorActive: { r: 163, g: 230, b: 53, a: 0.9 }, // Лайм
+      randomSizeRange: 1.5, // Разброс размеров
+    },
+    wallpaper: {
+      shape: "diamond",
+      dotSpacingX: 30,
+      dotSpacingY: 30,
+      dotSize: 1.5,
+      maxDotSize: 3.2,
+      distortionRadius: 140,
+      distortionStrength: 20,
+      colorRest: isLight ? { r: 139, g: 92, b: 26, a: 0.5 } : { r: 189, g: 149, b: 91, a: 0.4 }, // Бронза
+      colorActive: { r: 232, g: 200, b: 122, a: 0.95 }, // Золото
+    },
+  };
+
+  const currentConfig = presets[activePreset];
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const mousePos = useRef({ x: -10000, y: -10000 });
@@ -39,11 +85,11 @@ export default function InteractiveDotGrid({
       currentY: number;
       vx: number;
       vy: number;
-      color: string;
-      size: number;
+      sizeOffset: number;
     }>
   >([]);
 
+  // Инициализация точек при изменении размера экрана или пресета
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -51,16 +97,22 @@ export default function InteractiveDotGrid({
     if (!ctx) return;
 
     let dpr = 1;
-    
+    let animationFrameId: number;
+
     const initializeDots = (width: number, height: number) => {
-      const cols = Math.ceil(width / dotSpacing) + 1;
-      const rows = Math.ceil(height / dotSpacing) + 1;
+      const cols = Math.ceil(width / currentConfig.dotSpacingX) + 1;
+      const rows = Math.ceil(height / currentConfig.dotSpacingY) + 1;
       const dots = [];
 
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
-          const x = col * dotSpacing;
-          const y = row * dotSpacing;
+          const x = col * currentConfig.dotSpacingX;
+          const y = row * currentConfig.dotSpacingY;
+          // Добавляем случайный разброс размера для лесного пресета
+          const sizeOffset = currentConfig.randomSizeRange
+            ? (Math.random() - 0.5) * currentConfig.randomSizeRange
+            : 0;
+
           dots.push({
             originalX: x,
             originalY: y,
@@ -68,8 +120,7 @@ export default function InteractiveDotGrid({
             currentY: y,
             vx: 0,
             vy: 0,
-            color: restDotColor,
-            size: dotSize,
+            sizeOffset,
           });
         }
       }
@@ -108,12 +159,7 @@ export default function InteractiveDotGrid({
     window.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseleave", handleMouseLeave);
 
-    const GREEN = isLight
-      ? { r: 26, g: 61, b: 43, a: 0.55 } // тёмно-зелёный для светлого фона
-      : { r: 40, g: 110, b: 70, a: 0.35 }; // Forest Green
-    const GOLD = { r: 232, g: 200, b: 122, a: 0.95 }; // Gold
-
-    let animationFrameId: number;
+    const bg = isLight ? "#f5f5f0" : "#000000";
 
     const animate = () => {
       ctx.fillStyle = bg;
@@ -123,21 +169,35 @@ export default function InteractiveDotGrid({
       const mx = mousePos.current.x;
       const my = mousePos.current.y;
 
+      // Отрисовка интерактивного свечения (Glow) под курсором
       if (mx !== -10000 && my !== -10000) {
-        const glowGrad = ctx.createRadialGradient(mx, my, 2, mx, my, distortionRadius * 1.3);
-        glowGrad.addColorStop(0, "rgba(26, 80, 46, 0.28)");
-        glowGrad.addColorStop(0.3, "rgba(232, 200, 122, 0.08)");
-        glowGrad.addColorStop(0.6, "rgba(26, 80, 46, 0.02)");
+        const glowGrad = ctx.createRadialGradient(
+          mx,
+          my,
+          2,
+          mx,
+          my,
+          currentConfig.distortionRadius * 1.3
+        );
+        glowGrad.addColorStop(
+          0,
+          isLight ? "rgba(26, 61, 43, 0.15)" : "rgba(40, 110, 70, 0.22)"
+        );
+        glowGrad.addColorStop(
+          0.4,
+          isLight ? "rgba(232, 200, 122, 0.05)" : "rgba(232, 200, 122, 0.07)"
+        );
         glowGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
         
         ctx.save();
         ctx.fillStyle = glowGrad;
         ctx.beginPath();
-        ctx.arc(mx, my, distortionRadius * 1.3, 0, Math.PI * 2);
+        ctx.arc(mx, my, currentConfig.distortionRadius * 1.3, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }
 
+      // Отрисовка точек
       for (let i = 0; i < dots.length; i++) {
         const dot = dots[i];
         const dx = mx - dot.originalX;
@@ -148,16 +208,18 @@ export default function InteractiveDotGrid({
         let targetY = dot.originalY;
         let force = 0;
 
-        if (distance < distortionRadius) {
-          const normDist = distance / distortionRadius;
+        // Физика отталкивания от мыши
+        if (distance < currentConfig.distortionRadius) {
+          const normDist = distance / currentConfig.distortionRadius;
           force = Math.sqrt(1 - normDist * normDist);
           
           const angle = Math.atan2(dot.originalY - my, dot.originalX - mx);
 
-          targetX = dot.originalX + Math.cos(angle) * force * distortionStrength;
-          targetY = dot.originalY + Math.sin(angle) * force * distortionStrength;
+          targetX = dot.originalX + Math.cos(angle) * force * currentConfig.distortionStrength;
+          targetY = dot.originalY + Math.sin(angle) * force * currentConfig.distortionStrength;
         }
 
+        // Пружинный эффект
         const springK = 0.06;
         const damping = 0.82;
         
@@ -170,24 +232,51 @@ export default function InteractiveDotGrid({
         dot.currentX += dot.vx;
         dot.currentY += dot.vy;
 
-        const r = Math.round(GREEN.r + (GOLD.r - GREEN.r) * force);
-        const g = Math.round(GREEN.g + (GOLD.g - GREEN.g) * force);
-        const b = Math.round(GREEN.b + (GOLD.b - GREEN.b) * force);
-        const a = GREEN.a + (GOLD.a - GREEN.a) * force;
+        // Расчет цвета (смешивание базового и активного)
+        const rest = currentConfig.colorRest;
+        const active = currentConfig.colorActive;
+        const r = Math.round(rest.r + (active.r - rest.r) * force);
+        const g = Math.round(rest.g + (active.g - rest.g) * force);
+        const b = Math.round(rest.b + (active.b - rest.b) * force);
+        const a = rest.a + (active.a - rest.a) * force;
         
-        const size = dotSize + (maxDotSize - dotSize) * force;
+        const baseSize = currentConfig.dotSize + dot.sizeOffset;
+        const size = Math.max(0.5, baseSize + (currentConfig.maxDotSize - baseSize) * force);
 
-        if (force > 0.02) {
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+
+        // Отрисовка фигуры в зависимости от выбранной формы пресета
+        if (currentConfig.shape === "circle") {
+          // Рисуем мягкое свечение вокруг активных кругов
+          if (force > 0.02) {
+            ctx.beginPath();
+            ctx.arc(dot.currentX, dot.currentY, size * 2.8, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a * 0.12 * force})`;
+            ctx.fill();
+            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+          }
           ctx.beginPath();
-          ctx.arc(dot.currentX, dot.currentY, size * 2.8, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a * 0.12 * force})`;
+          ctx.arc(dot.currentX, dot.currentY, size / 2, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (currentConfig.shape === "triangle") {
+          ctx.beginPath();
+          const side = size * 2.0;
+          const h = (Math.sqrt(3) / 2) * side;
+          ctx.moveTo(dot.currentX, dot.currentY - h / 2);
+          ctx.lineTo(dot.currentX - side / 2, dot.currentY + h / 2);
+          ctx.lineTo(dot.currentX + side / 2, dot.currentY + h / 2);
+          ctx.closePath();
+          ctx.fill();
+        } else if (currentConfig.shape === "diamond") {
+          ctx.beginPath();
+          const radius = size * 1.5;
+          ctx.moveTo(dot.currentX, dot.currentY - radius);
+          ctx.lineTo(dot.currentX + radius, dot.currentY);
+          ctx.lineTo(dot.currentX, dot.currentY + radius);
+          ctx.lineTo(dot.currentX - radius, dot.currentY);
+          ctx.closePath();
           ctx.fill();
         }
-
-        ctx.beginPath();
-        ctx.arc(dot.currentX, dot.currentY, size / 2, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
-        ctx.fill();
       }
 
       animationFrameId = requestAnimationFrame(animate);
@@ -201,13 +290,61 @@ export default function InteractiveDotGrid({
       document.removeEventListener("mouseleave", handleMouseLeave);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [dotSize, maxDotSize, dotSpacing, distortionRadius, distortionStrength, animationSpeed, bg, restDotColor]);
+  }, [activePreset, isLight]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 w-full h-screen -z-10 block pointer-events-none"
-      style={{ background: bg }}
-    />
+    <>
+      <canvas
+        ref={canvasRef}
+        className="fixed inset-0 w-full h-screen -z-10 block pointer-events-none"
+      />
+
+      {/* Интерактивная панель переключения пресетов (тестовая версия) */}
+      <div className="fixed bottom-6 left-6 z-50 flex items-center gap-2 bg-[#1F2121]/80 backdrop-blur-xl border border-white/10 px-3 py-2 rounded-full shadow-lg shadow-black/40 pointer-events-auto">
+        <span className="text-[10px] uppercase tracking-wider text-zinc-400 font-mono pl-2 pr-1 select-none">
+          Presets:
+        </span>
+        <button
+          onClick={() => setActivePreset("default")}
+          className={`px-3 py-1 text-[11px] font-medium rounded-full transition-all duration-200 cursor-pointer ${
+            activePreset === "default"
+              ? "bg-gold text-black font-semibold shadow"
+              : "text-zinc-300 hover:text-white hover:bg-white/5"
+          }`}
+        >
+          Default
+        </button>
+        <button
+          onClick={() => setActivePreset("triangles")}
+          className={`px-3 py-1 text-[11px] font-medium rounded-full transition-all duration-200 cursor-pointer ${
+            activePreset === "triangles"
+              ? "bg-gold text-black font-semibold shadow"
+              : "text-zinc-300 hover:text-white hover:bg-white/5"
+          }`}
+        >
+          Triangles
+        </button>
+        <button
+          onClick={() => setActivePreset("treeline")}
+          className={`px-3 py-1 text-[11px] font-medium rounded-full transition-all duration-200 cursor-pointer ${
+            activePreset === "treeline"
+              ? "bg-gold text-black font-semibold shadow"
+              : "text-zinc-300 hover:text-white hover:bg-white/5"
+          }`}
+        >
+          Tree Line
+        </button>
+        <button
+          onClick={() => setActivePreset("wallpaper")}
+          className={`px-3 py-1 text-[11px] font-medium rounded-full transition-all duration-200 cursor-pointer ${
+            activePreset === "wallpaper"
+              ? "bg-gold text-black font-semibold shadow"
+              : "text-zinc-300 hover:text-white hover:bg-white/5"
+          }`}
+        >
+          Wallpaper
+        </button>
+      </div>
+    </>
   );
 }
