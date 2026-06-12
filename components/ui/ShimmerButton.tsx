@@ -1,6 +1,7 @@
 "use client";
 
 import React, { CSSProperties, ReactNode } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 
 interface ShimmerButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
@@ -24,6 +25,8 @@ export default function ShimmerButton({
   variant = "default",
   ...props
 }: ShimmerButtonProps) {
+  const shouldReduceMotion = useReducedMotion();
+
   // Выбираем цвет шиммера в зависимости от брендового варианта (зеленый DDC или золото NBK)
   const defaultShimmerColor =
     variant === "forest"
@@ -34,8 +37,14 @@ export default function ShimmerButton({
 
   const color = shimmerColor || defaultShimmerColor;
 
+  const hoverAnimation = shouldReduceMotion ? {} : { scale: 1.02, y: -1 };
+  const tapAnimation = shouldReduceMotion ? {} : { scale: 0.97 };
+  const springTransition = shouldReduceMotion
+    ? { duration: 0.1 }
+    : { type: "spring", stiffness: 400, damping: 20, mass: 0.5 };
+
   return (
-    <button
+    <motion.button
       style={
         {
           "--shimmer-color": color,
@@ -49,8 +58,11 @@ export default function ShimmerButton({
           WebkitBackdropFilter: "blur(8px) saturate(160%)",
         } as CSSProperties
       }
-      className={`group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden border border-glass-border px-6 py-3 text-foreground transition-all duration-300 hover:scale-105 active:scale-95 ${className}`}
-      {...props}
+      className={`group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden border border-glass-border px-6 py-3 text-foreground transition-[border-color,background-color] duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 focus-visible:ring-offset-2 ${className}`}
+      whileHover={hoverAnimation}
+      whileTap={tapAnimation}
+      transition={springTransition}
+      {...(props as any)}
     >
       {/* Эффект мерцающего свечения (Шиммер) */}
       <div className="absolute inset-0 z-[-1] overflow-hidden [border-radius:var(--border-radius)] [mask-image:radial-gradient(ellipse_at_center,black,transparent)]">
@@ -73,6 +85,6 @@ export default function ShimmerButton({
       <div className="relative z-10 flex items-center gap-2 font-medium tracking-wide">
         {children}
       </div>
-    </button>
+    </motion.button>
   );
 }

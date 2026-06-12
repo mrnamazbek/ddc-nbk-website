@@ -1,11 +1,12 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import Image from "next/image";
 import { CometCard } from "@/components/ui/comet-card";
+import { cn } from "@/lib/utils";
 
 interface Leader {
   id: string;
@@ -13,6 +14,68 @@ interface Leader {
   role: { ru: string; en: string; kz: string };
   img: string;
   desc?: { ru: string; en: string; kz: string };
+}
+
+function LeaderCard({
+  leader,
+  locale,
+  isChairman = false,
+  isDeputy = false,
+  sizes = "320px",
+  cometCardClass = ""
+}: {
+  leader: Leader;
+  locale: "ru" | "en" | "kz";
+  isChairman?: boolean;
+  isDeputy?: boolean;
+  sizes?: string;
+  cometCardClass?: string;
+}) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const tag = isChairman ? "#CHAIRMAN" : isDeputy ? "#DEPUTY" : null;
+
+  return (
+    <CometCard className={cn("p-4 bg-charcoal/40 border border-glass-border rounded-[16px] shadow-xl group", cometCardClass)}>
+      <div className={cn(
+        "relative aspect-[3/4] w-full rounded-[12px] overflow-hidden bg-neutral-900 border border-white/5 mb-4",
+        !isLoaded && "animate-pulse bg-zinc-800"
+      )}>
+        <Image
+          src={leader.img}
+          alt={leader.name[locale]}
+          fill
+          sizes={sizes}
+          onLoad={() => setIsLoaded(true)}
+          className={cn(
+            "object-cover saturate-[0.85] contrast-[1.05] transition-transform duration-700 ease-out group-hover:scale-105",
+            !isLoaded ? "opacity-0" : "opacity-100"
+          )}
+        />
+      </div>
+      <div className="font-sans">
+        {tag && (
+          <div className={cn(
+            "text-[9px] font-mono tracking-[0.2em] uppercase mb-1",
+            isChairman ? "text-gold" : "text-zinc-500"
+          )}>
+            {tag}
+          </div>
+        )}
+        <h4 className={cn(
+          "font-bold text-foreground mb-1 leading-tight",
+          isChairman ? "text-lg" : "text-base"
+        )}>
+          {leader.name[locale]}
+        </h4>
+        <p className={cn(
+          "font-mono uppercase tracking-wider leading-relaxed",
+          isChairman ? "text-xs text-zinc-400" : isDeputy ? "text-[10px] text-zinc-400" : "text-[10px] text-gold"
+        )}>
+          {leader.role[locale]}
+        </p>
+      </div>
+    </CometCard>
+  );
 }
 
 export default function Leadership() {
@@ -288,25 +351,7 @@ export default function Leadership() {
               {/* 1. Председатель Совета Директоров (по центру) */}
               <div className="tree-node w-full flex flex-col items-center mb-6">
                 <div className="tree-card-wrapper w-full max-w-[340px]">
-                  <CometCard className="p-4 bg-charcoal/40 border border-glass-border rounded-[16px] shadow-xl">
-                    <div className="relative aspect-[3/4] w-full rounded-[12px] overflow-hidden bg-neutral-900 border border-white/5 mb-4">
-                      <Image
-                        src={boardOfDirectors[0].img}
-                        alt={boardOfDirectors[0].name[locale]}
-                        fill
-                        sizes="320px"
-                        className="object-cover saturate-[0.85] contrast-[1.05]"
-                      />
-                    </div>
-                    <div className="font-sans">
-                      <h4 className="text-base font-bold text-foreground mb-1 leading-tight">
-                        {boardOfDirectors[0].name[locale]}
-                      </h4>
-                      <p className="text-[10px] text-gold font-mono uppercase tracking-wider leading-relaxed">
-                        {boardOfDirectors[0].role[locale]}
-                      </p>
-                    </div>
-                  </CometCard>
+                  <LeaderCard leader={boardOfDirectors[0]} locale={locale} />
                 </div>
               </div>
 
@@ -333,25 +378,7 @@ export default function Leadership() {
                     <div className="hidden md:block absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-gold border border-black z-20" />
 
                     <div className="tree-card-wrapper w-full max-w-[340px] relative z-10">
-                      <CometCard className="p-4 bg-charcoal/40 border border-glass-border rounded-[16px] shadow-xl">
-                        <div className="relative aspect-[3/4] w-full rounded-[12px] overflow-hidden bg-neutral-900 border border-white/5 mb-4">
-                          <Image
-                            src={leader.img}
-                            alt={leader.name[locale]}
-                            fill
-                            sizes="320px"
-                            className="object-cover saturate-[0.85] contrast-[1.05]"
-                          />
-                        </div>
-                        <div className="font-sans">
-                          <h4 className="text-base font-bold text-foreground mb-1 leading-tight">
-                            {leader.name[locale]}
-                          </h4>
-                          <p className="text-[10px] text-zinc-400 font-mono uppercase tracking-wider leading-relaxed">
-                            {leader.role[locale]}
-                          </p>
-                        </div>
-                      </CometCard>
+                      <LeaderCard leader={leader} locale={locale} />
                     </div>
                   </div>
                 );
@@ -376,28 +403,13 @@ export default function Leadership() {
             {/* 1. Председатель Правления (Карточка + Обращение) */}
             <div className="tree-node w-full flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 mb-24 max-w-5xl mx-auto">
               <div className="tree-card-wrapper w-full max-w-[360px] flex-shrink-0">
-                <CometCard className="p-5 bg-charcoal/50 border border-gold/20 rounded-[16px] shadow-2xl">
-                  <div className="relative aspect-[3/4] w-full rounded-[12px] overflow-hidden bg-neutral-900 border border-white/5 mb-4">
-                    <Image
-                      src={managementBoard[0].img}
-                      alt={managementBoard[0].name[locale]}
-                      fill
-                      sizes="360px"
-                      className="object-cover saturate-[0.9] contrast-[1.05]"
-                    />
-                  </div>
-                  <div className="font-sans">
-                    <div className="text-[9px] font-mono tracking-[0.2em] text-gold uppercase mb-1">
-                      #CHAIRMAN
-                    </div>
-                    <h4 className="text-lg font-bold text-foreground mb-1 leading-tight">
-                      {managementBoard[0].name[locale]}
-                    </h4>
-                    <p className="text-xs text-zinc-400 font-mono uppercase tracking-wider">
-                      {managementBoard[0].role[locale]}
-                    </p>
-                  </div>
-                </CometCard>
+                <LeaderCard
+                  leader={managementBoard[0]}
+                  locale={locale}
+                  isChairman
+                  sizes="360px"
+                  cometCardClass="bg-charcoal/50 border-gold/20 shadow-2xl"
+                />
               </div>
 
               {/* Обращение Председателя */}
@@ -427,28 +439,7 @@ export default function Leadership() {
               {managementBoard.slice(1).map((leader) => (
                 <div key={leader.id} className="tree-node flex flex-col items-center">
                   <div className="tree-card-wrapper w-full max-w-[320px]">
-                    <CometCard className="p-4 bg-charcoal/40 border border-glass-border rounded-[16px] shadow-xl">
-                      <div className="relative aspect-[3/4] w-full rounded-[12px] overflow-hidden bg-neutral-900 border border-white/5 mb-4">
-                        <Image
-                          src={leader.img}
-                          alt={leader.name[locale]}
-                          fill
-                          sizes="320px"
-                          className="object-cover saturate-[0.85] contrast-[1.05]"
-                        />
-                      </div>
-                      <div className="font-sans">
-                        <div className="text-[9px] font-mono tracking-[0.2em] text-zinc-500 uppercase mb-1">
-                          #DEPUTY
-                        </div>
-                        <h4 className="text-base font-bold text-foreground mb-1 leading-tight">
-                          {leader.name[locale]}
-                        </h4>
-                        <p className="text-[10px] text-zinc-400 font-mono uppercase tracking-wider leading-relaxed">
-                          {leader.role[locale]}
-                        </p>
-                      </div>
-                    </CometCard>
+                    <LeaderCard leader={leader} locale={locale} isDeputy />
                   </div>
                 </div>
               ))}

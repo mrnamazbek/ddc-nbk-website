@@ -2,6 +2,7 @@ import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import { MapPin, Clock, ArrowRight, CheckCircle2, Award, Zap, Compass, Eye, Shield, Users2, Landmark } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface Job {
   title: string;
@@ -317,45 +318,53 @@ export default async function CareersPage() {
 
           <div className="grid grid-cols-1 gap-6">
             {jobs.map((job, idx) => (
-              <GlassCard key={idx} className="border-white/5 hover:border-gold/20 p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 transition-all duration-300">
-                <div className="flex flex-col gap-4">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Badge variant={job.badgeVariant}>{job.department}</Badge>
-                    <span className="text-xs text-zinc-500">•</span>
-                    <span className="text-xs text-zinc-400 font-light flex items-center gap-1">
-                      <MapPin className="w-3.5 h-3.5" />
-                      {job.location}
-                    </span>
-                    <span className="text-xs text-zinc-500">•</span>
-                    <span className="text-xs text-zinc-400 font-light flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5" />
-                      {job.type}
-                    </span>
-                  </div>
-                  
-                  <h3 className="text-lg sm:text-xl font-bold text-white tracking-wide">
-                    {job.title}
-                  </h3>
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: idx * 0.08 }}
+              >
+                <GlassCard className="border-white/5 hover:border-gold/20 p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 transition-all duration-300">
+                  <div className="flex flex-col gap-4">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <Badge variant={job.badgeVariant}>{job.department}</Badge>
+                      <span className="text-xs text-zinc-500">•</span>
+                      <span className="text-xs text-zinc-400 font-light flex items-center gap-1">
+                        <MapPin className="w-3.5 h-3.5" />
+                        {job.location}
+                      </span>
+                      <span className="text-xs text-zinc-500">•</span>
+                      <span className="text-xs text-zinc-400 font-light flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5" />
+                        {job.type}
+                      </span>
+                    </div>
+                    
+                    <h3 className="text-lg sm:text-xl font-bold text-white tracking-wide">
+                      {job.title}
+                    </h3>
 
-                  <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-zinc-500 font-light">
-                    <span>Опыт работы: <strong className="text-zinc-300 font-semibold">{job.experience}</strong></span>
-                    <span>Заработная плата: <strong className="text-gold font-semibold">{job.salary}</strong></span>
-                    {job.published && (
-                      <>
-                        <span className="text-zinc-600">|</span>
-                        <span>Опубликовано: <strong className="text-zinc-400">{job.published}</strong></span>
-                      </>
-                    )}
+                    <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-zinc-500 font-light">
+                      <span>Опыт работы: <strong className="text-zinc-300 font-semibold">{job.experience}</strong></span>
+                      <span>Заработная плата: <strong className="text-gold font-semibold">{job.salary}</strong></span>
+                      {job.published && (
+                        <>
+                          <span className="text-zinc-600">|</span>
+                          <span>Опубликовано: <strong className="text-zinc-400">{job.published}</strong></span>
+                        </>
+                      )}
+                    </div>
                   </div>
-                </div>
 
-                <a href={job.url} target="_blank" rel="noopener noreferrer" className="self-start md:self-auto">
-                  <Button variant="outline" className="flex items-center justify-center gap-2 group whitespace-nowrap">
-                    Откликнуться
-                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </Button>
-                </a>
-              </GlassCard>
+                  <a href={job.url} target="_blank" rel="noopener noreferrer" className="self-start md:self-auto">
+                    <Button variant="outline" className="flex items-center justify-center gap-2 group whitespace-nowrap">
+                      Откликнуться
+                      <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    </Button>
+                  </a>
+                </GlassCard>
+              </motion.div>
             ))}
           </div>
         </div>

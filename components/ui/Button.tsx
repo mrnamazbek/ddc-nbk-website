@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode, forwardRef } from "react";
-import { motion, HTMLMotionProps } from "framer-motion";
+import { motion, HTMLMotionProps, useReducedMotion } from "framer-motion";
 
 export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
   children: ReactNode;
@@ -12,8 +12,10 @@ export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children">
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ children, variant = "gold", size = "md", isMagnetic = false, className = "", ...props }, ref) => {
+    const shouldReduceMotion = useReducedMotion();
+
     // Базовые стили
-    const baseStyles = "inline-flex items-center justify-center font-medium transition-all duration-300 rounded-[var(--radius-button)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer";
+    const baseStyles = "inline-flex items-center justify-center font-medium transition-colors duration-200 rounded-[var(--radius-button)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer";
 
     // Стили вариантов
     let variantClass = "";
@@ -38,13 +40,21 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       </span>
     );
 
+    // Упругая пружинная анимация для премиального тактильного отклика
+    const hoverAnimation = shouldReduceMotion ? {} : { y: -1, scale: 1.02 };
+    const tapAnimation = shouldReduceMotion ? {} : { scale: 0.97 };
+    const springTransition = shouldReduceMotion
+      ? { duration: 0.1 }
+      : { type: "spring" as const, stiffness: 400, damping: 20, mass: 0.5 };
+
     return (
       <motion.button
         ref={ref}
         className={combinedClassName}
         data-variant={variant !== "ghost" ? variant : undefined}
-        whileHover={{ y: -2 }}
-        whileTap={{ scale: 0.98 }}
+        whileHover={hoverAnimation}
+        whileTap={tapAnimation}
+        transition={springTransition}
         {...props}
       >
         {content}

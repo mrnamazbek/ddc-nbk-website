@@ -251,10 +251,33 @@ html.light .bg-white\/\[0\.08\] {
   background: var(--color-forest-mid);
 }
 
-/* Индикатор фокуса для доступности */
+/* Стилизация выделения текста и каретки */
+::selection {
+  background-color: var(--selection-bg);
+  color: var(--selection-text);
+}
+
+body {
+  caret-color: var(--caret-color);
+}
+
+/* Индикатор фокуса для доступности (золотой бренд-контур с отступом) */
 *:focus-visible {
-  outline: 2px solid var(--color-forest-light);
+  outline: 2px solid var(--color-gold);
   outline-offset: 4px;
+}
+
+/* Полоса прогресса скролла сверху страницы */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-forest-light) 0%, var(--color-gold) 50%, var(--color-gold-light) 100%);
+  transform-origin: 0%;
+  z-index: 100;
+  pointer-events: none;
 }
 
 /* ==========================================

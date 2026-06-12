@@ -143,6 +143,11 @@
   --duration-fast: 200ms;
   --duration-base: 350ms;
   --duration-slow: 600ms;
+
+  /* Токены выделения и каретки (Темная тема) */
+  --selection-bg: rgba(201, 168, 76, 0.3);
+  --selection-text: #FFFFFF;
+  --caret-color: #C9A84C;
 }
 
 /* ==========================================
@@ -171,4 +176,9 @@ html.light {
   
   --shadow-button: 0 4px 12px rgba(14, 36, 25, 0.08);
   --shadow-card: 0 16px 48px rgba(14, 36, 25, 0.05);
+
+  /* Токены выделения и каретки (Светлая тема) */
+  --selection-bg: rgba(26, 61, 43, 0.15);
+  --selection-text: #0E2419;
+  --caret-color: #1A3D2B;
 }

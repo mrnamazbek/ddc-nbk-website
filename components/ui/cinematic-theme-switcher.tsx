@@ -83,7 +83,7 @@ export default function CinematicThemeSwitcher() {
       <motion.button
         ref={toggleRef}
         onClick={handleToggle}
-        className="relative flex h-[44px] w-[72px] items-center rounded-full p-[5px] transition-all duration-300 focus:outline-none"
+        className="relative flex h-[44px] w-[72px] items-center rounded-full p-[5px] transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 focus-visible:ring-offset-2"
         style={{
           background: isDark
             ? 'radial-gradient(ellipse at top left, #1A3D2B 0%, #0F241A 45%, #08080a 100%)'

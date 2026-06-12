@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode, useRef } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
 
 interface GlassCardProps {
   children: ReactNode;
@@ -20,6 +20,7 @@ export default function GlassCard({
 }: GlassCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   // Motion-значения для отслеживания мыши (3D-наклон)
   const x = useMotionValue(0);
@@ -27,8 +28,8 @@ export default function GlassCard({
 
   // Настройка сглаживания для эффекта пружины
   const springConfig = { damping: 22, stiffness: 160, mass: 0.6 };
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [8, -8]), springConfig);
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-8, 8]), springConfig);
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], shouldReduceMotion ? [0, 0] : [6, -6]), springConfig);
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], shouldReduceMotion ? [0, 0] : [-6, 6]), springConfig);
 
   function handleMouseMove(event: React.MouseEvent<HTMLDivElement>) {
     if (!cardRef.current) return;
@@ -46,7 +47,7 @@ export default function GlassCard({
       glowRef.current.style.top = `${clientY}px`;
     }
 
-    if (!isTiltEnabled) return;
+    if (!isTiltEnabled || shouldReduceMotion) return;
     
     // Отключаем 3D-наклон на мобильных устройствах
     if (window.innerWidth < 1024) return;

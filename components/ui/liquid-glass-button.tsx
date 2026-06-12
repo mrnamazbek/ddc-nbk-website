@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
+import { motion, useReducedMotion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -61,7 +62,7 @@ const liquidbuttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-transparent hover:scale-105 duration-300 transition text-primary",
+        default: "bg-transparent text-primary",
         destructive:
           "bg-destructive text-foreground hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
         outline:
@@ -98,33 +99,40 @@ function LiquidButton({
   VariantProps<typeof liquidbuttonVariants> & {
     asChild?: boolean;
   }) {
-  const Comp = asChild ? Slot : "button";
+  const shouldReduceMotion = useReducedMotion();
+
+  const hoverAnimation = shouldReduceMotion ? {} : { scale: 1.02 };
+  const tapAnimation = shouldReduceMotion ? {} : { scale: 0.97 };
+  const springTransition = shouldReduceMotion 
+    ? { duration: 0.1 } 
+    : { type: "spring", stiffness: 400, damping: 20, mass: 0.5 };
 
   return (
-    <>
-      <Comp
-        data-slot="button"
-        className={cn(
-          "relative",
-          liquidbuttonVariants({ variant, size, className })
-        )}
-        {...props}
-      >
-        <div className="absolute top-0 left-0 z-0 h-full w-full rounded-full 
-            shadow-[0_0_6px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3px_rgba(0,0,0,0.9),inset_-3px_-3px_0.5px_-3px_rgba(0,0,0,0.85),inset_1px_1px_1px_-0.5px_rgba(0,0,0,0.6),inset_-1px_-1px_1px_-0.5px_rgba(0,0,0,0.6),inset_0_0_6px_6px_rgba(0,0,0,0.12),inset_0_0_2px_2px_rgba(0,0,0,0.06),0_0_12px_rgba(255,255,255,0.15)] 
-        transition-all 
-        dark:shadow-[0_0_8px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3.5px_rgba(255,255,255,0.09),inset_-3px_-3px_0.5px_-3.5px_rgba(255,255,255,0.85),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_1px_-0.5px_rgba(255,255,255,0.6),inset_0_0_6px_6px_rgba(255,255,255,0.12),inset_0_0_2px_2px_rgba(255,255,255,0.06),0_0_12px_rgba(0,0,0,0.15)]" />
-        <div
-          className="absolute top-0 left-0 isolate -z-10 h-full w-full overflow-hidden rounded-md"
-          style={{ backdropFilter: 'url("#container-glass")' }}
-        />
+    <motion.button
+      data-slot="button"
+      className={cn(
+        "relative",
+        liquidbuttonVariants({ variant, size, className })
+      )}
+      whileHover={hoverAnimation}
+      whileTap={tapAnimation}
+      transition={springTransition}
+      {...(props as any)}
+    >
+      <div className="absolute top-0 left-0 z-0 h-full w-full rounded-full 
+          shadow-[0_0_6px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3px_rgba(0,0,0,0.9),inset_-3px_-3px_0.5px_-3px_rgba(0,0,0,0.85),inset_1px_1px_1px_-0.5px_rgba(0,0,0,0.6),inset_-1px_-1px_1px_-0.5px_rgba(0,0,0,0.6),inset_0_0_6px_6px_rgba(0,0,0,0.12),inset_0_0_2px_2px_rgba(0,0,0,0.06),0_0_12px_rgba(255,255,255,0.15)] 
+      transition-all 
+      dark:shadow-[0_0_8px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3.5px_rgba(255,255,255,0.09),inset_-3px_-3px_0.5px_-3.5px_rgba(255,255,255,0.85),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_1px_-0.5px_rgba(255,255,255,0.6),inset_0_0_6px_6px_rgba(255,255,255,0.12),inset_0_0_2px_2px_rgba(255,255,255,0.06),0_0_12px_rgba(0,0,0,0.15)]" />
+      <div
+        className="absolute top-0 left-0 isolate -z-10 h-full w-full overflow-hidden rounded-md"
+        style={{ backdropFilter: 'url("#container-glass")' }}
+      />
 
-        <div className="pointer-events-none z-10">
-          {children}
-        </div>
-        <GlassFilter />
-      </Comp>
-    </>
+      <div className="pointer-events-none z-10">
+        {children}
+      </div>
+      <GlassFilter />
+    </motion.button>
   );
 }
 
@@ -235,24 +243,40 @@ const metalButtonVariants = (
   variant: ColorVariant = "default",
   isPressed: boolean,
   isHovered: boolean,
-  isTouchDevice: boolean
+  isTouchDevice: boolean,
+  shouldReduceMotion: boolean
 ) => {
   const colors = colorVariants[variant];
-  const transitionStyle = "all 250ms cubic-bezier(0.1, 0.4, 0.2, 1)";
+  // Используем CSS-переменные дизайн-системы для переходов
+  const transitionStyle = shouldReduceMotion 
+    ? "none" 
+    : "all var(--duration-fast) var(--ease-spring)";
+
+  const wrapperTransform = shouldReduceMotion
+    ? "none"
+    : isPressed
+    ? "translateY(1px) scale(0.97)"
+    : isHovered && !isTouchDevice
+    ? "translateY(-1px) scale(1.02)"
+    : "translateY(0) scale(1)";
+
+  const buttonTransform = shouldReduceMotion
+    ? "none"
+    : isPressed
+    ? "scale(0.97)"
+    : "scale(1)";
 
   return {
     wrapper: cn(
-      "relative inline-flex transform-gpu rounded-[var(--radius-button)] p-[1.25px] will-change-transform",
+      "relative inline-flex transform-gpu rounded-[var(--radius-button)] p-[1.25px] will-change-transform focus-within:ring-2 focus-within:ring-gold/70 focus-within:ring-offset-2",
       colors.outer
     ),
     wrapperStyle: {
-      transform: isPressed
-        ? "translateY(2.5px) scale(0.99)"
-        : "translateY(0) scale(1)",
+      transform: wrapperTransform,
       boxShadow: isPressed
         ? "0 1px 2px rgba(0, 0, 0, 0.15)"
         : isHovered && !isTouchDevice
-        ? "0 4px 12px rgba(0, 0, 0, 0.12)"
+        ? "0 6px 16px rgba(0, 0, 0, 0.16), var(--shadow-gold)"
         : "0 3px 8px rgba(0, 0, 0, 0.08)",
       transition: transitionStyle,
       transformOrigin: "center center",
@@ -268,13 +292,13 @@ const metalButtonVariants = (
         isHovered && !isPressed && !isTouchDevice ? "brightness(1.05)" : "none",
     },
     button: cn(
-      "relative z-10 m-[1px] rounded-[calc(var(--radius-button)-1px)] inline-flex h-11 transform-gpu cursor-pointer items-center justify-center overflow-hidden px-6 py-2 text-sm leading-none font-semibold will-change-transform outline-none",
+      "relative z-10 m-[1px] rounded-[calc(var(--radius-button)-1px)] inline-flex h-11 transform-gpu cursor-pointer items-center justify-center overflow-hidden px-6 py-2 text-sm leading-none font-semibold will-change-transform outline-none focus-visible:outline-none",
       colors.button,
       colors.textColor,
       colors.textShadow
     ),
     buttonStyle: {
-      transform: isPressed ? "scale(0.97)" : "scale(1)",
+      transform: buttonTransform,
       transition: transitionStyle,
       transformOrigin: "center center",
       filter:
@@ -301,6 +325,7 @@ const MetalButton = React.forwardRef<HTMLButtonElement, MetalButtonProps>(
     const [isPressed, setIsPressed] = React.useState(false);
     const [isHovered, setIsHovered] = React.useState(false);
     const [isTouchDevice, setIsTouchDevice] = React.useState(false);
+    const shouldReduceMotion = useReducedMotion();
 
     React.useEffect(() => {
       setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
@@ -311,7 +336,8 @@ const MetalButton = React.forwardRef<HTMLButtonElement, MetalButtonProps>(
       variant,
       isPressed,
       isHovered,
-      isTouchDevice
+      isTouchDevice,
+      !!shouldReduceMotion
     );
 
     const handleInternalMouseDown = () => {

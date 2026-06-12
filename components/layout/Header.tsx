@@ -30,7 +30,7 @@ function LanguageSwitcher({
     <div
       role="group"
       aria-label="Тіл / Язык / Language"
-      className="inline-flex items-center gap-0.5 liquid-glass rounded-full p-1"
+      className="inline-flex items-center gap-0.5 liquid-glass rounded-full p-1 relative z-10"
     >
       {LANGUAGES.map((lng) => {
         const active = locale === lng;
@@ -41,10 +41,17 @@ function LanguageSwitcher({
             onClick={() => onSwitch(lng)}
             aria-label={lng.toUpperCase()}
             aria-pressed={active}
-            className={`font-mono font-bold tracking-wider rounded-full transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 flex items-center justify-center ${
+            className={`font-mono font-bold tracking-wider rounded-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 flex items-center justify-center relative transition-colors duration-300 ${
               size === "lg" ? "px-4 min-h-[44px] min-w-[44px] text-sm" : "px-3 py-1.5 min-h-[32px] min-w-[32px] text-xs"
-            } ${active ? "bg-gold text-black" : "text-muted hover:text-gold"}`}
+            } ${active ? "text-black z-10 font-bold" : "text-muted hover:text-gold z-10"}`}
           >
+            {active && (
+              <motion.div
+                layoutId={`activeLanguageBg-${size}`}
+                className="absolute inset-0 bg-gold rounded-full -z-10"
+                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              />
+            )}
             {lng.toUpperCase()}
           </button>
         );
@@ -248,9 +255,15 @@ export default function Header() {
                 return (
                   <motion.div
                     key={link.name}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.05 }}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 24,
+                      delay: idx * 0.04
+                    }}
                   >
                     <TransitionLink
                       href={link.href}
