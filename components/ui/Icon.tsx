@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { motion, useReducedMotion } from "framer-motion";
 import { Icon as IconifyIcon } from "@iconify/react";
 import * as Iconsax from "iconsax-react";
 import { useIconSystem, IconSystem } from "../theme/IconSystemProvider";
@@ -219,34 +218,13 @@ const iconsaxMap: Record<IconName, React.ComponentType<any>> = {
 
 export default function Icon({ name, className, size = 20, animate = true }: IconProps) {
   const { iconSystem } = useIconSystem();
-  const shouldReduceMotion = useReducedMotion();
-
-  // Настройка анимаций в зависимости от типа иконки
-  const isDirectional = ["arrow-right", "arrow-left", "arrow-up-right"].includes(name);
-  const isToggle = ["menu", "x", "sun", "moon"].includes(name);
-
-  // Варианты анимации
-  const variants = {
-    initial: { scale: 1, x: 0, y: 0, rotate: 0 },
-    hover: shouldReduceMotion || !animate ? {} : {
-      scale: isToggle ? 1.05 : 1,
-      rotate: name === "refresh" ? 180 : 0,
-      x: name === "arrow-right" ? 4 : name === "arrow-left" ? -4 : 0,
-      y: name === "arrow-up-right" ? -3 : 0,
-      transition: { type: "spring" as const, stiffness: 400, damping: 25 }
-    },
-    tap: shouldReduceMotion || !animate ? {} : {
-      scale: 0.9,
-      transition: { duration: 0.1 }
-    }
-  };
 
   // Отрисовка конкретной системы иконок
   const renderIconContent = () => {
     if (iconSystem === "iconsax") {
       const IconsaxComponent = iconsaxMap[name];
       if (IconsaxComponent) {
-        return <IconsaxComponent size={size} variant="linear" className="w-full h-full" />;
+        return <IconsaxComponent size={size} variant="Linear" className="w-full h-full" />;
       }
     }
 
@@ -260,16 +238,42 @@ export default function Icon({ name, className, size = 20, animate = true }: Ico
     return <IconifyIcon icon={mingcuteIcon} width={size} height={size} className="w-full h-full" />;
   };
 
+  // Вычисление классов анимации (CSS переходы, которые реагируют на .group-hover и direct hover)
+  const getAnimationClass = () => {
+    if (!animate) return "";
+    
+    const base = "transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]";
+    
+    switch (name) {
+      case "arrow-right":
+        return `${base} group-hover:translate-x-1 hover:translate-x-1`;
+      case "arrow-left":
+        return `${base} group-hover:-translate-x-1 hover:-translate-x-1`;
+      case "arrow-up-right":
+        return `${base} group-hover:translate-x-0.5 group-hover:-translate-y-0.5 hover:translate-x-0.5 hover:-translate-y-0.5`;
+      case "refresh":
+        return `${base} group-hover:rotate-180 hover:rotate-180 duration-500`;
+      case "menu":
+      case "x":
+      case "sun":
+      case "moon":
+        return `${base} group-hover:scale-110 hover:scale-110 active:scale-95`;
+      default:
+        // Легкое масштабирование для остальных иконок
+        return `${base} group-hover:scale-105 hover:scale-105 active:scale-95`;
+    }
+  };
+
   return (
-    <motion.span
-      className={cn("inline-flex items-center justify-center shrink-0 text-current", className)}
+    <span
+      className={cn(
+        "inline-flex items-center justify-center shrink-0 text-current select-none", 
+        getAnimationClass(),
+        className
+      )}
       style={{ width: size, height: size }}
-      variants={variants}
-      initial="initial"
-      whileHover="hover"
-      whileTap="tap"
     >
       {renderIconContent()}
-    </motion.span>
+    </span>
   );
 }

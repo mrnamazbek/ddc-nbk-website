@@ -2,7 +2,6 @@ import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import Icon, { IconName } from "@/components/ui/Icon";
-import { motion } from "framer-motion";
 
 interface Job {
   title: string;
@@ -317,12 +316,10 @@ export default async function CareersPage() {
 
           <div className="grid grid-cols-1 gap-6">
             {jobs.map((job, idx) => (
-              <motion.div
+              <div
                 key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: idx * 0.08 }}
+                className="opacity-0 animate-[fadeIn_0.8s_ease-out_forwards]"
+                style={{ animationDelay: `${idx * 0.08}s` }}
               >
                 <GlassCard className="border-white/5 hover:border-gold/20 p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 transition-all duration-300">
                   <div className="flex flex-col gap-4">
@@ -363,7 +360,7 @@ export default async function CareersPage() {
                     </Button>
                   </a>
                 </GlassCard>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
