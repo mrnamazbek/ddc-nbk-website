@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ShieldCheck, Lock, ShieldAlert, Key, Globe, Eye } from "lucide-react";
+import Icon, { IconName } from "@/components/ui/Icon";
 import GlassCard from "@/components/ui/GlassCard";
 import { useTranslations } from "next-intl";
 
@@ -22,34 +22,34 @@ export default function SecurityPage() {
     },
   };
 
-  const pillars = [
+  const pillars: { icon: IconName; title: string; description: string }[] = [
     {
-      icon: ShieldCheck,
+      icon: "shield-check",
       title: t("p1Title"),
       description: t("p1Desc"),
     },
     {
-      icon: Lock,
+      icon: "lock",
       title: t("p2Title"),
       description: t("p2Desc"),
     },
     {
-      icon: ShieldAlert,
+      icon: "alert",
       title: t("p3Title"),
       description: t("p3Desc"),
     },
     {
-      icon: Key,
+      icon: "key",
       title: t("p4Title"),
       description: t("p4Desc"),
     },
     {
-      icon: Globe,
+      icon: "globe",
       title: t("p5Title"),
       description: t("p5Desc"),
     },
     {
-      icon: Eye,
+      icon: "eye",
       title: t("p6Title"),
       description: t("p6Desc"),
     },
@@ -91,12 +91,11 @@ export default function SecurityPage() {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           {pillars.map((pillar, idx) => {
-            const PillarIcon = pillar.icon;
             return (
               <motion.div key={idx} variants={itemVariants} className="h-full">
                 <GlassCard className="h-full flex flex-col p-8 border-border hover:border-gold/20">
                   <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6 shrink-0">
-                    <PillarIcon className="w-6 h-6" />
+                    <Icon name={pillar.icon} size={24} />
                   </div>
                   
                   <h3 className="text-lg font-sans font-semibold text-foreground tracking-wide mb-3">

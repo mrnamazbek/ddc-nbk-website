@@ -1,10 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Coins, Zap, ShieldCheck, Share2, BarChart3, Landmark, CheckCircle2 } from "lucide-react";
+import Icon, { IconName } from "@/components/ui/Icon";
 
 interface ServiceDetail {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: IconName;
   title: string;
   subtitle: string;
   description: string;
@@ -29,7 +29,7 @@ export default function ServicesPage() {
 
   const services: ServiceDetail[] = [
     {
-      icon: Coins,
+      icon: "coins",
       title: "Платформа Цифрового Тенге (CBDC)",
       subtitle: "Национальная цифровая валюта",
       description: "Создание гибридной архитектуры, объединяющей преимущества распределенных реестров и классической высокопроизводительной банковской структуры.",
@@ -41,7 +41,7 @@ export default function ServicesPage() {
       techStack: "Hyperledger Fabric, Solidity, Go, HSM Modules",
     },
     {
-      icon: Zap,
+      icon: "zap",
       title: "Система Мгновенных Платежей (СМП)",
       subtitle: "Клиринг и транзакции 24/7/365",
       description: "Обеспечение проведения мгновенных межбанковских платежей для физических и юридических лиц по номеру телефона или QR-коду.",
@@ -53,7 +53,7 @@ export default function ServicesPage() {
       techStack: "Java, Spring Boot, Kafka, PostgreSQL, ISO 20022",
     },
     {
-      icon: Landmark,
+      icon: "bank",
       title: "Межбанковский Клиринг и Расчеты",
       subtitle: "Стабильность финансового ядра",
       description: "Поддержка и модернизация систем межбанковского клиринга, обеспечивающих гарантированное проведение крупных финансовых расчетов.",
@@ -65,7 +65,7 @@ export default function ServicesPage() {
       techStack: "C++, Python, Oracle DB, IBM WebSphere MQ",
     },
     {
-      icon: ShieldCheck,
+      icon: "shield-check",
       title: "Кибербезопасность Инфраструктуры",
       subtitle: "Государственный класс защиты",
       description: "Проектирование и сопровождение комплексной защиты финансовой сети Национального Банка от внешних кибератак и утечек.",
@@ -77,7 +77,7 @@ export default function ServicesPage() {
       techStack: "Fortinet, HSM, Linux, Hardware Crypto Units",
     },
     {
-      icon: Share2,
+      icon: "share",
       title: "Инфраструктура Open API / Open Banking",
       subtitle: "Финтех-экосистема",
       description: "Стандартизация и развитие единого шлюза открытых API для создания бесшовного взаимодействия между банками и финтех-компаниями.",
@@ -89,7 +89,7 @@ export default function ServicesPage() {
       techStack: "Node.js, Express, OAuth2, GraphQL, Kong API Gateway",
     },
     {
-      icon: BarChart3,
+      icon: "chart",
       title: "Финансовая Аналитика и Big Data",
       subtitle: "Интеллектуальный анализ рынка",
       description: "Обработка и анализ больших объемов неперсонализированных финансовых транзакций для макроэкономического прогнозирования.",
@@ -138,7 +138,6 @@ export default function ServicesPage() {
           className="space-y-12"
         >
           {services.map((service, idx) => {
-            const Icon = service.icon;
             return (
               <motion.div
                 key={idx}
@@ -150,7 +149,7 @@ export default function ServicesPage() {
                   {/* Иконка и заголовки */}
                   <div className="lg:col-span-4">
                     <div className="w-14 h-14 rounded-2xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
-                      <Icon className="w-7 h-7" />
+                      <Icon name={service.icon} size={24} />
                     </div>
                     <span className="text-xs text-gold/80 font-medium tracking-widest uppercase block mb-2">
                       {service.subtitle}
@@ -178,7 +177,7 @@ export default function ServicesPage() {
                     <ul className="space-y-3">
                       {service.features.map((feature, fIdx) => (
                         <li key={fIdx} className="flex items-start gap-3 text-sm text-zinc-400 font-light leading-relaxed">
-                          <CheckCircle2 className="w-4.5 h-4.5 text-forest-light shrink-0 mt-0.5" />
+                          <Icon name="check-circle" size={16} className="text-forest-light shrink-0 mt-0.5" />
                           <span>{feature}</span>
                         </li>
                       ))}

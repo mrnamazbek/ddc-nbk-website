@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import GlassCard from "@/components/ui/GlassCard";
-import { Calendar, ArrowRight } from "lucide-react";
+import Icon from "@/components/ui/Icon";
 
 interface NewsArticle {
   category: string;
@@ -133,7 +133,7 @@ export default function NewsPage() {
                   <div>
                     <div className="flex items-center gap-4 text-xs text-zinc-500 mb-4 font-sans font-light">
                       <div className="flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5" />
+                        <Icon name="calendar" size={14} />
                         {news.date}
                       </div>
                       <span>•</span>
@@ -151,10 +151,9 @@ export default function NewsPage() {
 
                   <div className="flex items-center gap-1 text-xs font-semibold text-gold group-hover:text-gold-light transition-colors duration-300">
                     Читать полностью
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                    <Icon name="arrow-right" size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
                   </div>
                 </div>
-
               </GlassCard>
             </motion.div>
           ))}

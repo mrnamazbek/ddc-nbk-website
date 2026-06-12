@@ -5,12 +5,13 @@ import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import GlassCard from "@/components/ui/GlassCard";
+import Icon, { IconName } from "@/components/ui/Icon";
 
 interface ServiceItem {
   number: string;
   key: string;
   hoverAccent: "forest" | "gold";
-  svgIcon: React.ReactNode;
+  iconName: IconName;
 }
 
 export default function Services() {
@@ -72,72 +73,37 @@ export default function Services() {
       number: "01",
       key: "s1",
       hoverAccent: "gold",
-      svgIcon: (
-        <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="12" r="9" stroke="currentColor" />
-          <path d="M12 7v10M8 9.5h8M8 12.5h8" stroke="currentColor" strokeLinecap="round" />
-          <path d="M12 3a9 9 0 0 1 6.364 2.636M5.636 18.364a9 9 0 0 1 0-12.728" stroke="currentColor" strokeDasharray="2 2" />
-        </svg>
-      ),
+      iconName: "contact-center",
     },
     {
       number: "02",
       key: "s2",
       hoverAccent: "forest",
-      svgIcon: (
-        <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-          <circle cx="13" cy="7" r="1" fill="currentColor" />
-          <circle cx="11" cy="17" r="1" fill="currentColor" />
-        </svg>
-      ),
+      iconName: "procurement",
     },
     {
       number: "03",
       key: "s3",
       hoverAccent: "forest",
-      svgIcon: (
-        <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3 21h18M5 21V10m14 11V10M2 10h20M12 3L2 10h20L12 3z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-          <circle cx="12" cy="14" r="1.5" stroke="currentColor" />
-          <path d="M9 14h6" stroke="currentColor" />
-        </svg>
-      ),
+      iconName: "database",
     },
     {
       number: "04",
       key: "s4",
       hoverAccent: "gold",
-      svgIcon: (
-        <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M9 11l2 2 4-4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      ),
+      iconName: "it-services",
     },
     {
       number: "05",
       key: "s5",
       hoverAccent: "forest",
-      svgIcon: (
-        <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" />
-          <path d="M7 8h10M7 12h10M7 16h5" stroke="currentColor" strokeLinecap="round" />
-          <circle cx="16" cy="16" r="1.5" fill="currentColor" />
-        </svg>
-      ),
+      iconName: "development",
     },
     {
       number: "06",
       key: "s6",
       hoverAccent: "forest",
-      svgIcon: (
-        <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3 3v18h18" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M18.7 8l-5.1 5.2-2.8-2.7-4.8 4.8" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-          <circle cx="18.7" cy="8" r="1.5" fill="currentColor" />
-        </svg>
-      ),
+      iconName: "shield",
     },
   ];
 
@@ -185,10 +151,10 @@ export default function Services() {
                     <div className="flex items-center justify-between mb-8">
                       <div className={`w-12 h-12 rounded-xl liquid-glass flex items-center justify-center transition-all duration-300 ${
                         service.hoverAccent === "gold"
-                          ? "text-gold group-hover:bg-gold/10 group-hover:scale-110"
-                          : "text-forest-light group-hover:bg-forest/10 group-hover:scale-110"
+                          ? "text-gold group-hover:bg-gold/10"
+                          : "text-forest-light group-hover:bg-forest/10"
                       }`} data-hover={service.hoverAccent}>
-                        {service.svgIcon}
+                        <Icon name={service.iconName} size={24} />
                       </div>
                       
                       <span className="text-sm font-mono font-bold text-zinc-600 group-hover:text-muted transition-colors">
@@ -210,11 +176,7 @@ export default function Services() {
                     <span className="text-xs font-mono tracking-widest text-zinc-500 uppercase">
                       {t("status")}
                     </span>
-                    <svg viewBox="0 0 24 24" className={`w-4 h-4 stroke-[2] transition-transform duration-300 transform group-hover:translate-x-1 ${
-                      service.hoverAccent === "gold" ? "text-gold" : "text-forest-light"
-                    }`} fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                    <Icon name="arrow-right" size={16} className={service.hoverAccent === "gold" ? "text-gold" : "text-forest-light"} />
                   </div>
                 </GlassCard>
               </div>

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
-import { ArrowUpRight } from "lucide-react";
+import Icon from "../ui/Icon";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -83,7 +83,7 @@ export default function Footer() {
                       className="text-sm text-muted hover:text-foreground transition-colors flex items-center gap-1 group"
                     >
                       {link.name}
-                      <ArrowUpRight className="w-3 h-3 opacity-0 -translate-y-0.5 translate-x-0.5 group-hover:opacity-100 transition-all duration-300" />
+                      <Icon name="arrow-up-right" size={12} className="opacity-0 -translate-y-0.5 translate-x-0.5 group-hover:opacity-100 transition-all duration-300" />
                     </Link>
                   </li>
                 ))}

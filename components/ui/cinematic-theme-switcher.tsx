@@ -1,6 +1,6 @@
 'use client';
 
-import { Sun, Moon } from 'lucide-react';
+import Icon from './Icon';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from 'next-themes';
@@ -113,8 +113,8 @@ export default function CinematicThemeSwitcher() {
 
         {/* Фоновые иконки */}
         <div className="absolute inset-0 flex items-center justify-between px-[10px]">
-          <Sun size={15} className={isDark ? 'text-gold-light/70' : 'text-amber-600'} />
-          <Moon size={15} className={isDark ? 'text-gold-light/70' : 'text-slate-700'} />
+          <Icon name="sun" size={16} animate={false} className={isDark ? 'text-gold-light/70' : 'text-amber-600'} />
+          <Icon name="moon" size={16} animate={false} className={isDark ? 'text-gold-light/70' : 'text-slate-700'} />
         </div>
 
         {/* Бегунок */}
@@ -171,9 +171,9 @@ export default function CinematicThemeSwitcher() {
 
           <div className="relative z-10">
             {isDark ? (
-              <Moon size={16} className="text-gold-light" />
+              <Icon name="moon" size={16} animate={false} className="text-gold-light" />
             ) : (
-              <Sun size={16} className="text-amber-500" />
+              <Icon name="sun" size={16} animate={false} className="text-amber-500" />
             )}
           </div>
         </motion.div>

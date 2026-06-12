@@ -1,57 +1,61 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { useInView, useMotionValue, useSpring } from "framer-motion";
+import React, { useEffect, useRef } from "react";
+import { useMotionValue, useSpring, useTransform, useInView } from "framer-motion";
 
 interface NumberTickerProps {
   value: number;
-  direction?: "up" | "down";
-  delay?: number;
   className?: string;
+  delay?: number;
   prefix?: string;
   suffix?: string;
 }
 
 export default function NumberTicker({
   value,
-  direction = "up",
+  className,
   delay = 0,
-  className = "",
   prefix = "",
   suffix = "",
 }: NumberTickerProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const motionValue = useMotionValue(direction === "down" ? value : 0);
+  const motionValue = useMotionValue(0);
   const springValue = useSpring(motionValue, {
-    damping: 60,
-    stiffness: 100,
+    stiffness: 70,
+    damping: 15,
   });
-  const isInView = useInView(ref, { once: true, margin: "0px" });
+
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   useEffect(() => {
     if (isInView) {
-      setTimeout(() => {
-        motionValue.set(direction === "down" ? 0 : value);
+      const timer = setTimeout(() => {
+        motionValue.set(value);
       }, delay * 1000);
+      return () => clearTimeout(timer);
     }
-  }, [motionValue, isInView, delay, value, direction]);
+  }, [isInView, value, motionValue, delay]);
+
+  const formattedValue = useTransform(springValue, (latest) => {
+    // Округляем до целого или до одного знака после запятой, если есть дробная часть
+    const rounded = Math.round(latest * 10) / 10;
+    return `${prefix}${rounded.toLocaleString("ru-RU")}${suffix}`;
+  });
 
   useEffect(() => {
-    return springValue.on("change", (latest) => {
+    return formattedValue.on("change", (latest) => {
       if (ref.current) {
-        ref.current.textContent = Intl.NumberFormat("ru-RU", {
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
-        }).format(Math.floor(latest));
+        ref.current.textContent = latest;
       }
     });
-  }, [springValue]);
+  }, [formattedValue]);
 
   return (
-    <span className={className}>
-      {prefix}
-      <span ref={ref}>0</span>
-      {suffix}
+    <span
+      ref={ref}
+      className={className}
+    >
+      {prefix}0{suffix}
     </span>
   );
 }

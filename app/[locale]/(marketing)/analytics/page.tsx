@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import FinancialInform from "@/components/ui/FinancialInform";
 import GlassCard from "@/components/ui/GlassCard";
-import { Database, Cpu, Server, Check } from "lucide-react";
+import Icon from "@/components/ui/Icon";
 import { useTranslations } from "next-intl";
 
 export default function AnalyticsPage() {
@@ -75,7 +75,7 @@ export default function AnalyticsPage() {
             <GlassCard hoverAccent="forest" className="p-8 h-full" isTiltEnabled={false}>
               <div className="flex gap-4 items-start mb-6">
                 <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold">
-                  <Database className="w-6 h-6" />
+                  <Icon name="database" size={24} />
                 </div>
                 <div>
                   <span className="text-[10px] font-mono tracking-widest text-gold uppercase">Big Data Stack</span>
@@ -92,7 +92,7 @@ export default function AnalyticsPage() {
               <div className="space-y-4">
                 <div className="flex gap-3">
                   <div className="w-5 h-5 rounded-full bg-forest-mid/20 text-forest-light flex items-center justify-center shrink-0 mt-0.5">
-                    <Check className="w-3.5 h-3.5" />
+                    <Icon name="check" size={14} />
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-foreground uppercase tracking-wider">{t("ingestionTitle")}</h4>
@@ -102,7 +102,7 @@ export default function AnalyticsPage() {
 
                 <div className="flex gap-3">
                   <div className="w-5 h-5 rounded-full bg-forest-mid/20 text-forest-light flex items-center justify-center shrink-0 mt-0.5">
-                    <Check className="w-3.5 h-3.5" />
+                    <Icon name="check" size={14} />
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-foreground uppercase tracking-wider">{t("storageTitle")}</h4>
@@ -112,7 +112,7 @@ export default function AnalyticsPage() {
 
                 <div className="flex gap-3">
                   <div className="w-5 h-5 rounded-full bg-forest-mid/20 text-forest-light flex items-center justify-center shrink-0 mt-0.5">
-                    <Check className="w-3.5 h-3.5" />
+                    <Icon name="check" size={14} />
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-foreground uppercase tracking-wider">{t("orchTitle")}</h4>
@@ -150,7 +150,7 @@ export default function AnalyticsPage() {
               >
                 <div>
                   <div className="w-10 h-10 rounded-lg bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
-                    <Cpu className="w-5 h-5" />
+                    <Icon name="cpu" size={20} />
                   </div>
                   <h4 className="text-base font-bold text-foreground mb-3 tracking-wide">{tip.title}</h4>
                   <p className="text-xs text-text-secondary font-light leading-relaxed">{tip.desc}</p>
@@ -165,7 +165,7 @@ export default function AnalyticsPage() {
           <div className="absolute inset-0 bg-[radial-gradient(#52B78803_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
           
           <div className="flex gap-4 items-start mb-6">
-            <Server className="w-8 h-8 text-gold shrink-0 mt-1" />
+            <Icon name="server" size={32} className="text-gold shrink-0 mt-1" />
             <div>
               <span className="text-xs uppercase text-gold font-semibold tracking-wider">{t("careerOverline")}</span>
               <h3 className="text-xl font-bold text-white tracking-wide">{t("careerTitle")}</h3>

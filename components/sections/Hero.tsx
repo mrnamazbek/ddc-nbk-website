@@ -12,6 +12,7 @@ import ShimmerButton from "@/components/ui/ShimmerButton";
 import Magnetic from "@/components/motion/Magnetic";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 import { MetalButton } from "@/components/ui/liquid-glass-button";
+import Icon from "@/components/ui/Icon";
 
 import { SplineScene } from "@/components/ui/splite";
 
@@ -168,17 +169,7 @@ export default function Hero() {
                 }}
               >
                 {t("ctaPrimary")}
-                <svg
-                  className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 stroke-current" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                >
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
+                <Icon name="arrow-right" size={16} />
               </MetalButton>
             </Magnetic>
             <Magnetic>
@@ -233,16 +224,7 @@ export default function Hero() {
           animate={{ y: [0, 4, 0] }}
           transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
         >
-          <svg 
-            className="w-4 h-4 stroke-current" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
-            strokeLinejoin="round"
-          >
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
+          <Icon name="arrow-right" size={16} className="rotate-90 text-zinc-500" />
         </motion.div>
       </motion.div>
     </section>

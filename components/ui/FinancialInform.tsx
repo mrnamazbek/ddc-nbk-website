@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { TrendingUp, TrendingDown, Percent, Calendar, RefreshCw } from "lucide-react";
+import Icon from "./Icon";
 import GlassCard from "./GlassCard";
 
 interface RateItem {
@@ -112,7 +112,7 @@ export default function FinancialInform() {
             className="w-8 h-8 rounded-full bg-glass border border-glass-border flex items-center justify-center text-muted hover:text-gold hover:bg-glass active:scale-95 transition-all duration-300 disabled:opacity-50 select-none cursor-pointer"
             title={t("refreshBtn")}
           >
-            <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin text-gold" : ""}`} />
+            <Icon name="refresh" size={16} animate={false} className={isRefreshing ? "animate-spin text-gold" : ""} />
           </button>
         </div>
 
@@ -124,7 +124,7 @@ export default function FinancialInform() {
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs text-muted font-light">{t("baseRate")}</span>
               <div className="w-8 h-8 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center text-gold">
-                <Percent className="w-4 h-4" />
+                <Icon name="percent" size={16} />
               </div>
             </div>
             <div className="flex items-baseline gap-2 mb-2">
@@ -134,7 +134,7 @@ export default function FinancialInform() {
               <span className={`text-xs font-mono font-medium flex items-center gap-0.5 ${
                 baseRate.change < 0 ? "text-forest-light" : "text-red-500"
               }`}>
-                {baseRate.change < 0 ? <TrendingDown className="w-3.5 h-3.5" /> : <TrendingUp className="w-3.5 h-3.5" />}
+                {baseRate.change < 0 ? <Icon name="trending-down" size={14} /> : <Icon name="trending-up" size={14} />}
                 {baseRate.change < 0 ? "" : "+"}{baseRate.change}%
               </span>
             </div>
@@ -150,7 +150,7 @@ export default function FinancialInform() {
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs text-muted font-light">{t("inflation")}</span>
               <div className="w-8 h-8 rounded-lg bg-forest/20 border border-forest-light/20 flex items-center justify-center text-forest-light">
-                <TrendingDown className="w-4 h-4" />
+                <Icon name="trending-down" size={16} />
               </div>
             </div>
             <div className="flex items-baseline gap-2 mb-2">
@@ -158,7 +158,7 @@ export default function FinancialInform() {
                 {inflation.value.toFixed(1)}%
               </span>
               <span className="text-xs font-mono font-medium text-forest-light flex items-center gap-0.5">
-                <TrendingDown className="w-3.5 h-3.5" />
+                <Icon name="trending-down" size={14} />
                 {inflation.change}%
               </span>
             </div>
@@ -214,7 +214,7 @@ export default function FinancialInform() {
       {/* Футер дашборда со статусом обновления */}
       <div className="flex items-center justify-between border-t border-glass-border pt-6 mt-8">
         <span className="text-[10px] font-mono text-zinc-500 flex items-center gap-1.5">
-          <Calendar className="w-3.5 h-3.5" />
+          <Icon name="calendar" size={14} />
           {t("updated")}: {lastUpdated || t("loading")}
         </span>
         <span className="inline-flex items-center gap-1 text-[10px] font-mono text-gold-light">

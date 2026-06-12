@@ -6,11 +6,12 @@ import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import GlassCard from "@/components/ui/GlassCard";
 import TextReveal from "@/components/ui/TextReveal";
+import Icon, { IconName } from "@/components/ui/Icon";
 
 interface SecurityFeature {
   key: string;
   hoverAccent: "gold" | "forest";
-  svgIcon: React.ReactNode;
+  iconName: IconName;
 }
 
 export default function Security() {
@@ -89,35 +90,17 @@ export default function Security() {
     {
       key: "f1",
       hoverAccent: "gold",
-      svgIcon: (
-        <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" />
-          <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" strokeLinecap="round" />
-          <circle cx="12" cy="16" r="1.5" fill="currentColor" />
-        </svg>
-      ),
+      iconName: "lock",
     },
     {
       key: "f2",
       hoverAccent: "forest",
-      svgIcon: (
-        <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="12" r="10" stroke="currentColor" />
-          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="currentColor" />
-          <path d="M2 12h20M12 2v20" stroke="currentColor" strokeDasharray="2 2" />
-        </svg>
-      ),
+      iconName: "globe",
     },
     {
       key: "f3",
       hoverAccent: "gold",
-      svgIcon: (
-        <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" />
-          <path d="M6 12h4m4 0h4M6 15h2m8 0h2" stroke="currentColor" strokeLinecap="round" />
-          <circle cx="12" cy="10" r="1" fill="currentColor" />
-        </svg>
-      ),
+      iconName: "key",
     },
   ];
 
@@ -211,10 +194,7 @@ export default function Security() {
 
                   {/* Lock icon in center */}
                   <div className="absolute z-20 text-gold flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" className="w-9 h-9 stroke-[1.5] animate-pulse" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" />
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" />
-                    </svg>
+                    <Icon name="lock" size={36} className="animate-pulse" />
                   </div>
                 </div>
 
@@ -267,7 +247,7 @@ export default function Security() {
                         <div className={`w-11 h-11 rounded-lg liquid-glass flex items-center justify-center transition-all duration-300 ${
                           feat.hoverAccent === "gold" ? "text-gold group-hover:bg-gold/10" : "text-forest-light group-hover:bg-forest/10"
                         }`} data-hover={feat.hoverAccent}>
-                          {feat.svgIcon}
+                          <Icon name={feat.iconName} size={20} />
                         </div>
                         <div>
                           <h4 className="text-base font-sans font-semibold text-foreground mb-1">

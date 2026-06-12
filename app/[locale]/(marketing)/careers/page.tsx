@@ -1,7 +1,7 @@
 import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
-import { MapPin, Clock, ArrowRight, CheckCircle2, Award, Zap, Compass, Eye, Shield, Users2, Landmark } from "lucide-react";
+import Icon, { IconName } from "@/components/ui/Icon";
 import { motion } from "framer-motion";
 
 interface Job {
@@ -175,29 +175,29 @@ async function getVacancies(): Promise<Job[]> {
 export default async function CareersPage() {
   const jobs = await getVacancies();
 
-  const values = [
+  const values: { icon: IconName; title: string; text: string }[] = [
     {
-      icon: Compass,
+      icon: "compass",
       title: "Инновации",
       text: "Стремление внедрять передовые технологии и быть лидерами цифровой трансформации финансового сектора."
     },
     {
-      icon: Users2,
+      icon: "users2",
       title: "Прозрачность",
       text: "Открытость во внутренних и внешних процессах, честность с клиентами, партнерами и каждым сотрудником."
     },
     {
-      icon: Award,
+      icon: "award",
       title: "Качество",
       text: "Непрерывное совершенствование ИТ-продуктов и процессов для соответствия наивысшим международным стандартам."
     },
     {
-      icon: Shield,
+      icon: "shield",
       title: "Надёжность",
       text: "Гарантия высочайшей отказоустойчивости, безопасности и стабильности всех государственных ИТ-решений."
     },
     {
-      icon: Landmark,
+      icon: "bank",
       title: "Партнерство",
       text: "Тесное сотрудничество с Национальным Банком и его дочерними организациями для эффективной реализации проектов."
     }
@@ -232,7 +232,7 @@ export default async function CareersPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20">
           <GlassCard hoverAccent="gold" variant="liquid" isTiltEnabled={false} className="p-8 border border-white/5">
             <h3 className="text-xl font-bold text-white mb-4 tracking-wide flex items-center gap-3">
-              <Compass className="w-5 h-5 text-gold" />
+              <Icon name="compass" size={20} className="text-gold" />
               Миссия
             </h3>
             <p className="text-sm text-zinc-400 font-light leading-relaxed">
@@ -242,7 +242,7 @@ export default async function CareersPage() {
 
           <GlassCard hoverAccent="forest" variant="liquid" isTiltEnabled={false} className="p-8 border border-white/5">
             <h3 className="text-xl font-bold text-white mb-4 tracking-wide flex items-center gap-3">
-              <Eye className="w-5 h-5 text-forest-light" />
+              <Icon name="eye" size={20} className="text-forest-light" />
               Видение
             </h3>
             <p className="text-sm text-zinc-400 font-light leading-relaxed">
@@ -258,12 +258,11 @@ export default async function CareersPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {values.map((v, idx) => {
-              const Icon = v.icon;
               return (
                 <GlassCard key={idx} hoverAccent="gold" variant="glass" isTiltEnabled={false} className="p-6 border border-white/5 hover:border-gold/15 flex flex-col justify-between">
                   <div>
                     <div className="w-10 h-10 rounded-xl bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold mb-4 shrink-0">
-                      <Icon className="w-5 h-5" />
+                      <Icon name={v.icon} size={20} />
                     </div>
                     <h4 className="text-base font-bold text-white mb-2 tracking-wide">{v.title}</h4>
                     <p className="text-xs text-zinc-400 font-light leading-relaxed">{v.text}</p>
@@ -281,7 +280,7 @@ export default async function CareersPage() {
             <ul className="space-y-4">
               {whyUsPoints.map((point, idx) => (
                 <li key={idx} className="flex items-start gap-3.5 text-sm sm:text-base text-zinc-400 font-light leading-relaxed">
-                  <CheckCircle2 className="w-5 h-5 text-forest-light shrink-0 mt-0.5" />
+                  <Icon name="check-circle" size={20} className="text-forest-light shrink-0 mt-0.5" />
                   <span>{point}</span>
                 </li>
               ))}
@@ -291,7 +290,7 @@ export default async function CareersPage() {
           <div className="lg:col-span-5 bg-charcoal/40 border border-white/5 p-8 rounded-2xl relative overflow-hidden">
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-forest/20 rounded-full blur-2xl pointer-events-none" />
             <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
-              <Zap className="w-6 h-6" />
+              <Icon name="zap" size={24} />
             </div>
             <h4 className="text-base font-bold text-white mb-2">Начните свой путь в DDC</h4>
             <p className="text-xs text-zinc-400 font-light leading-relaxed mb-6">
@@ -330,13 +329,13 @@ export default async function CareersPage() {
                     <div className="flex flex-wrap items-center gap-3">
                       <Badge variant={job.badgeVariant}>{job.department}</Badge>
                       <span className="text-xs text-zinc-500">•</span>
-                      <span className="text-xs text-zinc-400 font-light flex items-center gap-1">
-                        <MapPin className="w-3.5 h-3.5" />
+                      <span className="text-xs text-zinc-400 font-light flex items-center gap-1.5">
+                        <Icon name="map-pin" size={14} />
                         {job.location}
                       </span>
                       <span className="text-xs text-zinc-500">•</span>
-                      <span className="text-xs text-zinc-400 font-light flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5" />
+                      <span className="text-xs text-zinc-400 font-light flex items-center gap-1.5">
+                        <Icon name="clock" size={14} />
                         {job.type}
                       </span>
                     </div>
@@ -360,7 +359,7 @@ export default async function CareersPage() {
                   <a href={job.url} target="_blank" rel="noopener noreferrer" className="self-start md:self-auto">
                     <Button variant="outline" className="flex items-center justify-center gap-2 group whitespace-nowrap">
                       Откликнуться
-                      <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                      <Icon name="arrow-right" size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
                     </Button>
                   </a>
                 </GlassCard>

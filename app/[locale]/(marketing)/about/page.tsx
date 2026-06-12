@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Landmark, Users, ArrowUpRight, Compass, ShieldCheck } from "lucide-react";
+import Icon, { IconName } from "@/components/ui/Icon";
 import Button from "@/components/ui/Button";
 import Timeline from "@/components/sections/Timeline";
 import Leadership from "@/components/sections/Leadership";
@@ -21,19 +21,19 @@ export default function AboutPage() {
     },
   };
 
-  const values = [
+  const values: { icon: IconName; title: string; text: string }[] = [
     {
-      icon: Compass,
+      icon: "compass",
       title: "Государственный вектор",
       text: "Каждый наш проект направлен на повышение эффективности и стабильности национальной финансовой архитектуры Казахстана.",
     },
     {
-      icon: Users,
+      icon: "users",
       title: "Человеческий капитал",
       text: "Мы объединяем сильнейших IT-инженеров, криптографов и финансовых аналитиков для решения задач государственного масштаба.",
     },
     {
-      icon: ShieldCheck,
+      icon: "shield-check",
       title: "Безопасность по умолчанию",
       text: "Методология разработки Security-by-Design гарантирует защиту данных на каждом уровне жизненного цикла систем.",
     },
@@ -77,7 +77,7 @@ export default function AboutPage() {
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-gold/10 rounded-full blur-2xl pointer-events-none" />
             <div className="flex gap-4 items-start mb-6">
               <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold">
-                <Landmark className="w-6 h-6" />
+                <Icon name="bank" size={24} />
               </div>
               <div>
                 <span className="text-xs uppercase text-gold font-medium tracking-wider">учредитель</span>
@@ -94,7 +94,7 @@ export default function AboutPage() {
               className="text-xs font-semibold text-gold flex items-center gap-1 hover:text-gold-light transition-colors duration-300"
             >
               Официальный сайт Нацбанка РК
-              <ArrowUpRight className="w-3.5 h-3.5" />
+              <Icon name="arrow-up-right" size={14} />
             </a>
           </div>
         </div>
@@ -108,7 +108,6 @@ export default function AboutPage() {
           className="grid grid-cols-1 md:grid-cols-3 gap-8"
         >
           {values.map((val, idx) => {
-            const ValIcon = val.icon;
             return (
               <motion.div
                 key={idx}
@@ -116,7 +115,7 @@ export default function AboutPage() {
                 className="bg-charcoal/20 border border-white/5 p-8 rounded-2xl hover:border-gold/20 transition-colors duration-500"
               >
                 <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
-                  <ValIcon className="w-6 h-6" />
+                  <Icon name={val.icon} size={24} />
                 </div>
                 <h4 className="text-lg font-bold text-white mb-3 tracking-wide">{val.title}</h4>
                 <p className="text-sm text-zinc-400 font-light leading-relaxed">{val.text}</p>
@@ -136,7 +135,7 @@ export default function AboutPage() {
           </div>
           <Button variant="gold" size="lg" className="shrink-0 flex items-center gap-2 group" onClick={() => window.location.href = "/careers"}>
             Открытые вакансии
-            <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            <Icon name="arrow-up-right" size={16} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Button>
         </div>
 

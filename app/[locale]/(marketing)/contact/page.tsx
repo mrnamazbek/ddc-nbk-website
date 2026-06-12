@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion } from "framer-motion";
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle2 } from "lucide-react";
+import Icon from "@/components/ui/Icon";
 import { useState } from "react";
 
 import { Label } from "@/components/ui/label";
@@ -94,7 +94,7 @@ export default function ContactPage() {
               <div className="space-y-6">
                 <div className="flex gap-4 items-start">
                   <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold shrink-0">
-                    <MapPin className="w-5 h-5" />
+                    <Icon name="map-pin" size={20} />
                   </div>
                   <div>
                     <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">Адрес</h5>
@@ -107,7 +107,7 @@ export default function ContactPage() {
 
                 <div className="flex gap-4 items-start">
                   <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold shrink-0">
-                    <Phone className="w-5 h-5" />
+                    <Icon name="phone" size={20} />
                   </div>
                   <div>
                     <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">Телефон приемной</h5>
@@ -119,7 +119,7 @@ export default function ContactPage() {
 
                 <div className="flex gap-4 items-start">
                   <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold shrink-0">
-                    <Mail className="w-5 h-5" />
+                    <Icon name="mail" size={20} />
                   </div>
                   <div>
                     <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">Электронная почта</h5>
@@ -131,7 +131,7 @@ export default function ContactPage() {
 
                 <div className="flex gap-4 items-start">
                   <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold shrink-0">
-                    <Clock className="w-5 h-5" />
+                    <Icon name="clock" size={20} />
                   </div>
                   <div>
                     <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">Режим работы</h5>
@@ -162,7 +162,7 @@ export default function ContactPage() {
                 className="text-center py-16 flex flex-col items-center justify-center pointer-events-auto"
               >
                 <div className="w-16 h-16 rounded-full bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
-                  <CheckCircle2 className="w-8 h-8" />
+                  <Icon name="check-circle" size={32} />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-4 tracking-wide">Обращение отправлено</h3>
                 <p className="text-sm text-zinc-400 font-light leading-relaxed max-w-md mx-auto mb-8">
@@ -239,7 +239,7 @@ export default function ContactPage() {
                   className="w-full justify-center flex items-center gap-2 py-4 h-12 text-gold font-medium bg-transparent hover:scale-[1.02] transition duration-300"
                 >
                   {isSubmitting ? "Отправка..." : "Отправить обращение"}
-                  <Send className="w-4 h-4" />
+                  <Icon name="send" size={16} />
                 </LiquidButton>
               </form>
             )}

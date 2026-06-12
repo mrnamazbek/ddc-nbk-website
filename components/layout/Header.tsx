@@ -5,13 +5,13 @@ import Image from "next/image";
 import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { Menu, X, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "../ui/Button";
 import Magnetic from "../motion/Magnetic";
 import TransitionLink from "../motion/TransitionLink";
 import CinematicThemeSwitcher from "../ui/cinematic-theme-switcher";
 import { LiquidButton } from "../ui/liquid-glass-button";
+import Icon from "../ui/Icon";
 
 const LANGUAGES = ["kz", "ru", "en"];
 
@@ -231,7 +231,7 @@ export default function Header() {
             aria-label="Toggle mobile menu"
             aria-expanded={isMobileMenuOpen}
           >
-            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {isMobileMenuOpen ? <Icon name="x" size={20} /> : <Icon name="menu" size={20} />}
           </button>
         </div>
       </header>
@@ -288,7 +288,7 @@ export default function Header() {
 
               <a href="https://zakup.nationalbank.kz" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="w-full">
                 <LiquidButton className="w-full text-gold font-medium py-3 justify-center flex items-center gap-2">
-                  {t("procurementPortal")} <ArrowRight className="w-4 h-4" />
+                  {t("procurementPortal")} <Icon name="arrow-right" size={16} />
                 </LiquidButton>
               </a>
             </div>

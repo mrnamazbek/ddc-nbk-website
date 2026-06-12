@@ -6,9 +6,10 @@
 
 :root {
   /* Текущие активные шрифты дизайн-системы */
-  --font-current-sans: var(--font-comfortaa), sans-serif;
-  --font-current-mono: var(--font-comfortaa), var(--font-mono), monospace;
-  --font-current-display: var(--font-comfortaa), var(--font-cormorant), serif;
+  --font-current-sans: var(--font-lato), sans-serif;
+  --font-current-mono: var(--font-mono), monospace;
+  --font-current-display: var(--font-lato), sans-serif;
+  --font-current-soft: var(--font-nunito), sans-serif;
 }
 
 @theme {
@@ -43,9 +44,10 @@
   --shadow-card: var(--shadow-card);
   --shadow-glass: var(--glass-shadow);
 
-  --font-display: var(--font-current-display), Georgia, serif;
+  --font-display: var(--font-current-display), sans-serif;
   --font-sans: var(--font-current-sans), system-ui, sans-serif;
   --font-mono: var(--font-current-mono), monospace;
+  --font-soft: var(--font-current-soft), sans-serif;
 
   --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-spin-slow: spin 8s linear infinite;

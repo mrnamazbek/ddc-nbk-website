@@ -7,10 +7,11 @@ import gsap from "@/lib/gsap";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import TextReveal from "@/components/ui/TextReveal";
+import Icon, { IconName } from "@/components/ui/Icon";
 
 interface ValueItem {
   key: string;
-  svgIcon: React.ReactNode;
+  iconName: IconName;
 }
 
 export default function About() {
@@ -86,29 +87,15 @@ export default function About() {
   const valueItems: ValueItem[] = [
     {
       key: "v1",
-      svgIcon: (
-        <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="12" r="10" stroke="currentColor" />
-          <path d="M12 6v6l4 2" stroke="currentColor" strokeLinecap="round" />
-        </svg>
-      ),
+      iconName: "clock",
     },
     {
       key: "v2",
-      svgIcon: (
-        <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9 11l2 2 4-4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-          <circle cx="12" cy="12" r="9" stroke="currentColor" />
-        </svg>
-      ),
+      iconName: "check-circle",
     },
     {
       key: "v3",
-      svgIcon: (
-        <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      ),
+      iconName: "shield",
     },
   ];
 
@@ -157,7 +144,7 @@ export default function About() {
                     className="flex gap-6 relative z-10 group animate-hover"
                   >
                     <div className="w-12 h-12 rounded-full liquid-glass flex items-center justify-center text-gold group-hover:bg-glass transition-all duration-300 shrink-0">
-                      {item.svgIcon}
+                      <Icon name={item.iconName} size={20} />
                     </div>
                     <div>
                       <h4 className="text-lg font-sans font-semibold text-foreground mb-2 group-hover:text-zinc-100 transition-colors">

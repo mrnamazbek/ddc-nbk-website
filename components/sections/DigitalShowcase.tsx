@@ -5,11 +5,12 @@ import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/Button";
 import GlassCard from "@/components/ui/GlassCard";
+import Icon, { IconName } from "@/components/ui/Icon";
 
 interface FeatureTab {
   id: string;
   hoverAccent: "gold" | "forest";
-  svgIcon: React.ReactNode;
+  iconName: IconName;
 }
 
 export default function DigitalShowcase() {
@@ -20,31 +21,17 @@ export default function DigitalShowcase() {
     {
       id: "t1",
       hoverAccent: "gold",
-      svgIcon: (
-        <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="12" r="9" stroke="currentColor" />
-          <path d="M12 7v10M8 9.5h8M8 12.5h8" stroke="currentColor" strokeLinecap="round" />
-        </svg>
-      ),
+      iconName: "coins",
     },
     {
       id: "t2",
       hoverAccent: "forest",
-      svgIcon: (
-        <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      ),
+      iconName: "zap",
     },
     {
       id: "t3",
       hoverAccent: "forest",
-      svgIcon: (
-        <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-[1.5]" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M8 11h8" stroke="currentColor" strokeLinecap="round" />
-        </svg>
-      ),
+      iconName: "shield",
     },
   ];
 
@@ -94,7 +81,7 @@ export default function DigitalShowcase() {
                       ? tab.hoverAccent === "gold" ? "text-gold font-bold" : "text-forest-light font-bold"
                       : "text-zinc-500"
                   }`} data-hover={tab.hoverAccent}>
-                    {tab.svgIcon}
+                    <Icon name={tab.iconName} size={20} />
                   </div>
                   <div>
                     <span className="text-[10px] block mb-1 font-mono tracking-widest uppercase opacity-70 group-hover:opacity-100 transition-opacity">
@@ -133,7 +120,7 @@ export default function DigitalShowcase() {
                       <div className={`w-12 h-12 rounded-xl liquid-glass flex items-center justify-center transition-all duration-300 ${
                         currentTab.hoverAccent === "gold" ? "text-gold group-hover:bg-gold/10" : "text-forest-light group-hover:bg-forest/10"
                       }`} data-hover={currentTab.hoverAccent}>
-                        {currentTab.svgIcon}
+                        <Icon name={currentTab.iconName} size={20} />
                       </div>
                       <div>
                         <span className="text-[10px] font-mono tracking-widest text-gold block mb-1">
@@ -153,12 +140,7 @@ export default function DigitalShowcase() {
                     <ul className="space-y-3.5">
                       {["b1", "b2", "b3"].map((b) => (
                         <li key={b} className="flex items-center gap-3.5 text-sm text-muted font-sans font-light">
-                          <svg viewBox="0 0 24 24" className={`w-4 h-4 shrink-0 stroke-[2] ${
-                            currentTab.hoverAccent === "gold" ? "text-gold" : "text-forest-light"
-                          }`} fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-                            <path d="M22 4L12 14.01l-3-3" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
+                          <Icon name="check-circle" size={16} className={currentTab.hoverAccent === "gold" ? "text-gold" : "text-forest-light"} />
                           {t(`${currentTab.id}.${b}`)}
                         </li>
                       ))}
@@ -168,9 +150,7 @@ export default function DigitalShowcase() {
                   <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-glass-border">
                     <Button variant="forest" className="flex items-center justify-center gap-2 group font-medium" onClick={() => { document.getElementById("services")?.scrollIntoView({ behavior: "smooth" }); }}>
                       {t("btnPrimary")}
-                      <svg viewBox="0 0 24 24" className="w-4 h-4 stroke-[2] transition-transform duration-300 transform group-hover:translate-x-1" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
+                      <Icon name="arrow-right" size={16} />
                     </Button>
                     <Button variant="ghost" className="font-medium" onClick={() => { document.getElementById("about")?.scrollIntoView({ behavior: "smooth" }); }}>{t("btnSecondary")}</Button>
                   </div>

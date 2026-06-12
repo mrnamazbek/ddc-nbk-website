@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Minus, HelpCircle } from "lucide-react";
+import Icon from "@/components/ui/Icon";
 import GlassCard from "@/components/ui/GlassCard";
 
 interface FAQItem {
@@ -82,13 +82,13 @@ export default function FAQPage() {
                   className="w-full text-left p-6 sm:p-8 flex items-center justify-between gap-6 cursor-pointer focus:outline-none focus:bg-white/5 transition-colors duration-300"
                 >
                   <div className="flex items-center gap-4">
-                    <HelpCircle className="w-5 h-5 text-gold shrink-0" />
+                    <Icon name="help" size={20} className="text-gold shrink-0" />
                     <h3 className="text-base sm:text-lg font-sans font-semibold text-white tracking-wide">
                       {faq.question}
                     </h3>
                   </div>
                   <div className={`w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-zinc-400 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}>
-                    {isOpen ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                    {isOpen ? <Icon name="minus" size={16} /> : <Icon name="plus" size={16} />}
                   </div>
                 </button>
 

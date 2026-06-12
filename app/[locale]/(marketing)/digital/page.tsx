@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Layers, Database, RefreshCw, Cpu } from "lucide-react";
+import Icon from "@/components/ui/Icon";
 import GlassCard from "@/components/ui/GlassCard";
 
 export default function DigitalPage() {
@@ -70,7 +70,7 @@ export default function DigitalPage() {
           <GlassCard className="border-white/5 hover:border-gold/20 flex flex-col justify-between">
             <div>
               <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
-                <Layers className="w-6 h-6" />
+                <Icon name="layers" size={24} />
               </div>
               <h3 className="text-lg font-bold text-white mb-3">Гибридная DLT архитектура</h3>
               <p className="text-sm text-zinc-400 font-light leading-relaxed">
@@ -83,7 +83,7 @@ export default function DigitalPage() {
           <GlassCard className="border-white/5 hover:border-gold/20 flex flex-col justify-between">
             <div>
               <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
-                <Cpu className="w-6 h-6" />
+                <Icon name="cpu" size={24} />
               </div>
               <h3 className="text-lg font-bold text-white mb-3">Смарт-контракты маркирования</h3>
               <p className="text-sm text-zinc-400 font-light leading-relaxed">
@@ -96,7 +96,7 @@ export default function DigitalPage() {
           <GlassCard className="border-white/5 hover:border-gold/20 flex flex-col justify-between">
             <div>
               <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
-                <RefreshCw className="w-6 h-6" />
+                <Icon name="refresh" size={24} />
               </div>
               <h3 className="text-lg font-bold text-white mb-3">Аппаратный оффлайн-клиринг</h3>
               <p className="text-sm text-zinc-400 font-light leading-relaxed">
@@ -139,7 +139,7 @@ export default function DigitalPage() {
         {/* Образовательный инсайт для инженеров */}
         <div className="bg-charcoal/30 border border-white/5 rounded-3xl p-8 sm:p-12">
           <div className="flex gap-4 items-start mb-6">
-            <Database className="w-8 h-8 text-gold shrink-0 mt-1" />
+            <Icon name="database" size={32} className="text-gold shrink-0 mt-1" />
             <div>
               <span className="text-xs uppercase text-gold font-semibold tracking-wider">инженерный инсайт</span>
               <h3 className="text-xl font-bold text-white tracking-wide">Почему распределенный реестр (DLT)?</h3>
