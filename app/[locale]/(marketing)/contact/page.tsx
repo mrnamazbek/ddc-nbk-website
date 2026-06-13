@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Icon from "@/components/ui/Icon";
 import { useState } from "react";
 
@@ -39,6 +39,7 @@ const LabelInputContainer = ({
 
 export default function ContactPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const reduce = useReducedMotion();
 
   const {
     register,
@@ -161,8 +162,30 @@ export default function ContactPage() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="text-center py-16 flex flex-col items-center justify-center pointer-events-auto"
               >
-                <div className="w-16 h-16 rounded-full bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
-                  <Icon name="check-circle" size={32} />
+                {/* Checkmark: spring pop-in + a subtle one-shot gold sparkle burst */}
+                <div className="relative mb-6">
+                  {!reduce &&
+                    Array.from({ length: 8 }).map((_, i) => {
+                      const ang = (i / 8) * Math.PI * 2;
+                      return (
+                        <motion.span
+                          key={i}
+                          aria-hidden
+                          className="absolute left-1/2 top-1/2 w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-gold"
+                          initial={{ x: 0, y: 0, scale: 0, opacity: 0 }}
+                          animate={{ x: Math.cos(ang) * 46, y: Math.sin(ang) * 46, scale: [0, 1, 0], opacity: [0, 1, 0] }}
+                          transition={{ duration: 0.7, delay: 0.18 + i * 0.02, ease: "easeOut" }}
+                        />
+                      );
+                    })}
+                  <motion.div
+                    initial={{ scale: 0, rotate: -18 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 340, damping: 15, delay: 0.05 }}
+                    className="w-16 h-16 rounded-full bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold"
+                  >
+                    <Icon name="check-circle" size={32} animate={false} />
+                  </motion.div>
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-4 tracking-wide">Обращение отправлено</h3>
                 <p className="text-sm text-zinc-400 font-light leading-relaxed max-w-md mx-auto mb-8">
@@ -238,8 +261,17 @@ export default function ContactPage() {
                   disabled={isSubmitting}
                   className="w-full justify-center flex items-center gap-2 py-4 h-12 text-gold font-medium bg-transparent hover:scale-[1.02] transition duration-300"
                 >
-                  {isSubmitting ? "Отправка..." : "Отправить обращение"}
-                  <Icon name="send" size={16} />
+                  {isSubmitting ? (
+                    <>
+                      Отправка…
+                      <Icon name="refresh" size={16} animate={false} className="animate-spin" />
+                    </>
+                  ) : (
+                    <>
+                      Отправить обращение
+                      <Icon name="send" size={16} animate={false} />
+                    </>
+                  )}
                 </LiquidButton>
               </form>
             )}
