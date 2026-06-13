@@ -2,8 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
+import dynamic from "next/dynamic";
 
-type PresetName = "default" | "triangles" | "treeline" | "wallpaper";
+// WebGL/R3F shader background — lazy-loaded (only when the Shader preset is on).
+const ShaderBackground = dynamic(() => import("./ShaderBackground"), { ssr: false });
+
+type PresetName = "default" | "triangles" | "treeline" | "wallpaper" | "shader";
 
 interface PresetConfig {
   shape: "circle" | "triangle" | "diamond";
@@ -70,6 +74,19 @@ export default function InteractiveDotGrid() {
       distortionStrength: 20,
       colorRest: isLight ? { r: 139, g: 92, b: 26, a: 0.5 } : { r: 189, g: 149, b: 91, a: 0.4 }, // Бронза
       colorActive: { r: 232, g: 200, b: 122, a: 0.95 }, // Золото
+    },
+    // Placeholder — the Shader preset renders a WebGL canvas instead of the 2D
+    // grid, so this config is never used (kept to satisfy the Record type).
+    shader: {
+      shape: "circle",
+      dotSpacingX: 26,
+      dotSpacingY: 26,
+      dotSize: 1.0,
+      maxDotSize: 2.3,
+      distortionRadius: 150,
+      distortionStrength: 30,
+      colorRest: { r: 40, g: 110, b: 70, a: 0.35 },
+      colorActive: { r: 232, g: 200, b: 122, a: 0.95 },
     },
   };
 
@@ -294,10 +311,14 @@ export default function InteractiveDotGrid() {
 
   return (
     <>
-      <canvas
-        ref={canvasRef}
-        className="fixed inset-0 w-full h-screen -z-10 block pointer-events-none"
-      />
+      {activePreset === "shader" ? (
+        <ShaderBackground isLight={isLight} />
+      ) : (
+        <canvas
+          ref={canvasRef}
+          className="fixed inset-0 w-full h-screen -z-10 block pointer-events-none"
+        />
+      )}
 
       {/* Интерактивная панель переключения пресетов (тестовая версия) */}
       <div className="fixed bottom-6 left-6 z-50 flex items-center gap-2 bg-[#1F2121]/80 backdrop-blur-xl border border-white/10 px-3 py-2 rounded-full shadow-lg shadow-black/40 pointer-events-auto">
@@ -343,6 +364,16 @@ export default function InteractiveDotGrid() {
           }`}
         >
           Wallpaper
+        </button>
+        <button
+          onClick={() => setActivePreset("shader")}
+          className={`px-3 py-1 text-[11px] font-medium rounded-full transition-all duration-200 cursor-pointer ${
+            activePreset === "shader"
+              ? "bg-gold text-black font-semibold shadow"
+              : "text-zinc-300 hover:text-white hover:bg-white/5"
+          }`}
+        >
+          Shader
         </button>
       </div>
     </>
