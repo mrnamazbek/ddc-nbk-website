@@ -3,7 +3,8 @@
 import React from "react";
 import { Icon as IconifyIcon } from "@iconify/react";
 import * as Iconsax from "iconsax-react";
-import { useIconSystem, IconSystem } from "../theme/IconSystemProvider";
+import { motion, useReducedMotion } from "framer-motion";
+import { useIconSystem } from "../theme/IconSystemProvider";
 import { cn } from "@/lib/utils";
 
 // Список доступных семантических имен иконок
@@ -218,13 +219,16 @@ const iconsaxMap: Record<IconName, React.ComponentType<any>> = {
 
 export default function Icon({ name, className, size = 20, animate = true }: IconProps) {
   const { iconSystem } = useIconSystem();
+  const reduce = useReducedMotion();
 
   // Отрисовка конкретной системы иконок
   const renderIconContent = () => {
     if (iconSystem === "iconsax") {
       const IconsaxComponent = iconsaxMap[name];
       if (IconsaxComponent) {
-        return <IconsaxComponent size={size} variant="Linear" className="w-full h-full" />;
+        // color="currentColor" is REQUIRED — Iconsax defaults to #292D32 (dark),
+        // which is invisible on our dark theme. This is why Iconsax "wasn't working".
+        return <IconsaxComponent size={size} variant="Linear" color="currentColor" className="w-full h-full" />;
       }
     }
 
@@ -238,12 +242,11 @@ export default function Icon({ name, className, size = 20, animate = true }: Ico
     return <IconifyIcon icon={mingcuteIcon} width={size} height={size} className="w-full h-full" />;
   };
 
-  // Вычисление классов анимации (CSS переходы, которые реагируют на .group-hover и direct hover)
-  const getAnimationClass = () => {
+  // Hover motion via CSS on the wrapper (so it works for BOTH icon sets, and
+  // reacts to a parent `.group` hover OR a direct hover on the icon).
+  const hoverClass = () => {
     if (!animate) return "";
-    
-    const base = "transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]";
-    
+    const base = "transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform";
     switch (name) {
       case "arrow-right":
         return `${base} group-hover:translate-x-1 hover:translate-x-1`;
@@ -253,27 +256,37 @@ export default function Icon({ name, className, size = 20, animate = true }: Ico
         return `${base} group-hover:translate-x-0.5 group-hover:-translate-y-0.5 hover:translate-x-0.5 hover:-translate-y-0.5`;
       case "refresh":
         return `${base} group-hover:rotate-180 hover:rotate-180 duration-500`;
-      case "menu":
-      case "x":
-      case "sun":
-      case "moon":
-        return `${base} group-hover:scale-110 hover:scale-110 active:scale-95`;
       default:
-        // Легкое масштабирование для остальных иконок
-        return `${base} group-hover:scale-105 hover:scale-105 active:scale-95`;
+        return `${base} group-hover:scale-110 hover:scale-110`;
     }
   };
 
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center justify-center shrink-0 text-current select-none", 
-        getAnimationClass(),
-        className
-      )}
-      style={{ width: size, height: size }}
-    >
+  const inner = (
+    <span className={cn("inline-flex w-full h-full items-center justify-center", hoverClass())}>
       {renderIconContent()}
     </span>
+  );
+
+  const outerClass = "inline-flex items-center justify-center shrink-0 text-current select-none";
+
+  // Static when animation is off or the user prefers reduced motion.
+  if (!animate || reduce) {
+    return (
+      <span className={cn(outerClass, className)} style={{ width: size, height: size }}>
+        {inner}
+      </span>
+    );
+  }
+
+  // Click micro-animation: tactile spring press/bounce on tap (framer-motion).
+  return (
+    <motion.span
+      className={cn(outerClass, className)}
+      style={{ width: size, height: size }}
+      whileTap={{ scale: 0.8 }}
+      transition={{ type: "spring", stiffness: 500, damping: 15, mass: 0.4 }}
+    >
+      {inner}
+    </motion.span>
   );
 }
