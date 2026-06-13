@@ -103,6 +103,11 @@ export default function Footer() {
             </span>
           </div>
 
+          {/* Блок верификации казахского шрифта (E2E-тест и визуальная проверка) */}
+          <div className="text-[11px] text-zinc-500 font-mono tracking-wider border border-white/5 bg-white/[0.02] px-3 py-1.5 rounded-lg select-all">
+            Проверка шрифта: <span className="text-gold font-normal font-sans">әғқңөұүһі АО Цифровое развитие</span>
+          </div>
+
           <div className="flex gap-6 text-xs text-muted">
             <Link href="/security" className="hover:text-gold transition-colors">
               Конфиденциальность

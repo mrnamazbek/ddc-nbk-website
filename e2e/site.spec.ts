@@ -65,11 +65,37 @@ test.describe("DDC Website E2E Tests", () => {
     await page.goto("/ru");
     
     // Находим кнопку переключения темы
-    // В Header.tsx должен быть переключатель темы. Давайте найдем кнопку
     const themeButton = page.locator('button[aria-label="Переключить тему"]');
     if (await themeButton.count() > 0) {
       await expect(themeButton).toBeVisible();
       await themeButton.click();
     }
+  });
+
+  test("should toggle font systems in A/B switcher and render Kazakh text", async ({ page }) => {
+    await page.goto("/ru");
+    
+    // Проверяем наличие проверочной строки в футере
+    const kzPositionText = page.locator("text=әғқңөұүһі АО Цифровое развитие");
+    await expect(kzPositionText).toBeVisible();
+    
+    // Находим кнопку открытия виджета
+    const switcherButton = page.locator('button[aria-label="Настройки A/B теста иконок"]');
+    await switcherButton.click();
+    
+    // Проверяем наличие заголовка A/B Тест шрифтов
+    await expect(page.locator("text=A/B Тест шрифтов")).toBeVisible();
+    
+    // Кнопка выбора Пары B
+    const pairBOption = page.locator("button:has-text('IBM Plex Sans + Lora')");
+    await expect(pairBOption).toBeVisible();
+    await pairBOption.click();
+    await expect(pairBOption).toHaveClass(/bg-forest/);
+    
+    // Кнопка выбора Пары A
+    const pairAOption = page.locator("button:has-text('Golos + Source Serif 4')");
+    await expect(pairAOption).toBeVisible();
+    await pairAOption.click();
+    await expect(pairAOption).toHaveClass(/bg-forest/);
   });
 });

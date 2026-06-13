@@ -87,11 +87,11 @@
   /* ==========================================
      4. Типографика (Typography System)
      ========================================== */
-  --font-display: var(--font-lato), sans-serif;
-  --font-heading: var(--font-lato), sans-serif;
-  --font-body: var(--font-lato), sans-serif;
-  --font-soft: var(--font-nunito), sans-serif;
-  --font-mono: var(--font-mono), monospace;
+  --font-display: var(--font-current-display), serif;
+  --font-heading: var(--font-current-sans), sans-serif;
+  --font-body: var(--font-current-sans), sans-serif;
+  --font-soft: var(--font-current-sans), sans-serif;
+  --font-mono: var(--font-current-mono), monospace;
 
   --text-xs: clamp(0.75rem, 1.2vw + 0.1rem, 0.875rem);
   --text-sm: clamp(0.875rem, 1.4vw + 0.1rem, 1rem);

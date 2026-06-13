@@ -1,29 +1,41 @@
 import type { Metadata } from "next";
-import { Lato, Nunito, JetBrains_Mono } from "next/font/google";
+import { Source_Serif_4, Golos_Text, Lora, IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
 import "../globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import PageTransitionProvider from "@/components/motion/PageTransition";
 import ThemeProvider from "@/components/theme/ThemeProvider";
 import { IconSystemProvider } from "@/components/theme/IconSystemProvider";
+import { FontSystemProvider } from "@/components/theme/FontSystemProvider";
 import IconSystemSwitcher from "@/components/ui/IconSystemSwitcher";
 
-const lato = Lato({
-  subsets: ["latin", "latin-ext"],
-  weight: ["300", "400", "700", "900"],
-  variable: "--font-lato",
+const sourceSerif = Source_Serif_4({
+  subsets: ["latin", "cyrillic", "cyrillic-ext"],
+  variable: "--font-source-serif",
   display: "swap",
 });
 
-const nunito = Nunito({
+const golosText = Golos_Text({
   subsets: ["latin", "cyrillic", "cyrillic-ext"],
-  weight: ["400", "600", "700"],
-  variable: "--font-nunito",
+  variable: "--font-golos",
+  display: "swap",
+});
+
+const lora = Lora({
+  subsets: ["latin", "cyrillic", "cyrillic-ext"],
+  variable: "--font-lora",
+  display: "swap",
+});
+
+const ibmPlexSans = IBM_Plex_Sans({
+  subsets: ["latin", "cyrillic", "cyrillic-ext"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-ibm-plex",
   display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin", "cyrillic"],
+  subsets: ["latin", "cyrillic", "cyrillic-ext"],
   weight: ["400", "500"],
   variable: "--font-mono",
   display: "swap",
@@ -50,7 +62,7 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
-      className={`${lato.variable} ${nunito.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${sourceSerif.variable} ${golosText.variable} ${lora.variable} ${ibmPlexSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
@@ -63,14 +75,16 @@ export default async function LocaleLayout({
       </head>
       <body className="min-h-full flex flex-col text-white">
         <ThemeProvider>
-          <IconSystemProvider>
-            <NextIntlClientProvider messages={messages}>
-              {/* Faint grain overlay (opacity 0.03) for organic texture */}
-              <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] bg-[url('/images/textures/bg-texture-noise.png')] bg-repeat" />
-              <PageTransitionProvider>{children}</PageTransitionProvider>
-              <IconSystemSwitcher />
-            </NextIntlClientProvider>
-          </IconSystemProvider>
+          <FontSystemProvider>
+            <IconSystemProvider>
+              <NextIntlClientProvider messages={messages}>
+                {/* Faint grain overlay (opacity 0.03) for organic texture */}
+                <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] bg-[url('/images/textures/bg-texture-noise.png')] bg-repeat" />
+                <PageTransitionProvider>{children}</PageTransitionProvider>
+                <IconSystemSwitcher />
+              </NextIntlClientProvider>
+            </IconSystemProvider>
+          </FontSystemProvider>
         </ThemeProvider>
       </body>
     </html>
