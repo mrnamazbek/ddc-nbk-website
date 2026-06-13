@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Source_Serif_4, Golos_Text, Lora, IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
+import { Source_Serif_4, Golos_Text, Lora, IBM_Plex_Sans, Manrope, JetBrains_Mono } from "next/font/google";
 import "../globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
@@ -34,6 +34,14 @@ const ibmPlexSans = IBM_Plex_Sans({
   display: "swap",
 });
 
+// Styrene-like grotesque for the "Anthropic" pair (Cyrillic-capable; Kazakh
+// glyphs Manrope may lack are caught by the Golos fallback in the CSS stack).
+const manrope = Manrope({
+  subsets: ["latin", "cyrillic", "cyrillic-ext"],
+  variable: "--font-manrope",
+  display: "swap",
+});
+
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin", "cyrillic", "cyrillic-ext"],
   weight: ["400", "500"],
@@ -62,7 +70,7 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
-      className={`${sourceSerif.variable} ${golosText.variable} ${lora.variable} ${ibmPlexSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${sourceSerif.variable} ${golosText.variable} ${lora.variable} ${ibmPlexSans.variable} ${manrope.variable} ${jetbrainsMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>

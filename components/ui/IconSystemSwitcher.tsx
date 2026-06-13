@@ -27,6 +27,7 @@ export default function IconSystemSwitcher() {
   const fontOptions: { id: FontSystem; name: string; desc: string }[] = [
     { id: "pair-a", name: "Golos + Source Serif 4", desc: "Строгий финтех-стиль" },
     { id: "pair-b", name: "IBM Plex Sans + Lora", desc: "Академический премиум" },
+    { id: "pair-c", name: "Manrope + Source Serif (Anthropic)", desc: "Гротеск в заголовках, антиква в тексте — стиль Styrene/Tiempos" },
   ];
 
   return (

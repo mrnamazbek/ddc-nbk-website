@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-export type FontSystem = "pair-a" | "pair-b";
+export type FontSystem = "pair-a" | "pair-b" | "pair-c";
 
 interface FontSystemContextType {
   fontSystem: FontSystem;
@@ -17,7 +17,7 @@ export function FontSystemProvider({ children }: { children: React.ReactNode }) 
 
   useEffect(() => {
     const saved = localStorage.getItem("ddc-font-system") as FontSystem;
-    if (saved && (saved === "pair-a" || saved === "pair-b")) {
+    if (saved && (saved === "pair-a" || saved === "pair-b" || saved === "pair-c")) {
       setFontSystemState(saved);
       updateHtmlClass(saved);
     } else {
@@ -29,7 +29,7 @@ export function FontSystemProvider({ children }: { children: React.ReactNode }) 
   const updateHtmlClass = (system: FontSystem) => {
     if (typeof document !== "undefined") {
       const root = document.documentElement;
-      root.classList.remove("font-pair-a", "font-pair-b");
+      root.classList.remove("font-pair-a", "font-pair-b", "font-pair-c");
       root.classList.add(`font-${system}`);
     }
   };

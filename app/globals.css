@@ -25,6 +25,16 @@ html.font-pair-b {
   --font-current-soft: var(--font-golos), sans-serif;
 }
 
+/* Пара C — «Anthropic / Styrene»: гротеск (Styrene-роль) в заголовках,
+   антиква Source Serif (Tiempos-роль) в тексте. Golos — запасной для казахских
+   глифов, которых может не быть в Manrope. Реальный Styrene (платный, Commercial
+   Type) можно подключить через next/font/local — см. инструкцию. */
+html.font-pair-c {
+  --font-current-sans: var(--font-source-serif), Georgia, serif;
+  --font-current-display: var(--font-manrope), var(--font-golos), sans-serif;
+  --font-current-soft: var(--font-manrope), var(--font-golos), sans-serif;
+}
+
 @theme {
   --color-forest: var(--color-forest);
   --color-forest-mid: var(--color-forest-mid);
