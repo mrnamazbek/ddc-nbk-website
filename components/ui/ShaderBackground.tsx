@@ -30,6 +30,7 @@ const fragmentShader = /* glsl */ `
   uniform vec3  uForestLight; // #52B788
   uniform vec3  uGold;        // #C9A84C
   uniform vec3  uGoldLight;   // #E8C87A
+  uniform vec3  uBgColor;     // A/B test bg color
 
   float hash(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
   float noise(vec2 p){
@@ -78,7 +79,7 @@ const fragmentShader = /* glsl */ `
     vec3 auroraCol = mix(uForest, uGold, flow);
     float aurora = flow * 0.05 + mouseGlow * 0.10;
 
-    vec3 bg = mix(vec3(0.027, 0.027, 0.039), vec3(0.961, 0.961, 0.941), uLight);
+    vec3 bg = mix(uBgColor, vec3(0.961, 0.961, 0.941), uLight);
     vec3 finalCol = bg + auroraCol * aurora + col * dotAlpha;
     gl_FragColor = vec4(finalCol, 1.0);
   }
@@ -89,11 +90,14 @@ function hexToRgb(hex: string): THREE.Vector3 {
   return new THREE.Vector3(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255);
 }
 
+import { useBgSystem } from "../theme/BgSystemProvider";
+
 function ShaderPlane({ isLight }: { isLight: boolean }) {
   const matRef = useRef<THREE.ShaderMaterial>(null);
   const { size, viewport } = useThree();
   const pointer = useRef({ x: 0.5, y: 0.5 });
   const smooth = useRef({ x: 0.5, y: 0.5 });
+  const { bgSystem } = useBgSystem();
 
   const uniforms = useMemo(
     () => ({
@@ -105,6 +109,7 @@ function ShaderPlane({ isLight }: { isLight: boolean }) {
       uForestLight: { value: hexToRgb("#52B788") },
       uGold: { value: hexToRgb("#C9A84C") },
       uGoldLight: { value: hexToRgb("#E8C87A") },
+      uBgColor: { value: new THREE.Vector3(16 / 255, 83 / 255, 76 / 255) },
     }),
     [] // eslint-disable-line react-hooks/exhaustive-deps
   );
@@ -112,6 +117,13 @@ function ShaderPlane({ isLight }: { isLight: boolean }) {
   useEffect(() => {
     uniforms.uLight.value = isLight ? 1 : 0;
   }, [isLight, uniforms]);
+
+  useEffect(() => {
+    const color = bgSystem === "bg-forest"
+      ? new THREE.Vector3(16 / 255, 83 / 255, 76 / 255)
+      : new THREE.Vector3(1 / 255, 59 / 255, 63 / 255);
+    uniforms.uBgColor.value.copy(color);
+  }, [bgSystem, uniforms]);
 
   useEffect(() => {
     const onMove = (e: PointerEvent) => {

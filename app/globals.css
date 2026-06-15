@@ -25,6 +25,15 @@ html.font-pair-b {
   --font-current-soft: var(--font-golos), sans-serif;
 }
 
+/* Классы переключения фонов A/B (только для темной темы) */
+html.bg-theme-forest:not(.light) {
+  --background: rgba(16, 83, 76, 1);
+}
+
+html.bg-theme-teal:not(.light) {
+  --background: rgba(1, 59, 63, 1);
+}
+
 /* Пара C — «Anthropic / Styrene»: гротеск (Styrene-роль) в заголовках,
    антиква Source Serif (Tiempos-роль) в тексте. Golos — запасной для казахских
    глифов, которых может не быть в Manrope. Реальный Styrene (платный, Commercial

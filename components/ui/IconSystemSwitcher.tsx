@@ -4,11 +4,13 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useIconSystem, IconSystem } from "../theme/IconSystemProvider";
 import { useFontSystem, FontSystem } from "../theme/FontSystemProvider";
+import { useBgSystem, BgSystem } from "../theme/BgSystemProvider";
 import Icon from "./Icon";
 
 export default function IconSystemSwitcher() {
   const { iconSystem, setIconSystem } = useIconSystem();
   const { fontSystem, setFontSystem } = useFontSystem();
+  const { bgSystem, setBgSystem } = useBgSystem();
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -28,6 +30,11 @@ export default function IconSystemSwitcher() {
     { id: "pair-a", name: "Golos + Source Serif 4", desc: "Строгий финтех-стиль" },
     { id: "pair-b", name: "IBM Plex Sans + Lora", desc: "Академический премиум" },
     { id: "pair-c", name: "Manrope + Source Serif (Anthropic)", desc: "Гротеск в заголовках, антиква в тексте — стиль Styrene/Tiempos" },
+  ];
+
+  const bgOptions: { id: BgSystem; name: string; desc: string }[] = [
+    { id: "bg-forest", name: "Deep Forest Green", desc: "Глубокий изумрудный (A)" },
+    { id: "bg-teal", name: "Deep Teal Base", desc: "Новый сине-зелёный оттенок (B)" },
   ];
 
   return (
@@ -89,6 +96,41 @@ export default function IconSystemSwitcher() {
                     key={opt.id}
                     type="button"
                     onClick={() => setFontSystem(opt.id)}
+                    className={`w-full text-left px-3 py-1.5 rounded-xl cursor-pointer flex flex-col transition-all relative overflow-hidden group ${
+                      active
+                        ? "bg-forest/30 border border-forest-light/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
+                        : "hover:bg-white/[0.03] border border-transparent"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <span className={`text-xs font-semibold ${active ? "text-gold" : "text-white"}`}>
+                        {opt.name}
+                      </span>
+                      {active && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
+                      )}
+                    </div>
+                    <span className="text-[10px] text-zinc-400 font-light mt-0.5 leading-tight">
+                      {opt.desc}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Группа переключения фонов */}
+            <div className="flex flex-col gap-2">
+              <div className="text-[10px] uppercase font-bold tracking-[0.2em] text-gold mb-1 border-b border-glass-border pb-2 flex items-center gap-1.5">
+                <Icon name="palette" size={12} className="text-gold" />
+                A/B Тест фона
+              </div>
+              {bgOptions.map((opt) => {
+                const active = bgSystem === opt.id;
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => setBgSystem(opt.id)}
                     className={`w-full text-left px-3 py-1.5 rounded-xl cursor-pointer flex flex-col transition-all relative overflow-hidden group ${
                       active
                         ? "bg-forest/30 border border-forest-light/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"

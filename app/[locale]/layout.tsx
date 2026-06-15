@@ -7,6 +7,7 @@ import PageTransitionProvider from "@/components/motion/PageTransition";
 import ThemeProvider from "@/components/theme/ThemeProvider";
 import { IconSystemProvider } from "@/components/theme/IconSystemProvider";
 import { FontSystemProvider } from "@/components/theme/FontSystemProvider";
+import { BgSystemProvider } from "@/components/theme/BgSystemProvider";
 import IconSystemSwitcher from "@/components/ui/IconSystemSwitcher";
 
 const sourceSerif = Source_Serif_4({
@@ -83,16 +84,18 @@ export default async function LocaleLayout({
       </head>
       <body className="min-h-full flex flex-col text-white">
         <ThemeProvider>
-          <FontSystemProvider>
-            <IconSystemProvider>
-              <NextIntlClientProvider messages={messages}>
-                {/* Faint grain overlay (opacity 0.03) for organic texture */}
-                <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] bg-[url('/images/textures/bg-texture-noise.png')] bg-repeat" />
-                <PageTransitionProvider>{children}</PageTransitionProvider>
-                <IconSystemSwitcher />
-              </NextIntlClientProvider>
-            </IconSystemProvider>
-          </FontSystemProvider>
+          <BgSystemProvider>
+            <FontSystemProvider>
+              <IconSystemProvider>
+                <NextIntlClientProvider messages={messages}>
+                  {/* Faint grain overlay (opacity 0.03) for organic texture */}
+                  <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] bg-[url('/images/textures/bg-texture-noise.png')] bg-repeat" />
+                  <PageTransitionProvider>{children}</PageTransitionProvider>
+                  <IconSystemSwitcher />
+                </NextIntlClientProvider>
+              </IconSystemProvider>
+            </FontSystemProvider>
+          </BgSystemProvider>
         </ThemeProvider>
       </body>
     </html>

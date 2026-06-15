@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { getScroll, startScrollTracking } from "@/lib/scrollStore";
 import { band, lerp, range } from "@/lib/sceneMath";
 import { useTranslations } from "next-intl";
+import { useBgSystem } from "@/components/theme/BgSystemProvider";
 
 interface ScrollSequenceProps {
   totalFrames?: number;
@@ -24,6 +25,7 @@ export default function ScrollSequence({
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const { bgSystem } = useBgSystem();
 
   // Ссылки на ассеты
   const shanyrakPngRef = useRef<HTMLImageElement | null>(null);
@@ -118,7 +120,7 @@ export default function ScrollSequence({
         canvas.height / 2,
         Math.max(canvas.width, canvas.height) * 0.8
       );
-      gradient.addColorStop(0, "#0E2419");
+      gradient.addColorStop(0, bgSystem === "bg-forest" ? "#10534C" : "#013B3F");
       gradient.addColorStop(1, "#0A0A0A");
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);

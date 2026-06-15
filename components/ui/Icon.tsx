@@ -55,7 +55,8 @@ export type IconName =
   | "contact-center"
   | "procurement"
   | "it-services"
-  | "development";
+  | "development"
+  | "palette";
 
 interface IconProps {
   name: IconName;
@@ -113,6 +114,7 @@ const mingcuteMap: Record<IconName, string> = {
   procurement: "mingcute:shopping-cart-1-line",
   "it-services": "mingcute:settings-1-line",
   development: "mingcute:code-line",
+  palette: "mingcute:palette-line",
 };
 
 // Маппинг для Solar (Iconify)
@@ -164,6 +166,7 @@ const solarMap: Record<IconName, string> = {
   procurement: "solar:cart-linear",
   "it-services": "solar:settings-linear",
   development: "solar:code-linear",
+  palette: "solar:palette-linear",
 };
 
 // Маппинг для Iconsax (локальные React компоненты)
@@ -215,6 +218,7 @@ const iconsaxMap: Record<IconName, React.ComponentType<any>> = {
   procurement: Iconsax.ShoppingCart,
   "it-services": Iconsax.Setting2,
   development: Iconsax.Code,
+  palette: Iconsax.Colorfilter,
 };
 
 export default function Icon({ name, className, size = 20, animate = true }: IconProps) {
