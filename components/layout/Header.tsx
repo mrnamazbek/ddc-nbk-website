@@ -139,7 +139,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1300px] transition-all duration-500 rounded-full ${
+        className={`!fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1300px] transition-all duration-500 rounded-full ${
           isScrolled
             ? "liquid-glass-strong shadow-card py-3 px-6 sm:px-8"
             : "liquid-glass shadow-lg py-4 px-6 sm:px-8"
