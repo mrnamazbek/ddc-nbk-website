@@ -37,7 +37,7 @@
   /* ==========================================
      2. Семантические цвета Темной темы (Default Dark Theme)
      ========================================== */
-  --background: #08080a;
+  --background: #08140D; /* deep forest green base (was near-black #08080a) */
   --foreground: #FFFFFF;
   --surface: #141419;
   

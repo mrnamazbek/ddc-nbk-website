@@ -93,7 +93,33 @@ export default function InteractiveDotGrid() {
   const currentConfig = presets[activePreset];
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const bgWrapRef = useRef<HTMLDivElement | null>(null);
   const mousePos = useRef({ x: -10000, y: -10000 });
+
+  // Плавно гасим фон-эффект при прокрутке вниз: к концу первого экрана он почти
+  // исчезает, оставляя ровный тёмно-зелёный фон. Управляется через Lenis (window scroll).
+  useEffect(() => {
+    let raf = 0;
+    const apply = () => {
+      const el = bgWrapRef.current;
+      if (!el) return;
+      const vh = window.innerHeight || 1;
+      const o = Math.max(0, Math.min(1, 1 - window.scrollY / (vh * 1.05)));
+      el.style.opacity = String(o);
+    };
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(apply);
+    };
+    apply();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
   const dotsRef = useRef<
     Array<{
       originalX: number;
@@ -176,7 +202,7 @@ export default function InteractiveDotGrid() {
     window.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseleave", handleMouseLeave);
 
-    const bg = isLight ? "#f5f5f0" : "#000000";
+    const bg = isLight ? "#f5f5f0" : "#08140D"; // deep forest green base (was near-black)
 
     const animate = () => {
       ctx.fillStyle = bg;
@@ -311,14 +337,18 @@ export default function InteractiveDotGrid() {
 
   return (
     <>
-      {activePreset === "shader" ? (
-        <ShaderBackground isLight={isLight} />
-      ) : (
-        <canvas
-          ref={canvasRef}
-          className="fixed inset-0 w-full h-screen -z-10 block pointer-events-none"
-        />
-      )}
+      {/* Wrapper fades the whole background effect out as the user scrolls past
+          the first viewport (opacity driven by the scroll effect above). */}
+      <div ref={bgWrapRef} style={{ willChange: "opacity" }}>
+        {activePreset === "shader" ? (
+          <ShaderBackground isLight={isLight} />
+        ) : (
+          <canvas
+            ref={canvasRef}
+            className="fixed inset-0 w-full h-screen -z-10 block pointer-events-none"
+          />
+        )}
+      </div>
 
       {/* Интерактивная панель переключения пресетов (тестовая версия) */}
       <div className="fixed bottom-6 left-6 z-50 flex items-center gap-2 bg-[#1F2121]/80 backdrop-blur-xl border border-white/10 px-3 py-2 rounded-full shadow-lg shadow-black/40 pointer-events-auto">

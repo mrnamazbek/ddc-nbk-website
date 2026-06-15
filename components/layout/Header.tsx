@@ -7,10 +7,8 @@ import { usePathname, useRouter } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "../ui/Button";
-import Magnetic from "../motion/Magnetic";
 import TransitionLink from "../motion/TransitionLink";
 import CinematicThemeSwitcher from "../ui/cinematic-theme-switcher";
-import { LiquidButton } from "../ui/liquid-glass-button";
 import Icon from "../ui/Icon";
 
 const LANGUAGES = ["kz", "ru", "en"];
@@ -148,22 +146,20 @@ export default function Header() {
         }`}
       >
         <div className="w-full flex items-center justify-between">
-          {/* Logo */}
-          <TransitionLink href="/" className="flex items-center gap-3 group select-none">
+          {/* Logo (mark only — clean & compact) */}
+          <TransitionLink
+            href="/"
+            aria-label="DDC — на главную"
+            className="flex items-center group select-none shrink-0"
+          >
             <Image
               src={logoSrc}
               alt="DDC — Центр цифрового развития НБК"
-              width={42}
-              height={42}
+              width={44}
+              height={44}
               priority
-              className="transition-transform duration-700 group-hover:rotate-[120deg] pointer-events-none"
+              className="transition-transform duration-500 ease-out group-hover:scale-105 group-active:scale-95 pointer-events-none"
             />
-            <div>
-              <span className="font-heading font-bold text-xl tracking-wider text-foreground">DDC</span>
-              <span className="block text-[8px] text-gold font-mono tracking-widest leading-none uppercase">
-                {t("subsidiaryOfNBK")}
-              </span>
-            </div>
           </TransitionLink>
 
           {/* Desktop menu — liquid-glass pill with a sliding cursor highlight */}
@@ -213,15 +209,6 @@ export default function Header() {
 
             {/* Language Switcher */}
             <LanguageSwitcher locale={locale} onSwitch={switchLocale} />
-
-            {/* Procurement Portal Button */}
-            <a href="https://zakup.nationalbank.kz" target="_blank" rel="noopener noreferrer">
-              <Magnetic>
-                <LiquidButton className="text-gold font-medium px-4 py-2 text-xs">
-                  {t("procurementPortal")}
-                </LiquidButton>
-              </Magnetic>
-            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -285,12 +272,6 @@ export default function Header() {
                 <span className="text-sm text-muted">{t("language")}</span>
                 <LanguageSwitcher locale={locale} onSwitch={switchLocale} size="lg" />
               </div>
-
-              <a href="https://zakup.nationalbank.kz" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="w-full">
-                <LiquidButton className="w-full text-gold font-medium py-3 justify-center flex items-center gap-2">
-                  {t("procurementPortal")} <Icon name="arrow-right" size={16} />
-                </LiquidButton>
-              </a>
             </div>
           </motion.div>
         )}
