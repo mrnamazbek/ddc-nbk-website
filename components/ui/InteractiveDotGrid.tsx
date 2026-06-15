@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
+import { useBgSystem } from "../theme/BgSystemProvider";
 
 // WebGL/R3F shader background — lazy-loaded (only when the Shader preset is on).
 const ShaderBackground = dynamic(() => import("./ShaderBackground"), { ssr: false });
@@ -25,6 +26,7 @@ interface PresetConfig {
 export default function InteractiveDotGrid() {
   const { resolvedTheme } = useTheme();
   const isLight = resolvedTheme === "light";
+  const { bgSystem } = useBgSystem();
 
   const [activePreset, setActivePreset] = useState<PresetName>("default");
   
@@ -202,7 +204,9 @@ export default function InteractiveDotGrid() {
     window.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseleave", handleMouseLeave);
 
-    const bg = isLight ? "#f5f5f0" : "#08140D"; // deep forest green base (was near-black)
+    const bg = isLight
+      ? "#f5f5f0"
+      : (bgSystem === "bg-forest" ? "#10534C" : "#013B3F");
 
     const animate = () => {
       ctx.fillStyle = bg;
@@ -333,7 +337,7 @@ export default function InteractiveDotGrid() {
       document.removeEventListener("mouseleave", handleMouseLeave);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [activePreset, isLight]);
+  }, [activePreset, isLight, bgSystem]);
 
   return (
     <>
