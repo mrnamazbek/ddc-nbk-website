@@ -308,11 +308,272 @@
     "inflation": "Annual Inflation",
     "inflationTrend": "Rate reduction",
     "exchangeRates": "Official Exchange Rates (KZT)",
-    "usd": "US Dollar",
-    "eur": "Euro",
     "rub": "Russian Ruble",
     "updated": "Updated",
     "loading": "loading...",
     "liveFeed": "NBK Live feed"
+  },
+  "AboutPage": {
+    "overline": "ABOUT DDC CENTER",
+    "titleLine1": "Architects of",
+    "titleAccent": "financial technologies",
+    "subtitle": "Digital Development Center (DDC) is a subsidiary of the National Bank of Kazakhstan, established to implement breakthrough fintech projects of state importance.",
+    "missionTitle": "Our Mission",
+    "missionDesc1": "We believe that modern national currency and payment gateways must meet the demands of the digital era. DDC creates secure, scalable, and accessible solutions that enhance the competitiveness of Kazakhstan's economy on the global stage.",
+    "missionDesc2": "From Digital Tenge integration to interbank clearing automation, we handle the full cycle of development, testing, and scaling of critical infrastructure.",
+    "founderBadge": "founder",
+    "founderTitle": "National Bank of Kazakhstan",
+    "founderDesc": "Direct control by the main financial regulator ensures that developments align with state goals of financial stability and security.",
+    "founderLink": "Official website of the National Bank of RK",
+    "v1Title": "State Vector",
+    "v1Text": "Each of our projects aims to improve the efficiency and stability of Kazakhstan's national financial architecture.",
+    "v2Title": "Human Capital",
+    "v2Text": "We bring together the strongest IT engineers, cryptographers, and financial analysts to solve state-scale challenges.",
+    "v3Title": "Security by Default",
+    "v3Text": "The Security-by-Design development methodology guarantees data protection at every level of the system life cycle.",
+    "ctaTitle": "Develop the technologies of the future",
+    "ctaDesc": "We are looking for talented engineers, analysts, and architects ready to solve complex state-scale tasks in a strong team.",
+    "ctaBtn": "Open Vacancies"
+  },
+  "ServicesPage": {
+    "overline": "SOLUTIONS AND TECHNOLOGIES",
+    "titleLine1": "State-level",
+    "titleAccent": "platforms and services",
+    "subtitle": "DDC designs, builds, and maintains the technological core of the financial sector of the Republic of Kazakhstan. Our portfolio includes solutions from digital currency to high-load clearing systems.",
+    "techStackLabel": "Technology stack:",
+    "keyFeaturesLabel": "Key features:",
+    "s1": {
+      "title": "Digital Tenge Platform (CBDC)",
+      "subtitle": "National digital currency",
+      "description": "Creation of a hybrid architecture combining the advantages of distributed ledgers and classic high-performance banking structure.",
+      "f1": "Programmability via smart contracts to control targeted spending",
+      "f2": "Two-tier offline transactions without mobile network access",
+      "f3": "Integration with existing cashless infrastructure of commercial banks"
+    },
+    "s2": {
+      "title": "Instant Payments System (IPS)",
+      "subtitle": "Clearing and transactions 24/7/365",
+      "description": "Ensuring instant interbank payments for individuals and legal entities by phone number or QR code.",
+      "f1": "Payment processing speed under 2 seconds",
+      "f2": "Connection of all commercial banks of Kazakhstan through a single gateway",
+      "f3": "Compliance with international message standard ISO 20022"
+    },
+    "s3": {
+      "title": "Interbank Clearing and Settlements",
+      "subtitle": "Stability of the financial core",
+      "description": "Support and modernization of interbank clearing systems ensuring guaranteed execution of large financial settlements.",
+      "f1": "Multilateral netting and scheduled clearing",
+      "f2": "High infrastructure fault tolerance at 99.999% SLA level",
+      "f3": "Integration with Real-Time Gross Settlement (RTGS) systems"
+    },
+    "s4": {
+      "title": "Infrastructure Cybersecurity",
+      "subtitle": "State protection class",
+      "description": "Designing and maintaining comprehensive protection of the National Bank's financial network from external cyberattacks and leaks.",
+      "f1": "Implementation of state cryptographic standards (ST RK)",
+      "f2": "Protection of communication channels using hardware encryption",
+      "f3": "Audit and penetration testing of systems (Red Teaming)"
+    },
+    "s5": {
+      "title": "Open API / Open Banking Infrastructure",
+      "subtitle": "Fintech ecosystem",
+      "description": "Standardization and development of a single open API gateway to create seamless interaction between banks and fintech companies.",
+      "f1": "Unified API specifications portal for developers",
+      "f2": "Secure authentication via OAuth 2.0 / OpenID Connect",
+      "f3": "Reducing barriers for new fintech products entering the market"
+    },
+    "s6": {
+      "title": "Financial Analytics and Big Data",
+      "subtitle": "Market intelligence",
+      "description": "Processing and analysis of large volumes of non-personalized financial transactions for macroeconomic forecasting.",
+      "f1": "Monitoring of transactional activity on a country scale",
+      "f2": "Building predictive models for inflation and liquidity",
+      "f3": "Automatic detection of anomalies and suspicious transactions"
+    }
+  },
+  "DigitalPage": {
+    "overline": "DIGITAL TECHNOLOGIES",
+    "titleLine1": "Digital Tenge:",
+    "titleAccent": "A New Era of Money",
+    "subtitle": "Research, prototyping, and launch of the third form of national currency based on distributed ledger technology (DLT).",
+    "swipeHint": "Swipe table ↔",
+    "card1Title": "Hybrid DLT Architecture",
+    "card1Desc": "Combination of private blockchain (Hyperledger Fabric) with traditional high-performance relational databases to balance scalability and legal transparency.",
+    "card2Title": "Target-Marked Smart Contracts",
+    "card2Desc": "Programmable smart contracts allow automatic monitoring of budget spending. Money physically cannot be spent on purposes not specified by the contract.",
+    "card3Title": "Hardware Offline Clearing",
+    "card3Desc": "Special security chips in smart cards and mobile phones allow storing cryptographic token signatures and conducting transactions directly between devices without connection.",
+    "compareTitle": "Comparison of forms of",
+    "compareAccent": "national currency",
+    "thFeature": "Feature",
+    "thCash": "Cash",
+    "thNonCash": "Non-cash money",
+    "thCbdc": "Digital Tenge (CBDC)",
+    "insightTitle": "Why Distributed Ledger (DLT)?",
+    "insightDesc1": "Unlike classical DBMSs (like PostgreSQL or Oracle), where data integrity is controlled by a single central administrator, Digital Tenge uses distributed consensus. This eliminates the risk of unauthorized alteration of balances or transaction history by third parties, creating mathematically provable trust in the currency.",
+    "insightDesc2": "However, to ensure throughput of 50,000+ transactions per second, we designed a two-tier system where ledger data is cached in high-speed in-memory databases for fast reads, while the final settlement is fixed in the distributed ledger.",
+    "rows": {
+      "form": {
+        "name": "Form of issue",
+        "cash": "Physical (paper, metal)",
+        "nonCash": "Electronic records in banks",
+        "cbdc": "Unique digital token"
+      },
+      "issuer": {
+        "name": "Issuer",
+        "cash": "National Bank of RK",
+        "nonCash": "Commercial banks",
+        "cbdc": "National Bank of RK"
+      },
+      "offline": {
+        "name": "Offline mode",
+        "cash": "Yes (full offline)",
+        "nonCash": "No (requires internet)",
+        "cbdc": "Yes (two-tier offline)"
+      },
+      "programmable": {
+        "name": "Programmability",
+        "cash": "No",
+        "nonCash": "Limited (autopayments)",
+        "cbdc": "Yes (via smart contracts)"
+      },
+      "speed": {
+        "name": "Settlement speed",
+        "cash": "Instant upon physical transfer",
+        "nonCash": "From a few seconds to days",
+        "cbdc": "Instant (in real-time)"
+      }
+    }
+  },
+  "NewsPage": {
+    "overline": "DDC PRESS CENTER",
+    "titleLine1": "Events, releases",
+    "titleAccent": "and publications",
+    "subtitle": "Stay informed about the latest updates, Digital Tenge architecture news, and scientific and technical reports of our laboratory.",
+    "readTimeSuffix": "read",
+    "readMore": "Read more",
+    "articles": {
+      "a1": {
+        "category": "Pilot Project",
+        "title": "Successful offline integration of Digital Tenge",
+        "excerpt": "Completed the first stage of testing two-tier offline payments on mobile devices and smart cards in remote regions.",
+        "date": "May 18, 2026",
+        "readTime": "5 min"
+      },
+      "a2": {
+        "category": "Integration",
+        "title": "Connecting five major banks to the Open API platform",
+        "excerpt": "Implementation of unified open banking standards allows automating instant interbank information exchange.",
+        "date": "May 04, 2026",
+        "readTime": "4 min"
+      },
+      "a3": {
+        "category": "Release",
+        "title": "Published technical Whitepaper on CBDC 2.0 architecture",
+        "excerpt": "The new document details the mechanisms of smart contracts for marking targeted state subsidies.",
+        "date": "April 22, 2026",
+        "readTime": "8 min"
+      },
+      "a4": {
+        "category": "Events",
+        "title": "DDC participated in Fintech Forum Kazakhstan 2026",
+        "excerpt": "Center executives presented intermediate results of Digital Tenge integration into the retail payments sector.",
+        "date": "April 15, 2026",
+        "readTime": "3 min"
+      },
+      "a5": {
+        "category": "Education",
+        "title": "Launch of internships for Junior Database engineers and analysts",
+        "excerpt": "Jointly with the National Bank, recruitment is open for a paid annual internship at the DDC cybersecurity lab.",
+        "date": "April 02, 2026",
+        "readTime": "6 min"
+      },
+      "a6": {
+        "category": "Technology",
+        "title": "Modernization of Instant Payments core: migration to Redis clusters",
+        "excerpt": "Caching architecture update allowed reducing transaction confirmation time to 1.2 seconds under peak load.",
+        "date": "March 20, 2026",
+        "readTime": "7 min"
+      }
+    }
+  },
+  "CareersPage": {
+    "overline": "Digital Development Center of the National Bank of Kazakhstan",
+    "titleLine1": "Center is looking for",
+    "titleAccent": "new talents",
+    "subtitle": "The Digital Development Center of the National Bank of Kazakhstan (DDC) is a strategic partner in the digital transformation of the financial sector. Since 2022, the company has been developing, implementing, and supporting state information systems for the National Bank and its subsidiaries.",
+    "missionTitle": "Mission",
+    "missionDesc": "To be a leader in digital transformation, providing the National Bank and its subsidiaries with advanced IT solutions that accelerate innovation, ensure stability, and set new quality standards in data and technology management.",
+    "visionTitle": "Vision",
+    "visionDesc": "We strive to become a benchmark in the field of digital transformation by developing and implementing advanced IT solutions for the National Bank and its subsidiaries. We see ourselves as a key partner capable of providing innovation, high reliability, and efficiency of all technological processes, paving the way for other organizations to a digital future.",
+    "valuesTitle": "Our",
+    "valuesAccent": "values",
+    "whyUsTitle": "Why Us?",
+    "whyUs1": "The working environment is built on Oracle, Sybase, IBM, Microsoft technologies, where non-trivial tasks in system integration and complex architecture are solved daily.",
+    "whyUs2": "We are a close-knit team with clear values and an ISO-recognized quality system, where work is a level of professionalism and mutual support.",
+    "whyUs3": "We cover all levels of responsibility from system architecture to support, providing employees with flexible growth and the opportunity to rotate roles.",
+    "whyUs4": "You will get unique experience working on systemic state tasks and the opportunity to grow in the complex, large infrastructure of the National Bank of RK.",
+    "startJourneyTitle": "Start your journey at DDC",
+    "startJourneyDesc": "If you want to work on systemic state tasks, grow in a complex large infrastructure, and be part of the technological base of the National Bank — join DDC!",
+    "viewVacancies": "View vacancies ({count})",
+    "openVacanciesTitle": "Open",
+    "openVacanciesAccent": "vacancies ({count})",
+    "actualDate": "Actual as of: {date}",
+    "applyBtn": "Apply Now",
+    "expLabel": "Experience:",
+    "salaryLabel": "Salary:",
+    "pubLabel": "Published:",
+    "noSalary": "Not specified",
+    "salaryFromTo": "from {from} to {to} {curr}",
+    "salaryFrom": "from {from} {curr}",
+    "salaryTo": "to {to} {curr}",
+    "expNoExperience": "No experience",
+    "exp1To3": "1–3 years",
+    "exp3To6": "3–6 years",
+    "expMoreThan6": "More than 6 years",
+    "v1Title": "Innovation",
+    "v1Text": "Desire to implement advanced technologies and be leaders in digital transformation of the financial sector.",
+    "v2Title": "Transparency",
+    "v2Text": "Openness in internal and external processes, honesty with clients, partners, and every employee.",
+    "v3Title": "Quality",
+    "v3Text": "Continuous improvement of IT products and processes to meet the highest international standards.",
+    "v4Title": "Reliability",
+    "v4Text": "Guarantee of the highest fault tolerance, security, and stability of all state IT solutions.",
+    "v5Title": "Partnership",
+    "v5Text": "Close cooperation with the National Bank and its subsidiaries for effective project implementation."
+  },
+  "ContactPage": {
+    "overline": "CONTACT US",
+    "titleLine1": "DDC Contacts",
+    "titleAccent": "and Feedback",
+    "subtitle": "We are always ready to cooperate with partners, press, and future colleagues. Leave a request, and our specialists will contact you shortly.",
+    "officeTitle": "Head office in Almaty",
+    "labelAddress": "Address",
+    "addressVal": "Republic of Kazakhstan, 050040, Almaty, Al-Farabi Avenue, 21 (BC 'Al-Farabi')",
+    "labelPhone": "Reception phone",
+    "labelEmail": "Email",
+    "labelClock": "Working hours",
+    "clockVal": "Monday — Friday: 09:00 - 18:30 | Lunch: 13:00 - 14:30",
+    "statusTitle": "Request status",
+    "statusDesc": "All requests sent through the form are recorded in the Unified Document Management System of the National Bank of RK and reviewed within the timeframes established by law.",
+    "formSubmittedTitle": "Request Sent",
+    "formSubmittedDesc": "Thank you! Your request has been successfully registered. We will contact you within 2 working days.",
+    "sendAnotherBtn": "Send another message",
+    "fieldName": "First & Last Name",
+    "fieldEmail": "Email",
+    "fieldOrg": "Organization",
+    "fieldMsg": "Message text",
+    "placeholderName": "John Doe",
+    "placeholderEmail": "example@mail.com",
+    "placeholderOrg": "Bank of Kazakhstan JSC",
+    "placeholderMsg": "Describe the purpose of your request or cooperation proposal...",
+    "btnSubmitting": "Sending...",
+    "btnSubmit": "Send Request",
+    "errors": {
+      "name": "Please enter your name (minimum 2 characters)",
+      "email": "Invalid email address",
+      "organization": "Please enter your organization name",
+      "message": "Message must be at least 10 characters long"
+    }
   }
 }

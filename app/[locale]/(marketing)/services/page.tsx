@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Icon, { IconName } from "@/components/ui/Icon";
+import { useTranslations } from "next-intl";
 
 interface ServiceDetail {
   icon: IconName;
@@ -13,6 +14,8 @@ interface ServiceDetail {
 }
 
 export default function ServicesPage() {
+  const t = useTranslations("ServicesPage");
+
   const containerVariants = {
     hidden: {},
     visible: { transition: { staggerChildren: 0.15 } },
@@ -30,73 +33,73 @@ export default function ServicesPage() {
   const services: ServiceDetail[] = [
     {
       icon: "coins",
-      title: "Платформа Цифрового Тенге (CBDC)",
-      subtitle: "Национальная цифровая валюта",
-      description: "Создание гибридной архитектуры, объединяющей преимущества распределенных реестров и классической высокопроизводительной банковской структуры.",
+      title: t("s1.title"),
+      subtitle: t("s1.subtitle"),
+      description: t("s1.description"),
       features: [
-        "Программируемость через смарт-контракты для контроля целевого расходования",
-        "Двухуровневые оффлайн-транзакции без доступа к сотовым сетям",
-        "Интеграция с существующей безналичной инфраструктурой коммерческих банков",
+        t("s1.f1"),
+        t("s1.f2"),
+        t("s1.f3"),
       ],
       techStack: "Hyperledger Fabric, Solidity, Go, HSM Modules",
     },
     {
       icon: "zap",
-      title: "Система Мгновенных Платежей (СМП)",
-      subtitle: "Клиринг и транзакции 24/7/365",
-      description: "Обеспечение проведения мгновенных межбанковских платежей для физических и юридических лиц по номеру телефона или QR-коду.",
+      title: t("s2.title"),
+      subtitle: t("s2.subtitle"),
+      description: t("s2.description"),
       features: [
-        "Скорость обработки платежа менее 2 секунд",
-        "Подключение всех коммерческих банков Казахстана через единый шлюз",
-        "Соответствие международному стандарту сообщений ISO 20022",
+        t("s2.f1"),
+        t("s2.f2"),
+        t("s2.f3"),
       ],
       techStack: "Java, Spring Boot, Kafka, PostgreSQL, ISO 20022",
     },
     {
       icon: "bank",
-      title: "Межбанковский Клиринг и Расчеты",
-      subtitle: "Стабильность финансового ядра",
-      description: "Поддержка и модернизация систем межбанковского клиринга, обеспечивающих гарантированное проведение крупных финансовых расчетов.",
+      title: t("s3.title"),
+      subtitle: t("s3.subtitle"),
+      description: t("s3.description"),
       features: [
-        "Многосторонний неттинг и клиринг по расписанию",
-        "Высокая отказоустойчивость инфраструктуры уровня 99.999% SLA",
-        "Интеграция с системами валовых расчетов в реальном времени (RTGS)",
+        t("s3.f1"),
+        t("s3.f2"),
+        t("s3.f3"),
       ],
       techStack: "C++, Python, Oracle DB, IBM WebSphere MQ",
     },
     {
       icon: "shield-check",
-      title: "Кибербезопасность Инфраструктуры",
-      subtitle: "Государственный класс защиты",
-      description: "Проектирование и сопровождение комплексной защиты финансовой сети Национального Банка от внешних кибератак и утечек.",
+      title: t("s4.title"),
+      subtitle: t("s4.subtitle"),
+      description: t("s4.description"),
       features: [
-        "Внедрение государственных криптографических стандартов (СТ РК)",
-        "Защита каналов связи с использованием аппаратного шифрования",
-        "Аудит и тестирование систем на проникновение (Red Teaming)",
+        t("s4.f1"),
+        t("s4.f2"),
+        t("s4.f3"),
       ],
       techStack: "Fortinet, HSM, Linux, Hardware Crypto Units",
     },
     {
       icon: "share",
-      title: "Инфраструктура Open API / Open Banking",
-      subtitle: "Финтех-экосистема",
-      description: "Стандартизация и развитие единого шлюза открытых API для создания бесшовного взаимодействия между банками и финтех-компаниями.",
+      title: t("s5.title"),
+      subtitle: t("s5.subtitle"),
+      description: t("s5.description"),
       features: [
-        "Единый портал спецификаций API для разработчиков",
-        "Безопасная аутентификация через OAuth 2.0 / OpenID Connect",
-        "Снижение барьеров для выхода новых финтех-продуктов на рынок",
+        t("s5.f1"),
+        t("s5.f2"),
+        t("s5.f3"),
       ],
       techStack: "Node.js, Express, OAuth2, GraphQL, Kong API Gateway",
     },
     {
       icon: "chart",
-      title: "Финансовая Аналитика и Big Data",
-      subtitle: "Интеллектуальный анализ рынка",
-      description: "Обработка и анализ больших объемов неперсонализированных финансовых транзакций для макроэкономического прогнозирования.",
+      title: t("s6.title"),
+      subtitle: t("s6.subtitle"),
+      description: t("s6.description"),
       features: [
-        "Мониторинг транзакционной активности в масштабе страны",
-        "Построение прогнозных моделей инфляции и ликвидности",
-        "Автоматическое выявление аномалий и подозрительных операций",
+        t("s6.f1"),
+        t("s6.f2"),
+        t("s6.f3"),
       ],
       techStack: "Hadoop, Spark, ClickHouse, Python (PyTorch), Tableau",
     },
@@ -118,14 +121,14 @@ export default function ServicesPage() {
           className="max-w-3xl mb-20"
         >
           <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
-            РЕШЕНИЯ И ТЕХНОЛОГИИ
+            {t("overline")}
           </span>
           <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
-            Государственные <br />
-            <span className="text-gradient-gold font-medium">платформы и сервисы</span>
+            {t("titleLine1")} <br />
+            <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
           </h1>
           <p className="text-lg text-zinc-400 font-light leading-relaxed">
-            DDC проектирует, создает и поддерживает технологическое ядро финансового сектора Республики Казахстан. Наш портфель включает решения от цифровой валюты до высоконагруженных клиринговых систем.
+            {t("subtitle")}
           </p>
         </motion.div>
 
@@ -160,7 +163,7 @@ export default function ServicesPage() {
                     
                     {/* Технологический стек */}
                     <div className="mt-6 pt-6 border-t border-white/5">
-                      <span className="text-[10px] uppercase tracking-wider text-zinc-500 block mb-2">Стек технологий:</span>
+                      <span className="text-[10px] uppercase tracking-wider text-zinc-500 block mb-2">{t("techStackLabel")}</span>
                       <code className="text-xs text-gold font-mono bg-charcoal/30 px-3 py-1.5 rounded border border-white/5 inline-block">
                         {service.techStack}
                       </code>
@@ -173,7 +176,7 @@ export default function ServicesPage() {
                       {service.description}
                     </p>
                     
-                    <h4 className="text-sm font-semibold text-white tracking-wider uppercase mb-4">Ключевые возможности:</h4>
+                    <h4 className="text-sm font-semibold text-white tracking-wider uppercase mb-4">{t("keyFeaturesLabel")}</h4>
                     <ul className="space-y-3">
                       {service.features.map((feature, fIdx) => (
                         <li key={fIdx} className="flex items-start gap-3 text-sm text-zinc-400 font-light leading-relaxed">

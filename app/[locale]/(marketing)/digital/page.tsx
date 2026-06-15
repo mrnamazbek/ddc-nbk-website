@@ -3,38 +3,41 @@
 import { motion } from "framer-motion";
 import Icon from "@/components/ui/Icon";
 import GlassCard from "@/components/ui/GlassCard";
+import { useTranslations } from "next-intl";
 
 export default function DigitalPage() {
+  const t = useTranslations("DigitalPage");
+
   const comparisonData = [
     {
-      feature: "Форма выпуска",
-      cash: "Физическая (бумага, металл)",
-      nonCash: "Электронные записи в банках",
-      cbdc: "Уникальный цифровой токен",
+      feature: t("rows.form.name"),
+      cash: t("rows.form.cash"),
+      nonCash: t("rows.form.nonCash"),
+      cbdc: t("rows.form.cbdc"),
     },
     {
-      feature: "Эмитент",
-      cash: "Национальный Банк РК",
-      nonCash: "Коммерческие банки",
-      cbdc: "Национальный Банк РК",
+      feature: t("rows.issuer.name"),
+      cash: t("rows.issuer.cash"),
+      nonCash: t("rows.issuer.nonCash"),
+      cbdc: t("rows.issuer.cbdc"),
     },
     {
-      feature: "Режим оффлайн",
-      cash: "Да (полный оффлайн)",
-      nonCash: "Нет (нужен интернет)",
-      cbdc: "Да (двухуровневый оффлайн)",
+      feature: t("rows.offline.name"),
+      cash: t("rows.offline.cash"),
+      nonCash: t("rows.offline.nonCash"),
+      cbdc: t("rows.offline.cbdc"),
     },
     {
-      feature: "Программируемость",
-      cash: "Нет",
-      nonCash: "Ограниченно (автоплатежи)",
-      cbdc: "Да (через смарт-контракты)",
+      feature: t("rows.programmable.name"),
+      cash: t("rows.programmable.cash"),
+      nonCash: t("rows.programmable.nonCash"),
+      cbdc: t("rows.programmable.cbdc"),
     },
     {
-      feature: "Скорость расчетов",
-      cash: "Мгновенно при передаче",
-      nonCash: "От нескольких секунд до дней",
-      cbdc: "Мгновенно (в реальном времени)",
+      feature: t("rows.speed.name"),
+      cash: t("rows.speed.cash"),
+      nonCash: t("rows.speed.nonCash"),
+      cbdc: t("rows.speed.cbdc"),
     },
   ];
 
@@ -54,14 +57,14 @@ export default function DigitalPage() {
           className="max-w-3xl mb-16"
         >
           <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
-            ЦИФРОВЫЕ ТЕХНОЛОГИИ
+            {t("overline")}
           </span>
           <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
-            Цифровой Тенге: <br />
-            <span className="text-gradient-gold font-medium">Новая Эра Денег</span>
+            {t("titleLine1")} <br />
+            <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
           </h1>
           <p className="text-lg text-zinc-400 font-light leading-relaxed">
-            Исследование, прототипирование и запуск третьей формы национальной валюты на базе технологии распределенного реестра (DLT).
+            {t("subtitle")}
           </p>
         </motion.div>
 
@@ -72,9 +75,9 @@ export default function DigitalPage() {
               <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
                 <Icon name="layers" size={24} />
               </div>
-              <h3 className="text-lg font-bold text-white mb-3">Гибридная DLT архитектура</h3>
+              <h3 className="text-lg font-bold text-white mb-3">{t("card1Title")}</h3>
               <p className="text-sm text-zinc-400 font-light leading-relaxed">
-                Сочетание приватного блокчейна (Hyperledger Fabric) с традиционными реляционными СУБД сверхвысокой производительности для обеспечения баланса масштабируемости и юридической прозрачности.
+                {t("card1Desc")}
               </p>
             </div>
             <div className="text-xs text-gold font-mono mt-6">Hyperledger Fabric, Go, Solidity</div>
@@ -85,9 +88,9 @@ export default function DigitalPage() {
               <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
                 <Icon name="cpu" size={24} />
               </div>
-              <h3 className="text-lg font-bold text-white mb-3">Смарт-контракты маркирования</h3>
+              <h3 className="text-lg font-bold text-white mb-3">{t("card2Title")}</h3>
               <p className="text-sm text-zinc-400 font-light leading-relaxed">
-                Программируемые смарт-контракты позволяют автоматически контролировать расходование бюджетных средств. Деньги физически не могут быть потрачены на цели, не предусмотренные контрактом.
+                {t("card2Desc")}
               </p>
             </div>
             <div className="text-xs text-gold font-mono mt-6">Ethereum Virtual Machine (EVM)</div>
@@ -98,9 +101,9 @@ export default function DigitalPage() {
               <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
                 <Icon name="refresh" size={24} />
               </div>
-              <h3 className="text-lg font-bold text-white mb-3">Аппаратный оффлайн-клиринг</h3>
+              <h3 className="text-lg font-bold text-white mb-3">{t("card3Title")}</h3>
               <p className="text-sm text-zinc-400 font-light leading-relaxed">
-                Специальные чипы безопасности в смарт-картах и мобильных телефонах позволяют хранить криптографические подписи токенов и проводить транзакции напрямую между устройствами без связи.
+                {t("card3Desc")}
               </p>
             </div>
             <div className="text-xs text-gold font-mono mt-6">NFC, Secure Element, JavaCard</div>
@@ -110,16 +113,16 @@ export default function DigitalPage() {
         {/* Секция Сравнения форм денег */}
         <div className="mb-24">
           <h2 className="font-display text-2xl sm:text-4xl text-white mb-8 font-normal tracking-tight">
-            Сравнение форм <span className="text-gradient-gold">национальной валюты</span>
+            {t("compareTitle")} <span className="text-gradient-gold">{t("compareAccent")}</span>
           </h2>
           <div className="w-full overflow-x-auto rounded-2xl border border-white/5 bg-charcoal/20 backdrop-blur-md">
             <table className="w-full min-w-[700px] border-collapse text-left text-sm font-sans font-light">
               <thead>
                 <tr className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wider font-semibold text-gold">
-                  <th className="p-5">Характеристика</th>
-                  <th className="p-5">Наличные деньги</th>
-                  <th className="p-5">Безналичные деньги</th>
-                  <th className="p-5 text-white">Цифровой Тенге (CBDC)</th>
+                  <th className="p-5">{t("thFeature")}</th>
+                  <th className="p-5">{t("thCash")}</th>
+                  <th className="p-5">{t("thNonCash")}</th>
+                  <th className="p-5 text-white">{t("thCbdc")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5 text-zinc-300">
@@ -134,6 +137,11 @@ export default function DigitalPage() {
               </tbody>
             </table>
           </div>
+          {/* Свайп-подсказка для мобильных экранов */}
+          <div className="flex justify-end mt-3 text-xs text-zinc-500 gap-1.5 lg:hidden px-2">
+            <span>{t("swipeHint")}</span>
+            <Icon name="arrow-right" size={14} className="animate-pulse" />
+          </div>
         </div>
 
         {/* Образовательный инсайт для инженеров */}
@@ -141,15 +149,15 @@ export default function DigitalPage() {
           <div className="flex gap-4 items-start mb-6">
             <Icon name="database" size={32} className="text-gold shrink-0 mt-1" />
             <div>
-              <span className="text-xs uppercase text-gold font-semibold tracking-wider">инженерный инсайт</span>
-              <h3 className="text-xl font-bold text-white tracking-wide">Почему распределенный реестр (DLT)?</h3>
+              <span className="text-xs uppercase text-gold font-semibold tracking-wider">{t("overline")}</span>
+              <h3 className="text-xl font-bold text-white tracking-wide">{t("insightTitle")}</h3>
             </div>
           </div>
           <p className="text-zinc-400 font-light leading-relaxed mb-6">
-            В отличие от классических СУБД (например, PostgreSQL или Oracle), где целостность данных контролируется единым центральным администратором, Цифровой Тенге использует распределенный консенсус. Это исключает риски несанкционированного изменения балансов или истории транзакций третьими лицами, создавая математически доказуемое доверие к валюте.
+            {t("insightDesc1")}
           </p>
           <p className="text-zinc-400 font-light leading-relaxed">
-            Тем не менее, для обеспечения пропускной способности в 50 000+ транзакций в секунду, мы спроектировали двухуровневую систему, где данные реестра кэшируются в высокоскоростных базах данных «in-memory» для быстрого чтения, а окончательный расчет (settlement) фиксируется в распределенном реестре.
+            {t("insightDesc2")}
           </p>
         </div>
 

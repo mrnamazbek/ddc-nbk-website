@@ -6,22 +6,13 @@ import * as z from "zod";
 import { motion, useReducedMotion } from "framer-motion";
 import Icon from "@/components/ui/Icon";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import { cn } from "@/lib/utils";
-
-// Validation schema for quality inbound messages
-const contactSchema = z.object({
-  name: z.string().min(2, { message: "Пожалуйста, введите ваше имя (минимум 2 символа)" }),
-  email: z.string().email({ message: "Некорректный адрес электронной почты" }),
-  organization: z.string().min(2, { message: "Пожалуйста, укажите название вашей организации" }),
-  message: z.string().min(10, { message: "Сообщение должно содержать минимум 10 символов" }),
-});
-
-type ContactFormValues = z.infer<typeof contactSchema>;
 
 const LabelInputContainer = ({
   children,
@@ -38,8 +29,19 @@ const LabelInputContainer = ({
 };
 
 export default function ContactPage() {
+  const t = useTranslations("ContactPage");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const reduce = useReducedMotion();
+
+  // Validation schema for quality inbound messages (created dynamically for localization)
+  const contactSchema = z.object({
+    name: z.string().min(2, { message: t("errors.name") }),
+    email: z.string().email({ message: t("errors.email") }),
+    organization: z.string().min(2, { message: t("errors.organization") }),
+    message: z.string().min(10, { message: t("errors.message") }),
+  });
+
+  type ContactFormValues = z.infer<typeof contactSchema>;
 
   const {
     register,
@@ -74,14 +76,14 @@ export default function ContactPage() {
           className="max-w-3xl mb-20"
         >
           <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
-            СВЯЗАТЬСЯ С НАМИ
+            {t("overline")}
           </span>
           <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
-            Контакты DDC <br />
-            <span className="text-gradient-gold font-medium">и обратная связь</span>
+            {t("titleLine1")} <br />
+            <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
           </h1>
           <p className="text-lg text-zinc-400 font-light leading-relaxed">
-            Мы всегда готовы к сотрудничеству с партнерами, прессой и будущими коллегами. Оставьте обращение, и наши специалисты свяжутся с вами в ближайшее время.
+            {t("subtitle")}
           </p>
         </motion.div>
 
@@ -90,7 +92,7 @@ export default function ContactPage() {
           {/* Left: Contact Info */}
           <div className="lg:col-span-5 space-y-10">
             <div>
-              <h3 className="text-xl font-bold text-white mb-6 tracking-wide">Главный офис в Алматы</h3>
+              <h3 className="text-xl font-bold text-white mb-6 tracking-wide">{t("officeTitle")}</h3>
               
               <div className="space-y-6">
                 <div className="flex gap-4 items-start">
@@ -98,10 +100,9 @@ export default function ContactPage() {
                     <Icon name="map-pin" size={20} />
                   </div>
                   <div>
-                    <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">Адрес</h5>
+                    <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">{t("labelAddress")}</h5>
                     <p className="text-sm text-zinc-400 font-light leading-relaxed">
-                      Республика Казахстан, 050040, г. Алматы, <br />
-                      проспект Аль-Фараби, д. 21 (БЦ «Al-Farabi»)
+                      {t("addressVal")}
                     </p>
                   </div>
                 </div>
@@ -111,7 +112,7 @@ export default function ContactPage() {
                     <Icon name="phone" size={20} />
                   </div>
                   <div>
-                    <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">Телефон приемной</h5>
+                    <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">{t("labelPhone")}</h5>
                     <p className="text-sm text-zinc-400 font-light font-mono leading-relaxed">
                       +7 (727) 330-24-00
                     </p>
@@ -123,7 +124,7 @@ export default function ContactPage() {
                     <Icon name="mail" size={20} />
                   </div>
                   <div>
-                    <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">Электронная почта</h5>
+                    <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">{t("labelEmail")}</h5>
                     <p className="text-sm text-zinc-400 font-light font-mono leading-relaxed">
                       info@ddc.nationalbank.kz
                     </p>
@@ -135,10 +136,9 @@ export default function ContactPage() {
                     <Icon name="clock" size={20} />
                   </div>
                   <div>
-                    <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">Режим работы</h5>
+                    <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">{t("labelClock")}</h5>
                     <p className="text-sm text-zinc-400 font-light leading-relaxed">
-                      Понедельник — Пятница: 09:00 - 18:30 <br />
-                      Обед: 13:00 - 14:30
+                      {t("clockVal")}
                     </p>
                   </div>
                 </div>
@@ -147,9 +147,9 @@ export default function ContactPage() {
 
             {/* Status Plate */}
             <div className="p-6 rounded-2xl bg-charcoal/30 border border-white/5">
-              <span className="text-[10px] uppercase text-gold font-semibold tracking-wider block mb-2">Статус обращения</span>
+              <span className="text-[10px] uppercase text-gold font-semibold tracking-wider block mb-2">{t("statusTitle")}</span>
               <p className="text-xs text-zinc-500 font-light leading-relaxed">
-                Все обращения, направленные через форму, фиксируются в Единой системе документооборота Национального Банка РК и рассматриваются в установленные законодательством сроки.
+                {t("statusDesc")}
               </p>
             </div>
           </div>
@@ -181,30 +181,30 @@ export default function ContactPage() {
                   <motion.div
                     initial={{ scale: 0, rotate: -18 }}
                     animate={{ scale: 1, rotate: 0 }}
-                    transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 340, damping: 15, delay: 0.05 }}
+                    transition={{ type: "spring", stiffness: 340, damping: 15, delay: 0.05 }}
                     className="w-16 h-16 rounded-full bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold"
                   >
                     <Icon name="check-circle" size={32} animate={false} />
                   </motion.div>
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-4 tracking-wide">Обращение отправлено</h3>
+                <h3 className="text-2xl font-bold text-white mb-4 tracking-wide">{t("formSubmittedTitle")}</h3>
                 <p className="text-sm text-zinc-400 font-light leading-relaxed max-w-md mx-auto mb-8">
-                  Спасибо! Ваше обращение успешно зарегистрировано. Мы свяжемся с вами в течение 2 рабочих дней.
+                  {t("formSubmittedDesc")}
                 </p>
                 <LiquidButton variant="default" size="lg" className="h-10 text-gold bg-transparent" onClick={() => setIsSubmitted(false)}>
-                  Отправить еще одно сообщение
+                  {t("sendAnotherBtn")}
                 </LiquidButton>
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pointer-events-auto">
                 <div className="flex flex-col space-y-6 sm:space-y-0 sm:flex-row sm:space-x-6">
                   <LabelInputContainer>
-                    <Label htmlFor="name">Имя и фамилия</Label>
+                    <Label htmlFor="name">{t("fieldName")}</Label>
                     <Input
                       id="name"
                       type="text"
                       {...register("name")}
-                      placeholder="Иван Иванов"
+                      placeholder={t("placeholderName")}
                       className={errors.name ? "ring-1 ring-red-500" : ""}
                     />
                     {errors.name && (
@@ -213,12 +213,12 @@ export default function ContactPage() {
                   </LabelInputContainer>
 
                   <LabelInputContainer>
-                    <Label htmlFor="email">Электронная почта</Label>
+                    <Label htmlFor="email">{t("fieldEmail")}</Label>
                     <Input
                       id="email"
                       type="email"
                       {...register("email")}
-                      placeholder="example@mail.com"
+                      placeholder={t("placeholderEmail")}
                       className={errors.email ? "ring-1 ring-red-500" : ""}
                     />
                     {errors.email && (
@@ -228,12 +228,12 @@ export default function ContactPage() {
                 </div>
 
                 <LabelInputContainer>
-                  <Label htmlFor="organization">Организация</Label>
+                  <Label htmlFor="organization">{t("fieldOrg")}</Label>
                   <Input
                     id="organization"
                     type="text"
                     {...register("organization")}
-                    placeholder="АО 'Банк Казахстана'"
+                    placeholder={t("placeholderOrg")}
                     className={errors.organization ? "ring-1 ring-red-500" : ""}
                   />
                   {errors.organization && (
@@ -242,12 +242,12 @@ export default function ContactPage() {
                 </LabelInputContainer>
 
                 <LabelInputContainer>
-                  <Label htmlFor="message">Текст обращения</Label>
+                  <Label htmlFor="message">{t("fieldMsg")}</Label>
                   <Textarea
                     id="message"
                     rows={6}
                     {...register("message")}
-                    placeholder="Опишите цель вашего обращения или предложение о сотрудничестве..."
+                    placeholder={t("placeholderMsg")}
                     className={errors.message ? "ring-1 ring-red-500" : ""}
                   />
                   {errors.message && (
@@ -257,18 +257,17 @@ export default function ContactPage() {
 
                 <LiquidButton
                   type="submit"
-                  variant="default"
                   disabled={isSubmitting}
                   className="w-full justify-center flex items-center gap-2 py-4 h-12 text-gold font-medium bg-transparent hover:scale-[1.02] transition duration-300"
                 >
                   {isSubmitting ? (
                     <>
-                      Отправка…
+                      {t("btnSubmitting")}
                       <Icon name="refresh" size={16} animate={false} className="animate-spin" />
                     </>
                   ) : (
                     <>
-                      Отправить обращение
+                      {t("btnSubmit")}
                       <Icon name="send" size={16} animate={false} />
                     </>
                   )}

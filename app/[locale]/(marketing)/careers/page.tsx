@@ -2,6 +2,7 @@ import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import Icon, { IconName } from "@/components/ui/Icon";
+import { getTranslations } from "next-intl/server";
 
 interface Job {
   title: string;
@@ -117,26 +118,57 @@ const FALLBACK_JOBS: Job[] = [
   }
 ];
 
-function formatSalary(salary: any) {
-  if (!salary) return "Не указана";
-  const { from, to, currency } = salary;
-  const currSymbol = currency === "RUR" ? "₽" : currency === "KZT" ? "₸" : currency;
-  if (from && to) return `от ${from} до ${to} ${currSymbol}`;
-  if (from) return `от ${from} ${currSymbol}`;
-  if (to) return `до ${to} ${currSymbol}`;
-  return "Не указана";
+function translateExperience(expName: string, t: any) {
+  if (!expName) return "";
+  const name = expName.toLowerCase();
+  if (name.includes("нет") || name.includes("без")) return t("expNoExperience");
+  if (name.includes("1") || (name.includes("3") && name.includes("год"))) return t("exp1To3");
+  if (name.includes("3") || (name.includes("6") && name.includes("лет"))) return t("exp3To6");
+  if (name.includes("более")) return t("expMoreThan6");
+  return expName;
 }
 
-function formatDate(dateStr: string) {
+function translateType(typeName: string, locale: string) {
+  if (!typeName) return "";
+  const name = typeName.toLowerCase();
+  if (name.includes("полная") || name.includes("full")) {
+    return locale === "kz" ? "Толық жұмыс күні" : locale === "en" ? "Full-time" : "Полная занятость";
+  }
+  return typeName;
+}
+
+function translateLocation(locName: string, locale: string) {
+  if (!locName) return "";
+  const name = locName.toLowerCase();
+  if (name.includes("астана") || name.includes("astana")) {
+    return locale === "kz" ? "Астана" : locale === "en" ? "Astana" : "Астана";
+  }
+  if (name.includes("алматы") || name.includes("almaty")) {
+    return locale === "kz" ? "Алматы" : locale === "en" ? "Almaty" : "Алматы";
+  }
+  return locName;
+}
+
+function formatSalary(salary: any, t: any) {
+  if (!salary) return t("noSalary");
+  const { from, to, currency } = salary;
+  const currSymbol = currency === "RUR" ? "₽" : currency === "KZT" ? "₸" : currency;
+  if (from && to) return t("salaryFromTo", { from, to, curr: currSymbol });
+  if (from) return t("salaryFrom", { from, curr: currSymbol });
+  if (to) return t("salaryTo", { to, curr: currSymbol });
+  return t("noSalary");
+}
+
+function formatDate(dateStr: string, locale: string) {
   try {
     const d = new Date(dateStr);
-    return d.toLocaleDateString("ru-RU", { day: "numeric", month: "long" });
+    return d.toLocaleDateString(locale === "kz" ? "kk-KZ" : locale === "en" ? "en-US" : "ru-RU", { day: "numeric", month: "long" });
   } catch {
     return "";
   }
 }
 
-async function getVacancies(): Promise<Job[]> {
+async function getVacancies(locale: string, t: any): Promise<Job[]> {
   try {
     const res = await fetch("https://api.hh.ru/vacancies?employer_id=28161", {
       headers: {
@@ -152,62 +184,79 @@ async function getVacancies(): Promise<Job[]> {
     if (data && Array.isArray(data.items) && data.items.length > 0) {
       return data.items.map((item: any) => ({
         title: item.name,
-        department: item.department?.name || "Центр цифрового развития",
-        location: item.area?.name || "Астана",
-        type: item.employment?.name || "Полная занятость",
+        department: item.department?.name || (locale === "kz" ? "Цифрлық даму орталығы" : locale === "en" ? "Digital Development Center" : "Центр цифрового развития"),
+        location: translateLocation(item.area?.name, locale),
+        type: translateType(item.employment?.name, locale),
         badgeVariant: (item.name.toLowerCase().includes("senior") || item.name.toLowerCase().includes("director")) 
           ? ("gold" as const) 
           : (item.name.toLowerCase().includes("junior") ? ("gray" as const) : ("green" as const)),
-        salary: formatSalary(item.salary),
-        experience: item.experience?.name || "Опыт не указан",
-        published: formatDate(item.published_at),
+        salary: formatSalary(item.salary, t),
+        experience: translateExperience(item.experience?.name, t),
+        published: formatDate(item.published_at, locale),
         url: item.alternate_url || "https://almaty.hh.kz/employer/28161",
       }));
     }
-    return FALLBACK_JOBS;
+    return getFallbackJobs(locale, t);
   } catch (e) {
     console.error("Failed to fetch vacancies from HH API, using fallback jobs", e);
-    return FALLBACK_JOBS;
+    return getFallbackJobs(locale, t);
   }
 }
 
-export default async function CareersPage() {
-  const jobs = await getVacancies();
+function getFallbackJobs(locale: string, t: any): Job[] {
+  return FALLBACK_JOBS.map(job => ({
+    ...job,
+    location: translateLocation(job.location, locale),
+    type: translateType(job.type, locale),
+    experience: translateExperience(job.experience, t),
+  }));
+}
+
+interface CareersPageProps {
+  params: Promise<{ locale: string }>;
+}
+
+export default async function CareersPage({ params }: CareersPageProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "CareersPage" });
+  const jobs = await getVacancies(locale, t);
 
   const values: { icon: IconName; title: string; text: string }[] = [
     {
       icon: "compass",
-      title: "Инновации",
-      text: "Стремление внедрять передовые технологии и быть лидерами цифровой трансформации финансового сектора."
+      title: t("v1Title"),
+      text: t("v1Text")
     },
     {
       icon: "users2",
-      title: "Прозрачность",
-      text: "Открытость во внутренних и внешних процессах, честность с клиентами, партнерами и каждым сотрудником."
+      title: t("v2Title"),
+      text: t("v2Text")
     },
     {
       icon: "award",
-      title: "Качество",
-      text: "Непрерывное совершенствование ИТ-продуктов и процессов для соответствия наивысшим международным стандартам."
+      title: t("v3Title"),
+      text: t("v3Text")
     },
     {
       icon: "shield",
-      title: "Надёжность",
-      text: "Гарантия высочайшей отказоустойчивости, безопасности и стабильности всех государственных ИТ-решений."
+      title: t("v4Title"),
+      text: t("v4Text")
     },
     {
       icon: "bank",
-      title: "Партнерство",
-      text: "Тесное сотрудничество с Национальным Банком и его дочерними организациями для эффективной реализации проектов."
+      title: t("v5Title"),
+      text: t("v5Text")
     }
   ];
 
   const whyUsPoints = [
-    "Рабочая среда построена на технологиях Oracle, Sybase, IBM, Microsoft, где ежедневно решаются нетривиальные задачи в системной интеграции и сложной архитектуре.",
-    "Мы сплоченная команда с ясными ценностями и признанной ISO системой качества, где работа — это уровень профессионализма и взаимной поддержки.",
-    "Мы охватываем все уровни ответственности от системной архитектуры до поддержки, обеспечивая сотрудникам гибкий рост и возможность вращаться в разных ролях.",
-    "Вы получите уникальный опыт работы над системными государственными задачами и возможность расти в сложной крупной инфраструктуре Нацбанка РК."
+    t("whyUs1"),
+    t("whyUs2"),
+    t("whyUs3"),
+    t("whyUs4")
   ];
+
+  const todayStr = new Date().toLocaleDateString(locale === "kz" ? "kk-KZ" : locale === "en" ? "en-US" : "ru-RU", { month: "long", year: "numeric" });
 
   return (
     <div className="relative w-full bg-black overflow-hidden min-h-screen pt-32 pb-24 font-sans">
@@ -216,14 +265,14 @@ export default async function CareersPage() {
         {/* Заголовок страницы */}
         <div className="max-w-3xl mb-16">
           <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
-            Центр цифрового развития Национального Банка Казахстана
+            {t("overline")}
           </span>
           <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
-            Центр в поиске <br />
-            <span className="text-gradient-gold font-medium">новых талантов</span>
+            {t("titleLine1")} <br />
+            <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
           </h1>
           <p className="text-base sm:text-lg text-zinc-400 font-light leading-relaxed">
-            АО «Центр цифрового развития Национального Банка Казахстана» — стратегический партнер цифровой трансформации финансового сектора. С 2022 года компания разрабатывает, внедряет и сопровождает государственные информационные системы для Национального Банка и его дочерних организаций.
+            {t("subtitle")}
           </p>
         </div>
 
@@ -232,20 +281,20 @@ export default async function CareersPage() {
           <GlassCard hoverAccent="gold" variant="liquid" isTiltEnabled={false} className="p-8 border border-white/5">
             <h3 className="text-xl font-bold text-white mb-4 tracking-wide flex items-center gap-3">
               <Icon name="compass" size={20} className="text-gold" />
-              Миссия
+              {t("missionTitle")}
             </h3>
             <p className="text-sm text-zinc-400 font-light leading-relaxed">
-              Быть лидером в цифровой трансформации, обеспечивая Национальный Банк и его дочерние структуры передовыми IT-решениями, которые ускоряют инновации, обеспечивают стабильность и устанавливают новые стандарты качества в управлении данными и технологиями.
+              {t("missionDesc")}
             </p>
           </GlassCard>
 
           <GlassCard hoverAccent="forest" variant="liquid" isTiltEnabled={false} className="p-8 border border-white/5">
             <h3 className="text-xl font-bold text-white mb-4 tracking-wide flex items-center gap-3">
               <Icon name="eye" size={20} className="text-forest-light" />
-              Видение
+              {t("visionTitle")}
             </h3>
             <p className="text-sm text-zinc-400 font-light leading-relaxed">
-              Мы стремимся стать эталоном в области цифровой трансформации, развивая и внедряя передовые IT-решения для Национального Банка и его дочерних структур. Мы видим себя ключевым партнёром, способным обеспечивать инновации, высокую надёжность и эффективность всех технологических процессов, прокладывая путь для других организаций к цифровому будущему.
+              {t("visionDesc")}
             </p>
           </GlassCard>
         </div>
@@ -253,7 +302,7 @@ export default async function CareersPage() {
         {/* Ценности компании */}
         <div className="mb-24">
           <h2 className="font-display text-2xl sm:text-3xl text-white mb-8 font-normal tracking-tight">
-            Наши <span className="text-gradient-gold">ценности</span>
+            {t("valuesTitle")} <span className="text-gradient-gold">{t("valuesAccent")}</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {values.map((v, idx) => {
@@ -275,7 +324,7 @@ export default async function CareersPage() {
         {/* Почему именно мы? */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24 pb-12 border-b border-white/5">
           <div className="lg:col-span-7">
-            <h3 className="text-2xl font-bold text-white mb-6 tracking-wide">Почему именно мы?</h3>
+            <h3 className="text-2xl font-bold text-white mb-6 tracking-wide">{t("whyUsTitle")}</h3>
             <ul className="space-y-4">
               {whyUsPoints.map((point, idx) => (
                 <li key={idx} className="flex items-start gap-3.5 text-sm sm:text-base text-zinc-400 font-light leading-relaxed">
@@ -291,13 +340,13 @@ export default async function CareersPage() {
             <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
               <Icon name="zap" size={24} />
             </div>
-            <h4 className="text-base font-bold text-white mb-2">Начните свой путь в DDC</h4>
+            <h4 className="text-base font-bold text-white mb-2">{t("startJourneyTitle")}</h4>
             <p className="text-xs text-zinc-400 font-light leading-relaxed mb-6">
-              Если вы хотите работать над системными государственными задачами, расти в сложной крупной инфраструктуре и быть частью технологической базы Национального Банка — присоединяйтесь к ЦЦР НБК!
+              {t("startJourneyDesc")}
             </p>
             <a href="#jobs-list" className="w-full block">
               <Button variant="gold" className="w-full justify-center text-xs">
-                Посмотреть вакансии ({jobs.length})
+                {t("viewVacancies", { count: jobs.length })}
               </Button>
             </a>
           </div>
@@ -307,10 +356,10 @@ export default async function CareersPage() {
         <div id="jobs-list" className="scroll-mt-24">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <h2 className="font-display text-2xl sm:text-4xl text-white font-normal tracking-tight">
-              Открытые <span className="text-gradient-gold">вакансии ({jobs.length})</span>
+              {t("openVacanciesTitle", { count: jobs.length })} <span className="text-gradient-gold">{t("openVacanciesAccent", { count: jobs.length })}</span>
             </h2>
             <span className="text-xs text-zinc-500 font-mono">
-              Актуально на: {new Date().toLocaleDateString("ru-RU", { month: "long", year: "numeric" })}
+              {t("actualDate", { date: todayStr })}
             </span>
           </div>
 
@@ -342,12 +391,12 @@ export default async function CareersPage() {
                     </h3>
 
                     <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-zinc-500 font-light">
-                      <span>Опыт работы: <strong className="text-zinc-300 font-semibold">{job.experience}</strong></span>
-                      <span>Заработная плата: <strong className="text-gold font-semibold">{job.salary}</strong></span>
+                      <span>{t("expLabel")} <strong className="text-zinc-300 font-semibold">{job.experience}</strong></span>
+                      <span>{t("salaryLabel")} <strong className="text-gold font-semibold">{job.salary}</strong></span>
                       {job.published && (
                         <>
                           <span className="text-zinc-600">|</span>
-                          <span>Опубликовано: <strong className="text-zinc-400">{job.published}</strong></span>
+                          <span>{t("pubLabel")} <strong className="text-zinc-400">{job.published}</strong></span>
                         </>
                       )}
                     </div>
@@ -355,7 +404,7 @@ export default async function CareersPage() {
 
                   <a href={job.url} target="_blank" rel="noopener noreferrer" className="self-start md:self-auto">
                     <Button variant="outline" className="flex items-center justify-center gap-2 group whitespace-nowrap">
-                      Откликнуться
+                      {t("applyBtn")}
                       <Icon name="arrow-right" size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
                     </Button>
                   </a>

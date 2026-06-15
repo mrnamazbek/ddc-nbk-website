@@ -12,8 +12,11 @@ import PartnerMarquee from "@/components/ui/PartnerMarquee";
 import Magnetic from "@/components/motion/Magnetic";
 import Icon from "@/components/ui/Icon";
 
+import { useRouter } from "@/i18n/navigation";
+
 export default function CTA() {
   const t = useTranslations("CTA");
+  const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -126,7 +129,7 @@ export default function CTA() {
                   variant="gold"
                   className="w-full sm:w-auto flex items-center justify-center gap-2 group"
                   onClick={() => {
-                    window.location.href = "/contact";
+                    router.push("/contact");
                   }}
                 >
                   {t("ctaPrimary")}
