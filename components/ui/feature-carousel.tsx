@@ -348,7 +348,7 @@ function FeatureCard({
               </motion.div>
             </motion.div>
           </AnimatePresence>
-          <div className="relative w-full h-[220px] md:h-[260px] overflow-hidden mt-6">
+          <div className="relative w-full h-[240px] sm:h-[300px] md:h-[340px] overflow-hidden mt-6">
             {mounted ? children : null}
           </div>
         </div>

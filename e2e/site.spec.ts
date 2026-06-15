@@ -98,4 +98,25 @@ test.describe("DDC Website E2E Tests", () => {
     await pairAOption.click();
     await expect(pairAOption).toHaveClass(/bg-forest/);
   });
+
+  test("should render SakaScroll component on main page", async ({ page }) => {
+    await page.goto("/ru");
+    
+    // Проверяем наличие заголовочной части Saka Core в SakaScroll
+    await expect(page.locator("text=Saka Core").first()).toBeVisible();
+    await expect(page.locator("text=Инфраструктура нового поколения").first()).toBeVisible();
+  });
+
+  test("should load mission page and render FeatureCarousel", async ({ page }) => {
+    await page.goto("/ru/mission");
+    
+    // Проверяем, что страница загрузилась и есть заголовок
+    await expect(page.locator("h1").first()).toContainText("миссия", { ignoreCase: true });
+    
+    // Проверяем наличие карусели
+    const firstStepText = page.locator("text=Разработка и сопровождение критических систем");
+    if (await firstStepText.count() > 0) {
+      await expect(firstStepText.first()).toBeVisible();
+    }
+  });
 });

@@ -5,6 +5,7 @@ import Services from "@/components/sections/Services";
 import About from "@/components/sections/About";
 import CTA from "@/components/sections/CTA";
 import Showcase from "@/components/sections/Showcase";
+import SakaScroll from "@/components/sections/SakaScroll";
 
 export default function MarketingHomePage() {
   return (
@@ -18,6 +19,7 @@ export default function MarketingHomePage() {
         <Services />
         {/* Parallax showcase of real DDC assets (3D renders, NBK architecture, team) */}
         <Showcase />
+        <SakaScroll />
         <About />
         <CTA />
       </div>

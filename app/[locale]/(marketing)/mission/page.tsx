@@ -87,32 +87,28 @@ export default function MissionPage() {
                 description={t("subtitle")}
                 steps={steps}
                 step1img1Class={cn(
-                  "pointer-events-none w-[50%] border border-border transition-all duration-500 rounded-[24px] absolute",
-                  "max-md:scale-[130%] max-md:rounded-[16px] rounded-[24px] left-[10%] top-[45%] md:left-[35px] md:top-[15%]",
-                  "md:group-hover:translate-y-2 object-cover aspect-[4/3] shadow-2xl"
+                  "pointer-events-none border border-border transition-all duration-500 rounded-[24px] absolute object-cover aspect-[4/3] shadow-2xl",
+                  "w-[46%] max-md:rounded-[12px] left-[4%] top-[15%] md:w-[50%] md:left-[35px] md:top-[15%] md:group-hover:translate-y-2"
                 )}
                 step1img2Class={cn(
-                  "pointer-events-none w-[55%] border border-border transition-all duration-500 overflow-hidden absolute",
-                  "max-md:scale-[130%] rounded-[24px] max-md:rounded-[16px] left-[55%] top-[35%] md:top-[5%] md:left-[calc(45%+35px+1rem)]",
-                  "md:group-hover:-translate-y-6 object-cover aspect-[4/3] shadow-2xl"
+                  "pointer-events-none border border-border transition-all duration-500 overflow-hidden absolute object-cover aspect-[4/3] shadow-2xl",
+                  "w-[46%] max-md:rounded-[12px] left-[50%] top-[25%] md:w-[55%] md:top-[5%] md:left-[calc(45%+35px+1rem)] md:group-hover:-translate-y-6"
                 )}
                 step2img1Class={cn(
-                  "pointer-events-none w-[45%] rounded-[24px] overflow-hidden border border-border transition-all duration-500 absolute",
-                  "max-md:scale-[130%] left-[10%] top-[50%] md:left-[35px] md:top-[12%]",
-                  "md:group-hover:translate-y-2 object-cover aspect-[4/3] shadow-2xl"
+                  "pointer-events-none rounded-[24px] overflow-hidden border border-border transition-all duration-500 absolute object-cover aspect-[4/3] shadow-2xl",
+                  "w-[46%] max-md:rounded-[12px] left-[4%] top-[20%] md:w-[45%] md:left-[35px] md:top-[12%] md:group-hover:translate-y-2"
                 )}
                 step2img2Class={cn(
-                  "pointer-events-none w-[45%] rounded-[24px] border border-border transition-all duration-500 overflow-hidden absolute",
-                  "max-md:scale-[120%] left-[55%] top-[30%] md:top-[8%] md:left-[calc(45%+27px+1rem)]",
-                  "md:group-hover:-translate-y-6 object-cover aspect-[4/3] shadow-2xl"
+                  "pointer-events-none rounded-[24px] border border-border transition-all duration-500 overflow-hidden absolute object-cover aspect-[4/3] shadow-2xl",
+                  "w-[46%] max-md:rounded-[12px] left-[50%] top-[10%] md:w-[45%] md:top-[8%] md:left-[calc(45%+27px+1rem)] md:group-hover:-translate-y-6"
                 )}
                 step3imgClass={cn(
-                  "pointer-events-none w-[80%] md:w-[70%] border border-border rounded-[24px] transition-all duration-500 overflow-hidden absolute",
-                  "left-[10%] top-[25%] md:top-[10%] md:left-[15%] shadow-2xl aspect-[16/9] object-cover"
+                  "pointer-events-none border border-border rounded-[24px] transition-all duration-500 overflow-hidden absolute aspect-[16/9] object-cover shadow-2xl",
+                  "w-[80%] md:w-[70%] left-[10%] top-[15%] md:top-[10%] md:left-[15%]"
                 )}
                 step4imgClass={cn(
-                  "pointer-events-none w-[80%] md:w-[70%] border border-border rounded-[24px] transition-all duration-500 overflow-hidden absolute",
-                  "left-[10%] top-[25%] md:top-[10%] md:left-[15%] shadow-2xl aspect-[16/9] object-cover"
+                  "pointer-events-none border border-border rounded-[24px] transition-all duration-500 overflow-hidden absolute aspect-[16/9] object-cover shadow-2xl",
+                  "w-[80%] md:w-[70%] left-[10%] top-[15%] md:top-[10%] md:left-[15%]"
                 )}
                 image={{
                   step1light1: "/images/nbk_architecture.png",
