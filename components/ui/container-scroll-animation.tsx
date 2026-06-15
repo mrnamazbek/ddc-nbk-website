@@ -1,13 +1,18 @@
 "use client";
 import React, { useRef } from "react";
 import { useScroll, useTransform, motion, MotionValue } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 export const ContainerScroll = ({
   titleComponent,
   children,
+  className,
+  cardClassName,
 }: {
   titleComponent: string | React.ReactNode;
   children: React.ReactNode;
+  className?: string;
+  cardClassName?: string;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -36,7 +41,10 @@ export const ContainerScroll = ({
 
   return (
     <div
-      className="h-[45rem] sm:h-[60rem] md:h-[75rem] flex items-center justify-center relative p-2 md:p-20"
+      className={cn(
+        "h-[45rem] sm:h-[60rem] md:h-[75rem] flex items-center justify-center relative p-2 md:p-20",
+        className
+      )}
       ref={containerRef}
     >
       <div
@@ -46,7 +54,7 @@ export const ContainerScroll = ({
         }}
       >
         <Header translate={translate} titleComponent={titleComponent} />
-        <Card rotate={rotate} translate={translate} scale={scale}>
+        <Card rotate={rotate} translate={translate} scale={scale} className={cardClassName}>
           {children}
         </Card>
       </div>
@@ -77,11 +85,13 @@ export const Card = ({
   rotate,
   scale,
   children,
+  className,
 }: {
   rotate: MotionValue<number>;
   scale: MotionValue<number>;
   translate: MotionValue<number>;
   children: React.ReactNode;
+  className?: string;
 }) => {
   return (
     <motion.div
@@ -91,7 +101,10 @@ export const Card = ({
         boxShadow:
           "0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003",
       }}
-      className="max-w-5xl -mt-12 mx-auto h-[20rem] sm:h-[30rem] md:h-[40rem] w-full border border-glass-border p-2 md:p-4 bg-charcoal/20 backdrop-blur-xl rounded-[24px] sm:rounded-[34px] shadow-card relative overflow-hidden group transition-all duration-300"
+      className={cn(
+        "max-w-5xl -mt-12 mx-auto h-[20rem] sm:h-[30rem] md:h-[40rem] w-full border border-glass-border p-2 md:p-4 bg-charcoal/20 backdrop-blur-xl rounded-[24px] sm:rounded-[34px] shadow-card relative overflow-hidden group transition-all duration-300",
+        className
+      )}
     >
       {/* Decorative inner gold glow border for premium liquid-glass design */}
       <div className="absolute inset-0 border border-gold/10 rounded-[24px] sm:rounded-[34px] pointer-events-none group-hover:border-gold/25 transition-colors duration-500" />
