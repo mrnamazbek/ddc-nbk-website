@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import Lenis from "lenis";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import gsap from "@/lib/gsap";
@@ -12,21 +12,57 @@ interface SmoothScrollProps {
 
 export default function SmoothScroll({ children }: SmoothScrollProps) {
   const pathname = usePathname();
+  const isPopStateRef = useRef(false);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      isPopStateRef.current = true;
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
 
   useEffect(() => {
     // Smooth scroll to hash anchor after page navigation
-    if (typeof window !== "undefined" && window.location.hash) {
-      const hash = window.location.hash;
-      const targetElement = document.querySelector(hash);
-      if (targetElement) {
+    if (typeof window !== "undefined") {
+      if (window.location.hash) {
+        const hash = window.location.hash;
+        const targetElement = document.querySelector(hash);
+        if (targetElement) {
+          const timer = setTimeout(() => {
+            const lenis = (window as any).__lenis;
+            if (lenis) {
+              lenis.scrollTo(targetElement);
+            } else {
+              targetElement.scrollIntoView({ behavior: "smooth" });
+            }
+            isPopStateRef.current = false;
+          }, 400); // Wait for transition and mounting to complete
+          return () => clearTimeout(timer);
+        }
+      } else {
+        // If this is a popstate (back/forward) navigation, do not reset scroll to top.
+        // Let the browser / Lenis handle restoration, then refresh ScrollTrigger.
+        if (isPopStateRef.current) {
+          isPopStateRef.current = false;
+          const timer = setTimeout(() => {
+            ScrollTrigger.refresh();
+          }, 400);
+          return () => clearTimeout(timer);
+        }
+
+        // For normal navigation, reset scroll to top after route change
         const timer = setTimeout(() => {
           const lenis = (window as any).__lenis;
           if (lenis) {
-            lenis.scrollTo(targetElement);
+            lenis.scrollTo(0, { immediate: true });
           } else {
-            targetElement.scrollIntoView({ behavior: "smooth" });
+            window.scrollTo(0, 0);
           }
-        }, 400); // Wait for transition and mounting to complete
+          ScrollTrigger.refresh();
+        }, 100);
         return () => clearTimeout(timer);
       }
     }
