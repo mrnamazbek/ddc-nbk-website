@@ -11,9 +11,15 @@ export default function MarketingLayout({
   return (
     <SmoothScroll>
       <ScrollProgress />
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-lg focus:border-2 focus:border-black focus:bg-white focus:px-4 focus:py-2 focus:text-base focus:font-bold focus:text-black"
+      >
+        Перейти к содержимому
+      </a>
       <div className="flex flex-col min-h-screen">
         <Header />
-        <main className="flex-grow">{children}</main>
+        <main id="main" className="flex-grow">{children}</main>
         <Footer />
       </div>
     </SmoothScroll>

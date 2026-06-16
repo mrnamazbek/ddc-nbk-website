@@ -1,0 +1,135 @@
+/* =========================================================================
+   «Версия для слабовидящих» — low-vision accessibility overrides.
+   All rules are scoped under `html.a11y …` so the normal site is untouched.
+   Goals: ≥7:1 contrast, large legible text, solid (non-glass) surfaces,
+   no motion / no decorative 3D-shader, underlined links, thick focus rings.
+   ========================================================================= */
+
+/* --- Scheme color tokens ------------------------------------------------- */
+html.a11y.a11y-scheme-bw {
+  --a11y-bg: #ffffff;
+  --a11y-fg: #000000;
+  --a11y-link: #0000cc;
+  --a11y-surface: #ffffff;
+  --a11y-border: #000000;
+}
+html.a11y.a11y-scheme-wb {
+  --a11y-bg: #000000;
+  --a11y-fg: #ffffff;
+  --a11y-link: #ffe600;
+  --a11y-surface: #000000;
+  --a11y-border: #ffffff;
+}
+html.a11y.a11y-scheme-blue {
+  --a11y-bg: #9dd2ff;
+  --a11y-fg: #06214a;
+  --a11y-link: #06214a;
+  --a11y-surface: #c9e6ff;
+  --a11y-border: #06214a;
+}
+
+/* --- Base surface + text ------------------------------------------------- */
+html.a11y,
+html.a11y body {
+  background: var(--a11y-bg) !important;
+  color: var(--a11y-fg) !important;
+}
+
+html.a11y *:not(svg):not(path):not(canvas) {
+  background-color: transparent !important;
+  background-image: none !important;
+  color: var(--a11y-fg) !important;
+  border-color: var(--a11y-border) !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+/* Solid panels for anything that was glassmorphism / blurred */
+html.a11y .liquid-glass,
+html.a11y .liquid-glass-strong,
+html.a11y .glass-card,
+html.a11y .glass-panel,
+html.a11y [class*="backdrop-blur"],
+html.a11y header,
+html.a11y nav {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background-color: var(--a11y-surface) !important;
+  border: 2px solid var(--a11y-border) !important;
+}
+
+/* --- Font scaling (rem-based) ------------------------------------------- */
+html.a11y.a11y-font-100 { font-size: 100%; }
+html.a11y.a11y-font-125 { font-size: 125%; }
+html.a11y.a11y-font-150 { font-size: 150%; }
+html.a11y.a11y-font-200 { font-size: 200%; }
+
+/* Override fluid clamp() heading sizes so they actually grow with the scaler */
+html.a11y h1 { font-size: 2.2rem !important; }
+html.a11y h2 { font-size: 1.8rem !important; }
+html.a11y h3 { font-size: 1.4rem !important; }
+html.a11y p,
+html.a11y li,
+html.a11y a,
+html.a11y span,
+html.a11y button,
+html.a11y label,
+html.a11y input,
+html.a11y textarea { font-size: 1rem !important; line-height: 1.6 !important; }
+
+/* --- Letter spacing ------------------------------------------------------ */
+html.a11y.a11y-spacing-m body { letter-spacing: 0.06em !important; }
+html.a11y.a11y-spacing-l body { letter-spacing: 0.14em !important; word-spacing: 0.16em !important; }
+
+/* --- Serif typeface toggle ---------------------------------------------- */
+html.a11y.a11y-serif body,
+html.a11y.a11y-serif * { font-family: Georgia, "Times New Roman", "Noto Serif", serif !important; }
+
+/* --- Grayscale images ---------------------------------------------------- */
+html.a11y.a11y-grayscale img,
+html.a11y.a11y-grayscale picture,
+html.a11y.a11y-grayscale video { filter: grayscale(1) contrast(1.1) !important; }
+
+/* --- Links: always underlined + high-contrast --------------------------- */
+html.a11y a {
+  color: var(--a11y-link) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 2px;
+}
+html.a11y a:hover,
+html.a11y a:focus { text-decoration-thickness: 2px; }
+
+/* --- Visible focus everywhere ------------------------------------------- */
+html.a11y :focus-visible {
+  outline: 3px solid var(--a11y-fg) !important;
+  outline-offset: 2px !important;
+}
+
+/* --- Kill decoration: dot-shader / 3D / parallax canvases & glows -------- */
+html.a11y canvas,
+html.a11y [data-decorative],
+html.a11y .pointer-events-none[class*="blur"] {
+  display: none !important;
+}
+
+/* --- Reduce motion: stop all animation/transition ----------------------- */
+html.a11y *,
+html.a11y *::before,
+html.a11y *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* --- Minimum tap targets ------------------------------------------------- */
+html.a11y a,
+html.a11y button,
+html.a11y [role="button"] { min-height: 44px; }
+
+/* The accessibility panel itself stays exactly as authored (solid white/black);
+   it must remain operable before/while the page reflows — so exclude it. */
+html.a11y [role="dialog"],
+html.a11y [role="dialog"] * {
+  letter-spacing: normal !important;
+}

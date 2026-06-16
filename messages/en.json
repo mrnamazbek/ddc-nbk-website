@@ -582,5 +582,24 @@
       "organization": "Please enter your organization name",
       "message": "Message must be at least 10 characters long"
     }
+  },
+  "A11y": {
+    "trigger": "Accessibility (low vision)",
+    "title": "Accessibility settings",
+    "fontSize": "Font size",
+    "scheme": "Color scheme",
+    "schemeBw": "Black on white",
+    "schemeWb": "White on black",
+    "schemeBlue": "Dark blue on light blue",
+    "spacing": "Letter spacing",
+    "spacingN": "Normal",
+    "spacingM": "Medium",
+    "spacingL": "Large",
+    "images": "Grayscale images",
+    "serif": "Serif font",
+    "reset": "Normal version",
+    "close": "Close",
+    "on": "On",
+    "off": "Off"
   }
 }

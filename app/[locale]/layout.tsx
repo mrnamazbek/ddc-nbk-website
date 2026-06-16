@@ -9,6 +9,8 @@ import { IconSystemProvider } from "@/components/theme/IconSystemProvider";
 import { FontSystemProvider } from "@/components/theme/FontSystemProvider";
 import { BgSystemProvider } from "@/components/theme/BgSystemProvider";
 import IconSystemSwitcher from "@/components/ui/IconSystemSwitcher";
+import AccessibilityProvider from "@/components/theme/AccessibilityProvider";
+import AccessibilityPanel from "@/components/ui/AccessibilityPanel";
 
 const sourceSerif = Source_Serif_4({
   subsets: ["latin", "cyrillic", "cyrillic-ext"],
@@ -88,10 +90,13 @@ export default async function LocaleLayout({
             <FontSystemProvider>
               <IconSystemProvider>
                 <NextIntlClientProvider messages={messages}>
-                  {/* Faint grain overlay (opacity 0.03) for organic texture */}
-                  <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] bg-[url('/images/textures/bg-texture-noise.png')] bg-repeat" />
-                  <PageTransitionProvider>{children}</PageTransitionProvider>
-                  <IconSystemSwitcher />
+                  <AccessibilityProvider>
+                    {/* Faint grain overlay (opacity 0.03) for organic texture */}
+                    <div data-decorative className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] bg-[url('/images/textures/bg-texture-noise.png')] bg-repeat" />
+                    <PageTransitionProvider>{children}</PageTransitionProvider>
+                    <IconSystemSwitcher />
+                    <AccessibilityPanel />
+                  </AccessibilityProvider>
                 </NextIntlClientProvider>
               </IconSystemProvider>
             </FontSystemProvider>
