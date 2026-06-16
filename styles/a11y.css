@@ -33,9 +33,14 @@ html.a11y,
 html.a11y body {
   background: var(--a11y-bg) !important;
   color: var(--a11y-fg) !important;
+  overflow-x: hidden !important; /* WCAG 1.4.10 reflow — no horizontal scroll */
+  max-width: 100% !important;
 }
 
-html.a11y *:not(svg):not(path):not(canvas) {
+/* Reset is scoped to the page chrome + content only — the accessibility panel
+   (a fixed [role="dialog"] rendered OUTSIDE main/header/footer) keeps its own
+   authored high-contrast styling untouched. */
+html.a11y :is(main, header, footer) *:not(svg):not(path):not(canvas) {
   background-color: transparent !important;
   background-image: none !important;
   color: var(--a11y-fg) !important;
@@ -132,4 +137,86 @@ html.a11y [role="button"] { min-height: 44px; }
 html.a11y [role="dialog"],
 html.a11y [role="dialog"] * {
   letter-spacing: normal !important;
+}
+
+/* =========================================================================
+   LAYOUT REFLOW — the fix for "unreadable / overlapping at 150–200%".
+   The marketing chrome uses a floating fixed header, fixed section heights,
+   overflow-hidden and JS parallax — all of which clip or overlap once text
+   grows. In a11y mode we linearise everything into a plain readable document.
+   ========================================================================= */
+
+/* Header: a static, full-width top bar — no floating, no overlap, no clipping. */
+html.a11y header {
+  position: static !important;
+  transform: none !important;
+  translate: none !important; /* Tailwind v4 uses the `translate` property */
+  rotate: none !important;
+  scale: none !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-bottom: 3px solid var(--a11y-border) !important;
+  background-color: var(--a11y-surface) !important;
+}
+/* Let the nav wrap instead of clipping its links; drop the decorative pill. */
+html.a11y header ul,
+html.a11y header > div,
+html.a11y header nav {
+  overflow: visible !important;
+  flex-wrap: wrap !important;
+  max-width: none !important;
+}
+html.a11y header li[aria-hidden],
+html.a11y header [aria-hidden="true"] { display: none !important; }
+
+/* Sections: auto height + visible overflow so scaled text never overlaps. */
+html.a11y section,
+html.a11y main,
+html.a11y main > div,
+html.a11y main [class*="min-h-screen"],
+html.a11y main [class*="h-screen"],
+html.a11y main [class*="max-h-"] {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+/* Neutralise JS parallax / absolute decorative layers inside content. */
+html.a11y main [style*="transform"] { transform: none !important; }
+html.a11y main .pointer-events-none[class*="bg-gradient"],
+html.a11y main [class*="blur-"] { display: none !important; }
+
+/* Buttons: solid high-contrast, keep our rounded pill shape & weight.
+   `[class]` qualifiers lift specificity above the :not()-inflated reset rule. */
+html.a11y :is(main, header, footer) button[class],
+html.a11y :is(main, header, footer) a[class*="rounded-full"],
+html.a11y :is(main, header, footer) [role="button"][class] {
+  background-color: var(--a11y-fg) !important;
+  color: var(--a11y-bg) !important;
+  border: 2px solid var(--a11y-fg) !important;
+  text-decoration: none !important;
+  font-weight: 700 !important;
+  padding: 0.5rem 1rem !important;
+}
+html.a11y :is(main, header, footer) button[class] *,
+html.a11y :is(main, header, footer) a[class*="rounded-full"] * { color: var(--a11y-bg) !important; }
+html.a11y :is(main, header, footer) button[class]:hover,
+html.a11y :is(main, header, footer) a[class*="rounded-full"]:hover {
+  background-color: var(--a11y-bg) !important;
+  color: var(--a11y-fg) !important;
+}
+html.a11y :is(main, header, footer) button[class]:hover * { color: var(--a11y-fg) !important; }
+
+/* Hide dev-only A/B switchers (icon / font / bg / preset testers) in a11y mode. */
+html.a11y .fixed.bottom-6 { display: none !important; }
+
+/* `.!fixed` on the header is an *important* utility living in Tailwind's
+   `utilities` cascade layer. Unlayered !important loses to layered !important,
+   so we must match the layer — there specificity wins (html.a11y header beats
+   the single .!fixed class) and the header becomes a static top bar. */
+@layer utilities {
+  html.a11y header { position: static !important; }
 }
