@@ -600,6 +600,12 @@
     "reset": "Normal version",
     "close": "Close",
     "on": "On",
-    "off": "Off"
+    "off": "Off",
+    "errorPrefix": "Error",
+    "skipLink": "Skip to content",
+    "abSwitcher": "Настройки A/B теста иконок",
+    "themeToggle": "Toggle theme",
+    "logoLabel": "DDC — Home",
+    "toggleMobileMenu": "Toggle mobile menu"
   }
 }

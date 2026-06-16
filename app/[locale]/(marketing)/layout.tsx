@@ -3,11 +3,15 @@ import Footer from "@/components/layout/Footer";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import ScrollProgress from "@/components/motion/ScrollProgress";
 
+import { useTranslations } from "next-intl";
+
 export default function MarketingLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const t = useTranslations("A11y");
+
   return (
     <SmoothScroll>
       <ScrollProgress />
@@ -15,11 +19,11 @@ export default function MarketingLayout({
         href="#main"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-lg focus:border-2 focus:border-black focus:bg-white focus:px-4 focus:py-2 focus:text-base focus:font-bold focus:text-black"
       >
-        Перейти к содержимому
+        {t("skipLink")}
       </a>
       <div className="flex flex-col min-h-screen">
         <Header />
-        <main id="main" className="flex-grow">{children}</main>
+        <main id="main" tabIndex={-1} className="flex-grow outline-none">{children}</main>
         <Footer />
       </div>
     </SmoothScroll>

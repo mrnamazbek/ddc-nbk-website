@@ -21,7 +21,12 @@ export function AccessibilityTrigger({ className = "" }: { className?: string })
   return (
     <button
       type="button"
-      onClick={() => setPanelOpen(!panelOpen)}
+      onClick={(e) => {
+        if (typeof window !== "undefined") {
+          (window as any).__activeA11yTrigger = e.currentTarget;
+        }
+        setPanelOpen(!panelOpen);
+      }}
       aria-label={t("trigger")}
       aria-haspopup="dialog"
       aria-expanded={panelOpen}
@@ -53,26 +58,116 @@ export default function AccessibilityPanel() {
   const { panelOpen: open, setPanelOpen: setOpen } = a11y;
   const titleId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
+
+  const getVisibleTrigger = () => {
+    if (typeof document === "undefined") return null;
+    const buttons = Array.from(document.querySelectorAll<HTMLElement>('button[aria-haspopup="dialog"]'));
+    return buttons.find(btn => btn.offsetWidth > 0 || btn.offsetHeight > 0) || buttons[0] || null;
+  };
 
   const close = () => {
     setOpen(false);
-    document.querySelector<HTMLElement>('button[aria-haspopup="dialog"]')?.focus();
   };
 
-  // Esc to close + restore focus to the trigger.
+  // Esc to close + Focus Trap + restore focus to the trigger.
   useEffect(() => {
     if (!open) return;
+    
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
+      if (e.key === "Escape") {
+        close();
+        return;
+      }
+      
+      if (e.key === "Tab") {
+        if (!panelRef.current) return;
+        
+        const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+        const focusables = Array.from(panelRef.current.querySelectorAll<HTMLElement>(focusableSelectors));
+        
+        if (focusables.length === 0) return;
+        
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        
+        if (e.shiftKey) {
+          // Shift + Tab
+          if (document.activeElement === first || document.activeElement === panelRef.current) {
+            last.focus();
+            e.preventDefault();
+          }
+        } else {
+          // Tab
+          if (document.activeElement === last) {
+            first.focus();
+            e.preventDefault();
+          }
+        }
+      }
     };
+    
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  // Move focus into the panel when it opens.
+  // Track active trigger and move focus into the panel when it opens.
   useEffect(() => {
-    if (open) panelRef.current?.focus();
+    if (open) {
+      const active = document.activeElement as HTMLElement;
+      let target = active ? (active.closest('button') || active) : null;
+      if (!target || target.tagName !== 'BUTTON' || (target.offsetWidth === 0 && target.offsetHeight === 0)) {
+        target = getVisibleTrigger();
+      }
+      triggerRef.current = target;
+      
+      const focusPanel = () => {
+        if (panelRef.current) {
+          panelRef.current.focus();
+        }
+      };
+      
+      focusPanel();
+      const rafId1 = requestAnimationFrame(() => {
+        const rafId2 = requestAnimationFrame(focusPanel);
+        return () => cancelAnimationFrame(rafId2);
+      });
+      
+      return () => {
+        cancelAnimationFrame(rafId1);
+      };
+    } else {
+      // Когда диалог закрывается, дождемся пока inert снимется в соседнем эффекте
+      const trigger = (typeof window !== "undefined" && (window as any).__activeA11yTrigger) || triggerRef.current || getVisibleTrigger();
+      if (trigger) {
+        const rafId = requestAnimationFrame(() => {
+          trigger.focus();
+        });
+        return () => cancelAnimationFrame(rafId);
+      }
+    }
+  }, [open]);
+
+  // Make the background content inert/hidden when modal is open
+  useEffect(() => {
+    if (!open) return;
+    
+    const siblings = Array.from(document.body.children).filter(
+      (el) => el !== panelRef.current && !el.contains(panelRef.current) && el.tagName !== 'SCRIPT'
+    );
+    
+    siblings.forEach((el) => {
+      el.setAttribute("inert", "true");
+      el.setAttribute("aria-hidden", "true");
+    });
+    
+    return () => {
+      siblings.forEach((el) => {
+        el.removeAttribute("inert");
+        el.removeAttribute("aria-hidden");
+      });
+    };
   }, [open]);
 
   return (

@@ -34,6 +34,7 @@ interface A11yCtx extends A11yState {
   reset: () => void;
   panelOpen: boolean;
   setPanelOpen: (b: boolean) => void;
+  prefersReducedMotion: boolean;
 }
 
 const Ctx = createContext<A11yCtx | null>(null);
@@ -66,6 +67,16 @@ function applyToHtml(s: A11yState) {
 export default function AccessibilityProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<A11yState>(DEFAULT);
   const [panelOpen, setPanelOpen] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mediaQuery.matches);
+    const listener = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener("change", listener);
+    return () => mediaQuery.removeEventListener("change", listener);
+  }, []);
 
   useEffect(() => {
     try {
@@ -104,6 +115,7 @@ export default function AccessibilityProvider({ children }: { children: React.Re
     reset: () => update(DEFAULT),
     panelOpen,
     setPanelOpen,
+    prefersReducedMotion,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

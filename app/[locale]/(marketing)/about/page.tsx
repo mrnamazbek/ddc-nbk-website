@@ -70,7 +70,7 @@ export default function AboutPage() {
         {/* Секция миссии */}
         <div id="mission" className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24 pb-12 border-b border-white/5">
           <div className="lg:col-span-7">
-            <h3 className="text-2xl font-bold text-white mb-6 tracking-wide">{t("missionTitle")}</h3>
+            <h2 className="text-2xl font-bold text-white mb-6 tracking-wide">{t("missionTitle")}</h2>
             <p className="text-zinc-400 font-light leading-relaxed mb-6">
               {t("missionDesc1")}
             </p>
@@ -86,7 +86,7 @@ export default function AboutPage() {
               </div>
               <div>
                 <span className="text-xs uppercase text-gold font-medium tracking-wider">{t("founderBadge")}</span>
-                <h4 className="text-base font-bold text-white">{t("founderTitle")}</h4>
+                <h3 className="text-base font-bold text-white">{t("founderTitle")}</h3>
               </div>
             </div>
             <p className="text-xs text-zinc-400 font-light leading-relaxed mb-6">
@@ -122,7 +122,7 @@ export default function AboutPage() {
                 <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
                   <Icon name={val.icon} size={24} />
                 </div>
-                <h4 className="text-lg font-bold text-white mb-3 tracking-wide">{val.title}</h4>
+                <h3 className="text-lg font-bold text-white mb-3 tracking-wide">{val.title}</h3>
                 <p className="text-sm text-zinc-400 font-light leading-relaxed">{val.text}</p>
               </motion.div>
             );
@@ -133,7 +133,7 @@ export default function AboutPage() {
         <div className="mt-24 bg-gradient-to-r from-forest-dark to-charcoal border border-forest-mid/30 p-8 sm:p-12 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-8 relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(#52B78805_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
           <div>
-            <h3 className="text-2xl font-bold text-white mb-3 tracking-wide">{t("ctaTitle")}</h3>
+            <h2 className="text-2xl font-bold text-white mb-3 tracking-wide">{t("ctaTitle")}</h2>
             <p className="text-sm text-zinc-400 font-light leading-relaxed max-w-xl">
               {t("ctaDesc")}
             </p>

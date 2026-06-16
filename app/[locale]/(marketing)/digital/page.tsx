@@ -75,7 +75,7 @@ export default function DigitalPage() {
               <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
                 <Icon name="layers" size={24} />
               </div>
-              <h3 className="text-lg font-bold text-white mb-3">{t("card1Title")}</h3>
+              <h2 className="text-lg font-bold text-white mb-3">{t("card1Title")}</h2>
               <p className="text-sm text-zinc-400 font-light leading-relaxed">
                 {t("card1Desc")}
               </p>
@@ -88,7 +88,7 @@ export default function DigitalPage() {
               <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
                 <Icon name="cpu" size={24} />
               </div>
-              <h3 className="text-lg font-bold text-white mb-3">{t("card2Title")}</h3>
+              <h2 className="text-lg font-bold text-white mb-3">{t("card2Title")}</h2>
               <p className="text-sm text-zinc-400 font-light leading-relaxed">
                 {t("card2Desc")}
               </p>
@@ -101,7 +101,7 @@ export default function DigitalPage() {
               <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
                 <Icon name="refresh" size={24} />
               </div>
-              <h3 className="text-lg font-bold text-white mb-3">{t("card3Title")}</h3>
+              <h2 className="text-lg font-bold text-white mb-3">{t("card3Title")}</h2>
               <p className="text-sm text-zinc-400 font-light leading-relaxed">
                 {t("card3Desc")}
               </p>
@@ -150,7 +150,7 @@ export default function DigitalPage() {
             <Icon name="database" size={32} className="text-gold shrink-0 mt-1" />
             <div>
               <span className="text-xs uppercase text-gold font-semibold tracking-wider">{t("overline")}</span>
-              <h3 className="text-xl font-bold text-white tracking-wide">{t("insightTitle")}</h3>
+              <h2 className="text-xl font-bold text-white tracking-wide">{t("insightTitle")}</h2>
             </div>
           </div>
           <p className="text-zinc-400 font-light leading-relaxed mb-6">

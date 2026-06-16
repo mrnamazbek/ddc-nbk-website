@@ -157,9 +157,9 @@ export default function ServicesPage() {
                     <span className="text-xs text-gold/80 font-medium tracking-widest uppercase block mb-2">
                       {service.subtitle}
                     </span>
-                    <h3 className="text-2xl font-bold text-white tracking-wide">
+                    <h2 className="text-2xl font-bold text-white tracking-wide">
                       {service.title}
-                    </h3>
+                    </h2>
                     
                     {/* Технологический стек */}
                     <div className="mt-6 pt-6 border-t border-white/5">
@@ -176,7 +176,7 @@ export default function ServicesPage() {
                       {service.description}
                     </p>
                     
-                    <h4 className="text-sm font-semibold text-white tracking-wider uppercase mb-4">{t("keyFeaturesLabel")}</h4>
+                    <h3 className="text-sm font-semibold text-white tracking-wider uppercase mb-4">{t("keyFeaturesLabel")}</h3>
                     <ul className="space-y-3">
                       {service.features.map((feature, fIdx) => (
                         <li key={fIdx} className="flex items-start gap-3 text-sm text-zinc-400 font-light leading-relaxed">

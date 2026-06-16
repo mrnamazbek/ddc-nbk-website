@@ -7,6 +7,7 @@ import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
 
 import { startScrollTracking } from "@/lib/scrollStore";
+import { useA11y } from "@/components/theme/AccessibilityProvider";
 import ShanyrakBillboard from "./scene/ShanyrakBillboard";
 import CoinBillboard from "./scene/CoinBillboard";
 import MorphObjects from "./scene/MorphObjects";
@@ -19,9 +20,9 @@ import ScrollSequence from "@/components/ScrollSequence";
 
 type Quality = "high" | "low" | "off";
 
-function detectQuality(): Quality {
+function detectQuality(a11yEnabled: boolean, prefersReducedMotion: boolean): Quality {
   if (typeof window === "undefined") return "high";
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return "off";
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || a11yEnabled || prefersReducedMotion) return "off";
   const coarse = window.matchMedia("(pointer: coarse)").matches;
   const small = window.innerWidth < 768;
   return coarse || small ? "low" : "high";
@@ -61,22 +62,27 @@ function SceneContents({ quality }: { quality: Quality }) {
 }
 
 export default function ExperienceCanvas() {
+  const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
   const [quality, setQuality] = useState<Quality>("high");
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const q = detectQuality();
+    const q = detectQuality(a11yEnabled, prefersReducedMotion);
     setQuality(q);
     setReady(true);
-    if (q !== "off") startScrollTracking();
-  }, []);
+    if (q !== "off" && !a11yEnabled && !prefersReducedMotion) startScrollTracking();
+  }, [a11yEnabled, prefersReducedMotion]);
 
   if (!ready) {
-  return <div className="fixed inset-0 z-0 bg-background" />;
+    return <div className="fixed inset-0 z-0 bg-background" />;
   }
 
-  // На мобильных (low) или при отключенных анимациях (off) используем оптимизированный 2D ScrollSequence
-  if (quality === "low" || quality === "off") {
+  // В режиме слабовидящих или при отключенном движении полностью гасим Canvas и анимации скролла
+  if (a11yEnabled || prefersReducedMotion || quality === "off") {
+    return null;
+  }
+
+  if (quality === "low") {
     return <ScrollSequence />;
   }
 

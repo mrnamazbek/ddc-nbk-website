@@ -389,12 +389,14 @@ function Steps({
                 isCompleted ? "bg-neutral-500/20" : "bg-neutral-500/10"
               )}
             >
-              <div
+              <button
+                type="button"
                 className={cn(
-                  "group flex w-full cursor-pointer items-center focus:outline-none focus-visible:ring-2",
+                  "group flex w-full cursor-pointer items-center focus:outline-none focus-visible:ring-2 bg-transparent text-left border-none p-0",
                   isCurrent && "pointer-events-none"
                 )}
                 onClick={() => onChange(stepIdx)}
+                aria-current={isCurrent ? "step" : undefined}
               >
                 <span className="flex items-center gap-2 text-xs md:text-sm font-medium">
                   <motion.span
@@ -445,7 +447,7 @@ function Steps({
                     {step.name}
                   </motion.span>
                 </span>
-              </div>
+              </button>
             </motion.li>
           );
         })}
@@ -503,13 +505,13 @@ export const FeatureCarousel = ({
               onAnimationComplete={handleAnimationComplete}
             >
               <AnimatedStepImage
-                alt={image.alt}
+                alt={steps[0]?.title || image.alt}
                 className={clsx(step1img1Class)}
                 src={image.step1light1}
                 preset="slideInLeft"
               />
               <AnimatedStepImage
-                alt={image.alt}
+                alt={steps[0]?.title || image.alt}
                 className={clsx(step1img2Class)}
                 src={image.step1light2}
                 preset="slideInRight"
@@ -524,13 +526,13 @@ export const FeatureCarousel = ({
               onAnimationComplete={handleAnimationComplete}
             >
               <AnimatedStepImage
-                alt={image.alt}
+                alt={steps[1]?.title || image.alt}
                 className={clsx(step2img1Class, "rounded-card")}
                 src={image.step2light1}
                 preset="fadeInScale"
               />
               <AnimatedStepImage
-                alt={image.alt}
+                alt={steps[1]?.title || image.alt}
                 className={clsx(step2img2Class, "rounded-card")}
                 src={image.step2light2}
                 preset="fadeInScale"
@@ -541,7 +543,7 @@ export const FeatureCarousel = ({
         case 2:
           return (
             <AnimatedStepImage
-              alt={image.alt}
+              alt={steps[2]?.title || image.alt}
               className={clsx(step3imgClass, "rounded-card")}
               src={image.step3light}
               preset="fadeInScale"
@@ -551,7 +553,7 @@ export const FeatureCarousel = ({
         case 3:
           return (
             <AnimatedStepImage
-              alt={image.alt}
+              alt={steps[3]?.title || image.alt}
               className={clsx(step4imgClass, "rounded-card")}
               src={image.step4light}
               preset="fadeInScale"

@@ -152,9 +152,9 @@ export default function NewsPage() {
                         <span>{news.readTime} {t("readTimeSuffix")}</span>
                       </div>
 
-                      <h3 className="text-lg font-sans font-bold text-white tracking-wide mb-3 line-clamp-2 group-hover:text-gold transition-colors duration-300">
+                      <h2 className="text-lg font-sans font-bold text-white tracking-wide mb-3 line-clamp-2 group-hover:text-gold transition-colors duration-300">
                         {news.title}
-                      </h3>
+                      </h2>
                       
                       <p className="text-sm font-sans font-light text-zinc-400 leading-relaxed line-clamp-3 mb-6">
                         {news.excerpt}

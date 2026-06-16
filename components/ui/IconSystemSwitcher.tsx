@@ -2,12 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { useIconSystem, IconSystem } from "../theme/IconSystemProvider";
 import { useFontSystem, FontSystem } from "../theme/FontSystemProvider";
 import { useBgSystem, BgSystem } from "../theme/BgSystemProvider";
 import Icon from "./Icon";
 
 export default function IconSystemSwitcher() {
+  const t = useTranslations("A11y");
   const { iconSystem, setIconSystem } = useIconSystem();
   const { fontSystem, setFontSystem } = useFontSystem();
   const { bgSystem, setBgSystem } = useBgSystem();
@@ -164,7 +166,7 @@ export default function IconSystemSwitcher() {
         whileTap={{ scale: 0.95 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
         className="w-12 h-12 rounded-full cursor-pointer liquid-glass border border-glass-border flex items-center justify-center text-gold shadow-lg hover:text-white transition-colors relative group"
-        aria-label="Настройки A/B теста иконок"
+        aria-label={t("abSwitcher")}
       >
         <span className="absolute inset-0 rounded-full bg-gold/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm" />
         <Icon name="zap" size={20} animate={!isOpen} className="relative z-10" />

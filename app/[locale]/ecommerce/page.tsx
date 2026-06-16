@@ -16,7 +16,7 @@ export default function EcommercePage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Ecommerce</CardTitle>
+        <h1 className="text-2xl font-semibold leading-none tracking-tight text-foreground">Ecommerce</h1>
         <CardDescription>
           The future of ecommerce is here.
         </CardDescription>

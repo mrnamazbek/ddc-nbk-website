@@ -83,9 +83,9 @@ export default function FAQPage() {
                 >
                   <div className="flex items-center gap-4">
                     <Icon name="help" size={20} className="text-gold shrink-0" />
-                    <h3 className="text-base sm:text-lg font-sans font-semibold text-white tracking-wide">
+                    <h2 className="text-base sm:text-lg font-sans font-semibold text-white tracking-wide">
                       {faq.question}
-                    </h3>
+                    </h2>
                   </div>
                   <div className={`w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-zinc-400 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}>
                     {isOpen ? <Icon name="minus" size={16} /> : <Icon name="plus" size={16} />}

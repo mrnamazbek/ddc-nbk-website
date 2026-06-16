@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { useBgSystem } from "../theme/BgSystemProvider";
+import { useA11y } from "../theme/AccessibilityProvider";
 
 // WebGL/R3F shader background — lazy-loaded (only when the Shader preset is on).
 const ShaderBackground = dynamic(() => import("./ShaderBackground"), { ssr: false });
@@ -24,11 +25,13 @@ interface PresetConfig {
 }
 
 export default function InteractiveDotGrid() {
+  const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
   const { resolvedTheme } = useTheme();
   const isLight = resolvedTheme === "light";
   const { bgSystem } = useBgSystem();
 
   const [activePreset, setActivePreset] = useState<PresetName>("default");
+
   
   // Конфигурации пресетов в стиле Shaders.com
   const presets: Record<PresetName, PresetConfig> = {
@@ -101,6 +104,7 @@ export default function InteractiveDotGrid() {
   // Плавно гасим фон-эффект при прокрутке вниз: к концу первого экрана он почти
   // исчезает, оставляя ровный тёмно-зелёный фон. Управляется через Lenis (window scroll).
   useEffect(() => {
+    if (a11yEnabled || prefersReducedMotion) return;
     let raf = 0;
     const apply = () => {
       const el = bgWrapRef.current;
@@ -136,6 +140,7 @@ export default function InteractiveDotGrid() {
 
   // Инициализация точек при изменении размера экрана или пресета
   useEffect(() => {
+    if (a11yEnabled || prefersReducedMotion) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -338,6 +343,10 @@ export default function InteractiveDotGrid() {
       cancelAnimationFrame(animationFrameId);
     };
   }, [activePreset, isLight, bgSystem]);
+
+  if (a11yEnabled || prefersReducedMotion) {
+    return null;
+  }
 
   return (
     <>

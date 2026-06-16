@@ -279,20 +279,20 @@ export default async function CareersPage({ params }: CareersPageProps) {
         {/* Миссия и Видение */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20">
           <GlassCard hoverAccent="gold" variant="liquid" isTiltEnabled={false} className="p-8 border border-white/5">
-            <h3 className="text-xl font-bold text-white mb-4 tracking-wide flex items-center gap-3">
+            <h2 className="text-xl font-bold text-white mb-4 tracking-wide flex items-center gap-3">
               <Icon name="compass" size={20} className="text-gold" />
               {t("missionTitle")}
-            </h3>
+            </h2>
             <p className="text-sm text-zinc-400 font-light leading-relaxed">
               {t("missionDesc")}
             </p>
           </GlassCard>
 
           <GlassCard hoverAccent="forest" variant="liquid" isTiltEnabled={false} className="p-8 border border-white/5">
-            <h3 className="text-xl font-bold text-white mb-4 tracking-wide flex items-center gap-3">
+            <h2 className="text-xl font-bold text-white mb-4 tracking-wide flex items-center gap-3">
               <Icon name="eye" size={20} className="text-forest-light" />
               {t("visionTitle")}
-            </h3>
+            </h2>
             <p className="text-sm text-zinc-400 font-light leading-relaxed">
               {t("visionDesc")}
             </p>
@@ -312,7 +312,7 @@ export default async function CareersPage({ params }: CareersPageProps) {
                     <div className="w-10 h-10 rounded-xl bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold mb-4 shrink-0">
                       <Icon name={v.icon} size={20} />
                     </div>
-                    <h4 className="text-base font-bold text-white mb-2 tracking-wide">{v.title}</h4>
+                    <h3 className="text-base font-bold text-white mb-2 tracking-wide">{v.title}</h3>
                     <p className="text-xs text-zinc-400 font-light leading-relaxed">{v.text}</p>
                   </div>
                 </GlassCard>
@@ -324,7 +324,7 @@ export default async function CareersPage({ params }: CareersPageProps) {
         {/* Почему именно мы? */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24 pb-12 border-b border-white/5">
           <div className="lg:col-span-7">
-            <h3 className="text-2xl font-bold text-white mb-6 tracking-wide">{t("whyUsTitle")}</h3>
+            <h2 className="text-2xl font-bold text-white mb-6 tracking-wide">{t("whyUsTitle")}</h2>
             <ul className="space-y-4">
               {whyUsPoints.map((point, idx) => (
                 <li key={idx} className="flex items-start gap-3.5 text-sm sm:text-base text-zinc-400 font-light leading-relaxed">
@@ -340,7 +340,7 @@ export default async function CareersPage({ params }: CareersPageProps) {
             <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
               <Icon name="zap" size={24} />
             </div>
-            <h4 className="text-base font-bold text-white mb-2">{t("startJourneyTitle")}</h4>
+            <h3 className="text-base font-bold text-white mb-2">{t("startJourneyTitle")}</h3>
             <p className="text-xs text-zinc-400 font-light leading-relaxed mb-6">
               {t("startJourneyDesc")}
             </p>

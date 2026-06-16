@@ -4,6 +4,7 @@ import Icon from './Icon';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from 'next-themes';
+import { useTranslations } from 'next-intl';
 
 interface Particle {
   id: number;
@@ -12,6 +13,7 @@ interface Particle {
 }
 
 export default function CinematicThemeSwitcher() {
+  const t = useTranslations("A11y");
   const { theme, setTheme, resolvedTheme } = useTheme();
 
   const [mounted, setMounted] = useState(false);
@@ -95,7 +97,7 @@ export default function CinematicThemeSwitcher() {
             ? '1.5px solid rgba(82,183,136,0.35)'
             : '1.5px solid rgba(203,213,225,0.6)',
         }}
-        aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+        aria-label={t("themeToggle")}
         role="switch"
         aria-checked={isDark}
         whileTap={{ scale: 0.96 }}

@@ -30,6 +30,7 @@ const LabelInputContainer = ({
 
 export default function ContactPage() {
   const t = useTranslations("ContactPage");
+  const tA11y = useTranslations("A11y");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const reduce = useReducedMotion();
 
@@ -92,7 +93,7 @@ export default function ContactPage() {
           {/* Left: Contact Info */}
           <div className="lg:col-span-5 space-y-10">
             <div>
-              <h3 className="text-xl font-bold text-white mb-6 tracking-wide">{t("officeTitle")}</h3>
+              <h2 className="text-xl font-bold text-white mb-6 tracking-wide">{t("officeTitle")}</h2>
               
               <div className="space-y-6">
                 <div className="flex gap-4 items-start">
@@ -182,12 +183,12 @@ export default function ContactPage() {
                     initial={{ scale: 0, rotate: -18 }}
                     animate={{ scale: 1, rotate: 0 }}
                     transition={{ type: "spring", stiffness: 340, damping: 15, delay: 0.05 }}
-                    className="w-16 h-16 rounded-full bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold"
+                    className="w-16 h-16 rounded-full bg-forest/30 border border-forest-light/25 flex items-center justify-center text-gold"
                   >
                     <Icon name="check-circle" size={32} animate={false} />
                   </motion.div>
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-4 tracking-wide">{t("formSubmittedTitle")}</h3>
+                <h2 className="text-2xl font-bold text-white mb-4 tracking-wide">{t("formSubmittedTitle")}</h2>
                 <p className="text-sm text-zinc-400 font-light leading-relaxed max-w-md mx-auto mb-8">
                   {t("formSubmittedDesc")}
                 </p>
@@ -206,9 +207,13 @@ export default function ContactPage() {
                       {...register("name")}
                       placeholder={t("placeholderName")}
                       className={errors.name ? "ring-1 ring-red-500" : ""}
+                      aria-invalid={errors.name ? "true" : "false"}
+                      aria-describedby={errors.name ? "name-error" : undefined}
                     />
                     {errors.name && (
-                      <p className="text-xs text-red-500 mt-1 font-light">{errors.name.message}</p>
+                      <p id="name-error" className="text-xs text-red-500 mt-1 font-semibold flex items-center gap-1" role="alert">
+                        <span className="sr-only">{tA11y("errorPrefix")}: </span>⚠️ {errors.name.message}
+                      </p>
                     )}
                   </LabelInputContainer>
 
@@ -220,9 +225,13 @@ export default function ContactPage() {
                       {...register("email")}
                       placeholder={t("placeholderEmail")}
                       className={errors.email ? "ring-1 ring-red-500" : ""}
+                      aria-invalid={errors.email ? "true" : "false"}
+                      aria-describedby={errors.email ? "email-error" : undefined}
                     />
                     {errors.email && (
-                      <p className="text-xs text-red-500 mt-1 font-light">{errors.email.message}</p>
+                      <p id="email-error" className="text-xs text-red-500 mt-1 font-semibold flex items-center gap-1" role="alert">
+                        <span className="sr-only">{tA11y("errorPrefix")}: </span>⚠️ {errors.email.message}
+                      </p>
                     )}
                   </LabelInputContainer>
                 </div>
@@ -235,9 +244,13 @@ export default function ContactPage() {
                     {...register("organization")}
                     placeholder={t("placeholderOrg")}
                     className={errors.organization ? "ring-1 ring-red-500" : ""}
+                    aria-invalid={errors.organization ? "true" : "false"}
+                    aria-describedby={errors.organization ? "organization-error" : undefined}
                   />
                   {errors.organization && (
-                    <p className="text-xs text-red-500 mt-1 font-light">{errors.organization.message}</p>
+                    <p id="organization-error" className="text-xs text-red-500 mt-1 font-semibold flex items-center gap-1" role="alert">
+                      <span className="sr-only">{tA11y("errorPrefix")}: </span>⚠️ {errors.organization.message}
+                    </p>
                   )}
                 </LabelInputContainer>
 
@@ -249,9 +262,13 @@ export default function ContactPage() {
                     {...register("message")}
                     placeholder={t("placeholderMsg")}
                     className={errors.message ? "ring-1 ring-red-500" : ""}
+                    aria-invalid={errors.message ? "true" : "false"}
+                    aria-describedby={errors.message ? "message-error" : undefined}
                   />
                   {errors.message && (
-                    <p className="text-xs text-red-500 mt-1 font-light">{errors.message.message}</p>
+                    <p id="message-error" className="text-xs text-red-500 mt-1 font-semibold flex items-center gap-1" role="alert">
+                      <span className="sr-only">{tA11y("errorPrefix")}: </span>⚠️ {errors.message.message}
+                    </p>
                   )}
                 </LabelInputContainer>
 

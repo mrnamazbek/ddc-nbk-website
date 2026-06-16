@@ -98,9 +98,9 @@ export default function SecurityPage() {
                     <Icon name={pillar.icon} size={24} />
                   </div>
                   
-                  <h3 className="text-lg font-sans font-semibold text-foreground tracking-wide mb-3">
+                  <h2 className="text-lg font-sans font-semibold text-foreground tracking-wide mb-3">
                     {pillar.title}
-                  </h3>
+                  </h2>
                   
                   <p className="text-sm font-sans font-light text-text-secondary leading-relaxed">
                     {pillar.description}
@@ -115,9 +115,9 @@ export default function SecurityPage() {
         <div className="mt-24 bg-charcoal/30 border border-border rounded-3xl p-8 sm:p-12 text-center lg:text-left">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-8">
-              <h3 className="text-xl font-bold text-foreground mb-4 tracking-wide">
+              <h2 className="text-xl font-bold text-foreground mb-4 tracking-wide">
                 {t("certTitle")}
-              </h3>
+              </h2>
               <p className="text-sm text-text-secondary font-light leading-relaxed">
                 {t("certDesc")}
               </p>

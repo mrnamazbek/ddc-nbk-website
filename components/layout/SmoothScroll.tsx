@@ -5,6 +5,7 @@ import Lenis from "lenis";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import gsap from "@/lib/gsap";
 import { usePathname } from "@/i18n/navigation";
+import { useA11y } from "../theme/AccessibilityProvider";
 
 interface SmoothScrollProps {
   children: ReactNode;
@@ -13,6 +14,7 @@ interface SmoothScrollProps {
 export default function SmoothScroll({ children }: SmoothScrollProps) {
   const pathname = usePathname();
   const isPopStateRef = useRef(false);
+  const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
 
   useEffect(() => {
     const handlePopState = () => {
@@ -69,8 +71,11 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
   }, [pathname]);
 
   useEffect(() => {
-    // Disable smooth scroll if user prefers reduced motion
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    // Disable smooth scroll if accessibility mode or prefers-reduced-motion is active
+    if (a11yEnabled || prefersReducedMotion) {
+      if (typeof window !== "undefined") {
+        delete (window as any).__lenis;
+      }
       return;
     }
 
@@ -105,8 +110,11 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       lenis.off("scroll", updateScrollTrigger);
       lenis.destroy();
       gsap.ticker.remove(updateLenis);
+      if (typeof window !== "undefined") {
+        delete (window as any).__lenis;
+      }
     };
-  }, []);
+  }, [a11yEnabled, prefersReducedMotion]);
 
   return <>{children}</>;
 }

@@ -16,10 +16,13 @@ import Icon from "@/components/ui/Icon";
 
 import { SplineScene } from "@/components/ui/splite";
 
+import { useA11y } from "@/components/theme/AccessibilityProvider";
+
 const ROBOT_SCENE = "/spline/scene.splinecode";
 
 export default function Hero() {
   const t = useTranslations("Hero");
+  const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
@@ -39,12 +42,12 @@ export default function Hero() {
     const checkMobile = () => {
       const isCoarse = window.matchMedia("(pointer: coarse)").matches;
       const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      setIsMobileDevice(window.innerWidth < 768 || isCoarse || isReduced);
+      setIsMobileDevice(window.innerWidth < 768 || isCoarse || isReduced || a11yEnabled || prefersReducedMotion);
     };
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  }, [a11yEnabled, prefersReducedMotion]);
 
   useGSAP(
     () => {

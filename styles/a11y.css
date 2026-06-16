@@ -211,7 +211,20 @@ html.a11y :is(main, header, footer) a[class*="rounded-full"]:hover {
 html.a11y :is(main, header, footer) button[class]:hover * { color: var(--a11y-fg) !important; }
 
 /* Hide dev-only A/B switchers (icon / font / bg / preset testers) in a11y mode. */
-html.a11y .fixed.bottom-6 { display: none !important; }
+html.a11y .fixed.bottom-6,
+html.a11y .scroll-progress-bar {
+  display: none !important;
+}
+
+/* Ensure container backgrounds are solid for clear contrast rendering and axe audits */
+html.a11y :is(main, header, footer, section, div[id="acts"], div.relative) {
+  background-color: var(--a11y-bg) !important;
+}
+
+/* Force opacity 1 on animated/fading text components (e.g. TypewriterEffect) to guarantee text contrast */
+html.a11y :is(.transition-opacity, [class*="transition-opacity"], .inline-block) {
+  opacity: 1 !important;
+}
 
 /* `.!fixed` on the header is an *important* utility living in Tailwind's
    `utilities` cascade layer. Unlayered !important loses to layered !important,

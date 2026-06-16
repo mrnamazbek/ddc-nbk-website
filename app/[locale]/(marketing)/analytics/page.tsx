@@ -79,9 +79,9 @@ export default function AnalyticsPage() {
                 </div>
                 <div>
                   <span className="text-[10px] font-mono tracking-widest text-gold uppercase">Big Data Stack</span>
-                  <h3 className="text-lg font-bold text-foreground tracking-wide">
+                  <h2 className="text-lg font-bold text-foreground tracking-wide">
                     {t("pipelineTitle")}
-                  </h3>
+                  </h2>
                 </div>
               </div>
               
@@ -95,7 +95,7 @@ export default function AnalyticsPage() {
                     <Icon name="check" size={14} />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-foreground uppercase tracking-wider">{t("ingestionTitle")}</h4>
+                    <h3 className="text-xs font-bold text-foreground uppercase tracking-wider">{t("ingestionTitle")}</h3>
                     <p className="text-xs text-text-secondary font-light mt-0.5">{t("ingestionDesc")}</p>
                   </div>
                 </div>
@@ -105,7 +105,7 @@ export default function AnalyticsPage() {
                     <Icon name="check" size={14} />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-foreground uppercase tracking-wider">{t("storageTitle")}</h4>
+                    <h3 className="text-xs font-bold text-foreground uppercase tracking-wider">{t("storageTitle")}</h3>
                     <p className="text-xs text-text-secondary font-light mt-0.5">{t("storageDesc")}</p>
                   </div>
                 </div>
@@ -115,7 +115,7 @@ export default function AnalyticsPage() {
                     <Icon name="check" size={14} />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-foreground uppercase tracking-wider">{t("orchTitle")}</h4>
+                    <h3 className="text-xs font-bold text-foreground uppercase tracking-wider">{t("orchTitle")}</h3>
                     <p className="text-xs text-text-secondary font-light mt-0.5">{t("orchDesc")}</p>
                   </div>
                 </div>
@@ -152,7 +152,7 @@ export default function AnalyticsPage() {
                   <div className="w-10 h-10 rounded-lg bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
                     <Icon name="cpu" size={20} />
                   </div>
-                  <h4 className="text-base font-bold text-foreground mb-3 tracking-wide">{tip.title}</h4>
+                  <h3 className="text-base font-bold text-foreground mb-3 tracking-wide">{tip.title}</h3>
                   <p className="text-xs text-text-secondary font-light leading-relaxed">{tip.desc}</p>
                 </div>
               </motion.div>
@@ -168,7 +168,7 @@ export default function AnalyticsPage() {
             <Icon name="server" size={32} className="text-gold shrink-0 mt-1" />
             <div>
               <span className="text-xs uppercase text-gold font-semibold tracking-wider">{t("careerOverline")}</span>
-              <h3 className="text-xl font-bold text-white tracking-wide">{t("careerTitle")}</h3>
+              <h2 className="text-xl font-bold text-white tracking-wide">{t("careerTitle")}</h2>
             </div>
           </div>
 

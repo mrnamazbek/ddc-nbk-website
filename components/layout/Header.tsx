@@ -74,6 +74,7 @@ export default function Header() {
     : "/images/logo/ddc_logo_for_dark_theme.png";
 
   const t = useTranslations("Header");
+  const tA11y = useTranslations("A11y");
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
@@ -150,7 +151,7 @@ export default function Header() {
           {/* Logo (mark only — clean & compact) */}
           <TransitionLink
             href="/"
-            aria-label="DDC — на главную"
+            aria-label={tA11y("logoLabel")}
             className="flex items-center group select-none shrink-0"
           >
             <Image
@@ -221,7 +222,7 @@ export default function Header() {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="flex items-center justify-center min-w-[44px] min-h-[44px] rounded-full liquid-glass text-foreground hover:text-gold transition-colors focus-visible:outline-none"
-              aria-label="Toggle mobile menu"
+              aria-label={tA11y("toggleMobileMenu")}
               aria-expanded={isMobileMenuOpen}
             >
               {isMobileMenuOpen ? <Icon name="x" size={20} /> : <Icon name="menu" size={20} />}

@@ -91,6 +91,7 @@ function hexToRgb(hex: string): THREE.Vector3 {
 }
 
 import { useBgSystem } from "../theme/BgSystemProvider";
+import { useA11y } from "../theme/AccessibilityProvider";
 
 function ShaderPlane({ isLight }: { isLight: boolean }) {
   const matRef = useRef<THREE.ShaderMaterial>(null);
@@ -153,6 +154,12 @@ function ShaderPlane({ isLight }: { isLight: boolean }) {
 }
 
 export default function ShaderBackground({ isLight }: { isLight: boolean }) {
+  const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
+
+  if (a11yEnabled || prefersReducedMotion) {
+    return null;
+  }
+
   return (
     <div className="fixed inset-0 w-full h-screen -z-10 block pointer-events-none">
       <Canvas
