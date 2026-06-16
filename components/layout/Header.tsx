@@ -10,6 +10,7 @@ import Button from "../ui/Button";
 import TransitionLink from "../motion/TransitionLink";
 import CinematicThemeSwitcher from "../ui/cinematic-theme-switcher";
 import Icon from "../ui/Icon";
+import { AccessibilityTrigger } from "../ui/AccessibilityPanel";
 
 const LANGUAGES = ["kz", "ru", "en"];
 
@@ -204,6 +205,9 @@ export default function Header() {
 
           {/* Right action panel */}
           <div className="hidden xl:flex items-center gap-4">
+            {/* Accessibility (версия для слабовидящих) */}
+            <AccessibilityTrigger />
+
             {/* Theme Switcher */}
             <CinematicThemeSwitcher />
 
@@ -211,15 +215,18 @@ export default function Header() {
             <LanguageSwitcher locale={locale} onSwitch={switchLocale} />
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="xl:hidden flex items-center justify-center min-w-[44px] min-h-[44px] rounded-full liquid-glass text-foreground hover:text-gold transition-colors focus-visible:outline-none"
-            aria-label="Toggle mobile menu"
-            aria-expanded={isMobileMenuOpen}
-          >
-            {isMobileMenuOpen ? <Icon name="x" size={20} /> : <Icon name="menu" size={20} />}
-          </button>
+          {/* Mobile action panel — a11y always surfaced beside the menu button */}
+          <div className="xl:hidden flex items-center gap-2">
+            <AccessibilityTrigger />
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="flex items-center justify-center min-w-[44px] min-h-[44px] rounded-full liquid-glass text-foreground hover:text-gold transition-colors focus-visible:outline-none"
+              aria-label="Toggle mobile menu"
+              aria-expanded={isMobileMenuOpen}
+            >
+              {isMobileMenuOpen ? <Icon name="x" size={20} /> : <Icon name="menu" size={20} />}
+            </button>
+          </div>
         </div>
       </header>
 

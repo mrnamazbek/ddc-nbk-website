@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Icon from "@/components/ui/Icon";
@@ -10,6 +10,28 @@ import {
   type A11yScheme,
   type A11ySpacing,
 } from "@/components/theme/AccessibilityProvider";
+
+/**
+ * Reusable trigger button for the header utility area (desktop + mobile).
+ * Opens the shared panel via provider state.
+ */
+export function AccessibilityTrigger({ className = "" }: { className?: string }) {
+  const t = useTranslations("A11y");
+  const { panelOpen, setPanelOpen } = useA11y();
+  return (
+    <button
+      type="button"
+      onClick={() => setPanelOpen(!panelOpen)}
+      aria-label={t("trigger")}
+      aria-haspopup="dialog"
+      aria-expanded={panelOpen}
+      title={t("trigger")}
+      className={`flex items-center justify-center min-w-[44px] min-h-[44px] rounded-full liquid-glass text-foreground hover:text-gold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 ${className}`}
+    >
+      <Icon name="eye" size={20} />
+    </button>
+  );
+}
 
 const SCALES: A11yScale[] = [100, 125, 150, 200];
 const SPACINGS: A11ySpacing[] = ["n", "m", "l"];
@@ -28,22 +50,24 @@ const SCHEMES: { id: A11yScheme; swatchBg: string; swatchFg: string }[] = [
 export default function AccessibilityPanel() {
   const t = useTranslations("A11y");
   const a11y = useA11y();
-  const [open, setOpen] = useState(false);
+  const { panelOpen: open, setPanelOpen: setOpen } = a11y;
   const titleId = useId();
-  const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  const close = () => {
+    setOpen(false);
+    document.querySelector<HTMLElement>('button[aria-haspopup="dialog"]')?.focus();
+  };
 
   // Esc to close + restore focus to the trigger.
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setOpen(false);
-        triggerRef.current?.focus();
-      }
+      if (e.key === "Escape") close();
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   // Move focus into the panel when it opens.
@@ -53,19 +77,6 @@ export default function AccessibilityPanel() {
 
   return (
     <>
-      <button
-        ref={triggerRef}
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-label={t("trigger")}
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        title={t("trigger")}
-        className="flex items-center justify-center min-w-[44px] min-h-[44px] rounded-full liquid-glass text-foreground hover:text-gold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70"
-      >
-        <Icon name="eye" size={20} />
-      </button>
-
       <AnimatePresence>
         {open && (
           <>
@@ -75,7 +86,7 @@ export default function AccessibilityPanel() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              onClick={() => setOpen(false)}
+              onClick={close}
               className="fixed inset-0 z-[90] bg-black/60"
               aria-hidden
             />
@@ -100,10 +111,7 @@ export default function AccessibilityPanel() {
                 </h2>
                 <button
                   type="button"
-                  onClick={() => {
-                    setOpen(false);
-                    triggerRef.current?.focus();
-                  }}
+                  onClick={close}
                   aria-label={t("close")}
                   className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border-2 border-black hover:bg-black hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black"
                 >

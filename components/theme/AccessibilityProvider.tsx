@@ -32,6 +32,8 @@ interface A11yCtx extends A11yState {
   setGrayscale: (b: boolean) => void;
   setSerif: (b: boolean) => void;
   reset: () => void;
+  panelOpen: boolean;
+  setPanelOpen: (b: boolean) => void;
 }
 
 const Ctx = createContext<A11yCtx | null>(null);
@@ -63,6 +65,7 @@ function applyToHtml(s: A11yState) {
 
 export default function AccessibilityProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<A11yState>(DEFAULT);
+  const [panelOpen, setPanelOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -99,6 +102,8 @@ export default function AccessibilityProvider({ children }: { children: React.Re
     setGrayscale: (b) => update({ grayscale: b, enabled: true }),
     setSerif: (b) => update({ serif: b, enabled: true }),
     reset: () => update(DEFAULT),
+    panelOpen,
+    setPanelOpen,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
