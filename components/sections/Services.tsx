@@ -128,7 +128,7 @@ export default function Services() {
             {t("titleLine1")} <br />
             <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
           </h2>
-          <p className="text-muted font-sans font-light leading-relaxed max-w-2xl text-lg">
+          <p className="text-muted font-sans font-normal leading-relaxed max-w-2xl text-lg">
             {t("subtitle")}
           </p>
         </div>
@@ -166,7 +166,7 @@ export default function Services() {
                       {t(`${service.key}.title`)}
                     </h3>
 
-                    <p className="text-sm font-sans font-light text-muted leading-relaxed group-hover:text-muted transition-colors">
+                    <p className="text-sm font-sans font-normal text-muted leading-relaxed group-hover:text-muted transition-colors">
                       {t(`${service.key}.desc`)}
                     </p>
                   </div>

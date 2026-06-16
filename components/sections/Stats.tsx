@@ -44,7 +44,7 @@ export default function Stats() {
             {t("title")}{" "}
             <span className="text-gradient-forest font-medium">{t("titleAccent")}</span>
           </h2>
-          <p className="text-muted font-sans font-light leading-relaxed text-lg">
+          <p className="text-muted font-sans font-normal leading-relaxed text-lg">
             {t("subtitle")}
           </p>
         </div>
@@ -70,7 +70,7 @@ export default function Stats() {
                 <h3 className="text-base font-sans font-semibold text-foreground tracking-wide mb-2">
                   {t(`${s.key}.label`)}
                 </h3>
-                <p className="text-sm font-sans font-light text-muted leading-relaxed">
+                <p className="text-sm font-sans font-normal text-muted leading-relaxed">
                   {t(`${s.key}.desc`)}
                 </p>
               </GlassCard>

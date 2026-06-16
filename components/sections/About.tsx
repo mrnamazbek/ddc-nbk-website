@@ -150,7 +150,7 @@ export default function About() {
                       <h4 className="text-lg font-sans font-semibold text-foreground mb-2 group-hover:text-zinc-100 transition-colors">
                         {t(`${item.key}.title`)}
                       </h4>
-                      <p className="text-sm font-sans font-light text-muted leading-relaxed group-hover:text-muted transition-colors">
+                      <p className="text-sm font-sans font-normal text-muted leading-relaxed group-hover:text-muted transition-colors">
                         {t(`${item.key}.text`)}
                       </p>
                     </div>

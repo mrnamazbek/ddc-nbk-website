@@ -119,7 +119,7 @@ export default function CTA() {
               <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
             </h2>
 
-            <p className="text-sm sm:text-base text-muted font-sans font-light leading-relaxed max-w-2xl mx-auto mb-10 relative z-10">
+            <p className="text-sm sm:text-base text-muted font-sans font-normal leading-relaxed max-w-2xl mx-auto mb-10 relative z-10">
               {t("subtitle")}
             </p>
 

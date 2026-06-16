@@ -149,7 +149,7 @@ export default function Hero() {
           {/* Подзаголовок на Inter */}
           <motion.p
             variants={itemVariants}
-            className="text-sm sm:text-base lg:text-lg text-foreground/70 font-sans font-light leading-relaxed max-w-2xl mb-6"
+            className="text-sm sm:text-base lg:text-lg text-foreground/70 font-sans font-normal leading-relaxed max-w-2xl mb-6"
           >
             {t("subtitle")}
           </motion.p>
