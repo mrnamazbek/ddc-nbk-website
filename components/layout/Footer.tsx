@@ -96,7 +96,7 @@ export default function Footer() {
         <div className="border-t border-glass-border pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex flex-col gap-2">
             <span className="text-xs text-muted">
-              © {currentYear} ТОО «Центр цифрового развития Национального Банка РК» (DDC). Все права защищены.
+              © {currentYear} АО «Центр цифрового развития Национального Банка РК» (DDC). Все права защищены.
             </span>
             <span className="text-[10px] text-gray-mid leading-relaxed">
               Информация, размещенная на данном ресурсе, носит официальный характер и охраняется законодательством Республики Казахстан.

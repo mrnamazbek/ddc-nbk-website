@@ -110,6 +110,29 @@ html.a11y :focus-visible {
   outline-offset: 2px !important;
 }
 
+/* --- Gradient / clipped text would be INVISIBLE on a solid a11y surface ---
+   .text-gradient-* and Tailwind's bg-clip-text + text-transparent paint the
+   text with `-webkit-text-fill-color: transparent`, so the glyphs vanish on the
+   high-contrast background (e.g. the hero "…financial stability…" accent).
+   Force any such text back to the foreground colour. */
+html.a11y :is([class*="text-gradient"], [class*="bg-clip-text"], .text-transparent),
+html.a11y :is([class*="text-gradient"], [class*="bg-clip-text"], .text-transparent) * {
+  background: none !important;
+  background-image: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+  -webkit-text-fill-color: var(--a11y-fg) !important;
+  color: var(--a11y-fg) !important;
+}
+
+/* --- Theme (dark/light) switcher is redundant in a11y mode -----------------
+   The colour scheme (bw / wb / blue) already controls the palette, so the
+   sun/moon toggle does nothing useful — hide it and its wrapper. */
+html.a11y button[role="switch"],
+html.a11y div:has(> button[role="switch"]) {
+  display: none !important;
+}
+
 /* --- Kill decoration: dot-shader / 3D / parallax canvases & glows -------- */
 html.a11y canvas,
 html.a11y [data-decorative],
