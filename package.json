@@ -20,9 +20,11 @@
     "@splinetool/react-spline": "^4.1.0",
     "@splinetool/runtime": "^1.12.97",
     "@studio-freight/lenis": "^1.0.42",
+    "@tabler/icons-react": "^3.44.0",
     "animejs": "^4.4.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dotted-map": "^3.1.0",
     "framer-motion": "^12.40.0",
     "gsap": "^3.15.0",
     "iconsax-react": "^0.0.8",
@@ -41,6 +43,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
     "@playwright/test": "^1.60.0",
     "@tailwindcss/postcss": "^4",
     "@types/animejs": "^3.1.13",

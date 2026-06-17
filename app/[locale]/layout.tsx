@@ -84,7 +84,7 @@ export default async function LocaleLayout({
 
   return (
     <html
-      lang={locale}
+      lang={locale === "kz" ? "kk" : locale}
       className={`${sourceSerif.variable} ${golosText.variable} ${lora.variable} ${ibmPlexSans.variable} ${manrope.variable} ${jetbrainsMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >

@@ -53,7 +53,7 @@ export default function AnalyticsPage() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
           className="max-w-3xl mb-16"
         >
-          <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
+          <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-medium mb-4 block">
             {t("overline")}
           </span>
           <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
@@ -74,11 +74,11 @@ export default function AnalyticsPage() {
           <div className="lg:col-span-5 flex flex-col gap-6">
             <GlassCard hoverAccent="forest" className="p-8 h-full" isTiltEnabled={false}>
               <div className="flex gap-4 items-start mb-6">
-                <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold">
+                <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold-light">
                   <Icon name="database" size={24} />
                 </div>
                 <div>
-                  <span className="text-[10px] font-mono tracking-widest text-gold uppercase">Big Data Stack</span>
+                  <span className="text-[10px] font-mono tracking-widest text-gold-light uppercase">Big Data Stack</span>
                   <h2 className="text-lg font-bold text-foreground tracking-wide">
                     {t("pipelineTitle")}
                   </h2>
@@ -134,7 +134,7 @@ export default function AnalyticsPage() {
             className="grid grid-cols-1 lg:grid-cols-3 gap-8"
           >
             <div className="lg:col-span-3">
-              <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-3 block">
+              <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-medium mb-3 block">
                 {t("schoolOverline")}
               </span>
               <h2 className="font-display text-2xl sm:text-4xl text-foreground mb-8 font-normal tracking-tight">
@@ -149,7 +149,7 @@ export default function AnalyticsPage() {
                 className="bg-charcoal/20 border border-border p-8 rounded-2xl hover:border-gold/20 transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
-                  <div className="w-10 h-10 rounded-lg bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
+                  <div className="w-10 h-10 rounded-lg bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold-light mb-6">
                     <Icon name="cpu" size={20} />
                   </div>
                   <h3 className="text-base font-bold text-foreground mb-3 tracking-wide">{tip.title}</h3>
@@ -165,33 +165,33 @@ export default function AnalyticsPage() {
           <div className="absolute inset-0 bg-[radial-gradient(#52B78803_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
           
           <div className="flex gap-4 items-start mb-6">
-            <Icon name="server" size={32} className="text-gold shrink-0 mt-1" />
+            <Icon name="server" size={32} className="text-gold-light shrink-0 mt-1" />
             <div>
-              <span className="text-xs uppercase text-gold font-semibold tracking-wider">{t("careerOverline")}</span>
+              <span className="text-xs uppercase text-gold-light font-semibold tracking-wider">{t("careerOverline")}</span>
               <h2 className="text-xl font-bold text-white tracking-wide">{t("careerTitle")}</h2>
             </div>
           </div>
 
-          <p className="text-zinc-400 font-light leading-relaxed mb-6">
+          <p className="text-zinc-300 font-light leading-relaxed mb-6">
             {t("careerDesc")}
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-zinc-400 font-light">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-zinc-300 font-light">
             <div className="flex gap-2">
-              <span className="text-gold font-bold">•</span>
-              <span dangerouslySetInnerHTML={{ __html: t("careerBullet1") }} />
+              <span className="text-gold-light font-bold">•</span>
+              <span dangerouslySetInnerHTML={{ __html: t.raw("careerBullet1") }} />
             </div>
             <div className="flex gap-2">
-              <span className="text-gold font-bold">•</span>
-              <span dangerouslySetInnerHTML={{ __html: t("careerBullet2") }} />
+              <span className="text-gold-light font-bold">•</span>
+              <span dangerouslySetInnerHTML={{ __html: t.raw("careerBullet2") }} />
             </div>
             <div className="flex gap-2">
-              <span className="text-gold font-bold">•</span>
-              <span dangerouslySetInnerHTML={{ __html: t("careerBullet3") }} />
+              <span className="text-gold-light font-bold">•</span>
+              <span dangerouslySetInnerHTML={{ __html: t.raw("careerBullet3") }} />
             </div>
             <div className="flex gap-2">
-              <span className="text-gold font-bold">•</span>
-              <span dangerouslySetInnerHTML={{ __html: t("careerBullet4") }} />
+              <span className="text-gold-light font-bold">•</span>
+              <span dangerouslySetInnerHTML={{ __html: t.raw("careerBullet4") }} />
             </div>
           </div>
         </div>

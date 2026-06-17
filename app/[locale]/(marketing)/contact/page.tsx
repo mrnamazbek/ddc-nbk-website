@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { LiquidButton } from "@/components/ui/liquid-glass-button";
+import { KazakhstanMap } from "@/components/ui/kazakhstan-map";
 import { cn } from "@/lib/utils";
 
 const LabelInputContainer = ({
@@ -76,14 +77,14 @@ export default function ContactPage() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-3xl mb-20"
         >
-          <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
+          <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-medium mb-4 block">
             {t("overline")}
           </span>
           <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
             {t("titleLine1")} <br />
             <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
           </h1>
-          <p className="text-lg text-zinc-400 font-light leading-relaxed">
+          <p className="text-lg text-zinc-300 font-light leading-relaxed">
             {t("subtitle")}
           </p>
         </motion.div>
@@ -97,48 +98,48 @@ export default function ContactPage() {
               
               <div className="space-y-6">
                 <div className="flex gap-4 items-start">
-                  <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold shrink-0">
+                  <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold-light shrink-0">
                     <Icon name="map-pin" size={20} />
                   </div>
                   <div>
-                    <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">{t("labelAddress")}</h5>
-                    <p className="text-sm text-zinc-400 font-light leading-relaxed">
+                    <h5 className="text-xs text-gold-light uppercase tracking-wider font-semibold mb-1">{t("labelAddress")}</h5>
+                    <p className="text-sm text-zinc-300 font-light leading-relaxed">
                       {t("addressVal")}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex gap-4 items-start">
-                  <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold shrink-0">
+                  <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold-light shrink-0">
                     <Icon name="phone" size={20} />
                   </div>
                   <div>
-                    <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">{t("labelPhone")}</h5>
-                    <p className="text-sm text-zinc-400 font-light font-mono leading-relaxed">
+                    <h5 className="text-xs text-gold-light uppercase tracking-wider font-semibold mb-1">{t("labelPhone")}</h5>
+                    <p className="text-sm text-zinc-300 font-light font-mono leading-relaxed">
                       +7 (727) 330-24-00
                     </p>
                   </div>
                 </div>
 
                 <div className="flex gap-4 items-start">
-                  <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold shrink-0">
+                  <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold-light shrink-0">
                     <Icon name="mail" size={20} />
                   </div>
                   <div>
-                    <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">{t("labelEmail")}</h5>
-                    <p className="text-sm text-zinc-400 font-light font-mono leading-relaxed">
+                    <h5 className="text-xs text-gold-light uppercase tracking-wider font-semibold mb-1">{t("labelEmail")}</h5>
+                    <p className="text-sm text-zinc-300 font-light font-mono leading-relaxed">
                       info@ddc.nationalbank.kz
                     </p>
                   </div>
                 </div>
 
                 <div className="flex gap-4 items-start">
-                  <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold shrink-0">
+                  <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold-light shrink-0">
                     <Icon name="clock" size={20} />
                   </div>
                   <div>
-                    <h5 className="text-xs text-gold uppercase tracking-wider font-semibold mb-1">{t("labelClock")}</h5>
-                    <p className="text-sm text-zinc-400 font-light leading-relaxed">
+                    <h5 className="text-xs text-gold-light uppercase tracking-wider font-semibold mb-1">{t("labelClock")}</h5>
+                    <p className="text-sm text-zinc-300 font-light leading-relaxed">
                       {t("clockVal")}
                     </p>
                   </div>
@@ -148,8 +149,8 @@ export default function ContactPage() {
 
             {/* Status Plate */}
             <div className="p-6 rounded-2xl bg-charcoal/30 border border-white/5">
-              <span className="text-[10px] uppercase text-gold font-semibold tracking-wider block mb-2">{t("statusTitle")}</span>
-              <p className="text-xs text-zinc-500 font-light leading-relaxed">
+              <span className="text-[10px] uppercase text-gold-light font-semibold tracking-wider block mb-2">{t("statusTitle")}</span>
+              <p className="text-xs text-zinc-300 font-light leading-relaxed">
                 {t("statusDesc")}
               </p>
             </div>
@@ -183,16 +184,16 @@ export default function ContactPage() {
                     initial={{ scale: 0, rotate: -18 }}
                     animate={{ scale: 1, rotate: 0 }}
                     transition={{ type: "spring", stiffness: 340, damping: 15, delay: 0.05 }}
-                    className="w-16 h-16 rounded-full bg-forest/30 border border-forest-light/25 flex items-center justify-center text-gold"
+                    className="w-16 h-16 rounded-full bg-forest/30 border border-forest-light/25 flex items-center justify-center text-gold-light"
                   >
                     <Icon name="check-circle" size={32} animate={false} />
                   </motion.div>
                 </div>
                 <h2 className="text-2xl font-bold text-white mb-4 tracking-wide">{t("formSubmittedTitle")}</h2>
-                <p className="text-sm text-zinc-400 font-light leading-relaxed max-w-md mx-auto mb-8">
+                <p className="text-sm text-zinc-300 font-light leading-relaxed max-w-md mx-auto mb-8">
                   {t("formSubmittedDesc")}
                 </p>
-                <LiquidButton variant="default" size="lg" className="h-10 text-gold bg-transparent" onClick={() => setIsSubmitted(false)}>
+                <LiquidButton variant="default" size="lg" className="h-10 text-gold-light bg-transparent" onClick={() => setIsSubmitted(false)}>
                   {t("sendAnotherBtn")}
                 </LiquidButton>
               </motion.div>
@@ -275,7 +276,7 @@ export default function ContactPage() {
                 <LiquidButton
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full justify-center flex items-center gap-2 py-4 h-12 text-gold font-medium bg-transparent hover:scale-[1.02] transition duration-300"
+                  className="w-full justify-center flex items-center gap-2 py-4 h-12 text-gold-light font-medium bg-transparent hover:scale-[1.02] transition duration-300"
                 >
                   {isSubmitting ? (
                     <>
@@ -294,6 +295,37 @@ export default function ContactPage() {
           </div>
 
         </div>
+
+        {/* Наши офисы — dotted Kazakhstan map with animated arc */}
+        <section aria-labelledby="offices-heading" className="mt-28 sm:mt-36">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-15%" }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-3xl mb-12"
+          >
+            <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-medium mb-4 block">
+              {t("officesOverline")}
+            </span>
+            <h2 id="offices-heading" className="font-display text-3xl sm:text-5xl font-normal tracking-tight text-white mb-6">
+              {t("officesTitle")}
+            </h2>
+            <p className="text-base sm:text-lg text-zinc-300 font-light leading-relaxed">
+              {t("officesSubtitle")}
+            </p>
+          </motion.div>
+
+          <div className="mx-auto max-w-4xl">
+            <KazakhstanMap
+              offices={[
+                { lat: 51.1694, lng: 71.4491, label: t("cityAstana") },
+                { lat: 43.222, lng: 76.8512, label: t("cityAlmaty") },
+              ]}
+              connections={[{ from: 0, to: 1 }]}
+            />
+          </div>
+        </section>
 
       </div>
     </div>

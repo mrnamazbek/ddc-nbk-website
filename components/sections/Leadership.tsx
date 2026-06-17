@@ -315,7 +315,7 @@ export default function Leadership() {
         
         {/* Заголовок секции */}
         <div className="max-w-3xl mb-20">
-          <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
+          <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-mono font-medium mb-4 block">
             {t("overline")}
           </span>
           <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
@@ -427,7 +427,7 @@ export default function Leadership() {
                   {managementBoard[0].desc?.[locale]}
                 </p>
                 <div className="border-t border-glass-border pt-4">
-                  <span className="text-xs text-zinc-400 uppercase tracking-widest font-mono block">
+                  <span className="text-xs text-zinc-300 uppercase tracking-widest font-mono block">
                     {managementBoard[0].name[locale]}
                   </span>
                 </div>

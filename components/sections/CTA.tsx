@@ -82,7 +82,7 @@ export default function CTA() {
         <PartnerMarquee 
           items={keywords} 
           speed="slow" 
-          className="mb-12 opacity-80" 
+          className="mb-12" 
         />
 
         <div
@@ -158,7 +158,7 @@ export default function CTA() {
           items={[...keywords].reverse()} 
           direction="right"
           speed="slow" 
-          className="mt-12 opacity-80" 
+          className="mt-12" 
         />
 
       </div>

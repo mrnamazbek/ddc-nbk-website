@@ -163,7 +163,7 @@ export const ProductCard = ({
     >
       <Link
         href={product.link}
-        className="block h-full w-full"
+        className="block h-full w-full relative"
       >
         <Image
           src={product.thumbnail}

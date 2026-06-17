@@ -55,14 +55,14 @@ export default function AboutPage() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-3xl mb-20"
         >
-          <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
+          <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-medium mb-4 block">
             {t("overline")}
           </span>
           <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
             {t("titleLine1")} <br />
             <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
           </h1>
-          <p className="text-lg text-zinc-400 font-light leading-relaxed">
+          <p className="text-lg text-zinc-300 font-light leading-relaxed">
             {t("subtitle")}
           </p>
         </motion.div>
@@ -71,10 +71,10 @@ export default function AboutPage() {
         <div id="mission" className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24 pb-12 border-b border-white/5">
           <div className="lg:col-span-7">
             <h2 className="text-2xl font-bold text-white mb-6 tracking-wide">{t("missionTitle")}</h2>
-            <p className="text-zinc-400 font-light leading-relaxed mb-6">
+            <p className="text-zinc-300 font-light leading-relaxed mb-6">
               {t("missionDesc1")}
             </p>
-            <p className="text-zinc-400 font-light leading-relaxed">
+            <p className="text-zinc-300 font-light leading-relaxed">
               {t("missionDesc2")}
             </p>
           </div>
@@ -89,7 +89,7 @@ export default function AboutPage() {
                 <h3 className="text-base font-bold text-white">{t("founderTitle")}</h3>
               </div>
             </div>
-            <p className="text-xs text-zinc-400 font-light leading-relaxed mb-6">
+            <p className="text-xs text-zinc-300 font-light leading-relaxed mb-6">
               {t("founderDesc")}
             </p>
             <a
@@ -123,7 +123,7 @@ export default function AboutPage() {
                   <Icon name={val.icon} size={24} />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-3 tracking-wide">{val.title}</h3>
-                <p className="text-sm text-zinc-400 font-light leading-relaxed">{val.text}</p>
+                <p className="text-sm text-zinc-300 font-light leading-relaxed">{val.text}</p>
               </motion.div>
             );
           })}
@@ -134,7 +134,7 @@ export default function AboutPage() {
           <div className="absolute inset-0 bg-[radial-gradient(#52B78805_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
           <div>
             <h2 className="text-2xl font-bold text-white mb-3 tracking-wide">{t("ctaTitle")}</h2>
-            <p className="text-sm text-zinc-400 font-light leading-relaxed max-w-xl">
+            <p className="text-sm text-zinc-300 font-light leading-relaxed max-w-xl">
               {t("ctaDesc")}
             </p>
           </div>

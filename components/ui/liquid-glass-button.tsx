@@ -99,7 +99,13 @@ function LiquidButton({
   VariantProps<typeof liquidbuttonVariants> & {
     asChild?: boolean;
   }) {
-  const shouldReduceMotion = useReducedMotion();
+  const [mounted, setMounted] = React.useState(false);
+  const shouldReduceMotionRaw = useReducedMotion();
+  const shouldReduceMotion = mounted ? !!shouldReduceMotionRaw : false;
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const hoverAnimation = shouldReduceMotion ? {} : { scale: 1.02 };
   const tapAnimation = shouldReduceMotion ? {} : { scale: 0.97 };
@@ -322,12 +328,15 @@ const ShineEffect = ({ isPressed }: { isPressed: boolean }) => {
 
 const MetalButton = React.forwardRef<HTMLButtonElement, MetalButtonProps>(
   ({ children, className, variant = "default", ...props }, ref) => {
+    const [mounted, setMounted] = React.useState(false);
     const [isPressed, setIsPressed] = React.useState(false);
     const [isHovered, setIsHovered] = React.useState(false);
     const [isTouchDevice, setIsTouchDevice] = React.useState(false);
-    const shouldReduceMotion = useReducedMotion();
+    const shouldReduceMotionRaw = useReducedMotion();
+    const shouldReduceMotion = mounted ? !!shouldReduceMotionRaw : false;
 
     React.useEffect(() => {
+      setMounted(true);
       setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
     }, []);
 

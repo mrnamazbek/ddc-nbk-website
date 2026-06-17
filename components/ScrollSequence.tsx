@@ -264,7 +264,7 @@ export default function ScrollSequence({
               style={{ width: `${loadingProgress}%` }}
             />
           </div>
-          <span className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">
+          <span className="font-mono text-[10px] text-zinc-400 uppercase tracking-widest">
             {t("loading")} • {loadingProgress}%
           </span>
         </div>

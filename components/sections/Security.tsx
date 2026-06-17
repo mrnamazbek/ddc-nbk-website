@@ -201,7 +201,7 @@ export default function Security() {
                 {/* Security posture block */}
                 <div className="space-y-3.5 border-t border-glass-border pt-4">
                   <div className="flex items-center justify-between text-[11px] font-mono">
-                    <span className="text-zinc-500">SECURITY STANDARDS</span>
+                    <span className="text-zinc-400">SECURITY STANDARDS</span>
                     <span className="text-forest-light font-bold">ISO 9001 · СТ РК</span>
                   </div>
                   <div className="w-full h-1 bg-glass rounded-full overflow-hidden">
@@ -219,7 +219,7 @@ export default function Security() {
           {/* Security features content */}
           <div className="lg:col-span-7 flex flex-col justify-center">
             <div ref={headerRef}>
-              <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
+              <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-mono font-medium mb-4 block">
                 {t("overline")}
               </span>
 

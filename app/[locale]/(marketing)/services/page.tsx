@@ -120,14 +120,14 @@ export default function ServicesPage() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-3xl mb-20"
         >
-          <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
+          <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-medium mb-4 block">
             {t("overline")}
           </span>
           <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
             {t("titleLine1")} <br />
             <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
           </h1>
-          <p className="text-lg text-zinc-400 font-light leading-relaxed">
+          <p className="text-lg text-zinc-300 font-light leading-relaxed">
             {t("subtitle")}
           </p>
         </motion.div>
@@ -154,7 +154,7 @@ export default function ServicesPage() {
                     <div className="w-14 h-14 rounded-2xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
                       <Icon name={service.icon} size={24} />
                     </div>
-                    <span className="text-xs text-gold/80 font-medium tracking-widest uppercase block mb-2">
+                    <span className="text-xs text-gold-light font-medium tracking-widest uppercase block mb-2">
                       {service.subtitle}
                     </span>
                     <h2 className="text-2xl font-bold text-white tracking-wide">
@@ -163,8 +163,8 @@ export default function ServicesPage() {
                     
                     {/* Технологический стек */}
                     <div className="mt-6 pt-6 border-t border-white/5">
-                      <span className="text-[10px] uppercase tracking-wider text-zinc-500 block mb-2">{t("techStackLabel")}</span>
-                      <code className="text-xs text-gold font-mono bg-charcoal/30 px-3 py-1.5 rounded border border-white/5 inline-block">
+                      <span className="text-sm uppercase tracking-wider text-zinc-300 block mb-2">{t("techStackLabel")}</span>
+                      <code className="text-xs text-gold-light font-mono bg-charcoal/30 px-3 py-1.5 rounded border border-white/5 inline-block">
                         {service.techStack}
                       </code>
                     </div>
@@ -179,7 +179,7 @@ export default function ServicesPage() {
                     <h3 className="text-sm font-semibold text-white tracking-wider uppercase mb-4">{t("keyFeaturesLabel")}</h3>
                     <ul className="space-y-3">
                       {service.features.map((feature, fIdx) => (
-                        <li key={fIdx} className="flex items-start gap-3 text-sm text-zinc-400 font-light leading-relaxed">
+                        <li key={fIdx} className="flex items-start gap-3 text-sm text-zinc-300 font-light leading-relaxed">
                           <Icon name="check-circle" size={16} className="text-forest-light shrink-0 mt-0.5" />
                           <span>{feature}</span>
                         </li>

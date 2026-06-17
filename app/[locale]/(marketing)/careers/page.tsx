@@ -264,14 +264,14 @@ export default async function CareersPage({ params }: CareersPageProps) {
         
         {/* Заголовок страницы */}
         <div className="max-w-3xl mb-16">
-          <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
+          <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-mono font-medium mb-4 block">
             {t("overline")}
           </span>
           <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
             {t("titleLine1")} <br />
             <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
           </h1>
-          <p className="text-base sm:text-lg text-zinc-400 font-light leading-relaxed">
+          <p className="text-base sm:text-lg text-zinc-300 font-light leading-relaxed">
             {t("subtitle")}
           </p>
         </div>
@@ -280,10 +280,10 @@ export default async function CareersPage({ params }: CareersPageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20">
           <GlassCard hoverAccent="gold" variant="liquid" isTiltEnabled={false} className="p-8 border border-white/5">
             <h2 className="text-xl font-bold text-white mb-4 tracking-wide flex items-center gap-3">
-              <Icon name="compass" size={20} className="text-gold" />
+              <Icon name="compass" size={20} className="text-gold-light" />
               {t("missionTitle")}
             </h2>
-            <p className="text-sm text-zinc-400 font-light leading-relaxed">
+            <p className="text-sm text-zinc-300 font-light leading-relaxed">
               {t("missionDesc")}
             </p>
           </GlassCard>
@@ -293,7 +293,7 @@ export default async function CareersPage({ params }: CareersPageProps) {
               <Icon name="eye" size={20} className="text-forest-light" />
               {t("visionTitle")}
             </h2>
-            <p className="text-sm text-zinc-400 font-light leading-relaxed">
+            <p className="text-sm text-zinc-300 font-light leading-relaxed">
               {t("visionDesc")}
             </p>
           </GlassCard>
@@ -309,11 +309,11 @@ export default async function CareersPage({ params }: CareersPageProps) {
               return (
                 <GlassCard key={idx} hoverAccent="gold" variant="glass" isTiltEnabled={false} className="p-6 border border-white/5 hover:border-gold/15 flex flex-col justify-between">
                   <div>
-                    <div className="w-10 h-10 rounded-xl bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold mb-4 shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold-light mb-4 shrink-0">
                       <Icon name={v.icon} size={20} />
                     </div>
                     <h3 className="text-base font-bold text-white mb-2 tracking-wide">{v.title}</h3>
-                    <p className="text-xs text-zinc-400 font-light leading-relaxed">{v.text}</p>
+                    <p className="text-xs text-zinc-300 font-light leading-relaxed">{v.text}</p>
                   </div>
                 </GlassCard>
               );
@@ -327,7 +327,7 @@ export default async function CareersPage({ params }: CareersPageProps) {
             <h2 className="text-2xl font-bold text-white mb-6 tracking-wide">{t("whyUsTitle")}</h2>
             <ul className="space-y-4">
               {whyUsPoints.map((point, idx) => (
-                <li key={idx} className="flex items-start gap-3.5 text-sm sm:text-base text-zinc-400 font-light leading-relaxed">
+                <li key={idx} className="flex items-start gap-3.5 text-sm sm:text-base text-zinc-300 font-light leading-relaxed">
                   <Icon name="check-circle" size={20} className="text-forest-light shrink-0 mt-0.5" />
                   <span>{point}</span>
                 </li>
@@ -337,11 +337,11 @@ export default async function CareersPage({ params }: CareersPageProps) {
           
           <div className="lg:col-span-5 bg-charcoal/40 border border-white/5 p-8 rounded-2xl relative overflow-hidden">
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-forest/20 rounded-full blur-2xl pointer-events-none" />
-            <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
+            <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold-light mb-6">
               <Icon name="zap" size={24} />
             </div>
             <h3 className="text-base font-bold text-white mb-2">{t("startJourneyTitle")}</h3>
-            <p className="text-xs text-zinc-400 font-light leading-relaxed mb-6">
+            <p className="text-xs text-zinc-300 font-light leading-relaxed mb-6">
               {t("startJourneyDesc")}
             </p>
             <a href="#jobs-list" className="w-full block">
@@ -358,7 +358,7 @@ export default async function CareersPage({ params }: CareersPageProps) {
             <h2 className="font-display text-2xl sm:text-4xl text-white font-normal tracking-tight">
               {t("openVacanciesTitle", { count: jobs.length })} <span className="text-gradient-gold">{t("openVacanciesAccent", { count: jobs.length })}</span>
             </h2>
-            <span className="text-xs text-zinc-500 font-mono">
+            <span className="text-xs text-zinc-300 font-mono">
               {t("actualDate", { date: todayStr })}
             </span>
           </div>
@@ -374,13 +374,13 @@ export default async function CareersPage({ params }: CareersPageProps) {
                   <div className="flex flex-col gap-4">
                     <div className="flex flex-wrap items-center gap-3">
                       <Badge variant={job.badgeVariant}>{job.department}</Badge>
-                      <span className="text-xs text-zinc-500">•</span>
-                      <span className="text-xs text-zinc-400 font-light flex items-center gap-1.5">
+                      <span className="text-xs text-zinc-300">•</span>
+                      <span className="text-xs text-zinc-300 font-light flex items-center gap-1.5">
                         <Icon name="map-pin" size={14} />
                         {job.location}
                       </span>
-                      <span className="text-xs text-zinc-500">•</span>
-                      <span className="text-xs text-zinc-400 font-light flex items-center gap-1.5">
+                      <span className="text-xs text-zinc-300">•</span>
+                      <span className="text-xs text-zinc-300 font-light flex items-center gap-1.5">
                         <Icon name="clock" size={14} />
                         {job.type}
                       </span>
@@ -390,13 +390,13 @@ export default async function CareersPage({ params }: CareersPageProps) {
                       {job.title}
                     </h3>
 
-                    <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-zinc-500 font-light">
+                    <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-zinc-300 font-light">
                       <span>{t("expLabel")} <strong className="text-zinc-300 font-semibold">{job.experience}</strong></span>
-                      <span>{t("salaryLabel")} <strong className="text-gold font-semibold">{job.salary}</strong></span>
+                      <span>{t("salaryLabel")} <strong className="text-gold-light font-semibold">{job.salary}</strong></span>
                       {job.published && (
                         <>
                           <span className="text-zinc-600">|</span>
-                          <span>{t("pubLabel")} <strong className="text-zinc-400">{job.published}</strong></span>
+                          <span>{t("pubLabel")} <strong className="text-zinc-300">{job.published}</strong></span>
                         </>
                       )}
                     </div>

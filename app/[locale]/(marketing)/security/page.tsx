@@ -70,7 +70,7 @@ export default function SecurityPage() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-3xl mb-20"
         >
-          <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
+          <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-medium mb-4 block">
             {t("overline")}
           </span>
           <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
@@ -124,7 +124,7 @@ export default function SecurityPage() {
             </div>
             <div className="lg:col-span-4 flex justify-center gap-6">
               <div className="border border-gold/30 bg-gold/5 px-6 py-4 rounded-xl text-center">
-                <span className="text-xs uppercase text-gold font-semibold tracking-wider block mb-1">{t("certClassLabel")}</span>
+                <span className="text-xs uppercase text-gold-light font-semibold tracking-wider block mb-1">{t("certClassLabel")}</span>
                 <span className="text-2xl font-bold text-foreground font-mono">{t("certClassValue")}</span>
               </div>
               <div className="border border-forest-light/30 bg-forest/5 px-6 py-4 rounded-xl text-center">

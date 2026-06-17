@@ -143,7 +143,7 @@ export default function NewsPage() {
                   {/* Контент */}
                   <div className="p-6 flex flex-col justify-between flex-grow">
                     <div>
-                      <div className="flex items-center gap-4 text-xs text-zinc-500 mb-4 font-sans font-light">
+                      <div className="flex items-center gap-4 text-xs text-zinc-400 mb-4 font-sans font-light">
                         <div className="flex items-center gap-1.5">
                           <Icon name="calendar" size={14} />
                           {news.date}

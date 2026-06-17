@@ -19,7 +19,7 @@ import {
   type MotionValue,
   type Variants,
 } from "framer-motion";
-import Balancer from "react-wrap-balancer";
+
 
 import { cn } from "@/lib/utils";
 
@@ -240,7 +240,7 @@ const StepImage = forwardRef<
 );
 StepImage.displayName = "StepImage";
 
-const MotionStepImage = motion(StepImage);
+const MotionStepImage = motion.create(StepImage);
 
 const AnimatedStepImage = ({
   preset = "fadeInScale",
@@ -342,8 +342,8 @@ function FeatureCard({
                   ease: [0.23, 1, 0.32, 1],
                 }}
               >
-                <div className="text-sm leading-relaxed text-neutral-300 sm:text-base dark:text-muted">
-                  <Balancer>{steps[step]?.description}</Balancer>
+                <div className="text-sm leading-relaxed text-neutral-300 sm:text-base dark:text-muted text-pretty">
+                  {steps[step]?.description}
                 </div>
               </motion.div>
             </motion.div>

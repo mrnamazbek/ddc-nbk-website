@@ -139,7 +139,7 @@ export default function FinancialInform() {
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-[10px] text-zinc-500 font-light">{t("baseRateTrend")}</span>
+              <span className="text-[10px] text-zinc-400 font-light">{t("baseRateTrend")}</span>
               {renderSparkline(baseRate.history, "text-gold")}
             </div>
           </div>
@@ -163,7 +163,7 @@ export default function FinancialInform() {
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-[10px] text-zinc-500 font-light">{t("inflationTrend")}</span>
+              <span className="text-[10px] text-zinc-400 font-light">{t("inflationTrend")}</span>
               {renderSparkline(inflation.history, "text-forest-light")}
             </div>
           </div>
@@ -171,7 +171,7 @@ export default function FinancialInform() {
 
         {/* Таблица официальных курсов валют */}
         <div className="space-y-3">
-          <span className="text-[10px] font-mono tracking-widest text-zinc-500 uppercase block mb-1">
+          <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase block mb-1">
             {t("exchangeRates")}
           </span>
           {rates.map((rate) => (
@@ -187,7 +187,7 @@ export default function FinancialInform() {
                   <h4 className="text-sm font-semibold text-foreground tracking-wide leading-tight">
                     {rate.code} / KZT
                   </h4>
-                  <span className="text-[10px] text-zinc-500 font-light">
+                  <span className="text-[10px] text-zinc-400 font-light">
                     {rate.name}
                   </span>
                 </div>
@@ -213,7 +213,7 @@ export default function FinancialInform() {
 
       {/* Футер дашборда со статусом обновления */}
       <div className="flex items-center justify-between border-t border-glass-border pt-6 mt-8">
-        <span className="text-[10px] font-mono text-zinc-500 flex items-center gap-1.5">
+        <span className="text-[10px] font-mono text-zinc-400 flex items-center gap-1.5">
           <Icon name="calendar" size={14} />
           {t("updated")}: {lastUpdated || t("loading")}
         </span>

@@ -119,7 +119,7 @@ export default function About() {
                 priority
                 className="pointer-events-none"
               />
-              <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium block">
+              <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-mono font-medium block">
                 {t("overline")}
               </span>
             </div>

@@ -282,15 +282,9 @@ export default function Icon({ name, className, size = 20, animate = true }: Ico
     );
   }
 
-  // Click micro-animation: tactile spring press/bounce on tap (framer-motion).
   return (
-    <motion.span
-      className={cn(outerClass, className)}
-      style={{ width: size, height: size }}
-      whileTap={{ scale: 0.8 }}
-      transition={{ type: "spring", stiffness: 500, damping: 15, mass: 0.4 }}
-    >
+    <span className={cn(outerClass, className)} style={{ width: size, height: size }}>
       {inner}
-    </motion.span>
+    </span>
   );
 }

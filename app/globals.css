@@ -29,6 +29,7 @@ html.font-pair-b {
 /* Классы переключения фонов A/B (только для темной темы) */
 html.bg-theme-forest:not(.light) {
   --background: rgba(16, 83, 76, 1);
+  --accent-gold: var(--color-gold-light);
 }
 
 html.bg-theme-teal:not(.light) {

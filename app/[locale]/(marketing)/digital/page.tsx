@@ -138,7 +138,7 @@ export default function DigitalPage() {
             </table>
           </div>
           {/* Свайп-подсказка для мобильных экранов */}
-          <div className="flex justify-end mt-3 text-xs text-zinc-500 gap-1.5 lg:hidden px-2">
+          <div className="flex justify-end mt-3 text-xs text-zinc-400 gap-1.5 lg:hidden px-2">
             <span>{t("swipeHint")}</span>
             <Icon name="arrow-right" size={14} className="animate-pulse" />
           </div>

@@ -29,7 +29,7 @@ export default function TextReveal({ text, className = "" }: TextRevealProps) {
 
       gsap.fromTo(
         wordsRef.current,
-        { opacity: 0.15 },
+        { opacity: 0.5 },
         {
           opacity: 1,
           stagger: 0.15,
@@ -48,7 +48,8 @@ export default function TextReveal({ text, className = "" }: TextRevealProps) {
 
   return (
     <div ref={containerRef} className={`relative z-10 py-4 ${className}`}>
-      <p className="flex flex-wrap gap-x-2 gap-y-1 font-display text-2xl md:text-3xl lg:text-4xl font-light text-foreground leading-relaxed">
+      <span className="sr-only">{text}</span>
+      <p aria-hidden="true" className="flex flex-wrap gap-x-2 gap-y-1 font-display text-2xl md:text-3xl lg:text-4xl font-light text-foreground leading-relaxed">
         {words.map((word, idx) => (
           <span
             key={idx}
