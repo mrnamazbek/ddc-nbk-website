@@ -12,8 +12,46 @@ interface SplineSceneProps {
   logoTarget?: string
 }
 
+/**
+ * @splinetool/runtime logs a benign `console.error("Missing property")` on every
+ * animation tick when a scene's timeline references a property that isn't present
+ * in the exported .splinecode. The 3D scene still renders correctly — the log just
+ * floods the console and trips Next's dev error overlay. We can't edit the binary
+ * scene, so we filter out that ONE exact message while a Spline scene is mounted
+ * and restore the original console.error once the last instance unmounts. Every
+ * other error (including any other Spline error) passes through untouched.
+ */
+let splineFilterCount = 0
+let originalConsoleError: typeof console.error | null = null
+
+function installSplineErrorFilter() {
+  if (splineFilterCount++ > 0) return
+  originalConsoleError = console.error
+  console.error = (...args: unknown[]) => {
+    const first = args[0]
+    const msg = typeof first === 'string' ? first : first instanceof Error ? first.message : ''
+    if (msg === 'Missing property') return
+    originalConsoleError!.apply(console, args as Parameters<typeof console.error>)
+  }
+}
+
+function uninstallSplineErrorFilter() {
+  if (splineFilterCount > 0) splineFilterCount--
+  if (splineFilterCount === 0 && originalConsoleError) {
+    console.error = originalConsoleError
+    originalConsoleError = null
+  }
+}
+
 export function SplineScene({ scene, className, logoImg, logoTarget }: SplineSceneProps) {
   const [shouldLoad, setShouldLoad] = useState(false);
+
+  // Silence the benign per-frame "Missing property" error from the Spline
+  // runtime for as long as this scene is mounted.
+  useEffect(() => {
+    installSplineErrorFilter();
+    return () => uninstallSplineErrorFilter();
+  }, []);
 
   useEffect(() => {
     // Delay WebGL canvas mount by 300ms to let page client transitions finish smoothly

@@ -169,8 +169,17 @@ html.a11y header nav {
   flex-wrap: wrap !important;
   max-width: none !important;
 }
-html.a11y header li[aria-hidden],
-html.a11y header [aria-hidden="true"] { display: none !important; }
+/* Hide the decorative sliding nav pill (a bare <li aria-hidden>). Must NOT use a
+   blanket [aria-hidden="true"] here — Iconify renders every icon SVG with
+   aria-hidden="true", so a broad rule blanks out the eye / menu / theme icons. */
+html.a11y header li[aria-hidden] { display: none !important; }
+
+/* Logo: the loaded PNG is theme-dependent (a *white* mark in dark theme), which
+   vanishes on the light a11y backgrounds. `brightness(0)` flattens any logo to a
+   solid black silhouette; the wb (black-bg) scheme then re-inverts it to white.
+   This keeps the brand mark visible & high-contrast in every scheme. */
+html.a11y header img { filter: brightness(0) !important; opacity: 1 !important; }
+html.a11y.a11y-scheme-wb header img { filter: brightness(0) invert(1) !important; }
 
 /* Sections: auto height + visible overflow so scaled text never overlaps. */
 html.a11y section,
@@ -231,5 +240,23 @@ html.a11y :is(.transition-opacity, [class*="transition-opacity"], .inline-block)
    so we must match the layer — there specificity wins (html.a11y header beats
    the single .!fixed class) and the header becomes a static top bar. */
 @layer utilities {
-  html.a11y header { position: static !important; }
+  /* Position AND the standalone transform properties Tailwind v4 emits
+     (`-translate-x-1/2` compiles to the `translate` property, not `transform`)
+     all live in this layer, so they must be neutralised HERE — an unlayered
+     !important loses to a layered one regardless of specificity. Without this
+     the header keeps its `translate: -50%` and slides half off the left edge. */
+  html.a11y header {
+    position: static !important;
+    /* Lightning CSS strips a standalone `translate: none`, so instead zero the
+       Tailwind variable the `-translate-x-1/2` utility actually reads
+       (`translate: var(--tw-translate-x) var(--tw-translate-y)`). Overriding the
+       custom property survives minification and resolves the translate to 0 0. */
+    --tw-translate-x: 0 !important;
+    --tw-translate-y: 0 !important;
+    --tw-rotate: 0 !important;
+    transform: none !important;
+    left: 0 !important;
+    right: auto !important;
+    top: 0 !important;
+  }
 }

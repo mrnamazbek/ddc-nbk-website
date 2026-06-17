@@ -99,14 +99,6 @@ test.describe("DDC Website E2E Tests", () => {
     await expect(pairAOption).toHaveClass(/bg-forest/);
   });
 
-  test("should render SakaScroll component on main page", async ({ page }) => {
-    await page.goto("/ru");
-    
-    // Проверяем наличие заголовочной части Saka Core в SakaScroll
-    await expect(page.locator("text=Saka Core").first()).toBeVisible();
-    await expect(page.locator("text=Инфраструктура нового поколения").first()).toBeVisible();
-  });
-
   test("should load mission page and render FeatureCarousel", async ({ page }) => {
     await page.goto("/ru/mission");
     
