@@ -172,17 +172,14 @@ test.describe("DDC Website E2E Tests", () => {
 
     // 3. Проверим отключение анимаций при системном reduced-motion
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.waitForTimeout(300); // Ждем реактивного обновления
-
-    const isLenisDestroyedBySys = await page.evaluate(() => typeof (window as any).__lenis === "undefined");
-    expect(isLenisDestroyedBySys).toBe(true);
+    await page.waitForFunction(() => typeof (window as any).__lenis === "undefined", { timeout: 8000 });
 
     const canvasCountSys = await page.locator("canvas").count();
     expect(canvasCountSys).toBe(0);
 
     // Возвращаем обратно для продолжения теста
     await page.emulateMedia({ reducedMotion: "no-preference" });
-    await page.waitForTimeout(300);
+    await page.waitForFunction(() => typeof (window as any).__lenis !== "undefined", { timeout: 8000 });
 
     // 4. Открываем панель снова и включаем режим доступности вручную
     await activeTrigger.click();
@@ -192,15 +189,13 @@ test.describe("DDC Website E2E Tests", () => {
     const bwSchemeButton = page.locator('button[aria-label="Чёрным по белому"]');
     await expect(bwSchemeButton).toBeVisible();
     await bwSchemeButton.click();
-    await page.waitForTimeout(300);
+    
+    // Ожидаем реактивного удаления __lenis
+    await page.waitForFunction(() => typeof (window as any).__lenis === "undefined", { timeout: 8000 });
 
     // Проверяем, что класс a11y добавился на html элемент
     const htmlClass = await page.evaluate(() => document.documentElement.className);
     expect(htmlClass).toContain("a11y");
-
-    // Проверяем, что __lenis был уничтожен и равен undefined
-    const isLenisDestroyed = await page.evaluate(() => typeof (window as any).__lenis === "undefined");
-    expect(isLenisDestroyed).toBe(true);
 
     // Проверяем, что canvas InteractiveDotGrid более не рендерится (или отсутствует в DOM)
     const canvasCount = await page.locator("canvas").count();
@@ -210,11 +205,9 @@ test.describe("DDC Website E2E Tests", () => {
     const resetButton = page.locator('button:has-text("Обычная версия")');
     await expect(resetButton).toBeVisible();
     await resetButton.click();
-    await page.waitForTimeout(300);
-
-    // Проверяем, что __lenis снова инициализирован
-    const isLenisRestored = await page.evaluate(() => typeof (window as any).__lenis !== "undefined");
-    expect(isLenisRestored).toBe(true);
+    
+    // Ожидаем реактивного пересоздания __lenis
+    await page.waitForFunction(() => typeof (window as any).__lenis !== "undefined", { timeout: 8000 });
 
     // Проверяем, что canvas InteractiveDotGrid снова рендерится в DOM
     const canvasRestoredCount = await page.locator("canvas").count();
