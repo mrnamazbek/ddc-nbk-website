@@ -327,7 +327,6 @@ function CarouselCard({ item, index, total, scroll, onSelect }: CardProps) {
         position={[0, 0.15, 0.02]}
         fontSize={0.14}
         color="#FFFFFF"
-        font="https://fonts.gstatic.com/s/outfit/v11/QGYsz_OtcxIAXY4Sj5eEG7v_dCQ.woff"
         anchorX="center"
         anchorY="middle"
         maxWidth={2.2}
@@ -340,7 +339,6 @@ function CarouselCard({ item, index, total, scroll, onSelect }: CardProps) {
         position={[0, -0.22, 0.02]}
         fontSize={0.09}
         color="#C9A84C"
-        font="https://fonts.gstatic.com/s/outfit/v11/QGYsz_OtcxIAXY4Sj5eEG7v_dCQ.woff"
         anchorX="center"
         anchorY="middle"
         maxWidth={2.2}
