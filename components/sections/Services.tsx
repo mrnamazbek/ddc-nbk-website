@@ -111,7 +111,7 @@ export default function Services() {
     <section 
       id="services" 
       ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden border-t border-glass-border"
+      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden"
     >
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">

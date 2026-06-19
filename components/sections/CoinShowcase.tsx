@@ -18,7 +18,7 @@ export default function CoinShowcase() {
   const staticMode = a11yEnabled || prefersReducedMotion;
 
   return (
-    <section className="relative w-full overflow-hidden border-t border-glass-border bg-black py-24 sm:py-32">
+    <section className="relative w-full overflow-hidden bg-background py-24 sm:py-32">
       {/* Ambient brand glows */}
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-[460px] w-[460px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/10 blur-[120px]" />
 

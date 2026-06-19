@@ -306,7 +306,7 @@ export default function Leadership() {
     <section
       id="leadership"
       ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden border-t border-glass-border"
+      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden"
     >
       {/* Декоративные свечения */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-forest/5 blur-[120px] pointer-events-none" />

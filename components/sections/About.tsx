@@ -103,7 +103,7 @@ export default function About() {
     <section 
       id="about" 
       ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden border-t border-glass-border"
+      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">

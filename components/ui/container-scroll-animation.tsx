@@ -108,14 +108,14 @@ export const Card = ({
           "0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003",
       }}
       className={cn(
-        "max-w-5xl -mt-12 mx-auto h-[20rem] sm:h-[30rem] md:h-[40rem] w-full border border-glass-border p-2 md:p-4 bg-charcoal/20 backdrop-blur-xl rounded-[24px] sm:rounded-[34px] shadow-card relative overflow-hidden group transition-all duration-300 will-change-transform",
+        "max-w-5xl -mt-12 mx-auto h-[20rem] sm:h-[30rem] md:h-[40rem] w-full border border-glass-border p-2 md:p-4 bg-charcoal/70 rounded-[24px] sm:rounded-[34px] shadow-card relative overflow-hidden group transition-all duration-300 will-change-transform",
         className
       )}
     >
       {/* Decorative inner gold glow border for premium liquid-glass design */}
       <div className="absolute inset-0 border border-gold/10 rounded-[24px] sm:rounded-[34px] pointer-events-none group-hover:border-gold/25 transition-colors duration-500" />
       
-      <div className="h-full w-full overflow-hidden rounded-[18px] sm:rounded-[28px] bg-background/20 dark:bg-background/15 backdrop-blur-md p-1 md:p-2 border border-glass-border/40 relative">
+      <div className="h-full w-full overflow-hidden rounded-[18px] sm:rounded-[28px] bg-background/40 dark:bg-background/30 p-1 md:p-2 border border-glass-border/40 relative">
         {children}
       </div>
     </motion.div>

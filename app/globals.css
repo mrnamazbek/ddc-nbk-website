@@ -28,12 +28,12 @@ html.font-pair-b {
 
 /* Классы переключения фонов A/B (только для темной темы) */
 html.bg-theme-forest:not(.light) {
-  --background: rgba(16, 83, 76, 1);
+  --background: rgba(8, 24, 21, 1); /* deep premium green-black */
   --accent-gold: var(--color-gold-light);
 }
 
 html.bg-theme-teal:not(.light) {
-  --background: rgba(1, 59, 63, 1);
+  --background: rgba(2, 18, 20, 1); /* deep premium teal-black */
 }
 
 /* Пара C — «Anthropic / Styrene»: гротеск (Styrene-роль) в заголовках,

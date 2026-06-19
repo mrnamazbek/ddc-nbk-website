@@ -69,7 +69,7 @@ export default function CTA() {
   return (
     <section 
       ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden border-t border-glass-border"
+      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden"
     >
       
       {/* Декоративные вращающиеся круги на фоне */}
