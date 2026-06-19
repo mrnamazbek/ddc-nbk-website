@@ -11,6 +11,7 @@ import TransitionLink from "../motion/TransitionLink";
 import CinematicThemeSwitcher from "../ui/cinematic-theme-switcher";
 import Icon from "../ui/Icon";
 import { AccessibilityTrigger } from "../ui/AccessibilityPanel";
+import NavPreviewCard from "./NavPreview";
 
 const LANGUAGES = ["kz", "ru", "en"];
 
@@ -58,44 +59,6 @@ function LanguageSwitcher({
     </div>
   );
 }
-
-const PAGE_SUMMARIES: Record<string, Record<string, string>> = {
-  "/": {
-    ru: "Цифровые решения для финансовой стабильности государства",
-    kz: "Мемлекеттің қаржылық тұрақтылығы үшін цифрлық шешімдер",
-    en: "Digital solutions for the financial stability of the state",
-  },
-  "/about": {
-    ru: "О Центре: история, ценности, руководство и основатель",
-    kz: "Орталық туралы: тарихы, құндылықтары, басшылығы және құрылтайшысы",
-    en: "About the Center: history, values, leadership and founder",
-  },
-  "/services": {
-    ru: "Разработка систем, IT-услуги и информационная безопасность",
-    kz: "Жүйелерді әзірлеу, IT-қызметтер және ақпараттық қауіпсіздік",
-    en: "Systems development, IT services and information security",
-  },
-  "/mission": {
-    ru: "Технологическое ядро финансовой системы Казахстана",
-    kz: "Қазақстанның қаржы жүйенің технологиялық өзегі",
-    en: "Technological core of the financial system of Kazakhstan",
-  },
-  "/news": {
-    ru: "Актуальные события, пресс-релизы и технологические обновления",
-    kz: "Өзекті оқиғалар, пресс-релиздер және технологиялық жаңартулар",
-    en: "Current events, press releases and technological updates",
-  },
-  "/careers": {
-    ru: "Вакансии, стажировки и карьерные возможности в DDC",
-    kz: "DDC-дегі бос жұмыс орындары, тағылымдамалар және мансаптық мүмкіндіктер",
-    en: "Vacancies, internships and career opportunities at DDC",
-  },
-  "/contact": {
-    ru: "Связь с нами, адрес, карта и контакт-центр 1477",
-    kz: "Бізбен байланыс, мекенжай, карта және 1477 байланыс орталығы",
-    en: "Contact us, address, map and contact center 1477",
-  },
-};
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -305,33 +268,28 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Hover preview panel */}
-        <AnimatePresence>
-          {hoveredLink && (
-            <motion.div
-              initial={{ opacity: 0, y: 10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              onMouseEnter={() => {
-                if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
-              }}
-              onMouseLeave={handleMouseLeaveLink}
-              className="absolute top-[calc(100%+0.75rem)] left-1/2 -translate-x-1/2 w-[340px] liquid-glass-strong border border-gold/25 p-5 rounded-2xl shadow-2xl z-50 text-left pointer-events-auto flex flex-col gap-2"
-            >
-              <div className="absolute -top-10 -left-10 w-24 h-24 bg-forest/10 rounded-full blur-xl pointer-events-none" />
-              <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-gold/5 rounded-full blur-xl pointer-events-none" />
-              
-              <h4 className="text-xs uppercase tracking-[0.15em] text-gold font-bold relative z-10">
-                {hoveredLink.name}
-              </h4>
-              <p className="text-xs text-zinc-300 dark:text-zinc-300 font-light leading-relaxed relative z-10">
-                {PAGE_SUMMARIES[hoveredLink.href]?.[locale] || ""}
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </header>
+
+      {/* Hover preview panel — rendered OUTSIDE <header> on purpose: the header's
+          liquid-glass sets `overflow:hidden` and has a transform, which would clip
+          any descendant positioned below it. As a fixed sibling it escapes that. */}
+      <AnimatePresence>
+        {hoveredLink && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            onMouseEnter={() => {
+              if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+            }}
+            onMouseLeave={handleMouseLeaveLink}
+            className="hidden xl:block fixed top-[5.25rem] left-1/2 -translate-x-1/2 z-[60] pointer-events-auto"
+          >
+            <NavPreviewCard link={hoveredLink} locale={locale} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Mobile menu overlay — full-screen liquid glass */}
       <AnimatePresence>
