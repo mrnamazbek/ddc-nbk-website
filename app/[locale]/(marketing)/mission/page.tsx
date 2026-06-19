@@ -5,15 +5,23 @@ import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
+import { useABTest } from "@/lib/abTest";
+import ABTestSwitcher from "@/components/ui/ABTestSwitcher";
+import { useA11y } from "@/components/theme/AccessibilityProvider";
 
 const FeatureCarousel = dynamic(
   () => import("@/components/ui/feature-carousel").then((mod) => mod.FeatureCarousel),
   { ssr: false }
 );
 
+const Mission3D = dynamic(() => import("@/components/sections/Mission3D"), {
+  ssr: false,
+  loading: () => <div className="fixed inset-0 bg-[#040C08] flex items-center justify-center text-gold-light font-mono text-xs">LOADING WEBGL SCENE...</div>,
+});
+
 import type { Step } from "@/components/ui/feature-carousel";
 
-export default function MissionPage() {
+function Mission2D() {
   const t = useTranslations("Mission");
 
   // Load translations for the 4 steps of the carousel dynamically
@@ -117,3 +125,22 @@ export default function MissionPage() {
     </div>
   );
 }
+
+export default function MissionPage() {
+  const variant = useABTest("mission");
+  const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
+
+  if (!variant) {
+    return <div className="min-h-screen bg-background" />;
+  }
+
+  const activeVariant = (a11yEnabled || prefersReducedMotion) ? "A" : variant;
+
+  return (
+    <>
+      {activeVariant === "A" ? <Mission2D /> : <Mission3D />}
+      <ABTestSwitcher pageKey="mission" current={activeVariant} />
+    </>
+  );
+}
+

@@ -3,6 +3,15 @@
 import { motion } from "framer-motion";
 import Icon, { IconName } from "@/components/ui/Icon";
 import { useTranslations } from "next-intl";
+import dynamic from "next/dynamic";
+import { useABTest } from "@/lib/abTest";
+import ABTestSwitcher from "@/components/ui/ABTestSwitcher";
+import { useA11y } from "@/components/theme/AccessibilityProvider";
+
+const Services3D = dynamic(() => import("@/components/sections/Services3D"), {
+  ssr: false,
+  loading: () => <div className="fixed inset-0 bg-[#040C08] flex items-center justify-center text-gold-light font-mono text-xs">LOADING WEBGL SCENE...</div>,
+});
 
 interface ServiceDetail {
   icon: IconName;
@@ -13,7 +22,7 @@ interface ServiceDetail {
   techStack: string;
 }
 
-export default function ServicesPage() {
+function Services2D() {
   const t = useTranslations("ServicesPage");
 
   const containerVariants = {
@@ -36,11 +45,7 @@ export default function ServicesPage() {
       title: t("s1.title"),
       subtitle: t("s1.subtitle"),
       description: t("s1.description"),
-      features: [
-        t("s1.f1"),
-        t("s1.f2"),
-        t("s1.f3"),
-      ],
+      features: [t("s1.f1"), t("s1.f2"), t("s1.f3")],
       techStack: "Hyperledger Fabric, Solidity, Go, HSM Modules",
     },
     {
@@ -48,11 +53,7 @@ export default function ServicesPage() {
       title: t("s2.title"),
       subtitle: t("s2.subtitle"),
       description: t("s2.description"),
-      features: [
-        t("s2.f1"),
-        t("s2.f2"),
-        t("s2.f3"),
-      ],
+      features: [t("s2.f1"), t("s2.f2"), t("s2.f3")],
       techStack: "Java, Spring Boot, Kafka, PostgreSQL, ISO 20022",
     },
     {
@@ -60,11 +61,7 @@ export default function ServicesPage() {
       title: t("s3.title"),
       subtitle: t("s3.subtitle"),
       description: t("s3.description"),
-      features: [
-        t("s3.f1"),
-        t("s3.f2"),
-        t("s3.f3"),
-      ],
+      features: [t("s3.f1"), t("s3.f2"), t("s3.f3")],
       techStack: "C++, Python, Oracle DB, IBM WebSphere MQ",
     },
     {
@@ -72,11 +69,7 @@ export default function ServicesPage() {
       title: t("s4.title"),
       subtitle: t("s4.subtitle"),
       description: t("s4.description"),
-      features: [
-        t("s4.f1"),
-        t("s4.f2"),
-        t("s4.f3"),
-      ],
+      features: [t("s4.f1"), t("s4.f2"), t("s4.f3")],
       techStack: "Fortinet, HSM, Linux, Hardware Crypto Units",
     },
     {
@@ -84,11 +77,7 @@ export default function ServicesPage() {
       title: t("s5.title"),
       subtitle: t("s5.subtitle"),
       description: t("s5.description"),
-      features: [
-        t("s5.f1"),
-        t("s5.f2"),
-        t("s5.f3"),
-      ],
+      features: [t("s5.f1"), t("s5.f2"), t("s5.f3")],
       techStack: "Node.js, Express, OAuth2, GraphQL, Kong API Gateway",
     },
     {
@@ -96,11 +85,7 @@ export default function ServicesPage() {
       title: t("s6.title"),
       subtitle: t("s6.subtitle"),
       description: t("s6.description"),
-      features: [
-        t("s6.f1"),
-        t("s6.f2"),
-        t("s6.f3"),
-      ],
+      features: [t("s6.f1"), t("s6.f2"), t("s6.f3")],
       techStack: "Hadoop, Spark, ClickHouse, Python (PyTorch), Tableau",
     },
   ];
@@ -197,3 +182,24 @@ export default function ServicesPage() {
     </div>
   );
 }
+
+export default function ServicesPage() {
+  const variant = useABTest("services");
+  const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
+
+  // If A/B test has not mounted, render simple placeholder to prevent flash of content
+  if (!variant) {
+    return <div className="min-h-screen bg-background" />;
+  }
+
+  // Under accessibility constraints, enforce the safe 2D variant
+  const activeVariant = (a11yEnabled || prefersReducedMotion) ? "A" : variant;
+
+  return (
+    <>
+      {activeVariant === "A" ? <Services2D /> : <Services3D />}
+      <ABTestSwitcher pageKey="services" current={activeVariant} />
+    </>
+  );
+}
+
