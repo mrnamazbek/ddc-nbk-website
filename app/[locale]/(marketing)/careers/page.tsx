@@ -259,7 +259,7 @@ export default async function CareersPage({ params }: CareersPageProps) {
   const todayStr = new Date().toLocaleDateString(locale === "kz" ? "kk-KZ" : locale === "en" ? "en-US" : "ru-RU", { month: "long", year: "numeric" });
 
   return (
-    <div className="relative w-full bg-black overflow-hidden min-h-screen pt-32 pb-24 font-sans">
+    <div className="relative w-full bg-background overflow-hidden min-h-screen pt-32 pb-24 font-sans">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         
         {/* Заголовок страницы */}

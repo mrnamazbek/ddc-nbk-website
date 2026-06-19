@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Icon, { IconName } from "@/components/ui/Icon";
 import Button from "@/components/ui/Button";
+import GlassCard from "@/components/ui/GlassCard";
 import Timeline from "@/components/sections/Timeline";
 import Leadership from "@/components/sections/Leadership";
 import { useTranslations } from "next-intl";
@@ -45,7 +46,7 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="relative w-full bg-black overflow-hidden min-h-screen pt-32 pb-24 font-sans">
+    <div className="relative w-full bg-background overflow-hidden min-h-screen pt-32 pb-24 font-sans">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         
         {/* Заголовок страницы */}
@@ -78,7 +79,11 @@ export default function AboutPage() {
               {t("missionDesc2")}
             </p>
           </div>
-          <div className="lg:col-span-5 bg-charcoal/40 border border-white/5 p-8 rounded-2xl relative overflow-hidden">
+          <GlassCard 
+            hoverAccent="gold" 
+            variant="liquid-strong" 
+            className="lg:col-span-5 p-8 border-glass-border relative overflow-hidden text-left"
+          >
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-gold/10 rounded-full blur-2xl pointer-events-none" />
             <div className="flex gap-4 items-start mb-6">
               <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold">
@@ -96,12 +101,12 @@ export default function AboutPage() {
               href="https://nationalbank.kz"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs font-semibold text-gold flex items-center gap-1 hover:text-gold-light transition-colors duration-300"
+              className="text-xs font-semibold text-gold flex items-center gap-1 hover:text-gold-light transition-colors duration-300 relative z-10"
             >
               {t("founderLink")}
               <Icon name="arrow-up-right" size={14} />
             </a>
-          </div>
+          </GlassCard>
         </div>
 
         {/* Ценности */}
@@ -114,23 +119,29 @@ export default function AboutPage() {
         >
           {values.map((val, idx) => {
             return (
-              <motion.div
-                key={idx}
-                variants={itemVariants}
-                className="bg-charcoal/20 border border-white/5 p-8 rounded-2xl hover:border-gold/20 transition-colors duration-500"
-              >
-                <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
-                  <Icon name={val.icon} size={24} />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-3 tracking-wide">{val.title}</h3>
-                <p className="text-sm text-zinc-300 font-light leading-relaxed">{val.text}</p>
+              <motion.div key={idx} variants={itemVariants}>
+                <GlassCard
+                  hoverAccent="gold"
+                  variant="liquid"
+                  className="p-8 h-full text-left"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6">
+                    <Icon name={val.icon} size={24} />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-3 tracking-wide">{val.title}</h3>
+                  <p className="text-sm text-zinc-300 font-light leading-relaxed">{val.text}</p>
+                </GlassCard>
               </motion.div>
             );
           })}
         </motion.div>
 
         {/* Секция CTA к карьере */}
-        <div className="mt-24 bg-gradient-to-r from-forest-dark to-charcoal border border-forest-mid/30 p-8 sm:p-12 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-8 relative overflow-hidden">
+        <GlassCard
+          hoverAccent="forest"
+          variant="liquid-strong"
+          className="mt-24 p-8 sm:p-12 border-forest-mid/30 flex flex-col md:flex-row md:items-center justify-between gap-8 relative overflow-hidden text-left"
+        >
           <div className="absolute inset-0 bg-[radial-gradient(#52B78805_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
           <div>
             <h2 className="text-2xl font-bold text-white mb-3 tracking-wide">{t("ctaTitle")}</h2>
@@ -138,11 +149,11 @@ export default function AboutPage() {
               {t("ctaDesc")}
             </p>
           </div>
-          <Button variant="gold" size="lg" className="shrink-0 flex items-center gap-2 group" onClick={() => router.push("/careers")}>
+          <Button variant="gold" size="lg" className="shrink-0 flex items-center gap-2 group relative z-10" onClick={() => router.push("/careers")}>
             {t("ctaBtn")}
             <Icon name="arrow-up-right" size={16} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Button>
-        </div>
+        </GlassCard>
 
       </div>
 

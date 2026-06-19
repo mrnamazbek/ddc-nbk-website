@@ -8,7 +8,6 @@ import ThemeProvider from "@/components/theme/ThemeProvider";
 import { IconSystemProvider } from "@/components/theme/IconSystemProvider";
 import { FontSystemProvider } from "@/components/theme/FontSystemProvider";
 import { BgSystemProvider } from "@/components/theme/BgSystemProvider";
-import IconSystemSwitcher from "@/components/ui/IconSystemSwitcher";
 import AccessibilityProvider from "@/components/theme/AccessibilityProvider";
 import AccessibilityPanel from "@/components/ui/AccessibilityPanel";
 
@@ -106,7 +105,6 @@ export default async function LocaleLayout({
                     {/* Faint grain overlay (opacity 0.03) for organic texture */}
                     <div data-decorative className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] bg-[url('/images/textures/bg-texture-noise.png')] bg-repeat" />
                     <PageTransitionProvider>{children}</PageTransitionProvider>
-                    <IconSystemSwitcher />
                     <AccessibilityPanel />
                   </AccessibilityProvider>
                 </NextIntlClientProvider>

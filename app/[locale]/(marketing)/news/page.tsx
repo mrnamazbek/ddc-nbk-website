@@ -91,7 +91,7 @@ export default function NewsPage() {
   ];
 
   return (
-    <div className="relative w-full bg-black overflow-hidden min-h-screen pt-32 pb-24 font-sans">
+    <div className="relative w-full bg-background overflow-hidden min-h-screen pt-32 pb-24 font-sans">
       {/* Мягкие свечения */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] pointer-events-none" />
@@ -105,14 +105,14 @@ export default function NewsPage() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-3xl mb-20"
         >
-          <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
+          <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-medium mb-4 block">
             {t("overline")}
           </span>
           <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
             {t("titleLine1")} <br />
             <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
           </h1>
-          <p className="text-lg text-zinc-400 font-light leading-relaxed">
+          <p className="text-lg text-zinc-300 font-light leading-relaxed">
             {t("subtitle")}
           </p>
         </motion.div>

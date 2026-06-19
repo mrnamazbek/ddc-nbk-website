@@ -19,15 +19,17 @@ export const ContainerScroll = ({
     target: containerRef,
   });
   const [isMobile, setIsMobile] = React.useState(false);
+  const [isLargeScreen, setIsLargeScreen] = React.useState(false);
 
   React.useEffect(() => {
-    const checkMobile = () => {
+    const checkScreen = () => {
       setIsMobile(window.innerWidth <= 768);
+      setIsLargeScreen(window.innerWidth >= 1920);
     };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
     return () => {
-      window.removeEventListener("resize", checkMobile);
+      window.removeEventListener("resize", checkScreen);
     };
   }, []);
 
@@ -35,7 +37,11 @@ export const ContainerScroll = ({
     return isMobile ? [0.85, 0.95] : [1.05, 1];
   };
 
-  const rotate = useTransform(scrollYProgress, [0, 1], isMobile ? [8, 0] : [20, 0]);
+  const rotate = useTransform(
+    scrollYProgress,
+    [0, 1],
+    isMobile ? [8, 0] : isLargeScreen ? [0, 0] : [20, 0]
+  );
   const scale = useTransform(scrollYProgress, [0, 1], scaleDimensions());
   const translate = useTransform(scrollYProgress, [0, 1], isMobile ? [0, -40] : [0, -100]);
 
@@ -102,7 +108,7 @@ export const Card = ({
           "0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003",
       }}
       className={cn(
-        "max-w-5xl -mt-12 mx-auto h-[20rem] sm:h-[30rem] md:h-[40rem] w-full border border-glass-border p-2 md:p-4 bg-charcoal/20 backdrop-blur-xl rounded-[24px] sm:rounded-[34px] shadow-card relative overflow-hidden group transition-all duration-300",
+        "max-w-5xl -mt-12 mx-auto h-[20rem] sm:h-[30rem] md:h-[40rem] w-full border border-glass-border p-2 md:p-4 bg-charcoal/20 backdrop-blur-xl rounded-[24px] sm:rounded-[34px] shadow-card relative overflow-hidden group transition-all duration-300 will-change-transform",
         className
       )}
     >

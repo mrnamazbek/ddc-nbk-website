@@ -59,9 +59,49 @@ function LanguageSwitcher({
   );
 }
 
+const PAGE_SUMMARIES: Record<string, Record<string, string>> = {
+  "/": {
+    ru: "Цифровые решения для финансовой стабильности государства",
+    kz: "Мемлекеттің қаржылық тұрақтылығы үшін цифрлық шешімдер",
+    en: "Digital solutions for the financial stability of the state",
+  },
+  "/about": {
+    ru: "О Центре: история, ценности, руководство и основатель",
+    kz: "Орталық туралы: тарихы, құндылықтары, басшылығы және құрылтайшысы",
+    en: "About the Center: history, values, leadership and founder",
+  },
+  "/services": {
+    ru: "Разработка систем, IT-услуги и информационная безопасность",
+    kz: "Жүйелерді әзірлеу, IT-қызметтер және ақпараттық қауіпсіздік",
+    en: "Systems development, IT services and information security",
+  },
+  "/mission": {
+    ru: "Технологическое ядро финансовой системы Казахстана",
+    kz: "Қазақстанның қаржы жүйенің технологиялық өзегі",
+    en: "Technological core of the financial system of Kazakhstan",
+  },
+  "/news": {
+    ru: "Актуальные события, пресс-релизы и технологические обновления",
+    kz: "Өзекті оқиғалар, пресс-релиздер және технологиялық жаңартулар",
+    en: "Current events, press releases and technological updates",
+  },
+  "/careers": {
+    ru: "Вакансии, стажировки и карьерные возможности в DDC",
+    kz: "DDC-дегі бос жұмыс орындары, тағылымдамалар және мансаптық мүмкіндіктер",
+    en: "Vacancies, internships and career opportunities at DDC",
+  },
+  "/contact": {
+    ru: "Связь с нами, адрес, карта и контакт-центр 1477",
+    kz: "Бізбен байланыс, мекенжай, карта және 1477 байланыс орталығы",
+    en: "Contact us, address, map and contact center 1477",
+  },
+};
+
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [hoveredLink, setHoveredLink] = useState<{ name: string; href: string } | null>(null);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -91,6 +131,34 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+      const lenis = (window as any).__lenis;
+      if (lenis) lenis.stop();
+    } else {
+      document.body.style.overflow = "";
+      const lenis = (window as any).__lenis;
+      if (lenis) lenis.start();
+    }
+    return () => {
+      document.body.style.overflow = "";
+      const lenis = (window as any).__lenis;
+      if (lenis) lenis.start();
+    };
+  }, [isMobileMenuOpen]);
+
+  const handleMouseEnterLink = (link: { name: string; href: string }) => {
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    setHoveredLink(link);
+  };
+
+  const handleMouseLeaveLink = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHoveredLink(null);
+    }, 200);
+  };
 
   const navLinks: { name: string; href: string }[] = [
     { name: t("home"), href: "/" },
@@ -141,10 +209,10 @@ export default function Header() {
   return (
     <>
       <header
-        className={`!fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1300px] transition-all duration-500 rounded-full ${
+        className={`!fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1300px] transition-all duration-500 rounded-full py-3 px-6 sm:px-8 ${
           isScrolled
-            ? "liquid-glass-strong shadow-card py-3 px-6 sm:px-8"
-            : "liquid-glass shadow-lg py-4 px-6 sm:px-8"
+            ? "liquid-glass-strong shadow-card"
+            : "liquid-glass shadow-lg"
         }`}
       >
         <div className="w-full flex items-center justify-between">
@@ -167,7 +235,10 @@ export default function Header() {
           {/* Desktop menu — liquid-glass pill with a sliding cursor highlight */}
           <ul
             ref={navListRef}
-            onMouseLeave={restPill}
+            onMouseLeave={() => {
+              restPill();
+              handleMouseLeaveLink();
+            }}
             className="hidden xl:flex items-center relative liquid-glass border border-glass-border p-1.5 rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
           >
             {navLinks.map((link, idx) => {
@@ -180,7 +251,11 @@ export default function Header() {
                   ref={(el) => {
                     tabRefs.current[idx] = el;
                   }}
-                  onMouseEnter={(e) => movePillTo(e.currentTarget)}
+                  onMouseEnter={(e) => {
+                    movePillTo(e.currentTarget);
+                    handleMouseEnterLink(link);
+                  }}
+                  onMouseLeave={handleMouseLeaveLink}
                   className="relative z-10"
                 >
                   <TransitionLink
@@ -229,6 +304,33 @@ export default function Header() {
             </button>
           </div>
         </div>
+
+        {/* Hover preview panel */}
+        <AnimatePresence>
+          {hoveredLink && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              onMouseEnter={() => {
+                if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+              }}
+              onMouseLeave={handleMouseLeaveLink}
+              className="absolute top-[calc(100%+0.75rem)] left-1/2 -translate-x-1/2 w-[340px] liquid-glass-strong border border-gold/25 p-5 rounded-2xl shadow-2xl z-50 text-left pointer-events-auto flex flex-col gap-2"
+            >
+              <div className="absolute -top-10 -left-10 w-24 h-24 bg-forest/10 rounded-full blur-xl pointer-events-none" />
+              <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-gold/5 rounded-full blur-xl pointer-events-none" />
+              
+              <h4 className="text-xs uppercase tracking-[0.15em] text-gold font-bold relative z-10">
+                {hoveredLink.name}
+              </h4>
+              <p className="text-xs text-zinc-300 dark:text-zinc-300 font-light leading-relaxed relative z-10">
+                {PAGE_SUMMARIES[hoveredLink.href]?.[locale] || ""}
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Mobile menu overlay — full-screen liquid glass */}
@@ -240,8 +342,8 @@ export default function Header() {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
             data-hover="gold"
-            style={{ background: "rgba(8,8,10,0.82)" }}
-            className="fixed inset-0 z-40 liquid-glass-strong rounded-none flex flex-col justify-between pt-32 pb-16 px-8 xl:hidden"
+            style={{ background: "rgba(8,8,10,0.9)" }}
+            className="fixed inset-0 z-40 liquid-glass-strong rounded-none flex flex-col justify-start gap-8 pt-32 pb-12 px-8 xl:hidden overflow-y-auto max-h-screen"
           >
             {/* Menu links */}
             <nav className="flex flex-col gap-6">
@@ -275,8 +377,8 @@ export default function Header() {
             </nav>
 
             {/* Mobile menu bottom action panel */}
-            <div className="flex flex-col gap-6">
-              <div className="flex items-center justify-between border-t border-glass-border pt-6">
+            <div className="flex flex-col gap-6 mt-auto pt-6 border-t border-glass-border">
+              <div className="flex items-center justify-between">
                 <span className="text-sm text-muted">{t("language")}</span>
                 <LanguageSwitcher locale={locale} onSwitch={switchLocale} size="lg" />
               </div>

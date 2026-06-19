@@ -106,7 +106,7 @@ export default function ServicesPage() {
   ];
 
   return (
-    <div className="relative w-full bg-black overflow-hidden min-h-screen pt-32 pb-24 font-sans">
+    <div className="relative w-full bg-background overflow-hidden min-h-screen pt-32 pb-24 font-sans">
       {/* Декоративный бэкграунд */}
       <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gold/5 rounded-full blur-[120px] pointer-events-none" />

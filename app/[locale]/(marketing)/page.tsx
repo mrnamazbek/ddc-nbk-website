@@ -1,6 +1,7 @@
 import InteractiveDotGrid from "@/components/ui/InteractiveDotGrid";
 import Hero from "@/components/sections/Hero";
 import Stats from "@/components/sections/Stats";
+import CoinShowcase from "@/components/sections/CoinShowcase";
 import Services from "@/components/sections/Services";
 import About from "@/components/sections/About";
 import CTA from "@/components/sections/CTA";
@@ -15,6 +16,7 @@ export default function MarketingHomePage() {
       <div id="acts" className="relative z-10">
         <Hero />
         <Stats />
+        <CoinShowcase />
         <Services />
         {/* Parallax showcase of real DDC assets (3D renders, NBK architecture, team) */}
         <Showcase />

@@ -30,7 +30,7 @@ export default function InteractiveDotGrid() {
   const isLight = resolvedTheme === "light";
   const { bgSystem } = useBgSystem();
 
-  const [activePreset, setActivePreset] = useState<PresetName>("default");
+  const [activePreset, setActivePreset] = useState<PresetName>("wallpaper");
 
   
   // Конфигурации пресетов в стиле Shaders.com
@@ -101,31 +101,24 @@ export default function InteractiveDotGrid() {
   const bgWrapRef = useRef<HTMLDivElement | null>(null);
   const mousePos = useRef({ x: -10000, y: -10000 });
 
+  const scrollOpacityRef = useRef(1);
+
   // Плавно гасим фон-эффект при прокрутке вниз: к концу первого экрана он почти
-  // исчезает, оставляя ровный тёмно-зелёный фон. Управляется через Lenis (window scroll).
+  // исчезает, оставляя ровный тёмно-зелёный фон.
   useEffect(() => {
     if (a11yEnabled || prefersReducedMotion) return;
-    let raf = 0;
-    const apply = () => {
-      const el = bgWrapRef.current;
-      if (!el) return;
+    const handleScroll = () => {
       const vh = window.innerHeight || 1;
-      const o = Math.max(0, Math.min(1, 1 - window.scrollY / (vh * 1.05)));
-      el.style.opacity = String(o);
+      scrollOpacityRef.current = Math.max(0, Math.min(1, 1 - window.scrollY / (vh * 1.05)));
     };
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(apply);
-    };
-    apply();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
     return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
     };
-  }, []);
+  }, [a11yEnabled, prefersReducedMotion]);
   const dotsRef = useRef<
     Array<{
       originalX: number;
@@ -214,15 +207,16 @@ export default function InteractiveDotGrid() {
       : (bgSystem === "bg-forest" ? "#10534C" : "#013B3F");
 
     const animate = () => {
-      ctx.fillStyle = bg;
-      ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+      // Очищаем канвас (делаем его прозрачным, чтобы просвечивал стабильный фон body)
+      ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
 
       const dots = dotsRef.current;
       const mx = mousePos.current.x;
       const my = mousePos.current.y;
+      const scrollOpacity = scrollOpacityRef.current;
 
-      // Отрисовка интерактивного свечения (Glow) под курсором
-      if (mx !== -10000 && my !== -10000) {
+      // Отрисовка интерактивного свечения (Glow) под курсором с учетом scrollOpacity
+      if (mx !== -10000 && my !== -10000 && scrollOpacity > 0.01) {
         const glowGrad = ctx.createRadialGradient(
           mx,
           my,
@@ -233,11 +227,15 @@ export default function InteractiveDotGrid() {
         );
         glowGrad.addColorStop(
           0,
-          isLight ? "rgba(26, 61, 43, 0.15)" : "rgba(40, 110, 70, 0.22)"
+          isLight 
+            ? `rgba(26, 61, 43, ${0.15 * scrollOpacity})` 
+            : `rgba(40, 110, 70, ${0.22 * scrollOpacity})`
         );
         glowGrad.addColorStop(
           0.4,
-          isLight ? "rgba(232, 200, 122, 0.05)" : "rgba(232, 200, 122, 0.07)"
+          isLight 
+            ? `rgba(232, 200, 122, ${0.05 * scrollOpacity})` 
+            : `rgba(232, 200, 122, ${0.07 * scrollOpacity})`
         );
         glowGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
         
@@ -249,85 +247,87 @@ export default function InteractiveDotGrid() {
         ctx.restore();
       }
 
-      // Отрисовка точек
-      for (let i = 0; i < dots.length; i++) {
-        const dot = dots[i];
-        const dx = mx - dot.originalX;
-        const dy = my - dot.originalY;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+      if (scrollOpacity > 0.005) {
+        // Отрисовка точек
+        for (let i = 0; i < dots.length; i++) {
+          const dot = dots[i];
+          const dx = mx - dot.originalX;
+          const dy = my - dot.originalY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
 
-        let targetX = dot.originalX;
-        let targetY = dot.originalY;
-        let force = 0;
+          let targetX = dot.originalX;
+          let targetY = dot.originalY;
+          let force = 0;
 
-        // Физика отталкивания от мыши
-        if (distance < currentConfig.distortionRadius) {
-          const normDist = distance / currentConfig.distortionRadius;
-          force = Math.sqrt(1 - normDist * normDist);
-          
-          const angle = Math.atan2(dot.originalY - my, dot.originalX - mx);
+          // Физика отталкивания от мыши
+          if (distance < currentConfig.distortionRadius) {
+            const normDist = distance / currentConfig.distortionRadius;
+            force = Math.sqrt(1 - normDist * normDist);
+            
+            const angle = Math.atan2(dot.originalY - my, dot.originalX - mx);
 
-          targetX = dot.originalX + Math.cos(angle) * force * currentConfig.distortionStrength;
-          targetY = dot.originalY + Math.sin(angle) * force * currentConfig.distortionStrength;
-        }
-
-        // Пружинный эффект
-        const springK = 0.06;
-        const damping = 0.82;
-        
-        const ax = (targetX - dot.currentX) * springK;
-        const ay = (targetY - dot.currentY) * springK;
-        
-        dot.vx = (dot.vx + ax) * damping;
-        dot.vy = (dot.vy + ay) * damping;
-        
-        dot.currentX += dot.vx;
-        dot.currentY += dot.vy;
-
-        // Расчет цвета (смешивание базового и активного)
-        const rest = currentConfig.colorRest;
-        const active = currentConfig.colorActive;
-        const r = Math.round(rest.r + (active.r - rest.r) * force);
-        const g = Math.round(rest.g + (active.g - rest.g) * force);
-        const b = Math.round(rest.b + (active.b - rest.b) * force);
-        const a = rest.a + (active.a - rest.a) * force;
-        
-        const baseSize = currentConfig.dotSize + dot.sizeOffset;
-        const size = Math.max(0.5, baseSize + (currentConfig.maxDotSize - baseSize) * force);
-
-        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
-
-        // Отрисовка фигуры в зависимости от выбранной формы пресета
-        if (currentConfig.shape === "circle") {
-          // Рисуем мягкое свечение вокруг активных кругов
-          if (force > 0.02) {
-            ctx.beginPath();
-            ctx.arc(dot.currentX, dot.currentY, size * 2.8, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a * 0.12 * force})`;
-            ctx.fill();
-            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+            targetX = dot.originalX + Math.cos(angle) * force * currentConfig.distortionStrength;
+            targetY = dot.originalY + Math.sin(angle) * force * currentConfig.distortionStrength;
           }
-          ctx.beginPath();
-          ctx.arc(dot.currentX, dot.currentY, size / 2, 0, Math.PI * 2);
-          ctx.fill();
-        } else if (currentConfig.shape === "triangle") {
-          ctx.beginPath();
-          const side = size * 2.0;
-          const h = (Math.sqrt(3) / 2) * side;
-          ctx.moveTo(dot.currentX, dot.currentY - h / 2);
-          ctx.lineTo(dot.currentX - side / 2, dot.currentY + h / 2);
-          ctx.lineTo(dot.currentX + side / 2, dot.currentY + h / 2);
-          ctx.closePath();
-          ctx.fill();
-        } else if (currentConfig.shape === "diamond") {
-          ctx.beginPath();
-          const radius = size * 1.5;
-          ctx.moveTo(dot.currentX, dot.currentY - radius);
-          ctx.lineTo(dot.currentX + radius, dot.currentY);
-          ctx.lineTo(dot.currentX, dot.currentY + radius);
-          ctx.lineTo(dot.currentX - radius, dot.currentY);
-          ctx.closePath();
-          ctx.fill();
+
+          // Пружинный эффект
+          const springK = 0.06;
+          const damping = 0.82;
+          
+          const ax = (targetX - dot.currentX) * springK;
+          const ay = (targetY - dot.currentY) * springK;
+          
+          dot.vx = (dot.vx + ax) * damping;
+          dot.vy = (dot.vy + ay) * damping;
+          
+          dot.currentX += dot.vx;
+          dot.currentY += dot.vy;
+
+          // Расчет цвета (смешивание базового и активного) и умножение альфы на scrollOpacity
+          const rest = currentConfig.colorRest;
+          const active = currentConfig.colorActive;
+          const r = Math.round(rest.r + (active.r - rest.r) * force);
+          const g = Math.round(rest.g + (active.g - rest.g) * force);
+          const b = Math.round(rest.b + (active.b - rest.b) * force);
+          const a = (rest.a + (active.a - rest.a) * force) * scrollOpacity;
+          
+          const baseSize = currentConfig.dotSize + dot.sizeOffset;
+          const size = Math.max(0.5, baseSize + (currentConfig.maxDotSize - baseSize) * force);
+
+          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+
+          // Отрисовка фигуры в зависимости от выбранной формы пресета
+          if (currentConfig.shape === "circle") {
+            // Рисуем мягкое свечение вокруг активных кругов
+            if (force > 0.02) {
+              ctx.beginPath();
+              ctx.arc(dot.currentX, dot.currentY, size * 2.8, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a * 0.12 * force})`;
+              ctx.fill();
+              ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+            }
+            ctx.beginPath();
+            ctx.arc(dot.currentX, dot.currentY, size / 2, 0, Math.PI * 2);
+            ctx.fill();
+          } else if (currentConfig.shape === "triangle") {
+            ctx.beginPath();
+            const side = size * 2.0;
+            const h = (Math.sqrt(3) / 2) * side;
+            ctx.moveTo(dot.currentX, dot.currentY - h / 2);
+            ctx.lineTo(dot.currentX - side / 2, dot.currentY + h / 2);
+            ctx.lineTo(dot.currentX + side / 2, dot.currentY + h / 2);
+            ctx.closePath();
+            ctx.fill();
+          } else if (currentConfig.shape === "diamond") {
+            ctx.beginPath();
+            const radius = size * 1.5;
+            ctx.moveTo(dot.currentX, dot.currentY - radius);
+            ctx.lineTo(dot.currentX + radius, dot.currentY);
+            ctx.lineTo(dot.currentX, dot.currentY + radius);
+            ctx.lineTo(dot.currentX - radius, dot.currentY);
+            ctx.closePath();
+            ctx.fill();
+          }
         }
       }
 
@@ -352,7 +352,7 @@ export default function InteractiveDotGrid() {
     <>
       {/* Wrapper fades the whole background effect out as the user scrolls past
           the first viewport (opacity driven by the scroll effect above). */}
-      <div ref={bgWrapRef} style={{ willChange: "opacity" }}>
+      <div ref={bgWrapRef}>
         {activePreset === "shader" ? (
           <ShaderBackground isLight={isLight} />
         ) : (
@@ -361,63 +361,6 @@ export default function InteractiveDotGrid() {
             className="fixed inset-0 w-full h-screen -z-10 block pointer-events-none"
           />
         )}
-      </div>
-
-      {/* Интерактивная панель переключения пресетов (тестовая версия) */}
-      <div className="fixed bottom-6 left-6 z-50 flex items-center gap-2 bg-[#1F2121]/80 backdrop-blur-xl border border-white/10 px-3 py-2 rounded-full shadow-lg shadow-black/40 pointer-events-auto">
-        <span className="text-[10px] uppercase tracking-wider text-zinc-400 font-mono pl-2 pr-1 select-none">
-          Presets:
-        </span>
-        <button
-          onClick={() => setActivePreset("default")}
-          className={`px-3 py-1 text-[11px] font-medium rounded-full transition-all duration-200 cursor-pointer ${
-            activePreset === "default"
-              ? "bg-gold text-black font-semibold shadow"
-              : "text-zinc-300 hover:text-white hover:bg-white/5"
-          }`}
-        >
-          Default
-        </button>
-        <button
-          onClick={() => setActivePreset("triangles")}
-          className={`px-3 py-1 text-[11px] font-medium rounded-full transition-all duration-200 cursor-pointer ${
-            activePreset === "triangles"
-              ? "bg-gold text-black font-semibold shadow"
-              : "text-zinc-300 hover:text-white hover:bg-white/5"
-          }`}
-        >
-          Triangles
-        </button>
-        <button
-          onClick={() => setActivePreset("treeline")}
-          className={`px-3 py-1 text-[11px] font-medium rounded-full transition-all duration-200 cursor-pointer ${
-            activePreset === "treeline"
-              ? "bg-gold text-black font-semibold shadow"
-              : "text-zinc-300 hover:text-white hover:bg-white/5"
-          }`}
-        >
-          Tree Line
-        </button>
-        <button
-          onClick={() => setActivePreset("wallpaper")}
-          className={`px-3 py-1 text-[11px] font-medium rounded-full transition-all duration-200 cursor-pointer ${
-            activePreset === "wallpaper"
-              ? "bg-gold text-black font-semibold shadow"
-              : "text-zinc-300 hover:text-white hover:bg-white/5"
-          }`}
-        >
-          Wallpaper
-        </button>
-        <button
-          onClick={() => setActivePreset("shader")}
-          className={`px-3 py-1 text-[11px] font-medium rounded-full transition-all duration-200 cursor-pointer ${
-            activePreset === "shader"
-              ? "bg-gold text-black font-semibold shadow"
-              : "text-zinc-300 hover:text-white hover:bg-white/5"
-          }`}
-        >
-          Shader
-        </button>
       </div>
     </>
   );

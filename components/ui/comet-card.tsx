@@ -72,7 +72,7 @@ export function CometCard({
     >
       <motion.div
         style={{ rotateX, rotateY, x: tX, y: tY, transformStyle: "preserve-3d" }}
-        className={`relative will-change-transform ${className}`}
+        className={`relative will-change-transform liquid-glass border border-glass-border rounded-[var(--radius-card)] ${className}`}
       >
         {children}
         <motion.div

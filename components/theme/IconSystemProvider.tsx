@@ -12,7 +12,7 @@ interface IconSystemContextType {
 const IconSystemContext = createContext<IconSystemContextType | undefined>(undefined);
 
 export function IconSystemProvider({ children }: { children: React.ReactNode }) {
-  const [iconSystem, setIconSystemState] = useState<IconSystem>("mingcute");
+  const [iconSystem, setIconSystemState] = useState<IconSystem>("solar");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export function IconSystemProvider({ children }: { children: React.ReactNode }) 
 
   // Предотвращаем мерцание при гидратации
   return (
-    <IconSystemContext.Provider value={{ iconSystem: mounted ? iconSystem : "mingcute", setIconSystem }}>
+    <IconSystemContext.Provider value={{ iconSystem: mounted ? iconSystem : "solar", setIconSystem }}>
       {children}
     </IconSystemContext.Provider>
   );

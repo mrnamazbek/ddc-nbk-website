@@ -11,6 +11,11 @@ test.describe("DDC Website E2E Tests", () => {
     // Проверяем наличие ключевых секций по тексту
     await expect(page.locator("text=Центр цифрового развития").first()).toBeVisible();
     await expect(page.locator("text=Цифровой Тенге").first()).toBeVisible();
+
+    // Переходим на казахскую локаль и проверяем казахские символы
+    await page.goto("/kz");
+    const kzPositionText = page.locator("text=әғқңөұүһі АО Цифровое развитие");
+    await expect(kzPositionText).toBeVisible();
   });
 
   test("should load careers page and display hh.ru vacancies", async ({ page }) => {
@@ -26,41 +31,6 @@ test.describe("DDC Website E2E Tests", () => {
     await expect(applyButton).toBeVisible();
   });
 
-  test("should toggle icon systems in A/B switcher", async ({ page }) => {
-    await page.goto("/ru");
-    
-    // Находим кнопку открытия виджета по aria-label
-    const switcherButton = page.locator('button[aria-label="Настройки A/B теста иконок"]');
-    await expect(switcherButton).toBeVisible();
-    
-    // Открываем виджет
-    await switcherButton.click();
-    
-    // Проверяем наличие заголовка виджета
-    await expect(page.locator("text=A/B Тест иконок")).toBeVisible();
-    
-    // Находим кнопку выбора Iconsax и кликаем на неё
-    const iconsaxOption = page.locator("button:has-text('Iconsax')");
-    await expect(iconsaxOption).toBeVisible();
-    await iconsaxOption.click();
-    
-    // Проверяем, что кнопка Iconsax стала активной (проверяем класс или визуально)
-    // Активная кнопка содержит bg-forest/30
-    await expect(iconsaxOption).toHaveClass(/bg-forest/);
-    
-    // Переключаем на Solar
-    const solarOption = page.locator("button:has-text('Solar')");
-    await expect(solarOption).toBeVisible();
-    await solarOption.click();
-    await expect(solarOption).toHaveClass(/bg-forest/);
-    
-    // Переключаем обратно на MingCute
-    const mingcuteOption = page.locator("button:has-text('MingCute')");
-    await expect(mingcuteOption).toBeVisible();
-    await mingcuteOption.click();
-    await expect(mingcuteOption).toHaveClass(/bg-forest/);
-  });
-  
   test("should support dark/light theme switching", async ({ page }) => {
     await page.goto("/ru");
     
@@ -70,33 +40,6 @@ test.describe("DDC Website E2E Tests", () => {
       await expect(themeButton).toBeVisible();
       await themeButton.click();
     }
-  });
-
-  test("should toggle font systems in A/B switcher and render Kazakh text", async ({ page }) => {
-    await page.goto("/ru");
-    
-    // Проверяем наличие проверочной строки в футере
-    const kzPositionText = page.locator("text=әғқңөұүһі АО Цифровое развитие");
-    await expect(kzPositionText).toBeVisible();
-    
-    // Находим кнопку открытия виджета
-    const switcherButton = page.locator('button[aria-label="Настройки A/B теста иконок"]');
-    await switcherButton.click();
-    
-    // Проверяем наличие заголовка A/B Тест шрифтов
-    await expect(page.locator("text=A/B Тест шрифтов")).toBeVisible();
-    
-    // Кнопка выбора Пары B
-    const pairBOption = page.locator("button:has-text('IBM Plex Sans + Lora')");
-    await expect(pairBOption).toBeVisible();
-    await pairBOption.click();
-    await expect(pairBOption).toHaveClass(/bg-forest/);
-    
-    // Кнопка выбора Пары A
-    const pairAOption = page.locator("button:has-text('Golos + Source Serif 4')");
-    await expect(pairAOption).toBeVisible();
-    await pairAOption.click();
-    await expect(pairAOption).toHaveClass(/bg-forest/);
   });
 
   test("should load mission page and render FeatureCarousel", async ({ page }) => {

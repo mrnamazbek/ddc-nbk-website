@@ -42,7 +42,7 @@ export default function DigitalPage() {
   ];
 
   return (
-    <div className="relative w-full bg-black overflow-hidden min-h-screen pt-32 pb-24 font-sans">
+    <div className="relative w-full bg-background overflow-hidden min-h-screen pt-32 pb-24 font-sans">
       {/* Мягкие свечения */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-forest/5 rounded-full blur-[160px] pointer-events-none" />
       <div className="absolute bottom-1/4 left-0 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] pointer-events-none" />
@@ -56,14 +56,14 @@ export default function DigitalPage() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-3xl mb-16"
         >
-          <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
+          <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-medium mb-4 block">
             {t("overline")}
           </span>
           <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
             {t("titleLine1")} <br />
             <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
           </h1>
-          <p className="text-lg text-zinc-400 font-light leading-relaxed">
+          <p className="text-lg text-zinc-300 font-light leading-relaxed">
             {t("subtitle")}
           </p>
         </motion.div>
@@ -118,7 +118,7 @@ export default function DigitalPage() {
           <div className="w-full overflow-x-auto rounded-2xl border border-white/5 bg-charcoal/20 backdrop-blur-md">
             <table className="w-full min-w-[700px] border-collapse text-left text-sm font-sans font-light">
               <thead>
-                <tr className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wider font-semibold text-gold">
+                <tr className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wider font-semibold text-gold-light">
                   <th className="p-5">{t("thFeature")}</th>
                   <th className="p-5">{t("thCash")}</th>
                   <th className="p-5">{t("thNonCash")}</th>
@@ -149,14 +149,14 @@ export default function DigitalPage() {
           <div className="flex gap-4 items-start mb-6">
             <Icon name="database" size={32} className="text-gold shrink-0 mt-1" />
             <div>
-              <span className="text-xs uppercase text-gold font-semibold tracking-wider">{t("overline")}</span>
+              <span className="text-xs uppercase text-gold-light font-semibold tracking-wider">{t("overline")}</span>
               <h2 className="text-xl font-bold text-white tracking-wide">{t("insightTitle")}</h2>
             </div>
           </div>
-          <p className="text-zinc-400 font-light leading-relaxed mb-6">
+          <p className="text-zinc-300 font-light leading-relaxed mb-6">
             {t("insightDesc1")}
           </p>
-          <p className="text-zinc-400 font-light leading-relaxed">
+          <p className="text-zinc-300 font-light leading-relaxed">
             {t("insightDesc2")}
           </p>
         </div>

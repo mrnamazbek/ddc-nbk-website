@@ -36,7 +36,7 @@ export default function PartnerMarquee({
         {marqueeItems.map((item, idx) => (
           <div
             key={idx}
-            className="flex items-center justify-center px-6 py-3 rounded-full border border-glass-border bg-white/[0.02] backdrop-blur-md text-zinc-900 dark:text-zinc-50 font-mono text-sm tracking-widest hover:text-foreground hover:border-brand-blue-light/30 hover:bg-brand-blue/5 transition-all duration-300"
+            className="flex items-center justify-center px-6 py-3 rounded-full border border-glass-border bg-white/[0.02] backdrop-blur-md text-zinc-300 dark:text-zinc-100 font-mono text-sm tracking-widest hover:text-foreground hover:border-brand-blue-light/30 hover:bg-brand-blue/5 transition-all duration-300"
           >
             {item}
           </div>
