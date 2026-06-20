@@ -16,7 +16,7 @@ function createStrokeShape(points: THREE.Vector2[], width: number): THREE.Shape 
   // Вычисляем нормали для каждой вершины
   const normals: THREE.Vector2[] = [];
   for (let i = 0; i <= n; i++) {
-    let d = new THREE.Vector2();
+    const d = new THREE.Vector2();
     if (i === 0) {
       d.subVectors(points[1], points[0]).normalize();
     } else if (i === n) {

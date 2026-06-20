@@ -270,8 +270,8 @@ export default function Leadership() {
       );
 
       // Анимация горизонтальных ветвей и карточек
-      const cardElements = gsap.utils.toArray(".tree-node");
-      cardElements.forEach((node: any) => {
+      const cardElements = gsap.utils.toArray<Element>(".tree-node");
+      cardElements.forEach((node: Element) => {
         const branch = node.querySelector(".tree-branch");
         const card = node.querySelector(".tree-card-wrapper");
 

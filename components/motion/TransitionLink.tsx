@@ -35,9 +35,9 @@ export default function TransitionLink({ href, onClick, ...rest }: LinkProps) {
 
         if (isSamePage && hash) {
           e.preventDefault();
-          const targetElement = document.querySelector(hash);
+          const targetElement = document.querySelector<HTMLElement>(hash);
           if (targetElement) {
-            const lenis = (window as any).__lenis;
+            const lenis = window.__lenis;
             if (lenis) {
               lenis.scrollTo(targetElement);
             } else {

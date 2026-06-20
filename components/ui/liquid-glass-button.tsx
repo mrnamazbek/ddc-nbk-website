@@ -111,7 +111,7 @@ function LiquidButton({
   const tapAnimation = shouldReduceMotion ? {} : { scale: 0.97 };
   const springTransition = shouldReduceMotion 
     ? { duration: 0.1 } 
-    : { type: "spring", stiffness: 400, damping: 20, mass: 0.5 };
+    : { type: "spring" as const, stiffness: 400, damping: 20, mass: 0.5 };
 
   return (
     <motion.button
@@ -123,7 +123,7 @@ function LiquidButton({
       whileHover={hoverAnimation}
       whileTap={tapAnimation}
       transition={springTransition}
-      {...(props as any)}
+      {...(props as React.ComponentProps<typeof motion.button>)}
     >
       <div className="absolute top-0 left-0 z-0 h-full w-full rounded-full 
           shadow-[0_0_6px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3px_rgba(0,0,0,0.9),inset_-3px_-3px_0.5px_-3px_rgba(0,0,0,0.85),inset_1px_1px_1px_-0.5px_rgba(0,0,0,0.6),inset_-1px_-1px_1px_-0.5px_rgba(0,0,0,0.6),inset_0_0_6px_6px_rgba(0,0,0,0.12),inset_0_0_2px_2px_rgba(0,0,0,0.06),0_0_12px_rgba(255,255,255,0.15)] 

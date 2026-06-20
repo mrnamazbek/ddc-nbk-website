@@ -61,10 +61,10 @@ test.describe("DDC Website E2E Tests", () => {
     await page.goto("/ru");
 
     // Ждем, пока React смонтирует SmoothScroll и инициализирует __lenis
-    await page.waitForFunction(() => typeof (window as any).__lenis !== "undefined", { timeout: 8000 });
+    await page.waitForFunction(() => typeof (window as { __lenis?: unknown }).__lenis !== "undefined", { timeout: 8000 });
 
     // 1. Проверяем, что __lenis инициализирован в обычном режиме
-    const hasLenisInitially = await page.evaluate(() => typeof (window as any).__lenis !== "undefined");
+    const hasLenisInitially = await page.evaluate(() => typeof (window as { __lenis?: unknown }).__lenis !== "undefined");
     expect(hasLenisInitially).toBe(true);
 
     // 2. Находим активную кнопку версии для слабовидящих
@@ -115,14 +115,14 @@ test.describe("DDC Website E2E Tests", () => {
 
     // 3. Проверим отключение анимаций при системном reduced-motion
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.waitForFunction(() => typeof (window as any).__lenis === "undefined", { timeout: 8000 });
+    await page.waitForFunction(() => typeof (window as { __lenis?: unknown }).__lenis === "undefined", { timeout: 8000 });
 
     const canvasCountSys = await page.locator("canvas").count();
     expect(canvasCountSys).toBe(0);
 
     // Возвращаем обратно для продолжения теста
     await page.emulateMedia({ reducedMotion: "no-preference" });
-    await page.waitForFunction(() => typeof (window as any).__lenis !== "undefined", { timeout: 8000 });
+    await page.waitForFunction(() => typeof (window as { __lenis?: unknown }).__lenis !== "undefined", { timeout: 8000 });
 
     // 4. Открываем панель снова и включаем режим доступности вручную
     await activeTrigger.click();
@@ -134,7 +134,7 @@ test.describe("DDC Website E2E Tests", () => {
     await bwSchemeButton.click();
     
     // Ожидаем реактивного удаления __lenis
-    await page.waitForFunction(() => typeof (window as any).__lenis === "undefined", { timeout: 8000 });
+    await page.waitForFunction(() => typeof (window as { __lenis?: unknown }).__lenis === "undefined", { timeout: 8000 });
 
     // Проверяем, что класс a11y добавился на html элемент
     const htmlClass = await page.evaluate(() => document.documentElement.className);
@@ -150,7 +150,7 @@ test.describe("DDC Website E2E Tests", () => {
     await resetButton.click();
     
     // Ожидаем реактивного пересоздания __lenis
-    await page.waitForFunction(() => typeof (window as any).__lenis !== "undefined", { timeout: 8000 });
+    await page.waitForFunction(() => typeof (window as { __lenis?: unknown }).__lenis !== "undefined", { timeout: 8000 });
 
     // Проверяем, что canvas InteractiveDotGrid снова рендерится в DOM
     const canvasRestoredCount = await page.locator("canvas").count();

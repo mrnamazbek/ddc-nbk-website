@@ -170,6 +170,7 @@ const solarMap: Record<IconName, string> = {
 };
 
 // Маппинг для Iconsax (локальные React компоненты)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const iconsaxMap: Record<IconName, React.ComponentType<any>> = {
   menu: Iconsax.HambergerMenu,
   x: Iconsax.CloseCircle,

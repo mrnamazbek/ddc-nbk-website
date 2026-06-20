@@ -5,6 +5,10 @@ import dynamic from 'next/dynamic'
 
 const Spline = dynamic(() => import('@splinetool/react-spline'), { ssr: false })
 
+type SplineLayer = { type: string; updateTexture: (url: string) => Promise<void> }
+type SplineObj = { material?: { layers?: SplineLayer[] }; children?: SplineObj[] }
+type SplineApp = { findObjectByName: (name: string) => SplineObj | undefined }
+
 interface SplineSceneProps {
   scene: string
   className?: string
@@ -68,7 +72,7 @@ export function SplineScene({ scene, className, logoImg, logoTarget }: SplineSce
       // Find all links referencing spline.design
       const links = document.querySelectorAll('a[href*="spline.design"]');
       links.forEach((link) => {
-        let parent = link.parentElement;
+        const parent = link.parentElement;
         if (parent && parent.style.position === 'absolute') {
           parent.remove();
         } else {
@@ -81,7 +85,7 @@ export function SplineScene({ scene, className, logoImg, logoTarget }: SplineSce
       allLinks.forEach((link) => {
         const text = link.innerText || '';
         if (text.toLowerCase().includes('built with spline') || link.getAttribute('href')?.includes('spline.design')) {
-          let parent = link.parentElement;
+          const parent = link.parentElement;
           if (parent && parent.style.position === 'absolute') {
             parent.remove();
           } else {
@@ -101,14 +105,15 @@ export function SplineScene({ scene, className, logoImg, logoTarget }: SplineSce
     };
   }, [shouldLoad]);
 
-  const handleLoad = async (splineApp: any) => {
+  const handleLoad = async (splineApp: unknown) => {
+    const app = splineApp as SplineApp;
     if (logoImg && logoTarget) {
       try {
-        const obj = splineApp.findObjectByName(logoTarget);
+        const obj = app.findObjectByName(logoTarget);
         if (obj) {
-          const applyTexture = async (targetObj: any) => {
+          const applyTexture = async (targetObj: SplineObj) => {
             if (targetObj.material && targetObj.material.layers) {
-              const textureLayer = targetObj.material.layers.find((l: any) => l.type === 'texture');
+              const textureLayer = targetObj.material.layers.find((l: SplineLayer) => l.type === 'texture');
               if (textureLayer) {
                 await textureLayer.updateTexture(logoImg);
               }

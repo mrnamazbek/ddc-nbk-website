@@ -4,6 +4,19 @@ import Badge from "@/components/ui/Badge";
 import Icon, { IconName } from "@/components/ui/Icon";
 import { getTranslations } from "next-intl/server";
 
+type Translator = (key: string, values?: Record<string, string | number>) => string;
+interface HHSalary { from: number | null; to: number | null; currency: string; gross: boolean; }
+interface HHVacancy {
+  name: string;
+  department?: { name?: string } | null;
+  area?: { name?: string } | null;
+  employment?: { name?: string } | null;
+  salary?: HHSalary | null;
+  experience?: { name?: string } | null;
+  published_at?: string;
+  alternate_url?: string;
+}
+
 interface Job {
   title: string;
   department: string;
@@ -118,7 +131,7 @@ const FALLBACK_JOBS: Job[] = [
   }
 ];
 
-function translateExperience(expName: string, t: any) {
+function translateExperience(expName: string | undefined, t: Translator) {
   if (!expName) return "";
   const name = expName.toLowerCase();
   if (name.includes("нет") || name.includes("без")) return t("expNoExperience");
@@ -128,7 +141,7 @@ function translateExperience(expName: string, t: any) {
   return expName;
 }
 
-function translateType(typeName: string, locale: string) {
+function translateType(typeName: string | undefined, locale: string) {
   if (!typeName) return "";
   const name = typeName.toLowerCase();
   if (name.includes("полная") || name.includes("full")) {
@@ -137,7 +150,7 @@ function translateType(typeName: string, locale: string) {
   return typeName;
 }
 
-function translateLocation(locName: string, locale: string) {
+function translateLocation(locName: string | undefined, locale: string) {
   if (!locName) return "";
   const name = locName.toLowerCase();
   if (name.includes("астана") || name.includes("astana")) {
@@ -149,7 +162,7 @@ function translateLocation(locName: string, locale: string) {
   return locName;
 }
 
-function formatSalary(salary: any, t: any) {
+function formatSalary(salary: HHSalary | null | undefined, t: Translator) {
   if (!salary) return t("noSalary");
   const { from, to, currency } = salary;
   const currSymbol = currency === "RUR" ? "₽" : currency === "KZT" ? "₸" : currency;
@@ -159,7 +172,8 @@ function formatSalary(salary: any, t: any) {
   return t("noSalary");
 }
 
-function formatDate(dateStr: string, locale: string) {
+function formatDate(dateStr: string | undefined, locale: string) {
+  if (!dateStr) return "";
   try {
     const d = new Date(dateStr);
     return d.toLocaleDateString(locale === "kz" ? "kk-KZ" : locale === "en" ? "en-US" : "ru-RU", { day: "numeric", month: "long" });
@@ -168,7 +182,7 @@ function formatDate(dateStr: string, locale: string) {
   }
 }
 
-async function getVacancies(locale: string, t: any): Promise<Job[]> {
+async function getVacancies(locale: string, t: Translator): Promise<Job[]> {
   try {
     const res = await fetch("https://api.hh.ru/vacancies?employer_id=28161", {
       headers: {
@@ -182,7 +196,7 @@ async function getVacancies(locale: string, t: any): Promise<Job[]> {
     }
     const data = await res.json();
     if (data && Array.isArray(data.items) && data.items.length > 0) {
-      return data.items.map((item: any) => ({
+      return data.items.map((item: HHVacancy) => ({
         title: item.name,
         department: item.department?.name || (locale === "kz" ? "Цифрлық даму орталығы" : locale === "en" ? "Digital Development Center" : "Центр цифрового развития"),
         location: translateLocation(item.area?.name, locale),
@@ -203,7 +217,7 @@ async function getVacancies(locale: string, t: any): Promise<Job[]> {
   }
 }
 
-function getFallbackJobs(locale: string, t: any): Job[] {
+function getFallbackJobs(locale: string, t: Translator): Job[] {
   return FALLBACK_JOBS.map(job => ({
     ...job,
     location: translateLocation(job.location, locale),

@@ -98,16 +98,16 @@ export default function Header() {
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = "hidden";
-      const lenis = (window as any).__lenis;
+      const lenis = window.__lenis;
       if (lenis) lenis.stop();
     } else {
       document.body.style.overflow = "";
-      const lenis = (window as any).__lenis;
+      const lenis = window.__lenis;
       if (lenis) lenis.start();
     }
     return () => {
       document.body.style.overflow = "";
-      const lenis = (window as any).__lenis;
+      const lenis = window.__lenis;
       if (lenis) lenis.start();
     };
   }, [isMobileMenuOpen]);

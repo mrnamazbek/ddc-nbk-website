@@ -31,10 +31,10 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     if (typeof window !== "undefined") {
       if (window.location.hash) {
         const hash = window.location.hash;
-        const targetElement = document.querySelector(hash);
+        const targetElement = document.querySelector<HTMLElement>(hash);
         if (targetElement) {
           const timer = setTimeout(() => {
-            const lenis = (window as any).__lenis;
+            const lenis = window.__lenis;
             if (lenis) {
               lenis.scrollTo(targetElement);
             } else {
@@ -57,7 +57,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
 
         // For normal navigation, reset scroll to top after route change
         const timer = setTimeout(() => {
-          const lenis = (window as any).__lenis;
+          const lenis = window.__lenis;
           if (lenis) {
             lenis.scrollTo(0, { immediate: true });
           } else {
@@ -74,7 +74,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     // Disable smooth scroll if accessibility mode or prefers-reduced-motion is active
     if (a11yEnabled || prefersReducedMotion) {
       if (typeof window !== "undefined") {
-        delete (window as any).__lenis;
+        delete window.__lenis;
       }
       return;
     }
@@ -111,7 +111,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       lenis.destroy();
       gsap.ticker.remove(updateLenis);
       if (typeof window !== "undefined") {
-        delete (window as any).__lenis;
+        delete window.__lenis;
       }
     };
   }, [a11yEnabled, prefersReducedMotion]);

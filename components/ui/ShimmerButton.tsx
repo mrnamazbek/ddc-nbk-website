@@ -41,7 +41,7 @@ export default function ShimmerButton({
   const tapAnimation = shouldReduceMotion ? {} : { scale: 0.97 };
   const springTransition = shouldReduceMotion
     ? { duration: 0.1 }
-    : { type: "spring", stiffness: 400, damping: 20, mass: 0.5 };
+    : { type: "spring" as const, stiffness: 400, damping: 20, mass: 0.5 };
 
   return (
     <motion.button
@@ -62,7 +62,7 @@ export default function ShimmerButton({
       whileHover={hoverAnimation}
       whileTap={tapAnimation}
       transition={springTransition}
-      {...(props as any)}
+      {...(props as React.ComponentProps<typeof motion.button>)}
     >
       {/* Эффект мерцающего свечения (Шиммер) */}
       <div className="absolute inset-0 z-[-1] overflow-hidden [border-radius:var(--border-radius)] [mask-image:radial-gradient(ellipse_at_center,black,transparent)]">

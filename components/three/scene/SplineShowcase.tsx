@@ -12,6 +12,9 @@ const Spline = dynamic(() => import("@splinetool/react-spline"), {
   ),
 });
 
+type SplineObj = { color: string | number };
+type SplineApp = { findObjectByName: (name: string) => SplineObj | null };
+
 interface SplineShowcaseProps {
   activeTab: string;
 }
@@ -24,7 +27,7 @@ interface SplineShowcaseProps {
  * 2. Next.js dynamic import (client-side execution only, ssr: false).
  */
 export default function SplineShowcase({ activeTab }: SplineShowcaseProps) {
-  const splineAppRef = useRef<any>(null);
+  const splineAppRef = useRef<SplineApp | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -78,8 +81,8 @@ export default function SplineShowcase({ activeTab }: SplineShowcaseProps) {
     };
   }, [isVisible]);
 
-  function handleLoad(splineApp: any) {
-    splineAppRef.current = splineApp;
+  function handleLoad(splineApp: unknown) {
+    splineAppRef.current = splineApp as SplineApp;
     updateColors();
   }
 

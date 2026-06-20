@@ -213,7 +213,10 @@ const stepVariants: Variants = {
 
 const StepImage = forwardRef<
   HTMLImageElement,
-  StepImageProps & { [key: string]: any }
+  StepImageProps & {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
+  }
 >(
   (
     { src, alt, className, style, width = 1200, height = 630, ...props },

@@ -23,7 +23,7 @@ export function AccessibilityTrigger({ className = "" }: { className?: string })
       type="button"
       onClick={(e) => {
         if (typeof window !== "undefined") {
-          (window as any).__activeA11yTrigger = e.currentTarget;
+          window.__activeA11yTrigger = e.currentTarget;
         }
         setPanelOpen(!panelOpen);
       }}
@@ -139,7 +139,7 @@ export default function AccessibilityPanel() {
       };
     } else {
       // Когда диалог закрывается, дождемся пока inert снимется в соседнем эффекте
-      const trigger = (typeof window !== "undefined" && (window as any).__activeA11yTrigger) || triggerRef.current || getVisibleTrigger();
+      const trigger = (typeof window !== "undefined" && window.__activeA11yTrigger) || triggerRef.current || getVisibleTrigger();
       if (trigger) {
         const rafId = requestAnimationFrame(() => {
           trigger.focus();
