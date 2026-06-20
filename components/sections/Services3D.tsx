@@ -7,7 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import * as THREE from "three";
 import { useTranslations } from "next-intl";
 import Icon, { IconName } from "@/components/ui/Icon";
-import { useA11y } from "@/components/theme/AccessibilityProvider";
+
+import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
 interface ServiceItem {
   id: number;
@@ -19,13 +20,7 @@ interface ServiceItem {
   techStack: string;
 }
 
-// Easing functions for buttery scroll transitions
-function easeOutQuint(x: number): number {
-  return 1 - Math.pow(1 - x, 5);
-}
-function easeInQuint(x: number): number {
-  return x * x * x * x * x;
-}
+
 
 /* ──────────────────────────────────────────────────────────────────────────
    GLSL Шейдер для интерактивного облака золотых и зеленых частиц
@@ -106,25 +101,28 @@ const fragmentShaderParticles = /* glsl */ `
   }
 `;
 
-function ParticleCloud({ scroll }: { scroll: number }) {
+// External helper function to keep component rendering pure (React 19 rule)
+function generateServicesParticles(count: number) {
+  const arr = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(Math.random() * 2 - 1);
+    const r = 4.5 + Math.random() * 6.5;
+    arr[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+    arr[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta) * 0.55;
+    arr[i * 3 + 2] = r * Math.cos(phi);
+  }
+  return arr;
+}
+
+function ParticleCloud({ scrollRef }: { scrollRef: React.RefObject<number> }) {
   const matRef = useRef<THREE.ShaderMaterial>(null);
   const { camera } = useThree();
   const mouse3d = useRef(new THREE.Vector3(0, 0, -1000));
   const smoothMouse3d = useRef(new THREE.Vector3(0, 0, -1000));
 
   const count = 3500;
-  const positions = useMemo(() => {
-    const arr = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(Math.random() * 2 - 1);
-      const r = 4.5 + Math.random() * 6.5;
-      arr[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      arr[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta) * 0.55;
-      arr[i * 3 + 2] = r * Math.cos(phi);
-    }
-    return arr;
-  }, []);
+  const positions = useMemo(() => generateServicesParticles(count), []);
 
   const uniforms = useMemo(
     () => ({
@@ -140,6 +138,7 @@ function ParticleCloud({ scroll }: { scroll: number }) {
   useFrame((state, dt) => {
     const m = matRef.current;
     if (!m) return;
+    const scroll = scrollRef.current;
     m.uniforms.uTime.value = state.clock.elapsedTime;
     m.uniforms.uScroll.value = scroll;
 
@@ -180,12 +179,33 @@ function ParticleCloud({ scroll }: { scroll: number }) {
    Центральный 3D-объект: Золотая Монета DDC
    ────────────────────────────────────────────────────────────────────────── */
 
-function CentralGoldCoin({ scroll }: { scroll: number }) {
+function CentralGoldCoin({ scrollRef }: { scrollRef: React.RefObject<number> }) {
   const coinRef = useRef<THREE.Group>(null);
   const matRef = useRef<THREE.MeshPhysicalMaterial>(null);
 
+  const reededGeometry = useMemo(() => {
+    const geometries = [];
+    const baseGeo = new THREE.BoxGeometry(0.015, 0.05, 0.2);
+    for (let i = 0; i < 36; i++) {
+      const angle = (i / 36) * Math.PI * 2;
+      const clone = baseGeo.clone();
+      clone.translate(Math.cos(angle) * 1.505, Math.sin(angle) * 1.505, 0);
+      clone.rotateZ(angle);
+      geometries.push(clone);
+    }
+    const merged = mergeGeometries(geometries);
+    baseGeo.dispose();
+    geometries.forEach(g => g.dispose());
+    return merged;
+  }, []);
+
+  const reededMaterial = useMemo(() => {
+    return new THREE.MeshPhysicalMaterial({ color: "#9E7D2D", metalness: 0.9, roughness: 0.3 });
+  }, []);
+
   useFrame((state, dt) => {
     if (!coinRef.current || !matRef.current) return;
+    const scroll = scrollRef.current;
 
     // Замедление вращения в финале
     const climaxFactor = scroll >= 0.8 ? (scroll - 0.8) / 0.2 : 0;
@@ -247,19 +267,7 @@ function CentralGoldCoin({ scroll }: { scroll: number }) {
 
       {/* Ребристость на ребре монеты */}
       <group rotation={[Math.PI / 2, 0, 0]}>
-        {Array.from({ length: 36 }).map((_, i) => {
-          const angle = (i / 36) * Math.PI * 2;
-          return (
-            <mesh
-              key={i}
-              position={[Math.cos(angle) * 1.505, Math.sin(angle) * 1.505, 0]}
-              rotation={[0, 0, angle]}
-            >
-              <boxGeometry args={[0.015, 0.05, 0.2]} />
-              <meshPhysicalMaterial color="#9E7D2D" metalness={0.9} roughness={0.3} />
-            </mesh>
-          );
-        })}
+        <mesh geometry={reededGeometry} material={reededMaterial} />
       </group>
     </group>
   );
@@ -269,11 +277,12 @@ function CentralGoldCoin({ scroll }: { scroll: number }) {
    3D Текст на заднем плане (Intro typography)
    ────────────────────────────────────────────────────────────────────────── */
 
-function BackgroundIntroText({ scroll }: { scroll: number }) {
+function BackgroundIntroText({ scrollRef }: { scrollRef: React.RefObject<number> }) {
   const textRef = useRef<THREE.Group>(null);
 
   useFrame((state, dt) => {
     if (!textRef.current) return;
+    const scroll = scrollRef.current;
     
     // В фазе 1 (0.0 -> 0.2) текст сдвигается вверх и затухает
     const opacity = scroll < 0.2 ? 1.0 - scroll / 0.2 : 0;
@@ -325,11 +334,11 @@ interface CardProps {
   item: ServiceItem;
   index: number;
   total: number;
-  scroll: number;
+  scrollRef: React.RefObject<number>;
   onSelect: (index: number) => void;
 }
 
-function CarouselCard({ item, index, total, scroll, onSelect }: CardProps) {
+function CarouselCard({ item, index, total, scrollRef, onSelect }: CardProps) {
   const meshRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
 
@@ -338,6 +347,7 @@ function CarouselCard({ item, index, total, scroll, onSelect }: CardProps) {
 
   useFrame((state, dt) => {
     if (!meshRef.current) return;
+    const scroll = scrollRef.current;
 
     const offset = scroll - focusPoint;
 
@@ -372,7 +382,7 @@ function CarouselCard({ item, index, total, scroll, onSelect }: CardProps) {
     // Вычисление прозрачности карточки
     // Карточка видна только в окрестности своего фокуса
     const fadeRange = 0.22;
-    let opacity = Math.max(0, 1.0 - Math.abs(offset) / fadeRange);
+    const opacity = Math.max(0, 1.0 - Math.abs(offset) / fadeRange);
     // Применяем плавное появление/исчезновение всей карусели
     let carouselOpacity = 1.0;
     if (scroll < 0.2) {
@@ -462,15 +472,16 @@ function CarouselCard({ item, index, total, scroll, onSelect }: CardProps) {
 
 interface SceneProps {
   items: ServiceItem[];
-  scroll: number;
+  scrollRef: React.RefObject<number>;
   onSelectCard: (index: number) => void;
 }
 
-function WebGLScene({ items, scroll, onSelectCard }: SceneProps) {
+function WebGLScene({ items, scrollRef, onSelectCard }: SceneProps) {
   const dirLightRef = useRef<THREE.DirectionalLight>(null);
   const spotlightRef = useRef<THREE.SpotLight>(null);
 
   useFrame((state, dt) => {
+    const scroll = scrollRef.current;
     const climaxFactor = scroll >= 0.8 ? (scroll - 0.8) / 0.2 : 0;
     
     // Плавное притухание изумрудного заполняющего света
@@ -548,9 +559,9 @@ function WebGLScene({ items, scroll, onSelectCard }: SceneProps) {
         color="#E8C87A"
       />
 
-      <BackgroundIntroText scroll={scroll} />
-      <ParticleCloud scroll={scroll} />
-      <CentralGoldCoin scroll={scroll} />
+      <BackgroundIntroText scrollRef={scrollRef} />
+      <ParticleCloud scrollRef={scrollRef} />
+      <CentralGoldCoin scrollRef={scrollRef} />
       
       <group>
         {items.map((item, idx) => (
@@ -559,7 +570,7 @@ function WebGLScene({ items, scroll, onSelectCard }: SceneProps) {
             item={item}
             index={idx}
             total={items.length}
-            scroll={scroll}
+            scrollRef={scrollRef}
             onSelect={onSelectCard}
           />
         ))}
@@ -632,9 +643,34 @@ export default function Services3D() {
     },
   ], [t]);
 
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const scrollProgressRef = useRef(0);
   const scrollTargetRef = useRef(0);
   const scrollCurrentRef = useRef(0);
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isClimax, setIsClimax] = useState(false);
+  const [isIntro, setIsIntro] = useState(true);
+
+  const activeIndexRef = useRef(0);
+  const isClimaxRef = useRef(false);
+  const isIntroRef = useRef(true);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(true);
+
+  // IntersectionObserver to pause rendering when offscreen
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setVisible(entry.isIntersecting);
+      },
+      { threshold: 0.005 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // Скролл-событие с плавной интерполяцией
   useEffect(() => {
@@ -653,8 +689,30 @@ export default function Services3D() {
       if (!active) return;
       const diff = scrollTargetRef.current - scrollCurrentRef.current;
       if (Math.abs(diff) > 0.00005) {
-        scrollCurrentRef.current += diff * 0.07; // Butterworth-like easing speed
-        setScrollProgress(scrollCurrentRef.current);
+        scrollCurrentRef.current += diff * 0.07;
+        scrollProgressRef.current = scrollCurrentRef.current;
+
+        const p = scrollProgressRef.current;
+        const nextIntro = p < 0.2;
+        const nextClimax = p >= 0.8;
+        let nextIdx = 0;
+        if (!nextIntro) {
+          if (nextClimax) nextIdx = 5;
+          else nextIdx = Math.min(5, Math.max(0, Math.round(((p - 0.2) / 0.6) * 5)));
+        }
+
+        if (nextIntro !== isIntroRef.current) {
+          isIntroRef.current = nextIntro;
+          setIsIntro(nextIntro);
+        }
+        if (nextClimax !== isClimaxRef.current) {
+          isClimaxRef.current = nextClimax;
+          setIsClimax(nextClimax);
+        }
+        if (nextIdx !== activeIndexRef.current) {
+          activeIndexRef.current = nextIdx;
+          setActiveIndex(nextIdx);
+        }
       }
       requestAnimationFrame(updateScroll);
     };
@@ -665,18 +723,6 @@ export default function Services3D() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  // Определение активного шага по скроллу
-  const isClimax = scrollProgress >= 0.8;
-  const isIntro = scrollProgress < 0.2;
-
-  const activeIndex = useMemo(() => {
-    if (isIntro) return 0;
-    if (isClimax) return 5;
-    // Линейный маппинг шкалы 0.2 -> 0.8 на 6 карточек
-    const val = (scrollProgress - 0.2) / 0.6;
-    return Math.min(5, Math.max(0, Math.round(val * 5)));
-  }, [scrollProgress, isIntro, isClimax]);
 
   const activeService = services[activeIndex] || services[0];
 
@@ -694,21 +740,24 @@ export default function Services3D() {
   };
 
   return (
-    <div className="relative w-full min-h-[500vh] bg-transparent font-sans">
+    <div ref={containerRef} className="relative w-full min-h-[500vh] bg-transparent font-sans">
       
       {/* 3D WebGL Холст */}
       <div className="fixed inset-0 w-full h-screen z-0 pointer-events-auto bg-[#040c08]">
-        <Canvas
-          camera={{ position: [0, 0, 6.2], fov: 48 }}
-          dpr={[1, 1.5]}
-          gl={{ antialias: true, powerPreference: "high-performance" }}
-        >
-          <WebGLScene
-            items={services}
-            scroll={scrollProgress}
-            onSelectCard={handleSelectCard}
-          />
-        </Canvas>
+        {visible && (
+          <Canvas
+            camera={{ position: [0, 0, 6.2], fov: 48 }}
+            dpr={[1, 1.5]}
+            gl={{ antialias: true, powerPreference: "high-performance" }}
+            frameloop={visible ? "always" : "never"}
+          >
+            <WebGLScene
+              items={services}
+              scrollRef={scrollProgressRef}
+              onSelectCard={handleSelectCard}
+            />
+          </Canvas>
+        )}
       </div>
 
       {/* HTML Интерфейс */}

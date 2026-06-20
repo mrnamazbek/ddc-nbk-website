@@ -28,7 +28,7 @@ function ridgeGeometry(width: number, peaks: number, height: number, seed: numbe
    blending, so the eagle reads as a glowing apparition gliding over the steppe. */
 function Eagle() {
   const group = useRef<THREE.Group>(null);
-  const tex = useTexture("/images/3d/burkit-eagle-gold.png");
+  const tex = useTexture("/images/3d/burkit-eagle-gold.webp");
   const videoTex = useBillboardVideo("/video/3d/burkit-eagle-gold.mp4");
 
   const mat = useMemo(() => {

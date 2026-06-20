@@ -87,14 +87,7 @@ export default async function LocaleLayout({
       className={`${sourceSerif.variable} ${golosText.variable} ${lora.variable} ${ibmPlexSans.variable} ${manrope.variable} ${jetbrainsMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        <link
-          rel="preload"
-          href="https://prod.spline.design/B6sU8aK49uDPNzXL/scene.splinecode"
-          as="fetch"
-          crossOrigin="anonymous"
-        />
-      </head>
+      <head />
       <body className="min-h-full flex flex-col text-white">
         <ThemeProvider>
           <BgSystemProvider>

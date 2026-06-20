@@ -36,7 +36,7 @@ export default function CinematicLoader() {
         {/* The gold shanyrak materialising — brightens + settles as it loads */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/images/3d/shanyrak-gold.png"
+          src="/images/3d/shanyrak-gold.webp"
           alt=""
           className="absolute inset-0 w-full h-full object-contain"
           style={{

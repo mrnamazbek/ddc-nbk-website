@@ -8,7 +8,7 @@ import { getScroll } from "@/lib/scrollStore";
 import { ACTS, band, lerp, range, smoothstep, easeOutExpo } from "@/lib/sceneMath";
 import { useBillboardVideo } from "./useBillboardVideo";
 
-const SRC = "/images/3d/shanyrak-gold.png";
+const SRC = "/images/3d/shanyrak-gold.webp";
 useTexture.preload(SRC);
 
 /**

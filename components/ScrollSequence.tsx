@@ -43,61 +43,136 @@ export default function ScrollSequence({
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Предзагрузка всех ресурсов
+  const currentDirRef = useRef("");
+
+  // Предзагрузка критических ресурсов и запуск фоновой загрузки остальных
   useEffect(() => {
     startScrollTracking();
     const dir = isMobile ? mobileDir : desktopDir;
-    const totalAssets = totalFrames + 3; // Кадры + 3 PNG ассета
-    let loadedCount = 0;
+    currentDirRef.current = dir;
+
+    // Создаем массив под все кадры, изначально заполненный null
+    const loadedFrames = new Array(totalFrames).fill(null);
+    sequenceFramesRef.current = loadedFrames;
+
+
+
+    // Загружаем только первые 20 кадров и 3 ключевых ассета для мгновенного старта
+    const criticalFramesCount = Math.min(20, totalFrames);
+    const criticalTotal = 3 + criticalFramesCount;
+    let criticalLoaded = 0;
 
     const incrementProgress = () => {
-      loadedCount++;
-      setLoadingProgress(Math.round((loadedCount / totalAssets) * 100));
-      if (loadedCount === totalAssets) {
+      criticalLoaded++;
+      const progress = Math.round((criticalLoaded / criticalTotal) * 100);
+      setLoadingProgress(Math.min(100, progress));
+      if (criticalLoaded === criticalTotal) {
         setIsLoaded(true);
+        // Запускаем фоновый стриминг оставшихся кадров
+        loadRemainingFrames(dir);
       }
     };
 
-    // Загрузка PNG ассетов
+    // Загрузка WebP ассетов
     const shanyrakPng = new Image();
-    shanyrakPng.src = "/images/3d/shanyrak-gold.png";
+    shanyrakPng.src = "/images/3d/shanyrak-gold.webp";
     shanyrakPng.onload = incrementProgress;
     shanyrakPng.onerror = incrementProgress;
     shanyrakPngRef.current = shanyrakPng;
 
     const coinPng = new Image();
-    coinPng.src = "/images/3d/tenge-coin-gold.png";
+    coinPng.src = "/images/3d/tenge-coin-gold.webp";
     coinPng.onload = incrementProgress;
     coinPng.onerror = incrementProgress;
     coinPngRef.current = coinPng;
 
     const eaglePng = new Image();
-    eaglePng.src = "/images/3d/burkit-eagle-gold.png";
+    eaglePng.src = "/images/3d/burkit-eagle-gold.webp";
     eaglePng.onload = incrementProgress;
     eaglePng.onerror = incrementProgress;
     eaglePngRef.current = eaglePng;
 
-    // Загрузка кадров последовательности
-    const loadedFrames: HTMLImageElement[] = [];
-    for (let i = 1; i <= totalFrames; i++) {
+    // Загрузка первых критических кадров последовательности
+    for (let i = 0; i < criticalFramesCount; i++) {
       const img = new Image();
-      const frameNum = String(i).padStart(4, "0");
+      const frameNum = String(i + 1).padStart(4, "0");
+      img.onload = () => {
+        sequenceFramesRef.current[i] = img;
+        incrementProgress();
+      };
+      img.onerror = () => {
+        incrementProgress();
+      };
       img.src = `${dir}/frame_${frameNum}.webp`;
-      img.onload = incrementProgress;
-      img.onerror = incrementProgress;
-      loadedFrames.push(img);
     }
-    sequenceFramesRef.current = loadedFrames;
+
+    // Фоновая загрузка остальных кадров небольшими пачками
+    let active = true;
+    const loadRemainingFrames = (targetDir: string) => {
+      let currentIndex = criticalFramesCount;
+      const batchSize = 4; // Загружаем небольшими порциями, чтобы не блокировать соединение
+
+      const loadNextBatch = () => {
+        if (!active || targetDir !== currentDirRef.current) return;
+        if (currentIndex >= totalFrames) return;
+
+        const end = Math.min(totalFrames, currentIndex + batchSize);
+        let batchLoaded = 0;
+        const batchTotal = end - currentIndex;
+
+        for (let i = currentIndex; i < end; i++) {
+          // Если кадр уже был инициирован ленивой загрузкой в rAF, пропускаем
+          if (sequenceFramesRef.current[i] !== null) {
+            batchLoaded++;
+            if (batchLoaded === batchTotal) {
+              currentIndex += batchTotal;
+              setTimeout(loadNextBatch, 30);
+            }
+            continue;
+          }
+
+          const img = new Image();
+          const frameNum = String(i + 1).padStart(4, "0");
+          img.onload = () => {
+            sequenceFramesRef.current[i] = img;
+            batchLoaded++;
+            if (batchLoaded === batchTotal) {
+              currentIndex += batchTotal;
+              if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+                window.requestIdleCallback(() => loadNextBatch());
+              } else {
+                setTimeout(loadNextBatch, 30);
+              }
+            }
+          };
+          img.onerror = () => {
+            batchLoaded++;
+            if (batchLoaded === batchTotal) {
+              currentIndex += batchTotal;
+              setTimeout(loadNextBatch, 30);
+            }
+          };
+          img.src = `${targetDir}/frame_${frameNum}.webp`;
+        }
+      };
+
+      setTimeout(loadNextBatch, 200);
+    };
 
     return () => {
+      active = false;
       shanyrakPng.src = "";
       coinPng.src = "";
       eaglePng.src = "";
-      loadedFrames.forEach((img) => (img.src = ""));
+      if (sequenceFramesRef.current) {
+        sequenceFramesRef.current.forEach((img) => {
+          if (img) img.src = "";
+        });
+      }
     };
   }, [isMobile, totalFrames, desktopDir, mobileDir]);
 
-  // Запуск rAF цикла отрисовки
+  // Запуск rAF цикла отрисовки с ленивым стримингом
   useEffect(() => {
     if (!isLoaded) return;
 
@@ -185,9 +260,51 @@ export default function ScrollSequence({
         }
         
         frameIndex = Math.max(0, Math.min(totalFrames - 1, frameIndex));
-        const frameImg = sequenceFramesRef.current[frameIndex];
         
-        if (frameImg) {
+        // Ленивая загрузка по требованию (по запросу rAF)
+        let frameImg = sequenceFramesRef.current[frameIndex];
+        if (frameImg === null) {
+          const img = new Image();
+          const frameNum = String(frameIndex + 1).padStart(4, "0");
+          img.onload = () => {
+            sequenceFramesRef.current[frameIndex] = img;
+          };
+          img.src = `${currentDirRef.current}/frame_${frameNum}.webp`;
+          sequenceFramesRef.current[frameIndex] = img;
+          frameImg = img;
+        }
+
+        // Поиск ближайшего загруженного кадра для предотвращения мерцания
+        let finalFrameImg = frameImg;
+        if (!frameImg || !frameImg.complete) {
+          let found = false;
+          for (let offset = 1; offset < totalFrames; offset++) {
+            const leftIdx = frameIndex - offset;
+            const rightIdx = frameIndex + offset;
+            
+            if (leftIdx >= 0) {
+              const leftImg = sequenceFramesRef.current[leftIdx];
+              if (leftImg && leftImg.complete) {
+                finalFrameImg = leftImg;
+                found = true;
+                break;
+              }
+            }
+            if (rightIdx < totalFrames) {
+              const rightImg = sequenceFramesRef.current[rightIdx];
+              if (rightImg && rightImg.complete) {
+                finalFrameImg = rightImg;
+                found = true;
+                break;
+              }
+            }
+          }
+          if (!found) {
+            finalFrameImg = sequenceFramesRef.current[0];
+          }
+        }
+        
+        if (finalFrameImg && finalFrameImg.complete) {
           let scale = 0.5;
           if (p < 0.25) {
             scale = lerp(0.38, 0.52, range(p, 0, 0.25));
@@ -196,24 +313,24 @@ export default function ScrollSequence({
           }
           // Дыхание
           scale *= (1 + Math.sin(t * 1.2) * 0.015);
-          centerImage(frameImg, shanyrakPresence, scale);
+          centerImage(finalFrameImg, shanyrakPresence, scale);
         }
       }
 
-      // 3. Рендеринг монеты Тенге (Coin PNG)
+      // 3. Рендеринг монеты Тенге (Coin WebP)
       if (coinPresence > 0) {
         const coinImg = coinPngRef.current;
-        if (coinImg) {
+        if (coinImg && coinImg.complete) {
           const coinScale = lerp(0.3, 0.46, range(p, 0.25, 0.45)) * (1 + Math.sin(t * 1.5) * 0.015);
           const rotation = t * 0.4 + p * 6; // Вращение монеты от времени и скролла
           centerImage(coinImg, coinPresence, coinScale, rotation);
         }
       }
 
-      // 4. Рендеринг Беркута (Eagle PNG)
+      // 4. Рендеринг Беркута (Eagle WebP)
       if (eaglePresence > 0) {
         const eagleImg = eaglePngRef.current;
-        if (eagleImg) {
+        if (eagleImg && eagleImg.complete) {
           const cross = range(p, 0.72, 0.88);
           // Полет слева направо
           const offsetX = lerp(-canvas.width * 0.6, canvas.width * 0.6, cross);
@@ -233,7 +350,7 @@ export default function ScrollSequence({
     return () => {
       cancelAnimationFrame(animId);
     };
-  }, [isLoaded, totalFrames]);
+  }, [isLoaded, totalFrames, bgSystem]);
 
   // Адаптивный размер холста
   useEffect(() => {

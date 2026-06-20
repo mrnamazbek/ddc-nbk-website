@@ -6,8 +6,6 @@ import { Text } from "@react-three/drei";
 import { motion, AnimatePresence } from "framer-motion";
 import * as THREE from "three";
 import { useTranslations } from "next-intl";
-import Icon from "@/components/ui/Icon";
-import { useA11y } from "@/components/theme/AccessibilityProvider";
 
 interface MissionStep {
   id: number;
@@ -16,13 +14,6 @@ interface MissionStep {
   description: string;
 }
 
-// Easing functions for buttery scroll transitions
-function easeOutQuint(x: number): number {
-  return 1 - Math.pow(1 - x, 5);
-}
-function easeInQuint(x: number): number {
-  return x * x * x * x * x;
-}
 
 /* ──────────────────────────────────────────────────────────────────────────
    GLSL Шейдер для интерактивных частиц (звездное облако)
@@ -99,25 +90,28 @@ const fragmentShaderParticles = /* glsl */ `
   }
 `;
 
-function ParticleCloud({ scroll }: { scroll: number }) {
+// External helper function to keep component rendering pure (React 19 rule)
+function generateMissionParticles(count: number) {
+  const arr = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(Math.random() * 2 - 1);
+    const r = 5.0 + Math.random() * 7.0;
+    arr[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+    arr[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta) * 0.65;
+    arr[i * 3 + 2] = r * Math.cos(phi);
+  }
+  return arr;
+}
+
+function ParticleCloud({ scrollRef }: { scrollRef: React.RefObject<number> }) {
   const matRef = useRef<THREE.ShaderMaterial>(null);
   const { camera } = useThree();
   const mouse3d = useRef(new THREE.Vector3(0, 0, -1000));
   const smoothMouse3d = useRef(new THREE.Vector3(0, 0, -1000));
 
   const count = 3000;
-  const positions = useMemo(() => {
-    const arr = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(Math.random() * 2 - 1);
-      const r = 5.0 + Math.random() * 7.0;
-      arr[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      arr[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta) * 0.65;
-      arr[i * 3 + 2] = r * Math.cos(phi);
-    }
-    return arr;
-  }, []);
+  const positions = useMemo(() => generateMissionParticles(count), []);
 
   const uniforms = useMemo(
     () => ({
@@ -133,6 +127,7 @@ function ParticleCloud({ scroll }: { scroll: number }) {
   useFrame((state, dt) => {
     const m = matRef.current;
     if (!m) return;
+    const scroll = scrollRef.current;
     m.uniforms.uTime.value = state.clock.elapsedTime;
     m.uniforms.uScroll.value = scroll;
 
@@ -173,11 +168,12 @@ function ParticleCloud({ scroll }: { scroll: number }) {
    Процедурный преломляющий Шанырак из золотого стекла
    ────────────────────────────────────────────────────────────────────────── */
 
-function CentralRefractiveShanyrak({ scroll }: { scroll: number }) {
+function CentralRefractiveShanyrak({ scrollRef }: { scrollRef: React.RefObject<number> }) {
   const shanyrakRef = useRef<THREE.Group>(null);
 
   useFrame((state, dt) => {
     if (shanyrakRef.current) {
+      const scroll = scrollRef.current;
       const climaxFactor = scroll >= 0.8 ? (scroll - 0.8) / 0.2 : 0;
       const speedMult = 1.0 - climaxFactor * 0.75;
       
@@ -265,11 +261,12 @@ function CentralRefractiveShanyrak({ scroll }: { scroll: number }) {
    3D Текст на заднем плане (Intro typography)
    ────────────────────────────────────────────────────────────────────────── */
 
-function BackgroundIntroText({ scroll }: { scroll: number }) {
+function BackgroundIntroText({ scrollRef }: { scrollRef: React.RefObject<number> }) {
   const textRef = useRef<THREE.Group>(null);
 
   useFrame((state, dt) => {
     if (!textRef.current) return;
+    const scroll = scrollRef.current;
     const opacity = scroll < 0.2 ? 1.0 - scroll / 0.2 : 0;
     const targetY = scroll < 0.2 ? (scroll / 0.2) * 3.5 : 3.5;
     textRef.current.position.y += (targetY - textRef.current.position.y) * Math.min(1, dt * 6);
@@ -317,18 +314,40 @@ interface CardProps {
   item: MissionStep;
   index: number;
   total: number;
-  scroll: number;
+  scrollRef: React.RefObject<number>;
   onSelect: (index: number) => void;
+  cardGeometry: THREE.PlaneGeometry;
+  ringGeometry: THREE.RingGeometry;
 }
 
-function CarouselCard({ item, index, total, scroll, onSelect }: CardProps) {
+function CarouselCard({ item, index, total, scrollRef, onSelect, cardGeometry, ringGeometry }: CardProps) {
   const meshRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
 
   const focusPoint = 0.2 + 0.6 * (index / (total - 1));
 
+  // Memoize materials to prevent recreation and shader compilation on hover/scroll
+  const cardMaterial = useMemo(() => {
+    return new THREE.MeshStandardMaterial({
+      color: new THREE.Color("#0D2117"),
+      roughness: 0.5,
+      metalness: 0.1,
+      transparent: true,
+      side: THREE.DoubleSide,
+    });
+  }, []);
+
+  const borderMaterial = useMemo(() => {
+    return new THREE.MeshBasicMaterial({
+      color: new THREE.Color("#C9A84C"),
+      transparent: true,
+      depthWrite: false,
+    });
+  }, []);
+
   useFrame((state, dt) => {
     if (!meshRef.current) return;
+    const scroll = scrollRef.current;
 
     const offset = scroll - focusPoint;
 
@@ -362,7 +381,7 @@ function CarouselCard({ item, index, total, scroll, onSelect }: CardProps) {
 
     // Вычисление прозрачности карточки
     const fadeRange = 0.22;
-    let opacity = Math.max(0, 1.0 - Math.abs(offset) / fadeRange);
+    const opacity = Math.max(0, 1.0 - Math.abs(offset) / fadeRange);
     // Применяем плавное появление/исчезновение всей карусели
     let carouselOpacity = 1.0;
     if (scroll < 0.2) {
@@ -372,11 +391,22 @@ function CarouselCard({ item, index, total, scroll, onSelect }: CardProps) {
     }
     const finalOpacity = opacity * carouselOpacity;
 
-    // Применяем прозрачность к материалам карточки
+    // Обновляем цвета материалов при наведении
+    cardMaterial.color.setStyle(hovered ? "#224A37" : "#0D2117");
+    borderMaterial.color.setStyle(hovered ? "#E8C87A" : "#C9A84C");
+
+    // Применяем прозрачность к материалам карточки через traverse (чтобы затронуть и текст)
     meshRef.current.traverse((child) => {
       if (child instanceof THREE.Mesh && child.material) {
         child.material.transparent = true;
-        child.material.opacity = finalOpacity * (hovered ? 1.0 : 0.78);
+        if (child.material === cardMaterial) {
+          child.material.opacity = finalOpacity * (hovered ? 1.0 : 0.78);
+        } else if (child.material === borderMaterial) {
+          child.material.opacity = finalOpacity * 0.2;
+        } else {
+          // Текст или другие вложенные меши
+          child.material.opacity = finalOpacity;
+        }
       }
     });
   });
@@ -398,23 +428,9 @@ function CarouselCard({ item, index, total, scroll, onSelect }: CardProps) {
         document.body.style.cursor = "auto";
       }}
     >
-      <mesh>
-        <planeGeometry args={[2.3, 1.4]} />
-        <meshPhysicalMaterial
-          color={hovered ? "#224A37" : "#0D2117"}
-          transmission={0.7}
-          roughness={0.25}
-          metalness={0.15}
-          ior={1.45}
-          thickness={0.08}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
+      <mesh geometry={cardGeometry} material={cardMaterial} />
 
-      <mesh position={[0, 0, 0.005]}>
-        <ringGeometry args={[1.11, 1.12, 4]} />
-        <meshBasicMaterial color={hovered ? "#E8C87A" : "#C9A84C"} opacity={0.2} transparent />
-      </mesh>
+      <mesh geometry={ringGeometry} material={borderMaterial} position={[0, 0, 0.005]} />
 
       <Text
         position={[0, 0.15, 0.02]}
@@ -448,15 +464,20 @@ function CarouselCard({ item, index, total, scroll, onSelect }: CardProps) {
 
 interface SceneProps {
   items: MissionStep[];
-  scroll: number;
+  scrollRef: React.RefObject<number>;
   onSelectCard: (index: number) => void;
 }
 
-function WebGLScene({ items, scroll, onSelectCard }: SceneProps) {
+function WebGLScene({ items, scrollRef, onSelectCard }: SceneProps) {
   const dirLightRef = useRef<THREE.DirectionalLight>(null);
   const spotlightRef = useRef<THREE.SpotLight>(null);
 
+  // Shared geometries to prevent garbage collection overhead
+  const cardGeometry = useMemo(() => new THREE.PlaneGeometry(2.3, 1.4), []);
+  const ringGeometry = useMemo(() => new THREE.RingGeometry(1.11, 1.12, 4), []);
+
   useFrame((state, dt) => {
+    const scroll = scrollRef.current;
     const climaxFactor = scroll >= 0.8 ? (scroll - 0.8) / 0.2 : 0;
     
     // Плавное притухание изумрудного заполняющего света
@@ -533,9 +554,9 @@ function WebGLScene({ items, scroll, onSelectCard }: SceneProps) {
         color="#E8C87A"
       />
 
-      <BackgroundIntroText scroll={scroll} />
-      <ParticleCloud scroll={scroll} />
-      <CentralRefractiveShanyrak scroll={scroll} />
+      <BackgroundIntroText scrollRef={scrollRef} />
+      <ParticleCloud scrollRef={scrollRef} />
+      <CentralRefractiveShanyrak scrollRef={scrollRef} />
       
       <group>
         {items.map((item, idx) => (
@@ -544,8 +565,10 @@ function WebGLScene({ items, scroll, onSelectCard }: SceneProps) {
             item={item}
             index={idx}
             total={items.length}
-            scroll={scroll}
+            scrollRef={scrollRef}
             onSelect={onSelectCard}
+            cardGeometry={cardGeometry}
+            ringGeometry={ringGeometry}
           />
         ))}
       </group>
@@ -587,10 +610,36 @@ export default function Mission3D() {
     },
   ], [t]);
 
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const scrollProgressRef = useRef(0);
   const scrollTargetRef = useRef(0);
   const scrollCurrentRef = useRef(0);
 
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isClimax, setIsClimax] = useState(false);
+  const [isIntro, setIsIntro] = useState(true);
+
+  const activeIndexRef = useRef(0);
+  const isClimaxRef = useRef(false);
+  const isIntroRef = useRef(true);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(true);
+
+  // IntersectionObserver to pause rendering when offscreen
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setVisible(entry.isIntersecting);
+      },
+      { threshold: 0.005 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Скролл-событие с плавной интерполяцией
   useEffect(() => {
     const handleScroll = () => {
       const doc = document.documentElement;
@@ -608,7 +657,29 @@ export default function Mission3D() {
       const diff = scrollTargetRef.current - scrollCurrentRef.current;
       if (Math.abs(diff) > 0.00005) {
         scrollCurrentRef.current += diff * 0.07;
-        setScrollProgress(scrollCurrentRef.current);
+        scrollProgressRef.current = scrollCurrentRef.current;
+
+        const p = scrollProgressRef.current;
+        const nextIntro = p < 0.2;
+        const nextClimax = p >= 0.8;
+        let nextIdx = 0;
+        if (!nextIntro) {
+          if (nextClimax) nextIdx = 3;
+          else nextIdx = Math.min(3, Math.max(0, Math.round(((p - 0.2) / 0.6) * 3)));
+        }
+
+        if (nextIntro !== isIntroRef.current) {
+          isIntroRef.current = nextIntro;
+          setIsIntro(nextIntro);
+        }
+        if (nextClimax !== isClimaxRef.current) {
+          isClimaxRef.current = nextClimax;
+          setIsClimax(nextClimax);
+        }
+        if (nextIdx !== activeIndexRef.current) {
+          activeIndexRef.current = nextIdx;
+          setActiveIndex(nextIdx);
+        }
       }
       requestAnimationFrame(updateScroll);
     };
@@ -619,16 +690,6 @@ export default function Mission3D() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  const isClimax = scrollProgress >= 0.8;
-  const isIntro = scrollProgress < 0.2;
-
-  const activeIndex = useMemo(() => {
-    if (isIntro) return 0;
-    if (isClimax) return 3;
-    const val = (scrollProgress - 0.2) / 0.6;
-    return Math.min(3, Math.max(0, Math.round(val * 3)));
-  }, [scrollProgress, isIntro, isClimax]);
 
   const activeStep = steps[activeIndex] || steps[0];
 
@@ -645,21 +706,24 @@ export default function Mission3D() {
   };
 
   return (
-    <div className="relative w-full min-h-[400vh] bg-transparent font-sans">
+    <div ref={containerRef} className="relative w-full min-h-[400vh] bg-transparent font-sans">
       
       {/* 3D WebGL Canvas */}
       <div className="fixed inset-0 w-full h-screen z-0 pointer-events-auto bg-[#040c08]">
-        <Canvas
-          camera={{ position: [0, 0, 5.8], fov: 48 }}
-          dpr={[1, 1.5]}
-          gl={{ antialias: true, powerPreference: "high-performance" }}
-        >
-          <WebGLScene
-            items={steps}
-            scroll={scrollProgress}
-            onSelectCard={handleSelectCard}
-          />
-        </Canvas>
+        {visible && (
+          <Canvas
+            camera={{ position: [0, 0, 5.8], fov: 48 }}
+            dpr={[1, 1.5]}
+            gl={{ antialias: true, powerPreference: "high-performance" }}
+            frameloop={visible ? "always" : "never"}
+          >
+            <WebGLScene
+              items={steps}
+              scrollRef={scrollProgressRef}
+              onSelectCard={handleSelectCard}
+            />
+          </Canvas>
+        )}
       </div>
 
       {/* HTML Overlay */}
