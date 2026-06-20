@@ -104,7 +104,11 @@ export default function Hero() {
       className="relative w-full min-h-screen lg:h-screen lg:max-h-[820px] xl:max-h-[880px] flex flex-col justify-center items-start overflow-hidden bg-transparent pt-16"
     >
       {/* Левый градиент-скрим для читаемости текста поверх живой 3D-сцены */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0E2419]/90 via-[#0E2419]/45 to-transparent pointer-events-none z-5" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0E2419] from-10% via-[#0E2419]/60 via-55% to-transparent pointer-events-none z-[6]" />
+
+      {/* Bottom fade so the WebGL dot/bokeh background dissolves smoothly into the
+          next (solid) section instead of cutting off with a hard edge. */}
+      <div className="absolute inset-x-0 bottom-0 h-40 sm:h-56 bg-gradient-to-t from-background via-background/70 to-transparent pointer-events-none z-[7]" />
 
       {/* Мягкие фоновые свечения для премиальной глубины */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-forest/15 blur-[120px] pointer-events-none z-0" />
@@ -196,9 +200,9 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute top-1/2 right-0 -translate-y-1/2 w-full md:w-[60%] lg:w-[55%] h-[80%] md:h-[95%] pointer-events-auto z-0 overflow-visible opacity-35 md:opacity-75 mix-blend-screen"
+          className="absolute top-1/2 right-0 -translate-y-1/2 w-full md:w-[52%] lg:w-[46%] xl:w-[42%] 2xl:w-[38%] max-w-[560px] h-[80%] md:h-[92%] pointer-events-auto z-0 overflow-visible opacity-30 md:opacity-65 mix-blend-screen"
         >
-          <div className="absolute top-0 bottom-0 left-[-20%] right-[-20%] w-[140%] h-full scale-[1.1] md:scale-[1.2] origin-center">
+          <div className="absolute inset-0 w-full h-full scale-[1.0] md:scale-[1.08] origin-center">
             {!isMobileDevice && (
               <SplineScene
                 scene={ROBOT_SCENE}

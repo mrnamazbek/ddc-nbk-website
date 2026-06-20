@@ -8,6 +8,7 @@ import * as THREE from "three";
 import { useTranslations } from "next-intl";
 import Icon, { IconName } from "@/components/ui/Icon";
 import { useA11y } from "@/components/theme/AccessibilityProvider";
+import DdcCoin from "@/components/three/DdcCoin";
 
 interface ServiceItem {
   id: number;
@@ -162,72 +163,6 @@ function ParticleCloud({ scroll }: { scroll: number }) {
   );
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
-   Центральный 3D-объект: Золотая Монета DDC с высокой детализацией
-   ────────────────────────────────────────────────────────────────────────── */
-
-function CentralGoldCoin() {
-  const coinRef = useRef<THREE.Group>(null);
-
-  useFrame((state) => {
-    if (!coinRef.current) return;
-    const t = state.clock.elapsedTime;
-    // Coin FACE toward the camera (+Z): the cylinder axis is local Y, so after the
-    // outer group lays it down, local Y → world Z. A local-Y spin keeps the face
-    // pointing at the viewer (slow majestic in-plane rotation) with a gentle sway.
-    coinRef.current.rotation.y = t * 0.25;
-    coinRef.current.rotation.x = Math.sin(t * 0.4) * 0.12;
-    coinRef.current.rotation.z = Math.cos(t * 0.3) * 0.1;
-  });
-
-  return (
-    // Outer group lays the coin face-on to the camera (local +Y → world +Z) so the
-    // viewer sees the face, not the rim. Inner group does the gentle sway above.
-    <group rotation={[Math.PI / 2, 0, 0]}>
-      <group ref={coinRef} position={[0, 0, 0]}>
-        {/* Главный диск монеты */}
-        <mesh castShadow receiveShadow>
-          <cylinderGeometry args={[1.5, 1.5, 0.18, 64]} />
-          <meshPhysicalMaterial
-            color="#C9A84C"
-            roughness={0.15}
-            metalness={0.95}
-            clearcoat={1.0}
-            clearcoatRoughness={0.1}
-            reflectivity={1.0}
-          />
-        </mesh>
-
-        {/* Внутренний обод */}
-        <mesh position={[0, 0.091, 0]}>
-          <cylinderGeometry args={[1.38, 1.38, 0.02, 64]} />
-          <meshPhysicalMaterial color="#E8C87A" roughness={0.25} metalness={0.9} />
-        </mesh>
-        <mesh position={[0, -0.091, 0]}>
-          <cylinderGeometry args={[1.38, 1.38, 0.02, 64]} />
-          <meshPhysicalMaterial color="#E8C87A" roughness={0.25} metalness={0.9} />
-        </mesh>
-
-        {/* Штрихи/ребристость на ребре монеты */}
-        <group rotation={[Math.PI / 2, 0, 0]}>
-          {Array.from({ length: 36 }).map((_, i) => {
-            const angle = (i / 36) * Math.PI * 2;
-            return (
-              <mesh
-                key={i}
-                position={[Math.cos(angle) * 1.505, Math.sin(angle) * 1.505, 0]}
-                rotation={[0, 0, angle]}
-              >
-                <boxGeometry args={[0.015, 0.05, 0.2]} />
-                <meshPhysicalMaterial color="#9E7D2D" metalness={0.9} roughness={0.3} />
-              </mesh>
-            );
-          })}
-        </group>
-      </group>
-    </group>
-  );
-}
 
 /* ──────────────────────────────────────────────────────────────────────────
    3D Карточка карусели
@@ -367,7 +302,7 @@ function WebGLScene({ items, scroll, onSelectCard }: SceneProps) {
       <directionalLight position={[-5, -2, 2]} intensity={0.8} color="#52B788" />
       
       <ParticleCloud scroll={scroll} />
-      <CentralGoldCoin />
+      <DdcCoin scale={0.72} />
       
       <group position={[0, 0, 0]}>
         {items.map((item, idx) => (

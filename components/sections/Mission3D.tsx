@@ -8,6 +8,7 @@ import * as THREE from "three";
 import { useTranslations } from "next-intl";
 import Icon from "@/components/ui/Icon";
 import { useA11y } from "@/components/theme/AccessibilityProvider";
+import DdcCoin from "@/components/three/DdcCoin";
 
 interface MissionStep {
   id: number;
@@ -153,85 +154,6 @@ function ParticleCloud({ scroll }: { scroll: number }) {
   );
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
-   Процедурный преломляющий Шанырак из золотого стекла
-   ────────────────────────────────────────────────────────────────────────── */
-
-function CentralRefractiveShanyrak() {
-  const shanyrakRef = useRef<THREE.Group>(null);
-
-  useFrame((state) => {
-    if (shanyrakRef.current) {
-      // Медленное вращение
-      shanyrakRef.current.rotation.y = state.clock.elapsedTime * 0.35;
-      shanyrakRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.2) * 0.12;
-      shanyrakRef.current.rotation.z = Math.cos(state.clock.elapsedTime * 0.15) * 0.1;
-    }
-  });
-
-  // Физический преломляющий материал (жидкое стекло золотого цвета)
-  const glassMat = useMemo(() => {
-    return new THREE.MeshPhysicalMaterial({
-      color: "#E8C87A",
-      metalness: 0.1,
-      roughness: 0.12,
-      transmission: 0.85,
-      ior: 1.55,
-      thickness: 0.4,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.05,
-      reflectivity: 1.0,
-      transparent: true,
-      side: THREE.DoubleSide
-    });
-  }, []);
-
-  return (
-    <group ref={shanyrakRef} position={[0, 0, 0]}>
-      {/* Внешнее кольцо */}
-      <mesh material={glassMat}>
-        <torusGeometry args={[1.5, 0.12, 16, 64]} />
-      </mesh>
-
-      {/* Дуги крестовины ( Шанырак состоит из перекрещивающихся изогнутых дуг ) */}
-      
-      {/* Дуга 1 */}
-      <mesh material={glassMat} rotation={[0, 0, 0]} position={[0, 0, 0]}>
-        <torusGeometry args={[1.48, 0.075, 12, 48, Math.PI * 0.6]} />
-      </mesh>
-      
-      {/* Дуга 2 */}
-      <mesh material={glassMat} rotation={[0, Math.PI / 2, 0]}>
-        <torusGeometry args={[1.48, 0.075, 12, 48, Math.PI * 0.6]} />
-      </mesh>
-      
-      {/* Дуга 3 */}
-      <mesh material={glassMat} rotation={[0, Math.PI, 0]}>
-        <torusGeometry args={[1.48, 0.075, 12, 48, Math.PI * 0.6]} />
-      </mesh>
-      
-      {/* Дуга 4 */}
-      <mesh material={glassMat} rotation={[0, -Math.PI / 2, 0]}>
-        <torusGeometry args={[1.48, 0.075, 12, 48, Math.PI * 0.6]} />
-      </mesh>
-
-      {/* Мелкие поперечные рейки (кульдреуши) */}
-      {Array.from({ length: 4 }).map((_, i) => {
-        const angle = (i / 4) * Math.PI * 2;
-        return (
-          <group key={i} rotation={[0, angle, 0]}>
-            <mesh material={glassMat} position={[0.7, 0.3, 0]}>
-              <cylinderGeometry args={[0.025, 0.025, 0.6]} />
-            </mesh>
-            <mesh material={glassMat} position={[-0.7, 0.3, 0]}>
-              <cylinderGeometry args={[0.025, 0.025, 0.6]} />
-            </mesh>
-          </group>
-        );
-      })}
-    </group>
-  );
-}
 
 /* ──────────────────────────────────────────────────────────────────────────
    3D Карточка карусели
@@ -356,7 +278,7 @@ function WebGLScene({ items, scroll, onSelectCard }: SceneProps) {
       <directionalLight position={[-6, -3, 3]} intensity={0.7} color="#52B788" />
       
       <ParticleCloud scroll={scroll} />
-      <CentralRefractiveShanyrak />
+      <DdcCoin scale={0.72} />
       
       <group>
         {items.map((item, idx) => (
