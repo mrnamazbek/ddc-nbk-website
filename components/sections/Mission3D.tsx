@@ -197,22 +197,22 @@ function CentralRefractiveShanyrak() {
       
       {/* Дуга 1 */}
       <mesh material={glassMat} rotation={[0, 0, 0]} position={[0, 0, 0]}>
-        <torusGeometry args={[1.48, 0.05, 8, 32, Math.PI * 0.6]} />
+        <torusGeometry args={[1.48, 0.075, 12, 48, Math.PI * 0.6]} />
       </mesh>
       
       {/* Дуга 2 */}
       <mesh material={glassMat} rotation={[0, Math.PI / 2, 0]}>
-        <torusGeometry args={[1.48, 0.05, 8, 32, Math.PI * 0.6]} />
+        <torusGeometry args={[1.48, 0.075, 12, 48, Math.PI * 0.6]} />
       </mesh>
       
       {/* Дуга 3 */}
       <mesh material={glassMat} rotation={[0, Math.PI, 0]}>
-        <torusGeometry args={[1.48, 0.05, 8, 32, Math.PI * 0.6]} />
+        <torusGeometry args={[1.48, 0.075, 12, 48, Math.PI * 0.6]} />
       </mesh>
       
       {/* Дуга 4 */}
       <mesh material={glassMat} rotation={[0, -Math.PI / 2, 0]}>
-        <torusGeometry args={[1.48, 0.05, 8, 32, Math.PI * 0.6]} />
+        <torusGeometry args={[1.48, 0.075, 12, 48, Math.PI * 0.6]} />
       </mesh>
 
       {/* Мелкие поперечные рейки (кульдреуши) */}
