@@ -8,13 +8,20 @@ import * as THREE from "three";
 import { useTranslations } from "next-intl";
 import Icon from "@/components/ui/Icon";
 import { useA11y } from "@/components/theme/AccessibilityProvider";
-import DdcCoin from "@/components/three/DdcCoin";
 
 interface MissionStep {
   id: number;
   name: string;
   title: string;
   description: string;
+}
+
+// Easing functions for buttery scroll transitions
+function easeOutQuint(x: number): number {
+  return 1 - Math.pow(1 - x, 5);
+}
+function easeInQuint(x: number): number {
+  return x * x * x * x * x;
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
@@ -26,6 +33,7 @@ const vertexShaderParticles = /* glsl */ `
   uniform float uScroll;
   uniform vec3 uMouse3d;
   uniform float uDistortionRadius;
+  uniform float uCleanFactor;
   
   varying float vAlpha;
   varying vec3 vColor;
@@ -40,13 +48,14 @@ const vertexShaderParticles = /* glsl */ `
     vec3 pos = position;
     
     // Плавное парение
-    float timeScale = uTime * 0.2;
-    pos.y += sin(pos.x * 0.4 + timeScale) * 0.35;
-    pos.x += cos(pos.z * 0.4 + timeScale) * 0.35;
-    pos.z += sin(pos.y * 0.3 + timeScale) * 0.25;
+    float timeScale = uTime * 0.16;
+    pos.y += sin(pos.x * 0.4 + timeScale) * 0.3;
+    pos.x += cos(pos.z * 0.4 + timeScale) * 0.3;
+    pos.z += sin(pos.y * 0.2 + timeScale) * 0.2;
     
-    // Вращение по скроллу
-    float angle = uScroll * 1.8;
+    // Вращение по скроллу (замедляется в Climax)
+    float speedMult = 1.0 - uCleanFactor * 0.8;
+    float angle = uScroll * 1.7 * speedMult;
     float c = cos(angle);
     float s = sin(angle);
     float nx = pos.x * c - pos.z * s;
@@ -65,14 +74,15 @@ const vertexShaderParticles = /* glsl */ `
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mvPosition;
     
-    gl_PointSize = (14.0 * (1.0 + hash(position.xy) * 1.2)) / -mvPosition.z;
+    gl_PointSize = (12.0 * (1.0 + hash(position.xy) * 1.2)) / -mvPosition.z;
     
-    vAlpha = smoothstep(-15.0, -1.0, mvPosition.z) * (1.0 - smoothstep(-2.0, 0.0, mvPosition.z)) * 0.4;
+    float cleanAlpha = 1.0 - uCleanFactor * 0.8;
+    vAlpha = smoothstep(-15.0, -1.0, mvPosition.z) * (1.0 - smoothstep(-2.0, 0.0, mvPosition.z)) * 0.4 * cleanAlpha;
     
     // Цвет частиц: золотистый и лесной зеленый
     float mixFactor = hash(position.yx);
-    vec3 green = vec3(0.08, 0.42, 0.27); // #156B45
-    vec3 gold = vec3(0.95, 0.82, 0.45);  // #F2D173
+    vec3 green = vec3(0.07, 0.40, 0.25); // #12663F
+    vec3 gold = vec3(0.94, 0.80, 0.42);  // #ECC26B
     vColor = mix(green, gold, mixFactor);
   }
 `;
@@ -103,7 +113,7 @@ function ParticleCloud({ scroll }: { scroll: number }) {
       const phi = Math.acos(Math.random() * 2 - 1);
       const r = 5.0 + Math.random() * 7.0;
       arr[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      arr[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta) * 0.7;
+      arr[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta) * 0.65;
       arr[i * 3 + 2] = r * Math.cos(phi);
     }
     return arr;
@@ -115,6 +125,7 @@ function ParticleCloud({ scroll }: { scroll: number }) {
       uScroll: { value: 0 },
       uMouse3d: { value: new THREE.Vector3(0, 0, -1000) },
       uDistortionRadius: { value: 3.0 },
+      uCleanFactor: { value: 0 },
     }),
     []
   );
@@ -124,6 +135,10 @@ function ParticleCloud({ scroll }: { scroll: number }) {
     if (!m) return;
     m.uniforms.uTime.value = state.clock.elapsedTime;
     m.uniforms.uScroll.value = scroll;
+
+    // В финале (Climax) делаем фон чище
+    const cleanTarget = scroll >= 0.8 ? (scroll - 0.8) / 0.2 : 0;
+    m.uniforms.uCleanFactor.value += (cleanTarget - m.uniforms.uCleanFactor.value) * Math.min(1, dt * 4);
 
     const pointer = state.pointer;
     if (pointer.x !== 0 || pointer.y !== 0) {
@@ -154,9 +169,148 @@ function ParticleCloud({ scroll }: { scroll: number }) {
   );
 }
 
+/* ──────────────────────────────────────────────────────────────────────────
+   Процедурный преломляющий Шанырак из золотого стекла
+   ────────────────────────────────────────────────────────────────────────── */
+
+function CentralRefractiveShanyrak({ scroll }: { scroll: number }) {
+  const shanyrakRef = useRef<THREE.Group>(null);
+
+  useFrame((state, dt) => {
+    if (shanyrakRef.current) {
+      const climaxFactor = scroll >= 0.8 ? (scroll - 0.8) / 0.2 : 0;
+      const speedMult = 1.0 - climaxFactor * 0.75;
+      
+      // Вращение
+      shanyrakRef.current.rotation.y = state.clock.elapsedTime * 0.35 * speedMult;
+      shanyrakRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.2) * 0.12 * speedMult;
+      shanyrakRef.current.rotation.z = Math.cos(state.clock.elapsedTime * 0.15) * 0.08 * speedMult;
+
+      // Масштабирование по фазам:
+      // Act 1 (Intro): 1.0 -> Act 2 (Showcase): 0.85 -> Act 3 (Climax): 1.8 (Крупный план)
+      let targetScale = 0.85;
+      if (scroll < 0.2) {
+        targetScale = THREE.MathUtils.lerp(1.0, 0.85, scroll / 0.2);
+      } else if (scroll >= 0.8) {
+        targetScale = THREE.MathUtils.lerp(0.85, 1.8, (scroll - 0.8) / 0.2);
+      }
+
+      shanyrakRef.current.scale.setScalar(
+        THREE.MathUtils.damp(shanyrakRef.current.scale.x, targetScale, 4, dt)
+      );
+
+      // В финале Шанырак выдвигается вперед
+      const targetZ = scroll >= 0.8 ? THREE.MathUtils.lerp(0.0, 0.8, (scroll - 0.8) / 0.2) : 0;
+      shanyrakRef.current.position.z += (targetZ - shanyrakRef.current.position.z) * Math.min(1, dt * 5);
+    }
+  });
+
+  // Преломляющий материал золотого стекла
+  const glassMat = useMemo(() => {
+    return new THREE.MeshPhysicalMaterial({
+      color: "#E8C87A",
+      metalness: 0.1,
+      roughness: 0.12,
+      transmission: 0.85,
+      ior: 1.55,
+      thickness: 0.4,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.05,
+      reflectivity: 1.0,
+      transparent: true,
+      side: THREE.DoubleSide
+    });
+  }, []);
+
+  return (
+    <group ref={shanyrakRef} position={[0, 0, 0]}>
+      {/* Внешнее кольцо */}
+      <mesh material={glassMat}>
+        <torusGeometry args={[1.5, 0.12, 16, 64]} />
+      </mesh>
+
+      {/* Дуги крестовины */}
+      <mesh material={glassMat}>
+        <torusGeometry args={[1.48, 0.05, 8, 32, Math.PI * 0.6]} />
+      </mesh>
+      <mesh material={glassMat} rotation={[0, Math.PI / 2, 0]}>
+        <torusGeometry args={[1.48, 0.05, 8, 32, Math.PI * 0.6]} />
+      </mesh>
+      <mesh material={glassMat} rotation={[0, Math.PI, 0]}>
+        <torusGeometry args={[1.48, 0.05, 8, 32, Math.PI * 0.6]} />
+      </mesh>
+      <mesh material={glassMat} rotation={[0, -Math.PI / 2, 0]}>
+        <torusGeometry args={[1.48, 0.05, 8, 32, Math.PI * 0.6]} />
+      </mesh>
+
+      {/* Кульдреуши (поперечные рейки) */}
+      {Array.from({ length: 4 }).map((_, i) => {
+        const angle = (i / 4) * Math.PI * 2;
+        return (
+          <group key={i} rotation={[0, angle, 0]}>
+            <mesh material={glassMat} position={[0.7, 0.3, 0]}>
+              <cylinderGeometry args={[0.025, 0.025, 0.6]} />
+            </mesh>
+            <mesh material={glassMat} position={[-0.7, 0.3, 0]}>
+              <cylinderGeometry args={[0.025, 0.025, 0.6]} />
+            </mesh>
+          </group>
+        );
+      })}
+    </group>
+  );
+}
 
 /* ──────────────────────────────────────────────────────────────────────────
-   3D Карточка карусели
+   3D Текст на заднем плане (Intro typography)
+   ────────────────────────────────────────────────────────────────────────── */
+
+function BackgroundIntroText({ scroll }: { scroll: number }) {
+  const textRef = useRef<THREE.Group>(null);
+
+  useFrame((state, dt) => {
+    if (!textRef.current) return;
+    const opacity = scroll < 0.2 ? 1.0 - scroll / 0.2 : 0;
+    const targetY = scroll < 0.2 ? (scroll / 0.2) * 3.5 : 3.5;
+    textRef.current.position.y += (targetY - textRef.current.position.y) * Math.min(1, dt * 6);
+    
+    textRef.current.traverse((child) => {
+      if (child instanceof THREE.Mesh && child.material) {
+        child.material.transparent = true;
+        child.material.opacity = opacity;
+      }
+    });
+  });
+
+  return (
+    <group ref={textRef} position={[0, 0, -4.5]}>
+      <Text
+        fontSize={0.68}
+        color="#FFFFFF"
+        anchorX="center"
+        anchorY="middle"
+        maxWidth={8}
+        textAlign="center"
+        lineHeight={1.1}
+      >
+        DDC MISSION
+      </Text>
+      <Text
+        position={[0, -0.45, 0]}
+        fontSize={0.22}
+        color="#C9A84C"
+        anchorX="center"
+        anchorY="middle"
+        letterSpacing={0.2}
+      >
+        STABILITY & INNOVATION
+      </Text>
+    </group>
+  );
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   3D Карточка карусели с параболическим скроллом
    ────────────────────────────────────────────────────────────────────────── */
 
 interface CardProps {
@@ -171,26 +325,60 @@ function CarouselCard({ item, index, total, scroll, onSelect }: CardProps) {
   const meshRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
 
-  const radius = 4.8;
+  const focusPoint = 0.2 + 0.6 * (index / (total - 1));
 
   useFrame((state, dt) => {
     if (!meshRef.current) return;
 
-    // Угол положения на карусели
-    const theta = (index / total) * Math.PI * 2 + scroll * Math.PI * 2;
-    
-    const targetX = Math.sin(theta) * radius;
-    const targetZ = Math.cos(theta) * radius - 1.2;
-    const targetY = -Math.sin(theta * 2.0) * 0.25 - 0.1;
+    const offset = scroll - focusPoint;
 
-    meshRef.current.position.x += (targetX - meshRef.current.position.x) * Math.min(1, dt * 10);
-    meshRef.current.position.z += (targetZ - meshRef.current.position.z) * Math.min(1, dt * 10);
-    meshRef.current.position.y += (targetY - meshRef.current.position.y) * Math.min(1, dt * 10);
+    // Новая круговая траектория на цилиндре
+    const angleStep = 0.85; // Шаг угла между карточками в радианах
+    const theta = -offset * angleStep;
 
-    meshRef.current.lookAt(0, 0, 4);
+    const R = 3.6; // Радиус цилиндра
+    const Z_offset = 1.6 - R; // Смещение по оси Z, чтобы в фокусе z было 1.6
 
-    const bounce = Math.sin(state.clock.elapsedTime * 1.3 + index) * 0.04;
-    meshRef.current.position.y += bounce;
+    const targetX = R * Math.sin(theta);
+    const targetY = -0.1; // Небольшое смещение по высоте
+    const targetZ = R * Math.cos(theta) + Z_offset;
+
+    const rx = 0.08; // Легкий наклон назад
+    const ry = -theta; // Направление лицом к камере
+
+    // Инерционное сглаживание движения
+    meshRef.current.position.x += (targetX - meshRef.current.position.x) * Math.min(1, dt * 8);
+    meshRef.current.position.y += (targetY - meshRef.current.position.y) * Math.min(1, dt * 8);
+    meshRef.current.position.z += (targetZ - meshRef.current.position.z) * Math.min(1, dt * 8);
+    meshRef.current.rotation.x += (rx - meshRef.current.rotation.x) * Math.min(1, dt * 8);
+    meshRef.current.rotation.y += (ry - meshRef.current.rotation.y) * Math.min(1, dt * 8);
+
+    // Мягкое парение активной карточки
+    const activeFactor = Math.max(0, 1.0 - Math.abs(offset) * 4.0); // 1.0 когда строго в фокусе
+    if (activeFactor > 0.05) {
+      const hoverBounce = Math.sin(state.clock.elapsedTime * 1.5 + index) * 0.03 * activeFactor;
+      meshRef.current.position.y += hoverBounce;
+    }
+
+    // Вычисление прозрачности карточки
+    const fadeRange = 0.22;
+    let opacity = Math.max(0, 1.0 - Math.abs(offset) / fadeRange);
+    // Применяем плавное появление/исчезновение всей карусели
+    let carouselOpacity = 1.0;
+    if (scroll < 0.2) {
+      carouselOpacity = Math.max(0, (scroll - 0.05) / 0.15); // появление от 0.05 до 0.2
+    } else if (scroll > 0.8) {
+      carouselOpacity = Math.max(0, 1.0 - (scroll - 0.8) / 0.12); // исчезновение от 0.8 до 0.92
+    }
+    const finalOpacity = opacity * carouselOpacity;
+
+    // Применяем прозрачность к материалам карточки
+    meshRef.current.traverse((child) => {
+      if (child instanceof THREE.Mesh && child.material) {
+        child.material.transparent = true;
+        child.material.opacity = finalOpacity * (hovered ? 1.0 : 0.78);
+      }
+    });
   });
 
   return (
@@ -210,14 +398,11 @@ function CarouselCard({ item, index, total, scroll, onSelect }: CardProps) {
         document.body.style.cursor = "auto";
       }}
     >
-      {/* Панель карточки */}
       <mesh>
         <planeGeometry args={[2.3, 1.4]} />
         <meshPhysicalMaterial
           color={hovered ? "#224A37" : "#0D2117"}
           transmission={0.7}
-          opacity={0.88}
-          transparent={true}
           roughness={0.25}
           metalness={0.15}
           ior={1.45}
@@ -226,16 +411,14 @@ function CarouselCard({ item, index, total, scroll, onSelect }: CardProps) {
         />
       </mesh>
 
-      {/* Тонкий золотой ободок */}
       <mesh position={[0, 0, 0.005]}>
-        <ringGeometry args={[1.13, 1.14, 4]} />
-        <meshBasicMaterial color={hovered ? "#E8C87A" : "#C9A84C"} opacity={0.3} transparent />
+        <ringGeometry args={[1.11, 1.12, 4]} />
+        <meshBasicMaterial color={hovered ? "#E8C87A" : "#C9A84C"} opacity={0.2} transparent />
       </mesh>
 
-      {/* Текст шага */}
       <Text
-        position={[0, 0.18, 0.02]}
-        fontSize={0.13}
+        position={[0, 0.15, 0.02]}
+        fontSize={0.12}
         color="#FFFFFF"
         anchorX="center"
         anchorY="middle"
@@ -244,15 +427,14 @@ function CarouselCard({ item, index, total, scroll, onSelect }: CardProps) {
         {item.name}
       </Text>
 
-      {/* Краткий заголовок */}
       <Text
-        position={[0, -0.15, 0.02]}
-        fontSize={0.08}
+        position={[0, -0.18, 0.02]}
+        fontSize={0.085}
         color="#C9A84C"
         anchorX="center"
         anchorY="middle"
         maxWidth={2.0}
-        fillOpacity={0.85}
+        fillOpacity={0.8}
       >
         {item.title.toUpperCase()}
       </Text>
@@ -271,14 +453,89 @@ interface SceneProps {
 }
 
 function WebGLScene({ items, scroll, onSelectCard }: SceneProps) {
+  const dirLightRef = useRef<THREE.DirectionalLight>(null);
+  const spotlightRef = useRef<THREE.SpotLight>(null);
+
+  useFrame((state, dt) => {
+    const climaxFactor = scroll >= 0.8 ? (scroll - 0.8) / 0.2 : 0;
+    
+    // Плавное притухание изумрудного заполняющего света
+    if (dirLightRef.current) {
+      const targetIntensity = THREE.MathUtils.lerp(1.2, 0.05, climaxFactor);
+      dirLightRef.current.intensity = THREE.MathUtils.damp(
+        dirLightRef.current.intensity,
+        targetIntensity,
+        4,
+        dt
+      );
+    }
+    
+    // Золотой прожектор разгорается в полную силу и сужается
+    if (spotlightRef.current) {
+      const targetIntensity = THREE.MathUtils.lerp(0.7, 6.5, climaxFactor);
+      const targetAngle = THREE.MathUtils.lerp(Math.PI / 7, Math.PI / 10, climaxFactor);
+      spotlightRef.current.intensity = THREE.MathUtils.damp(
+        spotlightRef.current.intensity,
+        targetIntensity,
+        4,
+        dt
+      );
+      spotlightRef.current.angle = THREE.MathUtils.damp(
+        spotlightRef.current.angle,
+        targetAngle,
+        4,
+        dt
+      );
+    }
+
+    // Движение камеры: пролет и наезд (зум) сквозь сцену
+    // Intro -> Showcase: камера сдвигается с высоты Y = 0.35 на Y = 0.0
+    // Showcase -> Climax: камера наезжает по Z с 5.8 до 3.7
+    let targetCameraY = 0.0;
+    if (scroll < 0.2) {
+      targetCameraY = THREE.MathUtils.lerp(0.35, 0.0, scroll / 0.2);
+    }
+    const targetCameraZ = THREE.MathUtils.lerp(5.8, 3.7, climaxFactor);
+
+    // Применяем инерционный сдвиг камеры
+    state.camera.position.z = THREE.MathUtils.damp(state.camera.position.z, targetCameraZ, 3.5, dt);
+    state.camera.position.y = THREE.MathUtils.damp(state.camera.position.y, targetCameraY, 3.5, dt);
+
+    // Мягкое дыхание камеры, замедляющееся в финале
+    const speedMult = THREE.MathUtils.lerp(1.0, 0.15, climaxFactor);
+    const breatheX = Math.sin(state.clock.elapsedTime * 0.7) * 0.06 * speedMult;
+    const breatheY = Math.cos(state.clock.elapsedTime * 0.7) * 0.06 * speedMult;
+    
+    state.camera.position.x = breatheX;
+    state.camera.position.y += (breatheY - state.camera.position.y) * Math.min(1, dt * 5); // сглаживаем наложение дыхания на Y
+    state.camera.lookAt(0, 0, 0);
+  });
+
   return (
     <>
-      <ambientLight intensity={0.4} />
-      <directionalLight position={[2, 6, 4]} intensity={1.6} color="#E8C87A" />
-      <directionalLight position={[-6, -3, 3]} intensity={0.7} color="#52B788" />
+      <ambientLight intensity={0.25} />
       
+      <directionalLight
+        ref={dirLightRef}
+        position={[-3, 5, 2]}
+        intensity={1.2}
+        color="#52B788"
+      />
+      
+      {/* Сфокусированный золотой прожектор (разгорается в финале) */}
+      <spotLight
+        ref={spotlightRef}
+        position={[0, 0, 7.0]}
+        intensity={0.7}
+        distance={14}
+        angle={Math.PI / 7}
+        penumbra={0.7}
+        color="#E8C87A"
+      />
+
+      <BackgroundIntroText scroll={scroll} />
       <ParticleCloud scroll={scroll} />
-      <DdcCoin scale={0.72} />
+      <CentralRefractiveShanyrak scroll={scroll} />
       
       <group>
         {items.map((item, idx) => (
@@ -349,8 +606,8 @@ export default function Mission3D() {
     const updateScroll = () => {
       if (!active) return;
       const diff = scrollTargetRef.current - scrollCurrentRef.current;
-      if (Math.abs(diff) > 0.0001) {
-        scrollCurrentRef.current += diff * 0.075;
+      if (Math.abs(diff) > 0.00005) {
+        scrollCurrentRef.current += diff * 0.07;
         setScrollProgress(scrollCurrentRef.current);
       }
       requestAnimationFrame(updateScroll);
@@ -363,11 +620,15 @@ export default function Mission3D() {
     };
   }, []);
 
+  const isClimax = scrollProgress >= 0.8;
+  const isIntro = scrollProgress < 0.2;
+
   const activeIndex = useMemo(() => {
-    const modProgress = ((scrollProgress % 1.0) + 1.0) % 1.0;
-    const rawIdx = Math.round(modProgress * 4);
-    return (4 - rawIdx) % 4;
-  }, [scrollProgress]);
+    if (isIntro) return 0;
+    if (isClimax) return 3;
+    const val = (scrollProgress - 0.2) / 0.6;
+    return Math.min(3, Math.max(0, Math.round(val * 3)));
+  }, [scrollProgress, isIntro, isClimax]);
 
   const activeStep = steps[activeIndex] || steps[0];
 
@@ -376,7 +637,7 @@ export default function Mission3D() {
     const max = doc.scrollHeight - window.innerHeight;
     if (max <= 0) return;
     
-    const targetScroll = (4 - index) % 4 / 4;
+    const targetScroll = 0.2 + 0.6 * (index / 3);
     window.scrollTo({
       top: targetScroll * max,
       behavior: "smooth"
@@ -384,7 +645,7 @@ export default function Mission3D() {
   };
 
   return (
-    <div className="relative w-full min-h-[350vh] bg-[#040C08] font-sans">
+    <div className="relative w-full min-h-[400vh] bg-transparent font-sans">
       
       {/* 3D WebGL Canvas */}
       <div className="fixed inset-0 w-full h-screen z-0 pointer-events-auto bg-[#040c08]">
@@ -404,8 +665,12 @@ export default function Mission3D() {
       {/* HTML Overlay */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 pt-32 pb-24 min-h-screen pointer-events-none">
         
-        {/* Заголовок */}
-        <div className="max-w-2xl mb-8 fixed top-24 left-6 sm:left-12 lg:left-16 pointer-events-auto">
+        {/* Заголовок (плавно исчезает в Climax) */}
+        <motion.div
+          animate={{ opacity: isClimax ? 0.05 : 1, y: isClimax ? -20 : 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-2xl mb-8 fixed top-24 left-6 sm:left-12 lg:left-16 pointer-events-auto"
+        >
           <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] text-gold font-medium mb-3 block">
             {t("overline")}
           </span>
@@ -417,46 +682,79 @@ export default function Mission3D() {
           <p className="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed max-w-md">
             {t("subtitle")}
           </p>
-        </div>
+        </motion.div>
 
-        {/* Информационная панель шага */}
+        {/* Боковая карточка шага миссии */}
         <div className="fixed right-6 sm:right-12 lg:right-16 bottom-20 w-full max-w-[28rem] sm:max-w-[32rem] pointer-events-auto">
           <AnimatePresence mode="wait">
-            <motion.div
-              key={activeStep.id}
-              initial={{ opacity: 0, y: 30, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.98 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="glass-panel border-white/5 bg-charcoal/80 p-6 sm:p-8 rounded-3xl overflow-hidden backdrop-blur-xl shadow-2xl hover:border-gold/20 transition-colors duration-500"
-            >
-              {/* Шаг */}
-              <div className="flex items-center gap-3.5 mb-4">
-                <span className="text-xs text-gold font-mono border border-gold/30 px-2 py-0.5 rounded-full">
-                  STEP 0{activeStep.id + 1}
-                </span>
-                <span className="text-xs text-zinc-400 font-light uppercase tracking-widest">
-                  {activeStep.name}
-                </span>
-              </div>
+            {!isClimax && !isIntro && (
+              <motion.div
+                key={activeStep.id}
+                initial={{ opacity: 0, y: 30, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.98 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="glass-panel border-white/5 bg-charcoal/80 p-6 sm:p-8 rounded-3xl overflow-hidden backdrop-blur-xl shadow-2xl hover:border-gold/20 transition-colors duration-500"
+              >
+                <div className="flex items-center gap-3.5 mb-4">
+                  <span className="text-xs text-gold font-mono border border-gold/30 px-2 py-0.5 rounded-full">
+                    STEP 0{activeStep.id + 1}
+                  </span>
+                  <span className="text-xs text-zinc-400 font-light uppercase tracking-widest">
+                    {activeStep.name}
+                  </span>
+                </div>
 
-              {/* Заголовок */}
-              <h2 className="text-lg sm:text-xl font-bold text-white tracking-wide mb-4 leading-snug">
-                {activeStep.title}
-              </h2>
+                <h2 className="text-lg sm:text-xl font-bold text-white tracking-wide mb-4 leading-snug">
+                  {activeStep.title}
+                </h2>
 
-              {/* Описание */}
-              <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
-                {activeStep.description}
-              </p>
-            </motion.div>
+                <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
+                  {activeStep.description}
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Финальный эмоциональный CTA в конце скролла (Climax) */}
+        <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
+          <AnimatePresence>
+            {isClimax && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+                className="max-w-xl text-center px-6 pointer-events-auto"
+              >
+                <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-gold font-mono font-semibold mb-4 block">
+                  НАША МИССИЯ
+                </span>
+                <h2 className="font-display text-3xl sm:text-5xl font-normal tracking-tight text-white mb-6 leading-tight">
+                  Стабильность государства <br />
+                  <span className="text-gradient-gold font-medium">через инновации</span>
+                </h2>
+                <p className="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed mb-8 max-w-md mx-auto">
+                  DDC стремится объединить лучшие мировые практики кибербезопасности, разработки и комплаенса для создания устойчивого финансового фундамента Республики Казахстан.
+                </p>
+                <div className="flex justify-center gap-4">
+                  <button 
+                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                    className="px-5 py-3 rounded-full text-xs font-semibold bg-gold text-black hover:bg-gold-light transition-colors cursor-pointer"
+                  >
+                    Вернуться к началу
+                  </button>
+                </div>
+              </motion.div>
+            )}
           </AnimatePresence>
         </div>
 
         {/* Подсказка */}
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 opacity-60 text-[10px] tracking-[0.2em] font-mono text-zinc-400">
-          <span>SCROLL TO DISCOVER</span>
-          <div className="w-1 h-3 rounded-full bg-gold/50 animate-bounce" />
+          <span>{isClimax ? "FINALE" : isIntro ? "SCROLL TO START" : "SCROLL TO DISCOVER"}</span>
+          <div className="w-1 h-3 rounded-full bg-gold/55 animate-bounce" />
         </div>
       </div>
     </div>
