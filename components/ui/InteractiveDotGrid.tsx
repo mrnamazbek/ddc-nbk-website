@@ -30,7 +30,7 @@ export default function InteractiveDotGrid() {
   const isLight = resolvedTheme === "light";
   const { bgSystem } = useBgSystem();
 
-  const [activePreset, setActivePreset] = useState<PresetName>("shader");
+  const [activePreset, setActivePreset] = useState<PresetName>("default");
 
   
   // Конфигурации пресетов в стиле Shaders.com
