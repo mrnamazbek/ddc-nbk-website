@@ -5,10 +5,10 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import { motion, AnimatePresence } from "framer-motion";
 import * as THREE from "three";
+import DdcCoin from "@/components/three/DdcCoin";
 import { useTranslations } from "next-intl";
 import Icon, { IconName } from "@/components/ui/Icon";
 
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
 interface ServiceItem {
   id: number;
@@ -181,94 +181,33 @@ function ParticleCloud({ scrollRef }: { scrollRef: React.RefObject<number> }) {
 
 function CentralGoldCoin({ scrollRef }: { scrollRef: React.RefObject<number> }) {
   const coinRef = useRef<THREE.Group>(null);
-  const matRef = useRef<THREE.MeshPhysicalMaterial>(null);
-
-  const reededGeometry = useMemo(() => {
-    const geometries = [];
-    const baseGeo = new THREE.BoxGeometry(0.015, 0.05, 0.2);
-    for (let i = 0; i < 36; i++) {
-      const angle = (i / 36) * Math.PI * 2;
-      const clone = baseGeo.clone();
-      clone.translate(Math.cos(angle) * 1.505, Math.sin(angle) * 1.505, 0);
-      clone.rotateZ(angle);
-      geometries.push(clone);
-    }
-    const merged = mergeGeometries(geometries);
-    baseGeo.dispose();
-    geometries.forEach(g => g.dispose());
-    return merged;
-  }, []);
-
-  const reededMaterial = useMemo(() => {
-    return new THREE.MeshPhysicalMaterial({ color: "#9E7D2D", metalness: 0.9, roughness: 0.3 });
-  }, []);
 
   useFrame((state, dt) => {
-    if (!coinRef.current || !matRef.current) return;
+    if (!coinRef.current) return;
     const scroll = scrollRef.current;
 
-    // Замедление вращения в финале
-    const climaxFactor = scroll >= 0.8 ? (scroll - 0.8) / 0.2 : 0;
-    const speedMult = 1.0 - climaxFactor * 0.75;
-    coinRef.current.rotation.y = state.clock.elapsedTime * 0.45 * speedMult;
-    coinRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.12 * speedMult;
-
-    // Масштабирование монеты по фазам:
-    // Act 1 (Intro): 1.5 -> Act 2 (Showcase): 1.25 -> Act 3 (Climax): 2.4 (Крупный план)
-    let targetScale = 1.25;
+    // Phase scaling: Intro 1.0 -> Showcase 0.85 -> Climax 1.5 (close-up).
+    let targetScale = 0.85;
     if (scroll < 0.2) {
-      targetScale = THREE.MathUtils.lerp(1.5, 1.25, scroll / 0.2);
+      targetScale = THREE.MathUtils.lerp(1.0, 0.85, scroll / 0.2);
     } else if (scroll >= 0.8) {
-      targetScale = THREE.MathUtils.lerp(1.25, 2.4, (scroll - 0.8) / 0.2);
+      targetScale = THREE.MathUtils.lerp(0.85, 1.5, (scroll - 0.8) / 0.2);
     }
-    
     coinRef.current.scale.setScalar(
       THREE.MathUtils.damp(coinRef.current.scale.x, targetScale, 4, dt)
     );
 
-    // В финале монета слегка сдвигается вперед для акцента
+    // Nudge forward in the climax for emphasis.
     const targetZ = scroll >= 0.8 ? THREE.MathUtils.lerp(0.0, 1.0, (scroll - 0.8) / 0.2) : 0;
     coinRef.current.position.z += (targetZ - coinRef.current.position.z) * Math.min(1, dt * 5);
   });
 
+  // DdcCoin brings its own studio Environment (so the gold reads correctly even
+  // when the scene lights dim in the climax) and faces the camera with a gentle
+  // sway -- coinRef only handles the scroll-driven scale/zoom.
   return (
     <group ref={coinRef} position={[0, 0, 0]}>
-      {/* Главный диск монеты */}
-      <mesh castShadow receiveShadow>
-        <cylinderGeometry args={[1.5, 1.5, 0.18, 64]} />
-        <meshPhysicalMaterial
-          ref={matRef}
-          color="#C9A84C"
-          roughness={0.12}
-          metalness={0.98}
-          clearcoat={1.0}
-          clearcoatRoughness={0.05}
-          reflectivity={1.0}
-        />
-      </mesh>
-      
-      {/* Внутренний обод */}
-      <mesh position={[0, 0.091, 0]}>
-        <cylinderGeometry args={[1.38, 1.38, 0.02, 64]} />
-        <meshPhysicalMaterial
-          color="#E8C87A"
-          roughness={0.2}
-          metalness={0.95}
-        />
-      </mesh>
-      <mesh position={[0, -0.091, 0]}>
-        <cylinderGeometry args={[1.38, 1.38, 0.02, 64]} />
-        <meshPhysicalMaterial
-          color="#E8C87A"
-          roughness={0.2}
-          metalness={0.95}
-        />
-      </mesh>
-
-      {/* Ребристость на ребре монеты */}
-      <group rotation={[Math.PI / 2, 0, 0]}>
-        <mesh geometry={reededGeometry} material={reededMaterial} />
-      </group>
+      <DdcCoin scale={1} />
     </group>
   );
 }

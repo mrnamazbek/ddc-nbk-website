@@ -5,6 +5,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import { motion, AnimatePresence } from "framer-motion";
 import * as THREE from "three";
+import DdcCoin from "@/components/three/DdcCoin";
 import { useTranslations } from "next-intl";
 
 interface MissionStep {
@@ -169,90 +170,32 @@ function ParticleCloud({ scrollRef }: { scrollRef: React.RefObject<number> }) {
    ────────────────────────────────────────────────────────────────────────── */
 
 function CentralRefractiveShanyrak({ scrollRef }: { scrollRef: React.RefObject<number> }) {
-  const shanyrakRef = useRef<THREE.Group>(null);
+  const coreRef = useRef<THREE.Group>(null);
 
   useFrame((state, dt) => {
-    if (shanyrakRef.current) {
-      const scroll = scrollRef.current;
-      const climaxFactor = scroll >= 0.8 ? (scroll - 0.8) / 0.2 : 0;
-      const speedMult = 1.0 - climaxFactor * 0.75;
-      
-      // Вращение
-      shanyrakRef.current.rotation.y = state.clock.elapsedTime * 0.35 * speedMult;
-      shanyrakRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.2) * 0.12 * speedMult;
-      shanyrakRef.current.rotation.z = Math.cos(state.clock.elapsedTime * 0.15) * 0.08 * speedMult;
+    if (!coreRef.current) return;
+    const scroll = scrollRef.current;
 
-      // Масштабирование по фазам:
-      // Act 1 (Intro): 1.0 -> Act 2 (Showcase): 0.85 -> Act 3 (Climax): 1.8 (Крупный план)
-      let targetScale = 0.85;
-      if (scroll < 0.2) {
-        targetScale = THREE.MathUtils.lerp(1.0, 0.85, scroll / 0.2);
-      } else if (scroll >= 0.8) {
-        targetScale = THREE.MathUtils.lerp(0.85, 1.8, (scroll - 0.8) / 0.2);
-      }
-
-      shanyrakRef.current.scale.setScalar(
-        THREE.MathUtils.damp(shanyrakRef.current.scale.x, targetScale, 4, dt)
-      );
-
-      // В финале Шанырак выдвигается вперед
-      const targetZ = scroll >= 0.8 ? THREE.MathUtils.lerp(0.0, 0.8, (scroll - 0.8) / 0.2) : 0;
-      shanyrakRef.current.position.z += (targetZ - shanyrakRef.current.position.z) * Math.min(1, dt * 5);
+    // Phase scaling: Intro 1.0 -> Showcase 0.85 -> Climax 1.4 (close-up).
+    let targetScale = 0.85;
+    if (scroll < 0.2) {
+      targetScale = THREE.MathUtils.lerp(1.0, 0.85, scroll / 0.2);
+    } else if (scroll >= 0.8) {
+      targetScale = THREE.MathUtils.lerp(0.85, 1.4, (scroll - 0.8) / 0.2);
     }
+    coreRef.current.scale.setScalar(
+      THREE.MathUtils.damp(coreRef.current.scale.x, targetScale, 4, dt)
+    );
+
+    const targetZ = scroll >= 0.8 ? THREE.MathUtils.lerp(0.0, 0.9, (scroll - 0.8) / 0.2) : 0;
+    coreRef.current.position.z += (targetZ - coreRef.current.position.z) * Math.min(1, dt * 5);
   });
 
-  // Преломляющий материал золотого стекла
-  const glassMat = useMemo(() => {
-    return new THREE.MeshPhysicalMaterial({
-      color: "#E8C87A",
-      metalness: 0.1,
-      roughness: 0.12,
-      transmission: 0.85,
-      ior: 1.55,
-      thickness: 0.4,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.05,
-      reflectivity: 1.0,
-      transparent: true,
-      side: THREE.DoubleSide
-    });
-  }, []);
-
+  // Reuse the DDC coin as the central object (the old gold-glass shanyrak read as
+  // a dark blob and lagged). DdcCoin carries its own Environment + faces camera.
   return (
-    <group ref={shanyrakRef} position={[0, 0, 0]}>
-      {/* Внешнее кольцо */}
-      <mesh material={glassMat}>
-        <torusGeometry args={[1.5, 0.12, 16, 64]} />
-      </mesh>
-
-      {/* Дуги крестовины */}
-      <mesh material={glassMat}>
-        <torusGeometry args={[1.48, 0.05, 8, 32, Math.PI * 0.6]} />
-      </mesh>
-      <mesh material={glassMat} rotation={[0, Math.PI / 2, 0]}>
-        <torusGeometry args={[1.48, 0.05, 8, 32, Math.PI * 0.6]} />
-      </mesh>
-      <mesh material={glassMat} rotation={[0, Math.PI, 0]}>
-        <torusGeometry args={[1.48, 0.05, 8, 32, Math.PI * 0.6]} />
-      </mesh>
-      <mesh material={glassMat} rotation={[0, -Math.PI / 2, 0]}>
-        <torusGeometry args={[1.48, 0.05, 8, 32, Math.PI * 0.6]} />
-      </mesh>
-
-      {/* Кульдреуши (поперечные рейки) */}
-      {Array.from({ length: 4 }).map((_, i) => {
-        const angle = (i / 4) * Math.PI * 2;
-        return (
-          <group key={i} rotation={[0, angle, 0]}>
-            <mesh material={glassMat} position={[0.7, 0.3, 0]}>
-              <cylinderGeometry args={[0.025, 0.025, 0.6]} />
-            </mesh>
-            <mesh material={glassMat} position={[-0.7, 0.3, 0]}>
-              <cylinderGeometry args={[0.025, 0.025, 0.6]} />
-            </mesh>
-          </group>
-        );
-      })}
+    <group ref={coreRef} position={[0, 0, 0]}>
+      <DdcCoin scale={1} />
     </group>
   );
 }
