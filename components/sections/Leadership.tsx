@@ -7,6 +7,9 @@ import gsap from "@/lib/gsap";
 import Image from "next/image";
 import { CometCard } from "@/components/ui/comet-card";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+import { useA11y } from "@/components/theme/AccessibilityProvider";
+import Icon from "@/components/ui/Icon";
 
 interface Leader {
   id: string;
@@ -82,6 +85,8 @@ export default function Leadership() {
   const t = useTranslations("Leadership");
   const locale = useLocale() as "ru" | "en" | "kz";
   const containerRef = useRef<HTMLDivElement>(null);
+  const [showPillars, setShowPillars] = useState(false);
+  const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
   
   // Данные для Совета директоров
   const boardOfDirectors: Leader[] = [
@@ -350,9 +355,67 @@ export default function Leadership() {
             <div className="flex flex-col gap-12 md:gap-4 w-full">
               {/* 1. Председатель Совета Директоров (по центру) */}
               <div className="tree-node w-full flex flex-col items-center mb-6">
-                <div className="tree-card-wrapper w-full max-w-[340px]">
+                <div className="tree-card-wrapper w-full max-w-[340px] relative z-10">
                   <LeaderCard leader={boardOfDirectors[0]} locale={locale} />
                 </div>
+
+                {/* Button to toggle strategic vision */}
+                <button
+                  onClick={() => setShowPillars(!showPillars)}
+                  aria-expanded={showPillars}
+                  aria-controls="strategic-pillars"
+                  className="mt-4 px-5 py-2.5 rounded-full border border-gold/30 hover:border-gold bg-charcoal/50 hover:bg-forest/20 text-gold text-xs font-mono uppercase tracking-[0.1em] transition-all duration-300 flex items-center gap-2 cursor-pointer shadow-lg hover:shadow-gold/10 z-10"
+                >
+                  <Icon name={showPillars ? "minus" : "eye"} size={14} className="text-gold" />
+                  {locale === "en" ? "Strategic Vision" : locale === "kz" ? "Стратегиялық көзқарас" : "Стратегическое видение"}
+                </button>
+
+                {/* 5 Pillars Accordion container */}
+                <AnimatePresence initial={false}>
+                  {showPillars && (
+                    <motion.div
+                      id="strategic-pillars"
+                      initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, height: 0 }}
+                      animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, height: "auto" }}
+                      exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+                      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                      className="w-full max-w-2xl mt-6 px-4 overflow-hidden relative z-10"
+                    >
+                      <div className="p-6 sm:p-8 bg-charcoal/40 border border-glass-border rounded-[24px] backdrop-blur-md shadow-2xl relative">
+                        {/* Glowing radial ornament background */}
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-gold/5 rounded-full blur-2xl pointer-events-none" />
+                        <div className="absolute bottom-0 left-0 w-32 h-32 bg-forest/5 rounded-full blur-2xl pointer-events-none" />
+                        
+                        <div className="text-left mb-6">
+                          <span className="text-[10px] uppercase tracking-[0.2em] text-gold font-mono block mb-1">
+                            {t("pillars.overline")}
+                          </span>
+                          <h4 className="text-base sm:text-lg font-display text-white font-medium">
+                            {t("pillars.title")}
+                          </h4>
+                        </div>
+
+                        <div className="space-y-6">
+                          {[1, 2, 3, 4, 5].map((num) => (
+                            <div key={num} className="flex gap-4 items-start group">
+                              <div className="w-8 h-8 rounded-lg bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold text-xs font-mono font-bold shrink-0">
+                                0{num}
+                              </div>
+                              <div className="border-b border-white/5 pb-4 last:border-0 last:pb-0 flex-1 text-left">
+                                <h5 className="text-sm font-semibold text-white mb-1.5 group-hover:text-gold transition-colors duration-300">
+                                  {t(`pillars.p${num}.title`)}
+                                </h5>
+                                <p className="text-xs text-zinc-400 font-light leading-relaxed">
+                                  {t(`pillars.p${num}.desc`)}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Остальные члены Совета директоров в шахматном порядке */}

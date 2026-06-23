@@ -9,6 +9,10 @@ const STATS = [
   { key: "s2", accent: "forest" as const },
   { key: "s3", accent: "forest" as const },
   { key: "s4", accent: "gold" as const },
+  { key: "s5", accent: "gold" as const },
+  { key: "s6", accent: "forest" as const },
+  { key: "s7", accent: "forest" as const },
+  { key: "s8", accent: "gold" as const },
 ];
 
 export default function Stats() {

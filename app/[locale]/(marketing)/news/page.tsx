@@ -35,6 +35,15 @@ export default function NewsPage() {
 
   const allNews: NewsArticle[] = [
     {
+      category: t("articles.a7.category"),
+      title: t("articles.a7.title"),
+      excerpt: t("articles.a7.excerpt"),
+      date: t("articles.a7.date"),
+      readTime: t("articles.a7.readTime"),
+      gradient: "from-[#8B7035]/30 via-[#0F251A] to-[#000000]",
+      link: `https://nationalbank.kz/${locale === "kz" ? "kz" : locale === "en" ? "en" : "ru"}/news`,
+    },
+    {
       category: t("articles.a1.category"),
       title: t("articles.a1.title"),
       excerpt: t("articles.a1.excerpt"),

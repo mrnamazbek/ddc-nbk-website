@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 import Icon from "@/components/ui/Icon";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 
 interface NewsItem {
   category: string;
@@ -16,33 +18,36 @@ interface NewsItem {
 }
 
 export default function News() {
+  const t = useTranslations("NewsPage");
+  const router = useRouter();
+
   const newsList: NewsItem[] = [
     {
-      category: "Пилотный проект",
-      title: "Успешная интеграция Цифрового Тенге в оффлайн-режиме",
-      excerpt: "Завершен первый этап тестирования двусторонних оффлайн-платежей на мобильных устройствах и смарт-картах в отдаленных регионах.",
-      date: "18 Мая 2026",
-      readTime: "5 мин",
-      gradient: "from-forest-dark/50 via-charcoal to-[#08080a]",
-      hoverAccent: "forest",
-    },
-    {
-      category: "Интеграция",
-      title: "Подключение пяти крупнейших банков к платформе Open API",
-      excerpt: "Внедрение единых стандартов открытого банкинга позволяет автоматизировать мгновенный межбанковский обмен информацией.",
-      date: "04 Мая 2026",
-      readTime: "4 мин",
-      gradient: "from-gold-dark/40 via-charcoal to-[#08080a]",
+      category: t("articles.a7.category"),
+      title: t("articles.a7.title"),
+      excerpt: t("articles.a7.excerpt"),
+      date: t("articles.a7.date"),
+      readTime: t("articles.a7.readTime"),
+      gradient: "from-[#8B7035]/30 via-charcoal to-[#08080a]",
       hoverAccent: "gold",
     },
     {
-      category: "Релиз",
-      title: "Опубликован технический Whitepaper архитектуры CBDC 2.0",
-      excerpt: "Новый документ подробно описывает механизмы смарт-контрактов для маркирования целевых государственных субсидий.",
-      date: "22 Апреля 2026",
-      readTime: "8 мин",
+      category: t("articles.a1.category"),
+      title: t("articles.a1.title"),
+      excerpt: t("articles.a1.excerpt"),
+      date: t("articles.a1.date"),
+      readTime: t("articles.a1.readTime"),
       gradient: "from-forest-dark/50 via-charcoal to-[#08080a]",
       hoverAccent: "forest",
+    },
+    {
+      category: t("articles.a2.category"),
+      title: t("articles.a2.title"),
+      excerpt: t("articles.a2.excerpt"),
+      date: t("articles.a2.date"),
+      readTime: t("articles.a2.readTime"),
+      gradient: "from-gold-dark/40 via-charcoal to-[#08080a]",
+      hoverAccent: "gold",
     },
   ];
 
@@ -87,11 +92,11 @@ export default function News() {
             className="max-w-2xl"
           >
             <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
-              пресс-центр ddc
+              {t("overline")}
             </span>
-            <h2 className="font-display text-3xl sm:text-5xl font-normal tracking-tight text-foreground leading-tight">
-              Последние события <br />
-              <span className="text-gradient-gold font-medium">и технологические релизы</span>
+            <h2 className="font-display text-3xl sm:text-5xl font-normal tracking-tight text-foreground leading-tight text-left">
+              {t("titleLine1")} <br />
+              <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
             </h2>
           </motion.div>
           
@@ -101,8 +106,12 @@ export default function News() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <Button variant="outline" className="flex items-center gap-2 group cursor-pointer">
-              Все публикации
+            <Button 
+              variant="outline" 
+              onClick={() => router.push("/news")}
+              className="flex items-center gap-2 group cursor-pointer"
+            >
+              {t("viewAll")}
               <Icon name="arrow-right" size={16} />
             </Button>
           </motion.div>
@@ -147,7 +156,7 @@ export default function News() {
                         {news.date}
                       </div>
                       <span>•</span>
-                      <span>{news.readTime} чтения</span>
+                      <span>{news.readTime} {t("readTimeSuffix")}</span>
                     </div>
 
                     <h3 className="text-lg font-sans font-bold text-foreground tracking-wide mb-3 line-clamp-2 group-hover:text-gold transition-colors duration-300">
@@ -159,8 +168,11 @@ export default function News() {
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-gold group-hover:text-gold-light transition-colors duration-300 cursor-pointer">
-                    Читать полностью
+                  <div 
+                    onClick={() => router.push("/news")}
+                    className="flex items-center gap-1.5 text-xs font-semibold text-gold group-hover:text-gold-light transition-colors duration-300 cursor-pointer"
+                  >
+                    {t("readMore")}
                     <Icon name="arrow-right" size={14} />
                   </div>
                 </div>

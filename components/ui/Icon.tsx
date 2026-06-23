@@ -225,6 +225,11 @@ const iconsaxMap: Record<IconName, React.ComponentType<any>> = {
 export default function Icon({ name, className, size = 20, animate = true }: IconProps) {
   const { iconSystem } = useIconSystem();
   const reduce = useReducedMotion();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Отрисовка конкретной системы иконок
   const renderIconContent = () => {
@@ -272,7 +277,11 @@ export default function Icon({ name, className, size = 20, animate = true }: Ico
     </span>
   );
 
-  const outerClass = "inline-flex items-center justify-center shrink-0 text-current select-none";
+  const outerClass = cn(
+    "inline-flex items-center justify-center shrink-0 text-current select-none",
+    mounted && animate && !reduce && "svgator-icon",
+    mounted && animate && !reduce && `svgator-icon-${name}`
+  );
 
   // Static when animation is off or the user prefers reduced motion.
   if (!animate || reduce) {

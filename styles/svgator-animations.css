@@ -1,0 +1,278 @@
+/* SVGator-style Vector Animations for DDC Icons */
+
+/* ============================================================
+   Keyframes
+   ============================================================ */
+
+/* 1. Self-drawing strokes */
+@keyframes svgator-draw {
+  from {
+    stroke-dashoffset: 60;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* 2. Rotation */
+@keyframes svgator-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 3. Pulse / Scaling */
+@keyframes svgator-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+/* 4. Float / Vertical Bobbing */
+@keyframes svgator-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* 5. Shake / Vibrating */
+@keyframes svgator-shake {
+  0%, 100% { transform: rotate(0deg); }
+  15%, 45%, 75% { transform: rotate(-6deg); }
+  30%, 60%, 90% { transform: rotate(6deg); }
+}
+
+/* 6. Blink */
+@keyframes svgator-blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0); }
+}
+
+/* 7. Layer sliding */
+@keyframes svgator-layer-1 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2.5px); }
+}
+@keyframes svgator-layer-2 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(2.5px); }
+}
+
+/* 8. Ripple / Soundwaves */
+@keyframes svgator-ripple {
+  0% { opacity: 0.3; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 0.3; transform: scale(0.85); }
+}
+
+/* 9. Color Cycle */
+@keyframes svgator-color-cycle {
+  0%, 100% { stroke: currentColor; }
+  50% { stroke: var(--color-gold, #C9A84C); }
+}
+
+/* ============================================================
+   Icon Selectors & Application
+   ============================================================ */
+
+.svgator-icon svg * {
+  transform-origin: center;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* IT Services (Gears) & Refresh */
+.svgator-icon-it-services:hover svg path,
+.group:hover .svgator-icon-it-services svg path,
+.svgator-icon-refresh:hover svg path,
+.group:hover .svgator-icon-refresh svg path {
+  animation: svgator-rotate 4s linear infinite;
+}
+
+/* Sun (Rotating rays & pulsing core) */
+.svgator-icon-sun:hover svg path:nth-child(even),
+.group:hover .svgator-icon-sun svg path:nth-child(even) {
+  animation: svgator-rotate 8s linear infinite;
+}
+.svgator-icon-sun:hover svg path:nth-child(odd),
+.group:hover .svgator-icon-sun svg path:nth-child(odd) {
+  animation: svgator-pulse 2s ease-in-out infinite;
+}
+
+/* Moon (Floating) */
+.svgator-icon-moon:hover svg path,
+.group:hover .svgator-icon-moon svg path {
+  animation: svgator-float 2.5s ease-in-out infinite;
+}
+
+/* Database (Stacking layers) */
+.svgator-icon-database svg path:nth-child(1) {
+  animation: svgator-layer-1 3s ease-in-out infinite;
+}
+.svgator-icon-database svg path:nth-child(3) {
+  animation: svgator-layer-2 3s ease-in-out infinite;
+}
+
+/* CPU (Pulsing connections & drawing paths) */
+.svgator-icon-cpu:hover svg rect,
+.group:hover .svgator-icon-cpu svg rect {
+  animation: svgator-pulse 2s ease-in-out infinite;
+}
+.svgator-icon-cpu:hover svg path,
+.group:hover .svgator-icon-cpu svg path {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: svgator-draw 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Server (Lighting up disks) */
+.svgator-icon-server:hover svg rect,
+.group:hover .svgator-icon-server svg rect {
+  animation: svgator-pulse 1.5s ease-in-out infinite;
+}
+
+/* Phone (Ringing) */
+.svgator-icon-phone:hover svg,
+.group:hover .svgator-icon-phone svg {
+  animation: svgator-shake 0.5s ease-in-out infinite;
+}
+
+/* Contact Center / Headphones (Soundwaves pulsing) */
+.svgator-icon-contact-center:hover svg path:nth-child(2),
+.group:hover .svgator-icon-contact-center svg path:nth-child(2) {
+  animation: svgator-ripple 1.5s ease-in-out infinite;
+}
+.svgator-icon-contact-center:hover svg path:nth-child(3),
+.group:hover .svgator-icon-contact-center svg path:nth-child(3) {
+  animation: svgator-ripple 1.5s ease-in-out infinite 0.2s;
+}
+
+/* Eye (Blinking and moving iris) */
+.svgator-icon-eye:hover svg path:first-of-type,
+.group:hover .svgator-icon-eye svg path:first-of-type {
+  animation: svgator-blink 4s linear infinite;
+}
+.svgator-icon-eye:hover svg path:last-of-type,
+.group:hover .svgator-icon-eye svg path:last-of-type {
+  animation: svgator-pulse 2s ease-in-out infinite;
+}
+
+/* Check & Check Circle & Shield Check (Self-drawing checkmark) */
+.svgator-icon-check:hover svg path,
+.group:hover .svgator-icon-check svg path,
+.svgator-icon-check-circle:hover svg path,
+.group:hover .svgator-icon-check-circle svg path,
+.svgator-icon-shield-check:hover svg path:last-child,
+.group:hover .svgator-icon-shield-check svg path:last-child {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: svgator-draw 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Calendar (Floating) */
+.svgator-icon-calendar:hover svg,
+.group:hover .svgator-icon-calendar svg {
+  animation: svgator-float 2s ease-in-out infinite;
+}
+
+/* Alert (Vibrating warning) */
+.svgator-icon-alert:hover svg,
+.group:hover .svgator-icon-alert svg {
+  animation: svgator-shake 0.6s ease-in-out infinite;
+}
+
+/* Zap (Lightning strike pulse) */
+.svgator-icon-zap:hover svg path,
+.group:hover .svgator-icon-zap svg path {
+  animation: svgator-pulse 1.2s ease-in-out infinite;
+}
+
+/* Key (Tilt rotation) */
+.svgator-icon-key:hover svg,
+.group:hover .svgator-icon-key svg {
+  transform: rotate(15deg);
+}
+
+/* Globe (Continuous rotation) */
+.svgator-icon-globe:hover svg,
+.group:hover .svgator-icon-globe svg {
+  animation: svgator-rotate 12s linear infinite;
+}
+
+/* Compass (Spinning needle) */
+.svgator-icon-compass:hover svg path:last-child,
+.group:hover .svgator-icon-compass svg path:last-child {
+  animation: svgator-rotate 3s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+}
+
+/* Award (Floating star/cup) */
+.svgator-icon-award:hover svg,
+.group:hover .svgator-icon-award svg {
+  animation: svgator-float 2s ease-in-out infinite;
+}
+
+/* Development (Blinking cursor / pulse) */
+.svgator-icon-development:hover svg path,
+.group:hover .svgator-icon-development svg path {
+  animation: svgator-pulse 1.5s ease-in-out infinite;
+}
+
+/* Palette (Brush stroke color cycling) */
+.svgator-icon-palette:hover svg path,
+.group:hover .svgator-icon-palette svg path {
+  animation: svgator-color-cycle 3s ease-in-out infinite;
+}
+
+/* Lock (Locking shackle animation) */
+.svgator-icon-lock:hover svg path:first-child,
+.group:hover .svgator-icon-lock svg path:first-child {
+  transform: translateY(-2px);
+}
+
+/* Procurement / Shopping Cart (Translating cart / rotating wheels) */
+.svgator-icon-procurement:hover svg,
+.group:hover .svgator-icon-procurement svg {
+  animation: svgator-float 2s ease-in-out infinite;
+}
+
+/* Trending Up & Trending Down (Pulsing and translating arrows) */
+.svgator-icon-trending-up:hover svg path,
+.group:hover .svgator-icon-trending-up svg path,
+.svgator-icon-trending-down:hover svg path,
+.group:hover .svgator-icon-trending-down svg path {
+  animation: svgator-pulse 1.8s ease-in-out infinite;
+}
+
+/* ============================================================
+   Accessibility & Reduced Motion Fallback
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .svgator-icon svg *,
+  .svgator-icon svg,
+  .svgator-icon:hover svg *,
+  .svgator-icon:hover svg,
+  .group:hover .svgator-icon svg * {
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+html.a11y .svgator-icon svg *,
+html.a11y .svgator-icon svg,
+html.a11y .svgator-icon:hover svg *,
+html.a11y .svgator-icon:hover svg,
+html.a11y .group:hover .svgator-icon svg * {
+  animation: none !important;
+  transform: none !important;
+  transition: none !important;
+}
