@@ -31,14 +31,14 @@ export default function SecuredFiHero() {
   });
 
   // Screen 1 (Hero Title & Subtitle) scroll animations
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.4], [1, 0.92]);
-  const heroY = useTransform(scrollYProgress, [0, 0.4], [0, -60]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.35], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.35], [1, 0.92]);
+  const heroY = useTransform(scrollYProgress, [0, 0.35], [0, -60]);
 
   // Screen 2 (Stats Grid) scroll animations
-  const statsOpacity = useTransform(scrollYProgress, [0.4, 0.55, 0.85, 0.98], [0, 1, 1, 0]);
-  const statsY = useTransform(scrollYProgress, [0.4, 0.55], [120, 0]);
-  const statsScale = useTransform(scrollYProgress, [0.85, 0.98], [1, 0.95]);
+  const statsOpacity = useTransform(scrollYProgress, [0.45, 0.55, 0.65, 0.75], [0, 1, 1, 0]);
+  const statsY = useTransform(scrollYProgress, [0.45, 0.55], [120, 0]);
+  const statsScale = useTransform(scrollYProgress, [0.65, 0.75], [1, 0.95]);
 
   const stats = [
     { key: "s1" },

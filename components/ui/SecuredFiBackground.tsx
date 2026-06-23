@@ -13,7 +13,7 @@ import { getScroll } from "@/lib/scrollStore";
 
 const vertexShader = /* glsl */ `
   uniform float uTime;
-  uniform float uPr;         // Morph progress: 0.0 (wave) -> 1.0 (sphere) -> 2.0 (dissolve)
+  uniform float uPr;         // Morph progress S: 0.0 -> 1.0
   uniform float uSize;       // Particle size scaling
   uniform float uAmplitude;  // Noise height amplitude on wave
   uniform float uSpeed;      // Noise speed
@@ -81,8 +81,8 @@ const vertexShader = /* glsl */ `
     pos2.y += sin(diagonal * 3.14159 * 1.5 - t * 1.8) * uAmplitude * 1.8;
 
     // 4. Easing mix between morph targets
-    float pr0 = smoothstep(0.0, 0.9, uPr);      // Wave to Sphere
-    float pr1 = smoothstep(1.3, 2.0, uPr);      // Sphere to Yield-Curve
+    float pr0 = smoothstep(0.25, 0.45, uPr);      // Wave to Sphere
+    float pr1 = smoothstep(0.75, 1.00, uPr);      // Sphere to Yield-Curve
 
     vec3 pos = mix(pos0, pos1, pr0);
     pos = mix(pos, pos2, pr1);
@@ -122,9 +122,9 @@ const fragmentShader = /* glsl */ `
     float colorFactor = clamp(vPos.y * 0.15 + 0.5, 0.0, 1.0);
     
     // During sphere morph, highlight active zones in gold
-    if (vMorph > 0.05 && vMorph < 1.3) {
+    if (vMorph > 0.25 && vMorph < 0.75) {
       colorFactor = smoothstep(-1.5, 2.5, vPos.y);
-    } else if (vMorph >= 1.3) {
+    } else if (vMorph >= 0.75) {
       // In diagonal wave, blend color along the diagonal axis
       colorFactor = clamp((vPos.x + vPos.y) * 0.08 + 0.5, 0.0, 1.0);
     }
@@ -223,7 +223,7 @@ function ShaderParticles({ isLight, scrollProgress }: ShaderParticlesProps) {
     m.uniforms.uThemeLight.value = isLight ? 1.0 : 0.0;
     
     // Smooth morph progress uPr (lerp / MathUtils.damp)
-    const targetPr = scrollProgress * 2.0; // Morph targets maps: 0.0 (S=0) -> 1.0 (S=0.5) -> 2.0 (S=1.0)
+    const targetPr = scrollProgress; // Morph target maps directly to S: 0.0 -> 1.0
     uPrSmooth.current = THREE.MathUtils.damp(uPrSmooth.current, targetPr, 6.5, dt);
     m.uniforms.uPr.value = uPrSmooth.current;
 
