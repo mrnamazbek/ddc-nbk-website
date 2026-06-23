@@ -108,21 +108,10 @@ const vertexShaderPoints = /* glsl */ `
     // Infinite forward drift along Z axis
     grid.z = mod(grid.z - uTime * 0.18 - uScroll * 2.0 + 18.0, 36.0) - 18.0;
 
-    // 2. Fibonacci sphere with time swirl
-    vec3 sphere = aSpherePos;
-    float swirl = uTime * 0.5;
-    sphere.x += sin(sphere.y * 2.5 + swirl) * 0.08 * aRandom;
-    sphere.z += cos(sphere.x * 2.5 + swirl) * 0.08 * aRandom;
-    sphere *= 3.4; // Sphere scale
+    // Use pure grid position (no morphing to sphere)
+    vec3 pos = grid;
 
-    // 3. Morph factor calculated via scroll
-    float PI = 3.141592653589793;
-    float morphFactor = abs(sin(uScroll * PI * 2.0));
-    morphFactor = smoothstep(0.0, 1.0, morphFactor); // Smooth ease transition
-
-    vec3 pos = mix(grid, sphere, morphFactor);
-
-    // 4. Mouse 3D repulsion
+    // 2. Mouse 3D repulsion
     float distToMouse = distance(pos, uMouse3d);
     float intensity = 0.0;
     if (distToMouse < uDistortionRadius) {
@@ -138,8 +127,11 @@ const vertexShaderPoints = /* glsl */ `
     // Dynamic point sizing based on distance
     gl_PointSize = uDotSize * (10.0 / -mvPosition.z);
 
+    // Fade out background particles smoothly as scroll increases (fully gone by 0.22 scroll)
+    float scrollFade = 1.0 - smoothstep(0.0, 0.22, uScroll);
+
     // Alpha falloff
-    vAlpha = smoothstep(-25.0, -1.0, mvPosition.z) * (1.0 - smoothstep(-1.2, 0.0, mvPosition.z));
+    vAlpha = smoothstep(-25.0, -1.0, mvPosition.z) * (1.0 - smoothstep(-1.2, 0.0, mvPosition.z)) * scrollFade;
     vIntensity = intensity;
   }
 `;
@@ -351,12 +343,11 @@ function MorphingParticles({ isLight }: { isLight: boolean }) {
     smoothMouse3d.current.lerp(mouse3d.current, Math.min(1, dt * 6));
     m.uniforms.uMouse3d.value.copy(smoothMouse3d.current);
 
-    // Camera animation via scroll
-    const PI = 3.141592653589793;
-    const targetZ = 8.5 - Math.sin(scroll * PI * 2.0) * 2.8;
+    // Camera animation via scroll (smooth drift forward, no oscillating bounce back)
+    const targetZ = 8.5 - scroll * 4.0;
     state.camera.position.z += (targetZ - state.camera.position.z) * Math.min(1, dt * 3.5);
     
-    const targetY = -0.5 - Math.cos(scroll * PI * 2.0) * 1.5;
+    const targetY = -0.5 - scroll * 1.5;
     state.camera.position.y += (targetY - state.camera.position.y) * Math.min(1, dt * 3.5);
 
     state.camera.lookAt(0, 0, 0);

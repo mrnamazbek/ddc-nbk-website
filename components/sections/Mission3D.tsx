@@ -309,11 +309,11 @@ function CarouselCard({ item, index, total, scrollRef, onSelect, cardGeometry, r
     const ry = -theta; // Направление лицом к камере
 
     // Инерционное сглаживание движения
-    meshRef.current.position.x += (targetX - meshRef.current.position.x) * Math.min(1, dt * 8);
-    meshRef.current.position.y += (targetY - meshRef.current.position.y) * Math.min(1, dt * 8);
-    meshRef.current.position.z += (targetZ - meshRef.current.position.z) * Math.min(1, dt * 8);
-    meshRef.current.rotation.x += (rx - meshRef.current.rotation.x) * Math.min(1, dt * 8);
-    meshRef.current.rotation.y += (ry - meshRef.current.rotation.y) * Math.min(1, dt * 8);
+    meshRef.current.position.x = THREE.MathUtils.damp(meshRef.current.position.x, targetX, 8, dt);
+    meshRef.current.position.y = THREE.MathUtils.damp(meshRef.current.position.y, targetY, 8, dt);
+    meshRef.current.position.z = THREE.MathUtils.damp(meshRef.current.position.z, targetZ, 8, dt);
+    meshRef.current.rotation.x = THREE.MathUtils.damp(meshRef.current.rotation.x, rx, 8, dt);
+    meshRef.current.rotation.y = THREE.MathUtils.damp(meshRef.current.rotation.y, ry, 8, dt);
 
     // Мягкое парение активной карточки
     const activeFactor = Math.max(0, 1.0 - Math.abs(offset) * 4.0); // 1.0 когда строго в фокусе

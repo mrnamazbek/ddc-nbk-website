@@ -5,9 +5,12 @@ import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { useBgSystem } from "../theme/BgSystemProvider";
 import { useA11y } from "../theme/AccessibilityProvider";
+import { useABTest } from "@/lib/abTest";
+import ABTestSwitcher from "./ABTestSwitcher";
 
 // WebGL/R3F shader background — lazy-loaded (only when the Shader preset is on).
 const ShaderBackground = dynamic(() => import("./ShaderBackground"), { ssr: false });
+const ShadersDotCursorBackground = dynamic(() => import("./ShadersDotCursorBackground"), { ssr: false });
 
 type PresetName = "default" | "triangles" | "treeline" | "wallpaper" | "shader";
 
@@ -29,6 +32,7 @@ export default function InteractiveDotGrid() {
   const { resolvedTheme } = useTheme();
   const isLight = resolvedTheme === "light";
   const { bgSystem } = useBgSystem();
+  const activeVariant = useABTest("home_background");
 
   const [activePreset, setActivePreset] = useState<PresetName>("shader");
 
@@ -353,7 +357,9 @@ export default function InteractiveDotGrid() {
       {/* Wrapper fades the whole background effect out as the user scrolls past
           the first viewport (opacity driven by the scroll effect above). */}
       <div ref={bgWrapRef}>
-        {activePreset === "shader" ? (
+        {activeVariant === "B" ? (
+          <ShadersDotCursorBackground />
+        ) : activePreset === "shader" ? (
           <ShaderBackground isLight={isLight} />
         ) : (
           <canvas
@@ -362,6 +368,7 @@ export default function InteractiveDotGrid() {
           />
         )}
       </div>
+      <ABTestSwitcher pageKey="home_background" current={activeVariant} />
     </>
   );
 }
