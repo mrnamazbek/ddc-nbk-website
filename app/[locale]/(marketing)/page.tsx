@@ -1,3 +1,8 @@
+"use client";
+
+import { useABTest } from "@/lib/abTest";
+import ABTestSwitcher from "@/components/ui/ABTestSwitcher";
+import dynamic from "next/dynamic";
 import InteractiveDotGrid from "@/components/ui/InteractiveDotGrid";
 import Hero from "@/components/sections/Hero";
 import Stats from "@/components/sections/Stats";
@@ -6,21 +11,49 @@ import About from "@/components/sections/About";
 import CTA from "@/components/sections/CTA";
 import Showcase from "@/components/sections/Showcase";
 
+// Lazy-loaded components for Variant B
+const SecuredFiBackground = dynamic(() => import("@/components/ui/SecuredFiBackground"), { ssr: false });
+const SecuredFiHero = dynamic(() => import("@/components/sections/SecuredFiHero"), { ssr: false });
+const SecuredFiServices = dynamic(() => import("@/components/sections/SecuredFiServices"), { ssr: false });
+
 export default function MarketingHomePage() {
+  const activeVariant = useABTest("home_layout");
+
+  if (activeVariant === "B") {
+    return (
+      <>
+        {/* Morphing 3D Particle Sphere in our colors */}
+        <SecuredFiBackground />
+
+        <div className="relative z-10">
+          {/* Replicating typography and scrolling presentation of Secured Finance */}
+          <SecuredFiHero />
+          
+          {/* Minimalist 6-card services list with pulsing status indicators */}
+          <SecuredFiServices />
+        </div>
+
+        {/* Global A/B variant switcher */}
+        <ABTestSwitcher pageKey="home_layout" current={activeVariant} />
+      </>
+    );
+  }
+
   return (
     <>
-      {/* Interactive forest/gold dot grid behind all content (fixed, black bg) */}
+      {/* Interactive forest/gold dot grid behind all content (Variant A) */}
       <InteractiveDotGrid />
 
       <div id="acts" className="relative z-10">
         <Hero />
         <Stats />
         <Services />
-        {/* Parallax showcase of real DDC assets (3D renders, NBK architecture, team) */}
         <Showcase />
         <About />
         <CTA />
       </div>
+
+      <ABTestSwitcher pageKey="home_layout" current={activeVariant} />
     </>
   );
 }
