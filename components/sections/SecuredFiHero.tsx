@@ -1,10 +1,28 @@
-"use client";
-
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useTranslations } from "next-intl";
+import { SplineScene } from "@/components/ui/splite";
+import { useA11y } from "@/components/theme/AccessibilityProvider";
+
+const ROBOT_SCENE = "/spline/scene.splinecode";
 
 export default function SecuredFiHero() {
+  const tStats = useTranslations("Stats");
+  const tHero = useTranslations("Hero");
   const containerRef = useRef<HTMLDivElement>(null);
+  const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
+  const [isMobileDevice, setIsMobileDevice] = useState(true);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+      const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      setIsMobileDevice(window.innerWidth < 768 || isCoarse || isReduced || a11yEnabled || prefersReducedMotion);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, [a11yEnabled, prefersReducedMotion]);
 
   // Track scroll progress across the 200vh viewport of the hero/stats section
   const { scrollYProgress } = useScroll({
@@ -23,30 +41,37 @@ export default function SecuredFiHero() {
   const statsScale = useTransform(scrollYProgress, [0.85, 0.98], [1, 0.95]);
 
   const stats = [
-    {
-      num: "1996",
-      label: "Year founded",
-      desc: "Over 20 years on the IT-solutions market for the National Bank.",
-    },
-    {
-      num: "50 / 24",
-      label: "Information systems",
-      desc: "50 systems built, 24 of them in operation today.",
-    },
-    {
-      num: "2020",
-      label: "Procurement portal",
-      desc: "Year the unified state procurement portal was launched.",
-    },
-    {
-      num: "1477",
-      label: "Contact center",
-      desc: "Unified toll-free support number across Kazakhstan.",
-    },
+    { key: "s1" },
+    { key: "s2" },
+    { key: "s3" },
+    { key: "s4" },
   ];
+
+  // Helper to split the title text dynamically so the last words are highlighted in gold
+  const overlineText = tStats("overline");
+  const words = overlineText.split(" ");
+  const midIndex = Math.max(1, words.length - 2);
+  const firstPart = words.slice(0, midIndex).join(" ");
+  const lastPart = words.slice(midIndex).join(" ");
 
   return (
     <div ref={containerRef} className="relative h-[200vh] w-full">
+      {/* BACKGROUND: Faint ambient Spline robot behind the text */}
+      {!isMobileDevice && (
+        <div className="fixed inset-0 w-full h-screen pointer-events-none z-0 opacity-[0.08] mix-blend-screen select-none">
+          <div className="w-full h-full scale-[1.0] md:scale-[1.12] origin-center">
+            <SplineScene
+              scene={ROBOT_SCENE}
+              className="w-full h-full [&_canvas]:!h-full [&_canvas]:!w-full"
+              logoImg="/spline/ddc_logo_rm_bckgrnd.png"
+              logoTarget="Body"
+            />
+          </div>
+          {/* Scrim to guarantee high contrast */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0e2419]/30 via-transparent to-[#040c08]/50" />
+        </div>
+      )}
+
       {/* SECTION 1: Fixed Hero Screen */}
       <motion.div
         style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
@@ -59,16 +84,16 @@ export default function SecuredFiHero() {
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
             className="mb-6 px-4 py-1.5 rounded-full border border-gold/20 bg-gold/5 text-gold-light text-xs font-mono tracking-widest uppercase"
           >
-            Digital Development Center
+            {tHero("badge")}
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="text-5xl md:text-8xl font-serif font-light tracking-tight text-white mb-8 leading-tight"
+            className="text-5xl md:text-8xl font-serif font-light tracking-tight text-white mb-8 leading-tight pointer-events-auto"
           >
-            Digital development <br />
-            <span className="text-gold-light font-normal">in numbers</span>
+            {firstPart} <br />
+            <span className="text-gold font-normal">{lastPart}</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 40 }}
@@ -76,15 +101,15 @@ export default function SecuredFiHero() {
             transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="max-w-2xl text-base md:text-lg text-zinc-400 font-sans font-light leading-relaxed mb-4"
           >
-            The technological core of the National Bank
+            {tStats("title")} <span className="text-gold-light font-medium">{tStats("titleAccent")}</span>
           </motion.p>
           <motion.p
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-xl text-sm md:text-base text-zinc-500 font-sans font-light leading-relaxed"
+            className="max-w-xl text-sm md:text-base text-zinc-400 font-sans font-light leading-relaxed"
           >
-            For over two decades we have built and maintained the key information systems of Kazakhstan's financial infrastructure.
+            {tStats("subtitle")}
           </motion.p>
         </div>
       </motion.div>
@@ -96,8 +121,8 @@ export default function SecuredFiHero() {
       >
         <div className="max-w-6xl w-full">
           <div className="text-center mb-16">
-            <h2 className="text-xs font-mono text-gold-light tracking-widest uppercase mb-4">Financial Infrastructure</h2>
-            <p className="text-2xl md:text-3xl font-serif text-white font-light">Key milestones of Kazakhstan's central bank IT operations</p>
+            <h2 className="text-xs font-mono text-gold-light tracking-widest uppercase mb-4">{tStats("titleAccent")}</h2>
+            <p className="text-2xl md:text-3xl font-serif text-white font-light max-w-3xl mx-auto leading-relaxed">{tStats("subtitle")}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
             {stats.map((stat, idx) => (
@@ -105,14 +130,14 @@ export default function SecuredFiHero() {
                 key={idx}
                 className="flex flex-col items-center md:items-start text-center md:text-left border-l border-white/5 pl-0 md:pl-6 py-2"
               >
-                <div className="text-4xl md:text-6xl font-serif font-light text-gold-light mb-3 tracking-tight">
-                  {stat.num}
+                <div className="text-4xl md:text-6xl font-serif font-light text-gold mb-3 tracking-tight">
+                  {tStats(`${stat.key}.value`)}
                 </div>
                 <div className="text-xs font-mono text-white tracking-wider uppercase mb-2">
-                  {stat.label}
+                  {tStats(`${stat.key}.label`)}
                 </div>
-                <div className="text-sm text-zinc-500 font-sans font-light leading-relaxed">
-                  {stat.desc}
+                <div className="text-sm text-zinc-400 font-sans font-light leading-relaxed">
+                  {tStats(`${stat.key}.desc`)}
                 </div>
               </div>
             ))}

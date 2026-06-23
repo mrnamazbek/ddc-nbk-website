@@ -2,44 +2,18 @@
 
 import { motion } from "framer-motion";
 
+import { useTranslations } from "next-intl";
+
 export default function SecuredFiServices() {
+  const t = useTranslations("Services");
+
   const services = [
-    {
-      num: "01",
-      title: "Contact Center 1477",
-      desc: "The National Bank's unified contact center. Technical and advisory support for administrative reporting and digital services. Free of charge across Kazakhstan.",
-      status: "operational",
-    },
-    {
-      num: "02",
-      title: "Procurement Portal Operator",
-      desc: "Operator of the procurement portal — a single access point for e-procurement by the National Bank and its organizations. In operation since 2020.",
-      status: "operational",
-    },
-    {
-      num: "03",
-      title: "Technological Data Operator",
-      desc: "Professional processing and management of data: database development and support, storage security, and adoption of modern technologies. Operator status since 2021.",
-      status: "operational",
-    },
-    {
-      num: "04",
-      title: "Unified IT Services Center",
-      desc: "Engineering competence center: preparation, integration, installation and support of the National Bank's equipment and systems — from server stations to workstations.",
-      status: "operational",
-    },
-    {
-      num: "05",
-      title: "Information Systems Development",
-      desc: "Full software product lifecycle. Since inception, 50 information systems have been built, 24 of which are in operation today (Agile, Waterfall).",
-      status: "operational",
-    },
-    {
-      num: "06",
-      title: "Information Security",
-      desc: "Maintenance and management of information security systems since 2022: event monitoring and response, security policy updates, and cyber-awareness training for staff.",
-      status: "operational",
-    },
+    { num: "01", key: "s1" },
+    { num: "02", key: "s2" },
+    { num: "03", key: "s3" },
+    { num: "04", key: "s4" },
+    { num: "05", key: "s5" },
+    { num: "06", key: "s6" },
   ];
 
   const containerVariants = {
@@ -76,7 +50,7 @@ export default function SecuredFiServices() {
             transition={{ duration: 0.8 }}
             className="text-xs font-mono text-gold-light tracking-widest uppercase mb-4"
           >
-            Digital Development Center • Services
+            {t("overline")}
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
@@ -85,7 +59,8 @@ export default function SecuredFiServices() {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="text-3xl md:text-5xl font-serif text-white font-light tracking-tight mb-6"
           >
-            Our services & areas
+            {t("titleLine1")}{" "}
+            <span className="text-gold font-normal">{t("titleAccent")}</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 30 }}
@@ -94,7 +69,7 @@ export default function SecuredFiServices() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="max-w-xl text-zinc-400 font-sans font-light leading-relaxed text-sm md:text-base"
           >
-            Key areas of activity of the Digital Development Center of the National Bank of Kazakhstan.
+            {t("subtitle")}
           </motion.p>
         </div>
 
@@ -143,10 +118,10 @@ export default function SecuredFiServices() {
 
               {/* Title & Description */}
               <h3 className="text-xl font-serif text-white font-light mb-4 group-hover:text-gold-light transition-colors duration-300">
-                {service.title}
+                {t(`${service.key}.title`)}
               </h3>
               <p className="text-zinc-500 group-hover:text-zinc-400 transition-colors duration-300 font-sans font-light text-sm leading-relaxed mb-8 flex-grow">
-                {service.desc}
+                {t(`${service.key}.desc`)}
               </p>
 
               {/* Operational Status Tag */}
@@ -156,7 +131,7 @@ export default function SecuredFiServices() {
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </span>
                 <span className="text-[10px] font-mono tracking-wider uppercase text-zinc-400 group-hover:text-zinc-300 transition-colors duration-300">
-                  status: {service.status}
+                  {t("status")}
                 </span>
               </div>
             </motion.div>

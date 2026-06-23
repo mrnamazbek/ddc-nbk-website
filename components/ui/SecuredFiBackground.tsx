@@ -8,7 +8,7 @@ import { useA11y } from "../theme/AccessibilityProvider";
 import { getScroll } from "@/lib/scrollStore";
 
 /* --------------------------------------------------------------------------
-   GLSL Shaders for particle morphing wave/sphere
+   GLSL Shaders for particle morphing wave/sphere/dissolve
    -------------------------------------------------------------------------- */
 
 const vertexShader = /* glsl */ `
@@ -57,26 +57,32 @@ const vertexShader = /* glsl */ `
   void main() {
     float t = uTime * uSpeed;
 
-    // 1. Stage 0: Plain Wave
+    // 1. Phase 1 (S = 0.0 - 0.25): Dome peeking from bottom
+    // We shape it into a bottom dome using a cosine falloff envelope from center
     vec3 pos0 = position;
-    // Apply scrolling wave noise on Y axis
-    float n = snoise2d(pos0.xz * 0.08 + t * 0.4) * uAmplitude;
-    pos0.y += n;
+    float distFromCenter = length(pos0.xz);
+    pos0.y = -2.8 + cos(clamp(distFromCenter / 18.0, 0.0, 1.0) * 3.14159 * 0.5) * 2.8;
+    
+    // Add vertical wave noise (bottom -> up flow direction achieved by moving Z offset in noise)
+    float waveNoise = snoise2d(vec2(pos0.x * 0.1, pos0.z * 0.06 - t * 0.5)) * uAmplitude;
+    pos0.y += waveNoise;
 
-    // 2. Stage 1: Sphere Positions
+    // 2. Phase 2 (S = 0.45 - 0.75): Full Centered 3D Sphere
     vec3 pos1 = aSpherePos;
-    // Add swirl noise to the sphere to make it look alive
-    float swirl = uTime * 0.25;
-    pos1.x += sin(pos1.y * 1.5 + swirl) * 0.2 * aRandom;
-    pos1.z += cos(pos1.x * 1.5 + swirl) * 0.2 * aRandom;
+    // Add orbital swirling noise
+    float swirl = uTime * 0.22;
+    pos1.x += sin(pos1.y * 1.8 + swirl) * 0.15 * aRandom;
+    pos1.z += cos(pos1.x * 1.8 + swirl) * 0.15 * aRandom;
 
-    // 3. Stage 2: Dissolved Grid
-    vec3 pos2 = position * 3.5;
-    pos2.y += snoise2d(pos2.xz * 0.04 - t * 0.3) * uAmplitude * 2.5;
+    // 3. Phase 3 (S = 0.75 - 1.0): Diagonal Yield Curve wave
+    // Particles expand and ripple diagonally left-to-right
+    vec3 pos2 = position * 3.2;
+    float diagonal = (pos2.x + pos2.z) * 0.08;
+    pos2.y += sin(diagonal * 3.14159 * 1.5 - t * 1.8) * uAmplitude * 1.8;
 
-    // 4. Morph interpolation based on uPr
-    float pr0 = clamp(uPr, 0.0, 1.0);
-    float pr1 = clamp(uPr - 1.0, 0.0, 1.0);
+    // 4. Easing mix between morph targets
+    float pr0 = smoothstep(0.0, 0.9, uPr);      // Wave to Sphere
+    float pr1 = smoothstep(1.3, 2.0, uPr);      // Sphere to Yield-Curve
 
     vec3 pos = mix(pos0, pos1, pr0);
     pos = mix(pos, pos2, pr1);
@@ -90,7 +96,7 @@ const vertexShader = /* glsl */ `
 
     vPos = pos;
     vMorph = uPr;
-    vNoise = n;
+    vNoise = waveNoise;
   }
 `;
 
@@ -100,43 +106,43 @@ const fragmentShader = /* glsl */ `
   varying float vMorph;
   varying float vNoise;
 
-  uniform vec3 uColor1;       // Primary dot color (Teal / Forest)
-  uniform vec3 uColor2;       // Secondary dot color (Gold Accent)
+  uniform vec3 uColor1;       // Primary Forest Green (#2D6A4F)
+  uniform vec3 uColor2;       // Active Gold Accent (#E8C87A)
   uniform float uAlpha;       // Base opacity multiplier
   uniform float uThemeLight;  // Adaptive theme state
 
   void main() {
-    // Make particles perfectly circular
+    // Perfect circular points
     float dist = distance(gl_PointCoord, vec2(0.5)) * 2.0;
     if (dist > 1.0) discard;
 
-    // Soft antialiasing for particle edge
-    float alphaMask = smoothstep(1.0, 0.78, dist);
+    float alphaMask = smoothstep(1.0, 0.76, dist);
 
-    // Morph color mapping
-    // At uPr = 0 (wave), dots are mostly emerald green
-    // At uPr = 1 (sphere), dots blend with active gold based on height
-    float colorFactor = clamp(vPos.y * 0.2 + 0.5, 0.0, 1.0);
-    if (vMorph > 1.0) {
-      colorFactor = clamp(length(vPos.xz) * 0.05, 0.0, 1.0);
+    // Mix color based on particle height and scroll morph state
+    float colorFactor = clamp(vPos.y * 0.15 + 0.5, 0.0, 1.0);
+    
+    // During sphere morph, highlight active zones in gold
+    if (vMorph > 0.05 && vMorph < 1.3) {
+      colorFactor = smoothstep(-1.5, 2.5, vPos.y);
+    } else if (vMorph >= 1.3) {
+      // In diagonal wave, blend color along the diagonal axis
+      colorFactor = clamp((vPos.x + vPos.y) * 0.08 + 0.5, 0.0, 1.0);
     }
-    
-    // Mix theme specific base colors
-    vec3 baseColor = mix(uColor1, uColor2, colorFactor * 0.45);
-    
-    // In light theme, make dots darker for readability
+
+    vec3 finalColor = mix(uColor1, uColor2, colorFactor);
+
+    // If light theme, darken dots to preserve high contrast (WCAG AA)
     if (uThemeLight > 0.5) {
-      baseColor = mix(baseColor * 0.5, vec3(0.2, 0.2, 0.2), 0.1);
+      finalColor = mix(finalColor * 0.45, vec3(0.15, 0.18, 0.16), 0.15);
     }
 
     float finalAlpha = uAlpha * alphaMask;
     
-    // Soften slightly for light theme
     if (uThemeLight > 0.5) {
-      finalAlpha *= 0.75;
+      finalAlpha *= 0.7;
     }
 
-    gl_FragColor = vec4(baseColor, finalAlpha);
+    gl_FragColor = vec4(finalColor, finalAlpha);
   }
 `;
 
@@ -146,12 +152,13 @@ const fragmentShader = /* glsl */ `
 
 interface ShaderParticlesProps {
   isLight: boolean;
+  scrollProgress: number;
 }
 
-function ShaderParticles({ isLight }: ShaderParticlesProps) {
+function ShaderParticles({ isLight, scrollProgress }: ShaderParticlesProps) {
   const matRef = useRef<THREE.ShaderMaterial>(null);
   const pointsRef = useRef<THREE.Points>(null);
-  const { size, camera } = useThree();
+  const { size } = useThree();
 
   const particleCount = 22500; // 150 x 150 grid
   const gridSize = 150;
@@ -161,21 +168,21 @@ function ShaderParticles({ isLight }: ShaderParticlesProps) {
     const spherePos = new Float32Array(particleCount * 3);
     const rands = new Float32Array(particleCount);
 
-    const radius = 3.8; // Radius of 3D sphere
+    const radius = 3.6; // Core radius of the 3D sphere
 
     for (let i = 0; i < particleCount; i++) {
       // 1. Grid positions (xz plane)
       const col = i % gridSize;
       const row = Math.floor(i / gridSize);
       const x = (col / (gridSize - 1)) * 36 - 18;
-      const y = -1.2; // Offset below center
+      const y = 0.0;
       const z = (row / (gridSize - 1)) * 36 - 18;
 
       pos[i * 3] = x;
       pos[i * 3 + 1] = y;
       pos[i * 3 + 2] = z;
 
-      // 2. Fibonacci sphere positions (beautiful uniform distribution)
+      // 2. Fibonacci sphere positions
       const phi = Math.acos(1 - 2 * (i + 0.5) / particleCount);
       const theta = Math.sqrt(particleCount * Math.PI) * phi;
       
@@ -194,49 +201,57 @@ function ShaderParticles({ isLight }: ShaderParticlesProps) {
     () => ({
       uTime: { value: 0 },
       uPr: { value: 0 },
-      uSize: { value: 16.0 },
-      uAmplitude: { value: 1.6 },
+      uSize: { value: 16.5 },
+      uAmplitude: { value: 1.5 },
       uSpeed: { value: 1.5 },
-      uColor1: { value: new THREE.Color("#23573A") }, // Emerald Teals
-      uColor2: { value: new THREE.Color("#E8C87A") }, // Gold highlights
+      uColor1: { value: new THREE.Color("#2D6A4F") }, // Forest Green (#2D6A4F)
+      uColor2: { value: new THREE.Color("#E8C87A") }, // Gold Accent (#E8C87A)
       uAlpha: { value: 0.85 },
       uThemeLight: { value: isLight ? 1.0 : 0.0 },
     }),
     [] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
+  const uPrSmooth = useRef(0);
+
   useFrame((state, dt) => {
     const m = matRef.current;
     const p = pointsRef.current;
     if (!m || !p) return;
 
-    // Get smooth scroll value
-    const scroll = getScroll().smooth; // Typically ranges from 0.0 (top) to ~2.0+ (bottom)
-
     m.uniforms.uTime.value = state.clock.elapsedTime;
     m.uniforms.uThemeLight.value = isLight ? 1.0 : 0.0;
     
-    // Map scroll values to morph progress:
-    // Scroll 0.0 -> uPr 0.0 (dome/wave at bottom)
-    // Scroll 1.0 -> uPr 1.0 (perfect sphere in center)
-    // Scroll 2.0+ -> uPr 2.0 (spread/dissolve layout)
-    m.uniforms.uPr.value = scroll * 1.0;
+    // Smooth morph progress uPr (lerp / MathUtils.damp)
+    const targetPr = scrollProgress * 2.0; // Morph targets maps: 0.0 (S=0) -> 1.0 (S=0.5) -> 2.0 (S=1.0)
+    uPrSmooth.current = THREE.MathUtils.damp(uPrSmooth.current, targetPr, 6.5, dt);
+    m.uniforms.uPr.value = uPrSmooth.current;
 
-    // Handle rotation of the particle system (slow orbit)
-    p.rotation.y = state.clock.elapsedTime * 0.04;
-    p.rotation.x = sin(state.clock.elapsedTime * 0.02) * 0.05;
+    // Slow rotation of particles
+    p.rotation.y = state.clock.elapsedTime * 0.035;
+    p.rotation.x = Math.sin(state.clock.elapsedTime * 0.015) * 0.04;
 
-    // Dynamic camera movements matching the target site's camera drifts
-    const targetZ = 9.0 - scroll * 1.5;
+    // Camera movements from specification
+    // S=0 -> Z=9.0, Y=-0.5
+    // S=0.5 -> Z=7.8, Y=0.0
+    // S=1.0 -> Z=10.5, Y=0.5
+    let targetZ = 9.0;
+    let targetY = -0.5;
+
+    if (scrollProgress < 0.5) {
+      const factor = scrollProgress / 0.5;
+      targetZ = THREE.MathUtils.lerp(9.0, 7.8, factor);
+      targetY = THREE.MathUtils.lerp(-0.5, 0.0, factor);
+    } else {
+      const factor = (scrollProgress - 0.5) / 0.5;
+      targetZ = THREE.MathUtils.lerp(7.8, 10.5, factor);
+      targetY = THREE.MathUtils.lerp(0.0, 0.5, factor);
+    }
+
     state.camera.position.z += (targetZ - state.camera.position.z) * Math.min(1.0, dt * 4.0);
-
-    const targetY = -0.5 + scroll * 0.5;
     state.camera.position.y += (targetY - state.camera.position.y) * Math.min(1.0, dt * 4.0);
-
     state.camera.lookAt(0, 0, 0);
   });
-
-  const sin = Math.sin;
 
   return (
     <points ref={pointsRef}>
@@ -267,40 +282,59 @@ export default function SecuredFiBackground() {
   const { resolvedTheme } = useTheme();
   const isLight = resolvedTheme === "light";
   const containerRef = useRef<HTMLDivElement>(null);
+  
   const [visible, setVisible] = useState(true);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     if (a11yEnabled || prefersReducedMotion) return;
+    
+    // Bind scroll progression to React state
+    const handleScroll = () => {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? window.scrollY / docHeight : 0;
+      setScrollProgress(Math.min(Math.max(progress, 0.0), 1.0));
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    // Intersection observer for visibility
     const el = containerRef.current;
     if (!el) return;
-
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        setVisible(entry.isIntersecting);
-      },
+      ([entry]) => setVisible(entry.isIntersecting),
       { threshold: 0.01 }
     );
     observer.observe(el);
 
     return () => {
+      window.removeEventListener("scroll", handleScroll);
       observer.disconnect();
     };
   }, [a11yEnabled, prefersReducedMotion]);
 
   if (a11yEnabled || prefersReducedMotion) {
-    // Fallback static background for accessibility
     return <div className="fixed inset-0 -z-10 bg-background" />;
   }
 
-  // Dark forest/teal background base matching the project guidelines
-  const bgStyle = isLight 
-    ? "bg-[#F5F5F0]" 
-    : "bg-[#091A11]";
+  // Smooth color transitions in DDC palette:
+  // Bright Forest Green (#0E2419) -> Deep/Near-Black (#040C08)
+  const forestHex = 0x0e2419;
+  const blackHex = 0x040c08;
+  
+  const cForest = new THREE.Color(forestHex);
+  const cBlack = new THREE.Color(blackHex);
+  
+  // Interpolate background color based on scroll
+  const currentBgColor = cForest.clone().lerp(cBlack, Math.min(scrollProgress * 1.25, 1.0));
+  const bgString = isLight ? "#F5F5F0" : `#${currentBgColor.getHexString()}`;
 
   return (
     <div
       ref={containerRef}
-      className={`fixed inset-0 w-full h-screen -z-10 block pointer-events-none transition-colors duration-500 ${bgStyle}`}
+      style={{ backgroundColor: bgString }}
+      className="fixed inset-0 w-full h-screen -z-10 block pointer-events-none transition-colors duration-200"
     >
       {visible && (
         <Canvas
@@ -310,8 +344,8 @@ export default function SecuredFiBackground() {
           style={{ width: "100%", height: "100%" }}
           frameloop={visible ? "always" : "never"}
         >
-          <ambientLight intensity={0.4} />
-          <ShaderParticles isLight={isLight} />
+          <ambientLight intensity={0.45} />
+          <ShaderParticles isLight={isLight} scrollProgress={scrollProgress} />
         </Canvas>
       )}
     </div>
