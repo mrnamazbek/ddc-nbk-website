@@ -174,6 +174,16 @@ export default function Header() {
     router.replace(pathname, { locale: lng });
   };
 
+  const targetLeft = hoveredLink
+    ? Math.max(
+        20,
+        Math.min(
+          hoveredLink.left - 200 + hoveredLink.width / 2,
+          typeof window !== "undefined" ? window.innerWidth - 420 : hoveredLink.left
+        )
+      )
+    : 0;
+
   return (
     <>
       <header
@@ -281,16 +291,20 @@ export default function Header() {
       <AnimatePresence>
         {hoveredLink && (
           <motion.div
-            initial={{ opacity: 0, y: 15, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.96 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 15, scale: 0.95, rotateX: -12, left: targetLeft }}
+            animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0, left: targetLeft }}
+            exit={{ opacity: 0, y: 10, scale: 0.95, rotateX: 8 }}
+            transition={{
+              left: { type: "spring", stiffness: 220, damping: 26 },
+              default: { duration: 0.25, ease: [0.16, 1, 0.3, 1] }
+            }}
             onMouseEnter={() => {
               if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
             }}
             onMouseLeave={handleMouseLeaveLink}
             style={{
-              left: `${Math.max(20, Math.min(hoveredLink.left - 200 + hoveredLink.width / 2, typeof window !== "undefined" ? window.innerWidth - 420 : hoveredLink.left))}px`,
+              perspective: 1000,
+              transformStyle: "preserve-3d",
             }}
             className="hidden xl:block fixed top-[5.25rem] z-[60] pointer-events-auto"
           >

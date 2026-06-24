@@ -138,7 +138,7 @@ export default function NavPreviewCard({
   return (
     <div
       onClick={() => router.push(link.href)}
-      className="relative w-[400px] overflow-hidden rounded-2xl border border-gold/20 liquid-glass-strong p-5 text-left shadow-2xl cursor-pointer hover:border-gold/40 hover:bg-white/[0.03] active:scale-[0.99] transition-all duration-300 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70"
+      className="relative w-[400px] overflow-hidden rounded-2xl border border-gold/20 bg-[#060a08]/98 backdrop-blur-3xl p-5 text-left shadow-2xl cursor-pointer hover:border-gold/40 hover:bg-white/[0.03] active:scale-[0.99] transition-all duration-300 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70"
       role="link"
       tabIndex={0}
       onKeyDown={(e) => {
