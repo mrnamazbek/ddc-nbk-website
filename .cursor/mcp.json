@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "shadcn": {
+      "command": "npx",
+      "args": [
+        "shadcn@latest",
+        "mcp"
+      ]
+    },
+    "shaders": {
+      "type": "http",
+      "url": "https://shaders.com/mcp"
+    },
+    "motion-dev": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "motion-ai"
+      ],
+      "env": {
+        "MOTION_TOKEN": "motion_sh4ZeQE0vM2vcSWfPQp2g9lQNYH7Sk5b"
+      }
+    }
+  }
+}

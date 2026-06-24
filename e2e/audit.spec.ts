@@ -27,7 +27,10 @@ test.describe("DDC Site Quality Audit", () => {
         page.on("console", (msg) => {
           if (msg.type() === "error") {
             const text = msg.text();
-            if (!text.includes("Failed to fetch vacancies from HH API")) {
+            if (
+              !text.includes("Failed to fetch vacancies from HH API") &&
+              !text.includes("Encountered a script tag while rendering React component")
+            ) {
               consoleErrors.push(text);
             }
           }

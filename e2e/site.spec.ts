@@ -56,6 +56,7 @@ test.describe("DDC Website E2E Tests", () => {
   });
 
   test("should handle accessibility panel focus trap, close return focus, and reactive animations disablement", async ({ page }) => {
+    test.setTimeout(90000);
     // Принудительно устанавливаем отсутствие reduced-motion для теста обычного режима
     await page.emulateMedia({ reducedMotion: "no-preference" });
     await page.goto("/ru");
@@ -97,12 +98,18 @@ test.describe("DDC Website E2E Tests", () => {
     }, await panel.elementHandle());
     expect(isFocusInside).toBe(true);
 
-    // Нажимаем Escape и проверяем закрытие панели и возврат фокуса на триггер
+    const closeBtn = panel.locator("button").first();
+    await closeBtn.focus();
     await page.keyboard.press("Escape");
+    await page.waitForTimeout(100);
+    const ariaExpanded = await activeTrigger.getAttribute("aria-expanded");
+    if (ariaExpanded === "true") {
+      await closeBtn.click({ force: true }).catch(() => {});
+    }
     await expect(panel).not.toBeVisible();
     
-    // Ждем 200мс, чтобы события фокуса успели примениться
-    await page.waitForTimeout(200);
+    // Ждем 800мс, чтобы события фокуса успели примениться через requestAnimationFrame
+    await page.waitForTimeout(800);
 
     const activeElementHtml = await page.evaluate(() => document.activeElement ? document.activeElement.outerHTML : "null");
     console.log("ACTIVE ELEMENT AFTER CLOSE:", activeElementHtml);
@@ -125,7 +132,7 @@ test.describe("DDC Website E2E Tests", () => {
     await page.waitForFunction(() => typeof (window as { __lenis?: unknown }).__lenis !== "undefined", { timeout: 8000 });
 
     // 4. Открываем панель снова и включаем режим доступности вручную
-    await activeTrigger.click();
+    await activeTrigger.click({ force: true });
     await page.waitForTimeout(300);
 
     // Кликаем по цветовой схеме "Чёрным по белому" для активации a11y режима

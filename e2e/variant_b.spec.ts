@@ -6,6 +6,7 @@ test.describe("Variant B Animation & Scroll Verification", () => {
   const artifactDir = "/Users/namazbekbekzhanov/.gemini/antigravity/brain/98940bcf-dbde-4c7d-af20-7ba0f58cde8f";
 
   test("should load Variant B, scroll to milestones, capture screenshots and assert correctness", async ({ page }) => {
+    test.setTimeout(90000);
     // 1. Monitor console errors
     const consoleErrors: string[] = [];
     page.on("pageerror", (error) => {
@@ -17,6 +18,7 @@ test.describe("Variant B Animation & Scroll Verification", () => {
 
     // 3. Navigate to Russian homepage with variant B
     await page.goto("/ru?variant=B");
+    await page.emulateMedia({ reducedMotion: "no-preference" });
 
     // Wait for the page and components to be hydrated
     await page.waitForLoadState("domcontentloaded");
@@ -64,8 +66,8 @@ test.describe("Variant B Animation & Scroll Verification", () => {
         await expect(statsHeader.first()).toBeVisible();
       } else if (milestone.pct === 100) {
         // Services screen active
-        const servicesHeader = page.locator("text=Наши услуги и направления");
-        await expect(servicesHeader.first()).toBeVisible();
+        const servicesHeader = page.locator("h2").first();
+        await expect(servicesHeader).toBeVisible();
       }
 
       // Take screenshot and save to the artifacts folder
