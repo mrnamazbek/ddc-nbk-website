@@ -13,6 +13,7 @@ interface NewsArticle {
   readTime: string;
   gradient: string;
   link: string;
+  image?: string;
 }
 
 export default function NewsPage() {
@@ -42,6 +43,7 @@ export default function NewsPage() {
       readTime: t("articles.a7.readTime"),
       gradient: "from-[#8B7035]/30 via-[#0F251A] to-[#000000]",
       link: `https://nationalbank.kz/${locale === "kz" ? "kz" : locale === "en" ? "en" : "ru"}/news`,
+      image: "/images/linkedin/post_15_data_factory.jpg",
     },
     {
       category: t("articles.a1.category"),
@@ -51,6 +53,7 @@ export default function NewsPage() {
       readTime: t("articles.a1.readTime"),
       gradient: "from-[#1A3D2B] via-[#0F251A] to-[#000000]",
       link: `https://nationalbank.kz/${locale === "kz" ? "kz" : locale === "en" ? "en" : "ru"}/news`,
+      image: "/images/linkedin/post_16_key_projects.jpg",
     },
     {
       category: t("articles.a2.category"),
@@ -60,6 +63,7 @@ export default function NewsPage() {
       readTime: t("articles.a2.readTime"),
       gradient: "from-[#8B7035] via-[#58461F] to-[#000000]",
       link: `https://nationalbank.kz/${locale === "kz" ? "kz" : locale === "en" ? "en" : "ru"}/news`,
+      image: "/images/linkedin/post_1_digital_services.jpg",
     },
     {
       category: t("articles.a3.category"),
@@ -69,6 +73,7 @@ export default function NewsPage() {
       readTime: t("articles.a3.readTime"),
       gradient: "from-[#2D6A4F] via-[#102A1E] to-[#000000]",
       link: `https://nationalbank.kz/${locale === "kz" ? "kz" : locale === "en" ? "en" : "ru"}/news`,
+      image: "/images/linkedin/post_9_it_architecture.jpg",
     },
     {
       category: t("articles.a4.category"),
@@ -78,6 +83,7 @@ export default function NewsPage() {
       readTime: t("articles.a4.readTime"),
       gradient: "from-[#1A3D2B] via-[#8B7035] to-[#000000]",
       link: `https://nationalbank.kz/${locale === "kz" ? "kz" : locale === "en" ? "en" : "ru"}/news`,
+      image: "/images/linkedin/post_10_binur_meeting.jpg",
     },
     {
       category: t("articles.a5.category"),
@@ -87,6 +93,7 @@ export default function NewsPage() {
       readTime: t("articles.a5.readTime"),
       gradient: "from-[#52B788] via-[#1A3D2B] to-[#000000]",
       link: `https://nationalbank.kz/${locale === "kz" ? "kz" : locale === "en" ? "en" : "ru"}/news`,
+      image: "/images/linkedin/post_11_llm_learning.jpg",
     },
     {
       category: t("articles.a6.category"),
@@ -96,6 +103,7 @@ export default function NewsPage() {
       readTime: t("articles.a6.readTime"),
       gradient: "from-[#8B7035] via-[#2D6A4F] to-[#000000]",
       link: `https://nationalbank.kz/${locale === "kz" ? "kz" : locale === "en" ? "en" : "ru"}/news`,
+      image: "/images/linkedin/post_13_kfgd_automation.jpg",
     },
   ];
 
@@ -143,6 +151,14 @@ export default function NewsPage() {
                   <div className={`w-full h-48 bg-gradient-to-br ${news.gradient} relative overflow-hidden flex items-center justify-center border-b border-white/5`}>
                     <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:1.5rem_1.5rem]" />
                     <div className="absolute w-32 h-32 rounded-full bg-gold/10 blur-xl group-hover:scale-125 transition-transform duration-700 pointer-events-none" />
+                    
+                    {news.image && (
+                      <img 
+                        src={news.image} 
+                        alt={news.title}
+                        className="absolute inset-0 w-full h-full object-cover opacity-75 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 pointer-events-none"
+                      />
+                    )}
                     
                     <span className="absolute top-4 left-4 text-[10px] uppercase tracking-wider font-semibold bg-white/10 text-gold-light border border-white/10 px-3 py-1 rounded-md backdrop-blur-md">
                       {news.category}

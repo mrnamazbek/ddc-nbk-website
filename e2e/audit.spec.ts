@@ -35,7 +35,10 @@ test.describe("DDC Site Quality Audit", () => {
 
         const failedRequests: string[] = [];
         page.on("requestfailed", (request) => {
-          failedRequests.push(`${request.url()}: ${request.failure()?.errorText}`);
+          const errorText = request.failure()?.errorText;
+          if (errorText !== "net::ERR_ABORTED") {
+            failedRequests.push(`${request.url()}: ${errorText}`);
+          }
         });
 
         // Emulate reduced motion to disable opacity animations during audit

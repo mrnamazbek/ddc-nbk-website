@@ -20,6 +20,7 @@ interface ServiceDetail {
   description: string;
   features: string[];
   techStack: string;
+  techStackIcons?: IconName[];
 }
 
 function Services2D() {
@@ -47,6 +48,7 @@ function Services2D() {
       description: t("s1.description"),
       features: [t("s1.f1"), t("s1.f2"), t("s1.f3")],
       techStack: "Hyperledger Fabric, Solidity, Go, HSM Modules",
+      techStackIcons: ["hyperledger", "solidity", "golang"],
     },
     {
       icon: "zap",
@@ -55,6 +57,7 @@ function Services2D() {
       description: t("s2.description"),
       features: [t("s2.f1"), t("s2.f2"), t("s2.f3")],
       techStack: "Java, Spring Boot, Kafka, PostgreSQL, ISO 20022",
+      techStackIcons: ["java", "spring", "kafka", "postgresql", "redis"],
     },
     {
       icon: "bank",
@@ -63,6 +66,7 @@ function Services2D() {
       description: t("s3.description"),
       features: [t("s3.f1"), t("s3.f2"), t("s3.f3")],
       techStack: "C++, Python, Oracle DB, IBM WebSphere MQ",
+      techStackIcons: ["cpp", "python", "oracle"],
     },
     {
       icon: "shield-check",
@@ -71,6 +75,7 @@ function Services2D() {
       description: t("s4.description"),
       features: [t("s4.f1"), t("s4.f2"), t("s4.f3")],
       techStack: "Fortinet, HSM, Linux, Hardware Crypto Units",
+      techStackIcons: ["shield-check", "lock"],
     },
     {
       icon: "share",
@@ -79,6 +84,7 @@ function Services2D() {
       description: t("s5.description"),
       features: [t("s5.f1"), t("s5.f2"), t("s5.f3")],
       techStack: "Node.js, Express, OAuth2, GraphQL, Kong API Gateway",
+      techStackIcons: ["nodejs", "express", "graphql", "kong"],
     },
     {
       icon: "chart",
@@ -87,6 +93,7 @@ function Services2D() {
       description: t("s6.description"),
       features: [t("s6.f1"), t("s6.f2"), t("s6.f3")],
       techStack: "Hadoop, Spark, ClickHouse, Python (PyTorch), Tableau",
+      techStackIcons: ["hadoop", "spark", "clickhouse", "python", "tableau"],
     },
   ];
 
@@ -148,10 +155,21 @@ function Services2D() {
                     
                     {/* Технологический стек */}
                     <div className="mt-6 pt-6 border-t border-white/5">
-                      <span className="text-sm uppercase tracking-wider text-zinc-300 block mb-2">{t("techStackLabel")}</span>
-                      <code className="text-xs text-gold-light font-mono bg-charcoal/30 px-3 py-1.5 rounded border border-white/5 inline-block">
-                        {service.techStack}
-                      </code>
+                      <span className="text-sm uppercase tracking-wider text-zinc-400 block mb-3">{t("techStackLabel")}</span>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <code className="text-xs text-gold-light font-mono bg-charcoal/30 px-3 py-1.5 rounded border border-white/5 inline-block">
+                          {service.techStack}
+                        </code>
+                        {service.techStackIcons && (
+                          <div className="flex items-center gap-1.5">
+                            {service.techStackIcons.map((icon, iIdx) => (
+                              <div key={iIdx} className="w-8 h-8 rounded-lg bg-white/[0.02] border border-white/10 flex items-center justify-center text-zinc-400 hover:text-gold hover:border-gold/30 hover:bg-white/[0.06] transition-all duration-300" title={icon}>
+                                <Icon name={icon} size={16} />
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
 

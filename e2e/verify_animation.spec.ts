@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 
 test('Verify Variant B scroll milestones', async ({ page }) => {
-  // Wait for the app to be fully hydrated
-  await page.goto('http://localhost:3000/en?variant=B', { waitUntil: 'networkidle' });
+  await page.goto('/en?variant=B');
+  await page.waitForLoadState("domcontentloaded");
   
   // We need to wait for the WebGL canvas to render
   await page.waitForTimeout(2000); // Give Three.js some time to init

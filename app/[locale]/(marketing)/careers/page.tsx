@@ -2,7 +2,9 @@ import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import Icon, { IconName } from "@/components/ui/Icon";
+import DDCEventGallery from "@/components/sections/DDCEventGallery";
 import { getTranslations } from "next-intl/server";
+
 
 type Translator = (key: string, values?: Record<string, string | number>) => string;
 interface HHSalary { from: number | null; to: number | null; currency: string; gross: boolean; }
@@ -365,6 +367,8 @@ export default async function CareersPage({ params }: CareersPageProps) {
             </a>
           </div>
         </div>
+
+        <DDCEventGallery />
 
         {/* Список вакансий */}
         <div id="jobs-list" className="scroll-mt-24">

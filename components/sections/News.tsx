@@ -15,6 +15,7 @@ interface NewsItem {
   readTime: string;
   gradient: string;
   hoverAccent: "forest" | "gold";
+  image?: string;
 }
 
 export default function News() {
@@ -30,6 +31,7 @@ export default function News() {
       readTime: t("articles.a7.readTime"),
       gradient: "from-[#8B7035]/30 via-charcoal to-[#08080a]",
       hoverAccent: "gold",
+      image: "/images/linkedin/post_15_data_factory.jpg",
     },
     {
       category: t("articles.a1.category"),
@@ -39,6 +41,7 @@ export default function News() {
       readTime: t("articles.a1.readTime"),
       gradient: "from-forest-dark/50 via-charcoal to-[#08080a]",
       hoverAccent: "forest",
+      image: "/images/linkedin/post_16_key_projects.jpg",
     },
     {
       category: t("articles.a2.category"),
@@ -48,6 +51,7 @@ export default function News() {
       readTime: t("articles.a2.readTime"),
       gradient: "from-gold-dark/40 via-charcoal to-[#08080a]",
       hoverAccent: "gold",
+      image: "/images/linkedin/post_1_digital_services.jpg",
     },
   ];
 
@@ -139,6 +143,14 @@ export default function News() {
                   
                   {/* Вращающаяся золотая сфера на фоне */}
                   <div className="absolute w-32 h-32 rounded-full bg-gold/10 blur-xl group-hover:scale-125 transition-transform duration-700 pointer-events-none" />
+                  
+                  {news.image && (
+                    <img 
+                      src={news.image} 
+                      alt={news.title}
+                      className="absolute inset-0 w-full h-full object-cover opacity-75 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 pointer-events-none"
+                    />
+                  )}
                   
                   {/* Категория (Badge) */}
                   <span className="absolute top-4 left-4 text-[10px] uppercase tracking-wider font-semibold liquid-glass text-gold-light px-3 py-1 rounded-md">

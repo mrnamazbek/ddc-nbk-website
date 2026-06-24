@@ -90,9 +90,9 @@ export default function AnalyticsPage() {
               </p>
 
               <div className="space-y-4">
-                <div className="flex gap-3">
-                  <div className="w-5 h-5 rounded-full bg-forest-mid/20 text-forest-light flex items-center justify-center shrink-0 mt-0.5">
-                    <Icon name="check" size={14} />
+                <div className="flex gap-3 items-start">
+                  <div className="w-8 h-8 rounded-lg bg-forest/20 border border-forest-light/10 text-gold-light flex items-center justify-center shrink-0 mt-0.5" title="Apache Kafka">
+                    <Icon name="kafka" size={18} />
                   </div>
                   <div>
                     <h3 className="text-xs font-bold text-foreground uppercase tracking-wider">{t("ingestionTitle")}</h3>
@@ -100,9 +100,10 @@ export default function AnalyticsPage() {
                   </div>
                 </div>
 
-                <div className="flex gap-3">
-                  <div className="w-5 h-5 rounded-full bg-forest-mid/20 text-forest-light flex items-center justify-center shrink-0 mt-0.5">
-                    <Icon name="check" size={14} />
+                <div className="flex gap-3 items-start">
+                  <div className="w-14 h-8 rounded-lg bg-forest/20 border border-forest-light/10 text-gold-light flex items-center justify-center gap-1.5 shrink-0 mt-0.5" title="PostgreSQL & ClickHouse">
+                    <Icon name="postgresql" size={16} />
+                    <Icon name="clickhouse" size={16} />
                   </div>
                   <div>
                     <h3 className="text-xs font-bold text-foreground uppercase tracking-wider">{t("storageTitle")}</h3>
@@ -110,9 +111,10 @@ export default function AnalyticsPage() {
                   </div>
                 </div>
 
-                <div className="flex gap-3">
-                  <div className="w-5 h-5 rounded-full bg-forest-mid/20 text-forest-light flex items-center justify-center shrink-0 mt-0.5">
-                    <Icon name="check" size={14} />
+                <div className="flex gap-3 items-start">
+                  <div className="w-14 h-8 rounded-lg bg-forest/20 border border-forest-light/10 text-gold-light flex items-center justify-center gap-1.5 shrink-0 mt-0.5" title="Apache Airflow & dbt">
+                    <Icon name="airflow" size={16} />
+                    <Icon name="dbt" size={16} />
                   </div>
                   <div>
                     <h3 className="text-xs font-bold text-foreground uppercase tracking-wider">{t("orchTitle")}</h3>

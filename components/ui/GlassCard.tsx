@@ -9,6 +9,7 @@ interface GlassCardProps {
   isTiltEnabled?: boolean;
   hoverAccent?: "gold" | "forest" | "default";
   variant?: "glass" | "liquid" | "liquid-strong";
+  onClick?: () => void;
 }
 
 export default function GlassCard({
@@ -17,6 +18,7 @@ export default function GlassCard({
   isTiltEnabled = true,
   hoverAccent = "default",
   variant = "liquid",
+  onClick,
 }: GlassCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
@@ -89,6 +91,7 @@ export default function GlassCard({
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onClick={onClick}
       style={{
         rotateX,
         rotateY,

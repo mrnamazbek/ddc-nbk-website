@@ -10,6 +10,7 @@ import Services from "@/components/sections/Services";
 import About from "@/components/sections/About";
 import CTA from "@/components/sections/CTA";
 import Showcase from "@/components/sections/Showcase";
+import Technologies from "@/components/sections/Technologies";
 
 // Lazy-loaded components for Variant B
 const SecuredFiBackground = dynamic(() => import("@/components/ui/SecuredFiBackground"), { ssr: false });
@@ -49,6 +50,7 @@ export default function MarketingHomePage() {
         <Stats />
         <Services />
         <Showcase />
+        <Technologies />
         <About />
         <CTA />
       </div>

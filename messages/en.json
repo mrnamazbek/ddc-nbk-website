@@ -618,6 +618,13 @@
     "officesSubtitle": "We operate in two key cities of Kazakhstan — the nation's capital and its financial center.",
     "cityAstana": "Astana",
     "cityAlmaty": "Almaty",
+    "tabLocal": "Kazakhstan (Offices)",
+    "tabGlobal": "Global Network",
+    "globeStatus": "All systems operational",
+    "globeTitle": "Cross-border Integration",
+    "globeDesc": "Our processing infrastructure is connected to major international gateways and hubs. This ensures instant cross-border payments, clearing, and interaction with financial systems of partners worldwide.",
+    "globeStat1": "Network Nodes",
+    "globeStat2": "Avg Latency",
     "officeTitle": "Head office in Almaty",
     "labelAddress": "Address",
     "addressVal": "Republic of Kazakhstan, 050040, Almaty, Al-Farabi Avenue, 21 (BC 'Al-Farabi')",
@@ -671,5 +678,56 @@
     "themeToggle": "Toggle theme",
     "logoLabel": "DDC — Home",
     "toggleMobileMenu": "Toggle mobile menu"
+  },
+  "EventGallery": {
+    "overline": "DDC CORPORATE LIFE",
+    "title": "Events & Everyday",
+    "titleAccent": "of our team",
+    "subtitle": "How we learn, collaborate with management, and build the technological future of the state's financial system.",
+    "events": {
+      "suleimenov": {
+        "title": "Meeting with the Governor of the NBK",
+        "desc": "Discussion of DDC performance and strategic priorities for AI, cybersecurity, and data management with Governor Timur Suleimenov."
+      },
+      "binur": {
+        "title": "Dialogue with CDO of the National Bank",
+        "desc": "An informal meeting with the Deputy Governor of the National Bank, Binur Zhalenov, discussing the integration of generative AI into internal processes."
+      },
+      "aiPlatform": {
+        "title": "Unified AI Platform",
+        "desc": "Strategic session on the creation of the Unified AI Platform of the National Bank of Kazakhstan for applied intelligent solutions."
+      },
+      "llmLearning": {
+        "title": "AI/LLM Engineering Training",
+        "desc": "DDC engineers' training at nFactorial School on developing applied solutions using Large Language Models (LLMs)."
+      },
+      "welcome": {
+        "title": "Welcome Meetings",
+        "desc": "Integration of new specialists into the DDC team, onboarding into the corporate culture and scale of state IT tasks."
+      },
+      "risks": {
+        "title": "Tech Talks on Risks",
+        "desc": "Internal knowledge sharing: assessment, management, and mitigation of risks in large-scale financial technology projects."
+      },
+      "architecture": {
+        "title": "IT Architecture & Systems",
+        "desc": "A session on systems thinking and designing a reliable and scalable IT architecture for the regulator."
+      }
+    }
+  },
+  "Technologies": {
+    "title": "TECHNOLOGIES",
+    "pmTitle": "Project Management",
+    "pmDesc": "We apply the latest project management systems, which allows us to achieve high results and meet client needs.",
+    "devopsTitle": "DevOps",
+    "devopsDesc": "This is our secret weapon that allows developers and admins to create and deploy apps faster, better and without downtime.",
+    "devTitle": "Frontend & Backend Development",
+    "devDesc": "We use advanced software development methodologies and technologies to ensure fast, reliable app development, increasing efficiency and quality.",
+    "openSourceTitle": "Open Source",
+    "openSourceDesc": "We develop and implement our solutions on open platforms using open-source software",
+    "bigDataTitle": "Big Data Analytics",
+    "bigDataDesc": "We collect data from various sources, process, store and perform subsequent data analysis with BI analytics reporting",
+    "aiTitle": "Computer Vision & AI",
+    "aiDesc": "We apply computer vision and neural networks in our projects when working with streaming and graphical data"
   }
 }

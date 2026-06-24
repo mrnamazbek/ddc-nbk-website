@@ -6,6 +6,7 @@ import * as Iconsax from "iconsax-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useIconSystem } from "../theme/IconSystemProvider";
 import { cn } from "@/lib/utils";
+import * as TechIcons from "./TechIcons";
 
 // Список доступных семантических имен иконок
 export type IconName =
@@ -56,7 +57,52 @@ export type IconName =
   | "procurement"
   | "it-services"
   | "development"
-  | "palette";
+  | "palette"
+  | "clickhouse"
+  | "airflow"
+  | "dbt"
+  | "oracle"
+  | "mastercard"
+  | "hyperledger"
+  | "express"
+  | "kong"
+  | "spark"
+  | "hadoop"
+  | "tableau"
+  | "solana"
+  | "spring"
+  | "kafka"
+  | "postgresql"
+  | "redis"
+  | "java"
+  | "golang"
+  | "python"
+  | "docker"
+  | "graphql"
+  | "nodejs"
+  | "solidity"
+  | "cpp"
+  | "jira"
+  | "confluence"
+  | "git"
+  | "github"
+  | "gitlab"
+  | "kubernetes"
+  | "terraform"
+  | "ansible"
+  | "nginx"
+  | "prometheus"
+  | "helm"
+  | "dotnet"
+  | "html5"
+  | "css3"
+  | "grpc"
+  | "angular"
+  | "csharp"
+  | "javascript"
+  | "nats"
+  | "nestjs"
+  | "typescript";
 
 interface IconProps {
   name: IconName;
@@ -66,7 +112,7 @@ interface IconProps {
 }
 
 // Маппинг для MingCute (Iconify)
-const mingcuteMap: Record<IconName, string> = {
+const mingcuteMap: Partial<Record<IconName, string>> = {
   menu: "mingcute:menu-line",
   x: "mingcute:close-line",
   "arrow-right": "mingcute:arrow-right-line",
@@ -118,7 +164,7 @@ const mingcuteMap: Record<IconName, string> = {
 };
 
 // Маппинг для Solar (Iconify)
-const solarMap: Record<IconName, string> = {
+const solarMap: Partial<Record<IconName, string>> = {
   menu: "solar:hamburger-menu-linear",
   x: "solar:close-circle-linear",
   "arrow-right": "solar:arrow-right-linear",
@@ -171,7 +217,7 @@ const solarMap: Record<IconName, string> = {
 
 // Маппинг для Iconsax (локальные React компоненты)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const iconsaxMap: Record<IconName, React.ComponentType<any>> = {
+const iconsaxMap: Partial<Record<IconName, React.ComponentType<any>>> = {
   menu: Iconsax.HambergerMenu,
   x: Iconsax.CloseCircle,
   "arrow-right": Iconsax.ArrowRight,
@@ -233,6 +279,68 @@ export default function Icon({ name, className, size = 20, animate = true }: Ico
 
   // Отрисовка конкретной системы иконок
   const renderIconContent = () => {
+    // Check local tech SVGs first
+    const localTechIcons: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+      postgresql: TechIcons.PostgreSQLIcon,
+      redis: TechIcons.RedisIcon,
+      solana: TechIcons.SolanaIcon,
+      spring: TechIcons.SpringIcon,
+      kafka: TechIcons.KafkaIcon,
+      java: TechIcons.JavaIcon,
+      golang: TechIcons.GoIcon,
+      python: TechIcons.PythonIcon,
+      docker: TechIcons.DockerIcon,
+      graphql: TechIcons.GraphQLIcon,
+      nodejs: TechIcons.NodeJSIcon,
+      solidity: TechIcons.SolidityIcon,
+      cpp: TechIcons.CPPIcon,
+    };
+
+    const brandMap: Record<string, string> = {
+      clickhouse: "logos:clickhouse",
+      airflow: "logos:apache-airflow",
+      dbt: "logos:dbt",
+      oracle: "logos:oracle",
+      mastercard: "logos:mastercard",
+      hyperledger: "logos:hyperledger-icon",
+      express: "logos:express",
+      kong: "logos:kong-icon",
+      spark: "logos:apache-spark",
+      hadoop: "logos:hadoop",
+      tableau: "logos:tableau",
+      jira: "logos:jira",
+      confluence: "logos:confluence",
+      git: "logos:git-icon",
+      github: "logos:github-icon",
+      gitlab: "logos:gitlab",
+      kubernetes: "logos:kubernetes",
+      terraform: "logos:terraform-icon",
+      ansible: "logos:ansible",
+      nginx: "logos:nginx",
+      prometheus: "logos:prometheus",
+      helm: "logos:helm",
+      dotnet: "logos:dotnet",
+      html5: "logos:html-5",
+      css3: "logos:css-3",
+      grpc: "logos:grpc",
+      angular: "logos:angular-icon",
+      csharp: "logos:c-sharp",
+      javascript: "logos:javascript",
+      nats: "logos:nats-icon",
+      nestjs: "logos:nestjs",
+      typescript: "logos:typescript-icon",
+    };
+
+    const LocalComponent = localTechIcons[name];
+    if (LocalComponent) {
+      return <LocalComponent size={size} className="w-full h-full" />;
+    }
+
+    const brandIcon = brandMap[name];
+    if (brandIcon) {
+      return <IconifyIcon icon={brandIcon} width={size} height={size} className="w-full h-full" />;
+    }
+
     if (iconSystem === "iconsax") {
       const IconsaxComponent = iconsaxMap[name];
       if (IconsaxComponent) {
@@ -244,12 +352,18 @@ export default function Icon({ name, className, size = 20, animate = true }: Ico
 
     if (iconSystem === "solar") {
       const solarIcon = solarMap[name];
-      return <IconifyIcon icon={solarIcon} width={size} height={size} className="w-full h-full" />;
+      if (solarIcon) {
+        return <IconifyIcon icon={solarIcon} width={size} height={size} className="w-full h-full" />;
+      }
     }
 
     // По умолчанию MingCute
     const mingcuteIcon = mingcuteMap[name];
-    return <IconifyIcon icon={mingcuteIcon} width={size} height={size} className="w-full h-full" />;
+    if (mingcuteIcon) {
+      return <IconifyIcon icon={mingcuteIcon} width={size} height={size} className="w-full h-full" />;
+    }
+
+    return null;
   };
 
   // Hover motion via CSS on the wrapper (so it works for BOTH icon sets, and

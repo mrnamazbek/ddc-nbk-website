@@ -6,8 +6,13 @@ import Button from "@/components/ui/Button";
 import GlassCard from "@/components/ui/GlassCard";
 import Timeline from "@/components/sections/Timeline";
 import Leadership from "@/components/sections/Leadership";
+import DDCEventGallery from "@/components/sections/DDCEventGallery";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
+import dynamic from "next/dynamic";
+
+const BaseModelViewer = dynamic(() => import("@/components/three/scene/BaseModelViewer"), { ssr: false });
+
 
 export default function AboutPage() {
   const t = useTranslations("AboutPage");
@@ -69,8 +74,8 @@ export default function AboutPage() {
         </motion.div>
 
         {/* Секция миссии */}
-        <div id="mission" className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24 pb-12 border-b border-white/5">
-          <div className="lg:col-span-7">
+        <div id="mission" className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16 pb-12">
+          <div className="lg:col-span-6">
             <h2 className="text-2xl font-bold text-white mb-6 tracking-wide">{t("missionTitle")}</h2>
             <p className="text-zinc-300 font-light leading-relaxed mb-6">
               {t("missionDesc1")}
@@ -79,35 +84,44 @@ export default function AboutPage() {
               {t("missionDesc2")}
             </p>
           </div>
-          <GlassCard 
-            hoverAccent="gold" 
-            variant="liquid-strong" 
-            className="lg:col-span-5 p-8 border-glass-border relative overflow-hidden text-left"
-          >
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-gold/10 rounded-full blur-2xl pointer-events-none" />
-            <div className="flex gap-4 items-start mb-6">
-              <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold">
-                <Icon name="bank" size={24} />
+          <div className="lg:col-span-6 min-h-[350px] relative overflow-hidden bg-charcoal/10 border border-white/5 rounded-3xl p-4 flex items-center justify-center">
+            <BaseModelViewer />
+          </div>
+        </div>
+
+        {/* Секция учредителя (Национальный Банк) */}
+        <GlassCard 
+          hoverAccent="gold" 
+          variant="liquid-strong" 
+          className="w-full p-8 sm:p-12 border-glass-border relative overflow-hidden text-left mb-24"
+        >
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-gold/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+            <div className="space-y-4">
+              <div className="flex gap-4 items-center">
+                <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold">
+                  <Icon name="bank" size={24} />
+                </div>
+                <div>
+                  <span className="text-xs uppercase text-gold font-medium tracking-wider">{t("founderBadge")}</span>
+                  <h3 className="text-xl font-bold text-white">{t("founderTitle")}</h3>
+                </div>
               </div>
-              <div>
-                <span className="text-xs uppercase text-gold font-medium tracking-wider">{t("founderBadge")}</span>
-                <h3 className="text-base font-bold text-white">{t("founderTitle")}</h3>
-              </div>
+              <p className="text-sm text-zinc-300 font-light leading-relaxed max-w-3xl">
+                {t("founderDesc")}
+              </p>
             </div>
-            <p className="text-xs text-zinc-300 font-light leading-relaxed mb-6">
-              {t("founderDesc")}
-            </p>
             <a
               href="https://nationalbank.kz"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs font-semibold text-gold flex items-center gap-1 hover:text-gold-light transition-colors duration-300 relative z-10"
+              className="text-sm font-semibold text-gold flex items-center gap-1 hover:text-gold-light transition-colors duration-300 shrink-0 relative z-10"
             >
               {t("founderLink")}
-              <Icon name="arrow-up-right" size={14} />
+              <Icon name="arrow-up-right" size={16} />
             </a>
-          </GlassCard>
-        </div>
+          </div>
+        </GlassCard>
 
         {/* Ценности */}
         <motion.div
@@ -157,6 +171,7 @@ export default function AboutPage() {
 
       </div>
 
+      <DDCEventGallery />
       <Timeline />
       <Leadership />
     </div>
