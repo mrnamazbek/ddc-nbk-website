@@ -120,6 +120,8 @@ export const NAV_PREVIEWS: Record<string, PreviewData> = {
   },
 };
 
+import { useRouter } from "@/i18n/navigation";
+
 /** Premium structured hover-preview card for a nav section. */
 export default function NavPreviewCard({
   link,
@@ -129,11 +131,23 @@ export default function NavPreviewCard({
   locale: string;
 }) {
   const data = NAV_PREVIEWS[link.href];
+  const router = useRouter();
   if (!data) return null;
   const L = (locale in OPEN ? locale : "en") as L;
 
   return (
-    <div className="relative w-[400px] overflow-hidden rounded-2xl border border-gold/20 liquid-glass-strong p-5 text-left shadow-2xl">
+    <div
+      onClick={() => router.push(link.href)}
+      className="relative w-[400px] overflow-hidden rounded-2xl border border-gold/20 liquid-glass-strong p-5 text-left shadow-2xl cursor-pointer hover:border-gold/40 hover:bg-white/[0.03] active:scale-[0.99] transition-all duration-300 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70"
+      role="link"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          router.push(link.href);
+        }
+      }}
+    >
       {/* Ambient brand glows */}
       <div className="pointer-events-none absolute -top-12 -left-12 h-28 w-28 rounded-full bg-forest/20 blur-2xl" />
       <div className="pointer-events-none absolute -bottom-12 -right-12 h-28 w-28 rounded-full bg-gold/10 blur-2xl" />

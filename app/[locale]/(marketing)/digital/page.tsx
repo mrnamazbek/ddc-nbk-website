@@ -80,7 +80,20 @@ export default function DigitalPage() {
                 {t("card1Desc")}
               </p>
             </div>
-            <div className="text-xs text-gold font-mono mt-6">Hyperledger Fabric, Go, Solidity</div>
+            <div className="mt-6 pt-4 border-t border-white/5 flex items-center gap-3">
+              <span className="text-[10px] uppercase tracking-wider text-zinc-500 font-medium">Stack:</span>
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-white/[0.02] border border-white/10 flex items-center justify-center text-zinc-400 hover:text-gold hover:border-gold/30 hover:bg-white/[0.06] transition-all duration-300" title="Hyperledger Fabric">
+                  <Icon name="hyperledger" size={14} />
+                </div>
+                <div className="w-7 h-7 rounded-lg bg-white/[0.02] border border-white/10 flex items-center justify-center text-zinc-400 hover:text-gold hover:border-gold/30 hover:bg-white/[0.06] transition-all duration-300" title="Golang">
+                  <Icon name="golang" size={14} />
+                </div>
+                <div className="w-7 h-7 rounded-lg bg-white/[0.02] border border-white/10 flex items-center justify-center text-zinc-400 hover:text-gold hover:border-gold/30 hover:bg-white/[0.06] transition-all duration-300" title="Solidity">
+                  <Icon name="solidity" size={14} />
+                </div>
+              </div>
+            </div>
           </GlassCard>
 
           <GlassCard className="border-white/5 hover:border-gold/20 flex flex-col justify-between">
@@ -93,7 +106,17 @@ export default function DigitalPage() {
                 {t("card2Desc")}
               </p>
             </div>
-            <div className="text-xs text-gold font-mono mt-6">Ethereum Virtual Machine (EVM)</div>
+            <div className="mt-6 pt-4 border-t border-white/5 flex items-center gap-3">
+              <span className="text-[10px] uppercase tracking-wider text-zinc-500 font-medium">Stack:</span>
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-white/[0.02] border border-white/10 flex items-center justify-center text-zinc-400 hover:text-gold hover:border-gold/30 hover:bg-white/[0.06] transition-all duration-300" title="EVM / Ethereum">
+                  <Icon name="ethereum" size={14} />
+                </div>
+                <div className="w-7 h-7 rounded-lg bg-white/[0.02] border border-white/10 flex items-center justify-center text-zinc-400 hover:text-gold hover:border-gold/30 hover:bg-white/[0.06] transition-all duration-300" title="Solidity">
+                  <Icon name="solidity" size={14} />
+                </div>
+              </div>
+            </div>
           </GlassCard>
 
           <GlassCard className="border-white/5 hover:border-gold/20 flex flex-col justify-between">
@@ -106,7 +129,17 @@ export default function DigitalPage() {
                 {t("card3Desc")}
               </p>
             </div>
-            <div className="text-xs text-gold font-mono mt-6">NFC, Secure Element, JavaCard</div>
+            <div className="mt-6 pt-4 border-t border-white/5 flex items-center gap-3">
+              <span className="text-[10px] uppercase tracking-wider text-zinc-500 font-medium">Stack:</span>
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-white/[0.02] border border-white/10 flex items-center justify-center text-zinc-400 hover:text-gold hover:border-gold/30 hover:bg-white/[0.06] transition-all duration-300" title="Java / JavaCard">
+                  <Icon name="java" size={14} />
+                </div>
+                <div className="w-7 h-7 rounded-lg bg-white/[0.02] border border-white/10 flex items-center justify-center text-zinc-400 hover:text-gold hover:border-gold/30 hover:bg-white/[0.06] transition-all duration-300" title="NFC">
+                  <Icon name="phone" size={14} />
+                </div>
+              </div>
+            </div>
           </GlassCard>
         </div>
 

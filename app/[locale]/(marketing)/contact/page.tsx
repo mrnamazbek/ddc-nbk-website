@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import { KazakhstanMap } from "@/components/ui/kazakhstan-map";
-import { InteractiveGlobe } from "@/components/ui/interactive-globe";
 import { cn } from "@/lib/utils";
 
 const LabelInputContainer = ({
@@ -34,7 +33,6 @@ export default function ContactPage() {
   const t = useTranslations("ContactPage");
   const tA11y = useTranslations("A11y");
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [activeTab, setActiveTab] = useState<"local" | "global">("local");
   const reduce = useReducedMotion();
 
   // Validation schema for quality inbound messages (created dynamically for localization)
@@ -318,79 +316,12 @@ export default function ContactPage() {
             </p>
           </motion.div>
 
-          <div className="mx-auto max-w-5xl">
-            {/* Tab Buttons */}
-            <div className="flex justify-center gap-4 mb-12">
-              <button
-                type="button"
-                onClick={() => setActiveTab("local")}
-                className={cn(
-                  "px-6 py-2 rounded-full border text-xs uppercase tracking-wider font-semibold transition-all duration-300 cursor-pointer",
-                  activeTab === "local"
-                    ? "bg-forest/20 border-forest-light/35 text-gold shadow-lg shadow-forest/10"
-                    : "bg-charcoal/20 border-white/5 text-zinc-400 hover:text-white"
-                )}
-              >
-                {t("tabLocal")}
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab("global")}
-                className={cn(
-                  "px-6 py-2 rounded-full border text-xs uppercase tracking-wider font-semibold transition-all duration-300 cursor-pointer",
-                  activeTab === "global"
-                    ? "bg-forest/20 border-forest-light/35 text-gold shadow-lg shadow-forest/10"
-                    : "bg-charcoal/20 border-white/5 text-zinc-400 hover:text-white"
-                )}
-              >
-                {t("tabGlobal")}
-              </button>
-            </div>
-
             {/* Container for Maps */}
             <div className="relative overflow-hidden bg-charcoal/10 border border-white/5 rounded-3xl p-8 sm:p-12 min-h-[480px] flex items-center justify-center">
-              {activeTab === "local" ? (
-                <div className="w-full">
-                  <KazakhstanMap
-                    offices={[
-                      { lat: 51.1694, lng: 71.4491, label: t("cityAstana") },
-                      { lat: 43.222, lng: 76.8512, label: t("cityAlmaty") },
-                    ]}
-                    connections={[{ from: 0, to: 1 }]}
-                  />
-                </div>
-              ) : (
-                <div className="w-full flex flex-col md:flex-row items-center gap-12 text-left">
-                  <div className="flex-1 space-y-4">
-                    <div className="inline-flex items-center gap-2 rounded-full border border-forest-light/20 bg-forest/10 px-3 py-1 text-xs text-gold-light">
-                      <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      {t("globeStatus")}
-                    </div>
-                    <h3 className="text-2xl font-bold text-white tracking-wide">
-                      {t("globeTitle")}
-                    </h3>
-                    <p className="text-sm text-zinc-300 font-light leading-relaxed">
-                      {t("globeDesc")}
-                    </p>
-                    <div className="flex gap-6 pt-4">
-                      <div>
-                        <p className="text-2xl font-bold text-white">7+</p>
-                        <p className="text-[10px] text-zinc-400 uppercase tracking-wider">{t("globeStat1")}</p>
-                      </div>
-                      <div className="w-px h-8 bg-white/10" />
-                      <div>
-                        <p className="text-2xl font-bold text-white">&lt;50ms</p>
-                        <p className="text-[10px] text-zinc-400 uppercase tracking-wider">{t("globeStat2")}</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex-1 flex items-center justify-center min-h-[300px]">
-                    <InteractiveGlobe size={380} />
-                  </div>
-                </div>
-              )}
+              <div className="w-full">
+                <KazakhstanMap />
+              </div>
             </div>
-          </div>
         </section>
 
       </div>

@@ -1,22 +1,39 @@
 "use client";
 
-import React, { Suspense, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import React, { Suspense, useRef, useMemo } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, Lightformer, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
+import { useReducedMotion } from "framer-motion";
 
 function Model({ url }: { url: string }) {
   const { scene } = useGLTF(url);
   const groupRef = useRef<THREE.Group>(null);
+  const { size } = useThree();
+  const reduce = useReducedMotion();
 
-  // Slow rotation and hover bobbing
+  // Slow rotation and hover bobbing (disabled if reduced motion is preferred)
   useFrame((state) => {
     if (groupRef.current) {
       const t = state.clock.getElapsedTime();
-      groupRef.current.rotation.y = t * 0.15;
-      groupRef.current.position.y = Math.sin(t * 0.5) * 0.12;
+      groupRef.current.rotation.y = reduce ? 0.3 : t * 0.12;
+      groupRef.current.position.y = reduce ? 0 : Math.sin(t * 0.4) * 0.08;
     }
   });
+
+  // Calculate geometric center of the loaded model
+  const { center, scaleVal } = useMemo(() => {
+    const box = new THREE.Box3().setFromObject(scene);
+    const centerVec = new THREE.Vector3();
+    box.getCenter(centerVec);
+    
+    // Scale responsive to viewport size
+    const isMobile = size.width < 500;
+    const isTablet = size.width >= 500 && size.width < 1024;
+    const scaleVal = isMobile ? 1.15 : isTablet ? 1.45 : 1.75;
+    
+    return { center: centerVec, scaleVal };
+  }, [scene, size.width]);
 
   // Apply premium gold and forest-green styling
   scene.traverse((child) => {
@@ -31,16 +48,20 @@ function Model({ url }: { url: string }) {
 
       mesh.material = new THREE.MeshPhysicalMaterial({
         color: isCore ? "#163A28" : "#E8C87A", // Forest green or gold
-        metalness: isCore ? 0.2 : 0.95,
-        roughness: isCore ? 0.15 : 0.22,
+        metalness: isCore ? 0.25 : 0.95,
+        roughness: isCore ? 0.15 : 0.24,
         clearcoat: 1.0,
         clearcoatRoughness: 0.1,
-        envMapIntensity: 2.0,
+        envMapIntensity: 2.2,
       });
     }
   });
 
-  return <primitive ref={groupRef} object={scene} scale={1.8} position={[0, 0, 0]} />;
+  return (
+    <group ref={groupRef} scale={scaleVal}>
+      <primitive object={scene} position={[-center.x, -center.y, -center.z]} />
+    </group>
+  );
 }
 
 export default function BaseModelViewer() {

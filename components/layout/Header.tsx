@@ -63,7 +63,7 @@ function LanguageSwitcher({
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [hoveredLink, setHoveredLink] = useState<{ name: string; href: string } | null>(null);
+  const [hoveredLink, setHoveredLink] = useState<{ name: string; href: string; left: number; width: number } | null>(null);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -112,9 +112,14 @@ export default function Header() {
     };
   }, [isMobileMenuOpen]);
 
-  const handleMouseEnterLink = (link: { name: string; href: string }) => {
+  const handleMouseEnterLink = (link: { name: string; href: string }, el: HTMLLIElement) => {
     if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
-    setHoveredLink(link);
+    const rect = el.getBoundingClientRect();
+    setHoveredLink({
+      ...link,
+      left: rect.left,
+      width: rect.width,
+    });
   };
 
   const handleMouseLeaveLink = () => {
@@ -216,7 +221,7 @@ export default function Header() {
                   }}
                   onMouseEnter={(e) => {
                     movePillTo(e.currentTarget);
-                    handleMouseEnterLink(link);
+                    handleMouseEnterLink(link, e.currentTarget);
                   }}
                   onMouseLeave={handleMouseLeaveLink}
                   className="relative z-10"
@@ -276,15 +281,18 @@ export default function Header() {
       <AnimatePresence>
         {hoveredLink && (
           <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.98 }}
+            initial={{ opacity: 0, y: 15, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.98 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
+            exit={{ opacity: 0, y: 10, scale: 0.96 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             onMouseEnter={() => {
               if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
             }}
             onMouseLeave={handleMouseLeaveLink}
-            className="hidden xl:block fixed top-[5.25rem] left-1/2 -translate-x-1/2 z-[60] pointer-events-auto"
+            style={{
+              left: `${Math.max(20, Math.min(hoveredLink.left - 200 + hoveredLink.width / 2, typeof window !== "undefined" ? window.innerWidth - 420 : hoveredLink.left))}px`,
+            }}
+            className="hidden xl:block fixed top-[5.25rem] z-[60] pointer-events-auto"
           >
             <NavPreviewCard link={hoveredLink} locale={locale} />
           </motion.div>
