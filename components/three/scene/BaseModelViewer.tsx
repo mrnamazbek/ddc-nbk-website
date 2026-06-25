@@ -7,7 +7,7 @@ import * as THREE from "three";
 import { useReducedMotion } from "framer-motion";
 
 function Model({ url }: { url: string }) {
-  const { scene } = useGLTF(url);
+  const { scene } = useGLTF(url, true);
   const groupRef = useRef<THREE.Group>(null);
   const { size } = useThree();
   const reduce = useReducedMotion();
