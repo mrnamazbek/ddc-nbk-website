@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 // Путь к папке артефактов для сохранения скриншотов
-const ARTIFACTS_DIR = '/Users/namazbekbekzhanov/.gemini/antigravity/brain/668a5636-cfd2-4ca4-a120-21fd88033a5e';
+const ARTIFACTS_DIR = '/Users/namazbekbekzhanov/.gemini/antigravity/brain/d4d0c84c-eed3-4011-b13f-d0000dd5fd01';
 
 test.describe('Visual QA - Interactive Shader Background & UI Elements', () => {
   let consoleErrors: string[] = [];
@@ -131,17 +131,25 @@ test.describe('Visual QA - Interactive Shader Background & UI Elements', () => {
     await expect(canvas).not.toBeVisible();
   });
 
-  test('MCP Playground Page - Bento Grid & Background Beams', async ({ page }) => {
+  test('MCP Playground Page - Bento Grid & Background Beams (RU & EN)', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto('/ru/test-mcp');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(2000);
 
-    // Убеждаемся, что элементы Bento Grid и фоновые лучи видны
-    const bentoItems = page.locator('.group\\/bento');
-    await expect(bentoItems.first()).toBeVisible();
+    for (const locale of ['ru', 'en']) {
+      await page.goto(`/${locale}/test-mcp`);
+      await page.waitForLoadState('networkidle');
+      await page.waitForTimeout(2000);
 
-    await page.screenshot({ path: `${ARTIFACTS_DIR}/screenshot_test_mcp.png` });
+      // Убеждаемся, что элементы Bento Grid и фоновые лучи видны
+      const bentoItems = page.locator('.group\\/bento');
+      await expect(bentoItems.first()).toBeVisible();
+
+      // Убеждаемся, что блок тарифов (Bento Pricing) отображается
+      const pricingCards = page.locator('.group\\/pricing');
+      await expect(pricingCards).toHaveCount(3);
+
+      await page.screenshot({ path: `${ARTIFACTS_DIR}/screenshot_test_mcp_${locale}.png` });
+    }
+
     const errors = consoleErrors.filter(err => !err.includes('favicon'));
     if (errors.length > 0) {
       console.error("CONSOLE ERRORS DETECTED:", errors);
