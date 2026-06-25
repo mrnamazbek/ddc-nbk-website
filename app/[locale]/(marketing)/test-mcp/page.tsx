@@ -13,8 +13,20 @@ import {
   IconTrendingUp,
   IconCheck
 } from '@tabler/icons-react';
+import { useFontSystem, type FontSystem } from '@/components/theme/FontSystemProvider';
 
 export default function TestMcpPage() {
+  const { fontSystem, setFontSystem } = useFontSystem();
+
+  const fontsList = [
+    { id: "pair-a", name: "Контроль (Golos + Source Serif)", desc: "Дефолтная шрифтовая система сайта" },
+    { id: "nohemi", name: "Nohemi", desc: "Стильный геометрический гротеск" },
+    { id: "neue-regrade", name: "Neue Regrade", desc: "Гротеск со скошенными ink traps" },
+    { id: "quantify", name: "Quantify", desc: "Футуристичный геометрический дисплейный шрифт" },
+    { id: "neue-power", name: "Neue Power (Clash Display)", desc: "Тяжелый бруталистский акцидентный шрифт" },
+    { id: "serena", name: "Serena (Satoshi)", desc: "Элегантный геометрический гротеск" },
+  ];
+
   const items = [
     {
       title: "Мониторинг транзакций",
@@ -123,6 +135,65 @@ export default function TestMcpPage() {
           <p className="text-zinc-400 max-w-2xl mx-auto text-base">
             Эта страница демонстрирует работу установленных компонентов Bento Grid и Background Beams, стилизованных под цветовую палитру DDC.
           </p>
+        </div>
+
+        {/* A/B Font Family Tester */}
+        <div className="max-w-4xl mx-auto mb-16 p-6 rounded-2xl border border-emerald-900/40 bg-[#061814]/50 backdrop-blur-md relative z-20">
+          <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+            <span className="text-[#E8C87A]">A/B Тестирование Шрифтов</span>
+          </h2>
+          <p className="text-zinc-300 text-sm mb-6">
+            Выберите шрифт ниже, чтобы применить его ко всему сайту. Шрифты <span className="font-semibold text-white">Nohemi</span>, <span className="font-semibold text-white">Neue Regrade</span> и <span className="font-semibold text-white">Quantify</span> загружены локально. Для <span className="font-semibold text-white">Neue Power</span> и <span className="font-semibold text-white">Serena</span> подключены их легальные веб-альтернативы премиум-класса <span className="font-semibold text-white">Clash Display</span> и <span className="font-semibold text-white">Satoshi</span> (от Indian Type Foundry).
+          </p>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
+            {fontsList.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => setFontSystem(f.id as FontSystem)}
+                className={`p-4 rounded-xl border text-left transition-all ${
+                  fontSystem === f.id
+                    ? "bg-[#E8C87A] text-[#030a06] border-[#E8C87A] shadow-[0_0_15px_rgba(232,200,122,0.2)]"
+                    : "bg-emerald-950/20 text-white border-emerald-900/40 hover:bg-emerald-950/40"
+                }`}
+              >
+                <div className="font-bold text-sm mb-1">{f.name}</div>
+                <div className="text-[10px] opacity-70 leading-tight">{f.desc}</div>
+              </button>
+            ))}
+          </div>
+
+          <h3 className="text-sm font-semibold text-zinc-400 mb-3 uppercase tracking-wider">Визуальное сравнение (Looks for eyes)</h3>
+          <div className="space-y-4">
+            {fontsList.map((f) => (
+              <div 
+                key={f.id} 
+                className="p-4 rounded-xl bg-black/30 border border-emerald-950/20 flex flex-col md:flex-row md:items-center justify-between gap-4"
+                style={{ 
+                  fontFamily: 
+                    f.id === "pair-a" ? "var(--font-golos)" : 
+                    f.id === "nohemi" ? "'Nohemi'" : 
+                    f.id === "neue-regrade" ? "'Neue Regrade'" : 
+                    f.id === "quantify" ? "'Quantify'" : 
+                    f.id === "neue-power" ? "'Clash Display'" : 
+                    f.id === "serena" ? "'Satoshi'" : 
+                    "sans-serif" 
+                }}
+              >
+                <div className="flex-1">
+                  <span className="text-xs text-zinc-500 font-mono block mb-1">Шрифт: {f.name}</span>
+                  <div className="text-2xl font-bold text-white tracking-tight">DDC Digital Development Center</div>
+                  <div className="text-sm text-zinc-400 mt-1 font-light leading-relaxed">
+                    Центр цифрового развития Национального Банка Республики Казахстан. Инновации и кибербезопасность.
+                  </div>
+                </div>
+                <div className="text-3xl font-extrabold text-[#E8C87A] self-end md:self-center">
+                  Aa Bb Cc 123
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Демонстрация Bento Grid */}

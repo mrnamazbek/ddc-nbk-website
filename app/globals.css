@@ -1,7 +1,62 @@
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@300,400,500,600,700&f[]=satoshi@300,400,500,700&display=swap');
 @import "tailwindcss";
 @import "../styles/tokens.css";
 @import "../styles/a11y.css";
 @import "../styles/svgator-animations.css";
+
+/* Local custom fonts for A/B testing */
+@font-face {
+  font-family: 'Nohemi';
+  src: url('/fonts/nohemi/Nohemi-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Nohemi';
+  src: url('/fonts/nohemi/Nohemi-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Nohemi';
+  src: url('/fonts/nohemi/Nohemi-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Nohemi';
+  src: url('/fonts/nohemi/Nohemi-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Regrade';
+  src: url('/fonts/neue-regrade/NeueRegrade-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Neue Regrade';
+  src: url('/fonts/neue-regrade/NeueRegrade-Semibold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Quantify';
+  src: url('/fonts/quantify/Quantify-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Instrument Serif / Barlow / JetBrains Mono are loaded via <link> in the
    document <head> (app/[locale]/layout.tsx) — Tailwind v4 + Lightning CSS
    rejects url() @import after the tailwindcss import, so do NOT re-add it here. */
@@ -25,6 +80,37 @@ html.font-pair-b {
   --font-current-sans: var(--font-ibm-plex), sans-serif;
   --font-current-display: var(--font-lora), serif;
   --font-current-soft: var(--font-golos), sans-serif;
+}
+
+/* Новые шрифты для A/B Тестирования */
+html.font-nohemi {
+  --font-current-sans: 'Nohemi', var(--font-golos), sans-serif;
+  --font-current-display: 'Nohemi', var(--font-source-serif), serif;
+  --font-current-soft: 'Nohemi', var(--font-ibm-plex), sans-serif;
+}
+
+html.font-neue-regrade {
+  --font-current-sans: 'Neue Regrade', var(--font-golos), sans-serif;
+  --font-current-display: 'Neue Regrade', var(--font-source-serif), serif;
+  --font-current-soft: 'Neue Regrade', var(--font-ibm-plex), sans-serif;
+}
+
+html.font-quantify {
+  --font-current-sans: var(--font-golos), sans-serif;
+  --font-current-display: 'Quantify', var(--font-source-serif), serif;
+  --font-current-soft: 'Quantify', var(--font-ibm-plex), sans-serif;
+}
+
+html.font-neue-power {
+  --font-current-sans: 'Clash Display', var(--font-golos), sans-serif;
+  --font-current-display: 'Clash Display', var(--font-source-serif), serif;
+  --font-current-soft: 'Clash Display', var(--font-ibm-plex), sans-serif;
+}
+
+html.font-serena {
+  --font-current-sans: 'Satoshi', var(--font-golos), sans-serif;
+  --font-current-display: 'Satoshi', var(--font-source-serif), serif;
+  --font-current-soft: 'Satoshi', var(--font-ibm-plex), sans-serif;
 }
 
 /* Классы переключения фонов A/B (только для темной темы) */

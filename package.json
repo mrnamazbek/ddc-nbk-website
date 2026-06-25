@@ -47,6 +47,7 @@
     "@axe-core/playwright": "^4.11.3",
     "@playwright/test": "^1.60.0",
     "@tailwindcss/postcss": "^4",
+    "@tamagui/font-nohemi": "^2.3.3",
     "@types/animejs": "^3.1.13",
     "@types/node": "^20",
     "@types/react": "^19",
