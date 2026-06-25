@@ -10,6 +10,7 @@ import { FontSystemProvider } from "@/components/theme/FontSystemProvider";
 import { BgSystemProvider } from "@/components/theme/BgSystemProvider";
 import AccessibilityProvider from "@/components/theme/AccessibilityProvider";
 import AccessibilityPanel from "@/components/ui/AccessibilityPanel";
+import FontFloatingSwitcher from "@/components/ui/FontFloatingSwitcher";
 
 const sourceSerif = Source_Serif_4({
   subsets: ["latin", "cyrillic", "cyrillic-ext"],
@@ -99,6 +100,7 @@ export default async function LocaleLayout({
                     <div data-decorative className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] bg-[url('/images/textures/bg-texture-noise.png')] bg-repeat" />
                     <PageTransitionProvider>{children}</PageTransitionProvider>
                     <AccessibilityPanel />
+                    <FontFloatingSwitcher />
                   </AccessibilityProvider>
                 </NextIntlClientProvider>
               </IconSystemProvider>

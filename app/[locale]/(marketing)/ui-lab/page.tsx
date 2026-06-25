@@ -513,8 +513,8 @@ export default function UiLabPage() {
           The new Gemini MCP entries are now in Codex config, but this running session must be restarted before those new servers appear as callable tools. This lab still shows exactly how each source should be tested.
         </SectionHeading>
 
-        <div className="grid gap-5 lg:grid-cols-3">
-          <GlassCard hoverAccent="forest" className="p-6">
+        <div className="grid items-start gap-5 lg:grid-cols-3">
+          <GlassCard hoverAccent="forest" className="self-start p-6">
             <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-gold">Callable now</p>
             <div className="mt-4 text-5xl font-semibold text-white">{liveCount}</div>
             <p className="mt-3 text-sm leading-6 text-white/58">Used in this pass for reference evidence and browser QA.</p>
