@@ -1,10 +1,13 @@
 "use client";
 
-import React, { Suspense, useRef, useMemo } from "react";
+import React, { Suspense, useRef, useMemo, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, Lightformer, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { useReducedMotion } from "framer-motion";
+
+// Set localized Draco decoder path to avoid fetching from external Google CDN
+useGLTF.setDecoderPath("/draco/");
 
 function Model({ url }: { url: string }) {
   const { scene } = useGLTF(url, true);
@@ -12,12 +15,12 @@ function Model({ url }: { url: string }) {
   const { size } = useThree();
   const reduce = useReducedMotion();
 
-  // Slow rotation and hover bobbing (disabled if reduced motion is preferred)
+  // Smooth auto-rotation and gentle bobbing (disabled if reduced motion is preferred)
   useFrame((state) => {
     if (groupRef.current) {
       const t = state.clock.getElapsedTime();
-      groupRef.current.rotation.y = reduce ? 0.3 : t * 0.12;
-      groupRef.current.position.y = reduce ? 0 : Math.sin(t * 0.4) * 0.08;
+      groupRef.current.rotation.y = reduce ? 0.3 : t * 0.22; // Faster auto-rotation
+      groupRef.current.position.y = reduce ? 0 : Math.sin(t * 0.5) * 0.04; // Reduced bobbing to prevent vertical clipping
     }
   });
 
@@ -35,80 +38,93 @@ function Model({ url }: { url: string }) {
     return { center: centerVec, scaleVal };
   }, [scene, size.width]);
 
-  // Apply premium gold and forest-green styling
-  scene.traverse((child) => {
-    if ((child as THREE.Mesh).isMesh) {
-      const mesh = child as THREE.Mesh;
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
+  // Create physical material once to prevent WebGL recompiling shaders on every component render/resize
+  const material = useMemo(() => {
+    const mat = new THREE.MeshPhysicalMaterial({
+      color: "#E8C87A",
+      metalness: 0.9,
+      roughness: 0.15,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.1,
+      envMapIntensity: 2.8,
+    });
 
-      const material = new THREE.MeshPhysicalMaterial({
-        color: "#E8C87A",
-        metalness: 0.9,
-        roughness: 0.15,
-        clearcoat: 1.0,
-        clearcoatRoughness: 0.1,
-        envMapIntensity: 2.8,
-      });
+    mat.onBeforeCompile = (shader) => {
+      // Внедряем vLocalZ во vertex shader
+      shader.vertexShader = `
+        varying float vLocalZ;
+        ${shader.vertexShader}
+      `.replace(
+        "#include <begin_vertex>",
+        `
+        #include <begin_vertex>
+        vLocalZ = position.z;
+        `
+      );
 
-      material.onBeforeCompile = (shader) => {
-        // Внедряем vLocalZ во vertex shader
-        shader.vertexShader = `
-          varying float vLocalZ;
-          ${shader.vertexShader}
-        `.replace(
-          "#include <begin_vertex>",
-          `
-          #include <begin_vertex>
-          vLocalZ = position.z;
-          `
-        );
+      // Внедряем vLocalZ во fragment shader
+      shader.fragmentShader = `
+        varying float vLocalZ;
+        ${shader.fragmentShader}
+      `;
 
-        // Внедряем vLocalZ во fragment shader
-        shader.fragmentShader = `
-          varying float vLocalZ;
-          ${shader.fragmentShader}
-        `;
+      // Перекрашиваем пиксели на основе высоты рельефа
+      shader.fragmentShader = shader.fragmentShader.replace(
+        "#include <color_fragment>",
+        `
+        #include <color_fragment>
+        float absZ = abs(vLocalZ);
+        
+        // Глубокий темно-зеленый лак
+        vec3 greenPaint = vec3(10.0 / 255.0, 48.0 / 255.0, 30.0 / 255.0);
+        
+        // Благородное золото с плавными переливами
+        vec3 goldPaint = vec3(235.0 / 255.0, 195.0 / 255.0, 105.0 / 255.0);
+        
+        // Порог 0.088 - 0.096 для идеального разделения основания и рельефа
+        float mixFactor = smoothstep(0.088, 0.096, absZ);
+        
+        diffuseColor.rgb = mix(greenPaint, goldPaint, mixFactor);
+        `
+      );
 
-        // Перекрашиваем пиксели на основе высоты рельефа
-        shader.fragmentShader = shader.fragmentShader.replace(
-          "#include <color_fragment>",
-          `
-          #include <color_fragment>
-          float absZ = abs(vLocalZ);
-          
-          // Глубокий темно-зеленый лак
-          vec3 greenPaint = vec3(10.0 / 255.0, 48.0 / 255.0, 30.0 / 255.0);
-          
-          // Благородное золото с плавными переливами
-          vec3 goldPaint = vec3(235.0 / 255.0, 195.0 / 255.0, 105.0 / 255.0);
-          
-          // Порог 0.088 - 0.096 для идеального разделения основания и рельефа
-          float mixFactor = smoothstep(0.088, 0.096, absZ);
-          
-          diffuseColor.rgb = mix(greenPaint, goldPaint, mixFactor);
-          `
-        );
+      // Модифицируем roughness и metalness
+      shader.fragmentShader = shader.fragmentShader.replace(
+        "#include <roughnessmap_fragment>",
+        `
+        #include <roughnessmap_fragment>
+        roughnessFactor = mix(0.22, 0.12, mixFactor);
+        `
+      ).replace(
+        "#include <metalnessmap_fragment>",
+        `
+        #include <metalnessmap_fragment>
+        metalnessFactor = mix(0.05, 0.95, mixFactor);
+        `
+      );
+    };
 
-        // Модифицируем roughness и metalness
-        shader.fragmentShader = shader.fragmentShader.replace(
-          "#include <roughnessmap_fragment>",
-          `
-          #include <roughnessmap_fragment>
-          roughnessFactor = mix(0.22, 0.12, mixFactor);
-          `
-        ).replace(
-          "#include <metalnessmap_fragment>",
-          `
-          #include <metalnessmap_fragment>
-          metalnessFactor = mix(0.05, 0.95, mixFactor);
-          `
-        );
-      };
+    return mat;
+  }, []);
 
-      mesh.material = material;
-    }
-  });
+  // Traverse the scene and assign materials only once when the scene or material changes
+  useMemo(() => {
+    scene.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const mesh = child as THREE.Mesh;
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        mesh.material = material;
+      }
+    });
+  }, [scene, material]);
+
+  // Clean up materials from GPU memory on unmount
+  useEffect(() => {
+    return () => {
+      material.dispose();
+    };
+  }, [material]);
 
   return (
     <group ref={groupRef} scale={scaleVal}>
@@ -121,8 +137,14 @@ export default function BaseModelViewer() {
   return (
     <div className="w-full h-full relative select-none cursor-grab active:cursor-grabbing">
       <Canvas
-        camera={{ position: [0, 0, 6.5], fov: 35 }}
-        gl={{ antialias: true, powerPreference: "high-performance" }}
+        camera={{ position: [0, 0, 7.2], fov: 35 }} // Moved camera back from 6.5 to 7.2 to prevent vertical clipping/cutting
+        dpr={[1, 2]} // Limit DPR to 2 for performance optimization on Retina screens
+        gl={{ 
+          antialias: true, 
+          powerPreference: "high-performance",
+          stencil: false, // Save memory and bandwidth by disabling stencil buffer
+          depth: true
+        }}
         onCreated={({ gl }) => {
           gl.toneMapping = THREE.ACESFilmicToneMapping;
           gl.toneMappingExposure = 1.1;
@@ -137,6 +159,8 @@ export default function BaseModelViewer() {
           <OrbitControls 
             enableZoom={false} 
             enablePan={false}
+            enableDamping={true} // Premium smooth drag interactions
+            dampingFactor={0.05}
             minPolarAngle={Math.PI / 3}
             maxPolarAngle={Math.PI / 1.8}
           />

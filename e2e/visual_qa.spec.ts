@@ -74,7 +74,11 @@ test.describe('Visual QA - Interactive Shader Background & UI Elements', () => {
     }
 
     // Убеждаемся, что консольных ошибок при этих операциях не было
-    expect(consoleErrors.filter(err => !err.includes('favicon')).length).toBe(0);
+    const errors = consoleErrors.filter(err => !err.includes('favicon'));
+    if (errors.length > 0) {
+      console.error("CONSOLE ERRORS DETECTED:", errors);
+    }
+    expect(errors.length).toBe(0);
   });
 
   test('Tablet Viewport - Responsive check', async ({ page }) => {
@@ -84,7 +88,11 @@ test.describe('Visual QA - Interactive Shader Background & UI Elements', () => {
     await page.waitForTimeout(1500);
 
     await page.screenshot({ path: `${ARTIFACTS_DIR}/screenshot_tablet.png` });
-    expect(consoleErrors.filter(err => !err.includes('favicon')).length).toBe(0);
+    const errors = consoleErrors.filter(err => !err.includes('favicon'));
+    if (errors.length > 0) {
+      console.error("CONSOLE ERRORS DETECTED:", errors);
+    }
+    expect(errors.length).toBe(0);
   });
 
   test('Mobile Viewport - Responsive check & mobile menu', async ({ page }) => {
@@ -103,7 +111,11 @@ test.describe('Visual QA - Interactive Shader Background & UI Elements', () => {
       await page.waitForTimeout(500);
       await page.screenshot({ path: `${ARTIFACTS_DIR}/screenshot_mobile_menu.png` });
     }
-    expect(consoleErrors.filter(err => !err.includes('favicon')).length).toBe(0);
+    const errors = consoleErrors.filter(err => !err.includes('favicon'));
+    if (errors.length > 0) {
+      console.error("CONSOLE ERRORS DETECTED:", errors);
+    }
+    expect(errors.length).toBe(0);
   });
 
   test('Reduced Motion Check - Canvas should not mount', async ({ page }) => {
@@ -130,6 +142,10 @@ test.describe('Visual QA - Interactive Shader Background & UI Elements', () => {
     await expect(bentoItems.first()).toBeVisible();
 
     await page.screenshot({ path: `${ARTIFACTS_DIR}/screenshot_test_mcp.png` });
-    expect(consoleErrors.filter(err => !err.includes('favicon')).length).toBe(0);
+    const errors = consoleErrors.filter(err => !err.includes('favicon'));
+    if (errors.length > 0) {
+      console.error("CONSOLE ERRORS DETECTED:", errors);
+    }
+    expect(errors.length).toBe(0);
   });
 });
