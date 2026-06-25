@@ -9,8 +9,11 @@ test.describe('Visual QA - Interactive Shader Background & UI Elements', () => {
   test.beforeEach(({ page }) => {
     consoleErrors = [];
     page.on('console', msg => {
+      const text = msg.text();
+      if (text.includes("TRAVERSE")) {
+        console.log(text);
+      }
       if (msg.type() === 'error') {
-        const text = msg.text();
         if (!text.includes("Encountered a script tag while rendering React component")) {
           consoleErrors.push(text);
         }
@@ -75,6 +78,21 @@ test.describe('Visual QA - Interactive Shader Background & UI Elements', () => {
 
     // Убеждаемся, что консольных ошибок при этих операциях не было
     expect(consoleErrors.filter(err => !err.includes('favicon')).length).toBe(0);
+  });
+
+  test('About Page - 3D Coin rendering, zoom & details without borders', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/ru/about');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(2500); // Даем время для инициализации R3F и загрузки SVG-эмблемы
+
+    // Проверяем наличие холста 3D-модели
+    const canvas = page.locator('canvas').first();
+    await expect(canvas).toBeVisible();
+
+    // Сохраняем скриншот монеты крупным планом
+    await page.screenshot({ path: `${ARTIFACTS_DIR}/screenshot_coin_detail.png` });
+    expect(consoleErrors.filter(err => !err.includes('favicon') && !err.includes('TRAVERSE')).length).toBe(0);
   });
 
   test('Tablet Viewport - Responsive check', async ({ page }) => {

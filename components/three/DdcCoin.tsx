@@ -73,7 +73,7 @@ function useEmblemGeometry() {
   }, [data]);
 }
 
-function CoinInner({ scale = 1 }: { scale?: number }) {
+function CoinInner({ scale = 1, reduceMotion = false }: { scale?: number; reduceMotion?: boolean }) {
   const group = useRef<THREE.Group>(null);
   const bodyGeo = useBodyGeometry();
   const emblemGeo = useEmblemGeometry();
@@ -114,6 +114,11 @@ function CoinInner({ scale = 1 }: { scale?: number }) {
   // Mostly face-on (emblem readable) with a gentle sway + pointer parallax.
   useFrame((state) => {
     if (!group.current) return;
+    if (reduceMotion) {
+      group.current.rotation.y = 0.3;
+      group.current.position.y = 0;
+      return;
+    }
     const t = state.clock.getElapsedTime();
     const targetY = Math.sin(t * 0.4) * 0.35 + state.pointer.x * 0.25;
     const targetX = 0.16 + -state.pointer.y * 0.15;
@@ -140,9 +145,11 @@ function CoinInner({ scale = 1 }: { scale?: number }) {
 export default function DdcCoin({
   scale = 1,
   withEnvironment = true,
+  reduceMotion = false,
 }: {
   scale?: number;
   withEnvironment?: boolean;
+  reduceMotion?: boolean;
 }) {
   return (
     <Suspense fallback={null}>
@@ -155,7 +162,7 @@ export default function DdcCoin({
           <Lightformer form="ring" intensity={1.6} color="#FFE6A8" position={[0, 0, -4]} scale={[10, 10, 1]} />
         </Environment>
       )}
-      <CoinInner scale={scale} />
+      <CoinInner scale={scale} reduceMotion={reduceMotion} />
     </Suspense>
   );
 }
