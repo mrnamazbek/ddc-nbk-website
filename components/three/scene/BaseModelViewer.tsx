@@ -5,21 +5,38 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, Lightformer, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { useReducedMotion } from "framer-motion";
+import { useTheme } from "next-themes";
 
 // Set localized Draco decoder path to avoid fetching from external Google CDN
 useGLTF.setDecoderPath("/draco/");
 
-function Model({ url }: { url: string }) {
+function Model({ url, isLight }: { url: string; isLight: boolean }) {
   const { scene } = useGLTF(url, true);
   const groupRef = useRef<THREE.Group>(null);
   const { size } = useThree();
   const reduce = useReducedMotion();
 
+  // Reference to uniforms to dynamically toggle light/dark shader styles without recompiling
+  const uniformsRef = useRef({
+    uIsLight: { value: isLight ? 1.0 : 0.0 }
+  });
+
+  const rotationY = useRef(0.3);
+
   // Smooth auto-rotation and gentle bobbing (disabled if reduced motion is preferred)
-  useFrame((state) => {
+  useFrame((state, delta) => {
     if (groupRef.current) {
       const t = state.clock.getElapsedTime();
-      groupRef.current.rotation.y = reduce ? 0.3 : t * 0.22; // Faster auto-rotation
+      // Use delta-time accumulation for sub-pixel rotation smoothness
+      if (!reduce) {
+        const safeDelta = Math.min(delta, 0.1);
+        // Increased speed (0.85 rad/s) for faster rotation
+        rotationY.current += safeDelta * 0.85;
+        // Smoothly interpolate current rotation to the target rotation to eliminate frame jitter
+        groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, rotationY.current, 0.12);
+      } else {
+        groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, 0.3, 0.12);
+      }
       groupRef.current.position.y = reduce ? 0 : Math.sin(t * 0.5) * 0.04; // Reduced bobbing to prevent vertical clipping
     }
   });
@@ -30,7 +47,7 @@ function Model({ url }: { url: string }) {
     const centerVec = new THREE.Vector3();
     box.getCenter(centerVec);
     
-    // Scale responsive to viewport size (optimized for fov: 35 and Z: 6.5)
+    // Scale responsive to viewport size (optimized for fov: 35 and Z: 7.2)
     const isMobile = size.width < 500;
     const isTablet = size.width >= 500 && size.width < 1024;
     const scaleVal = isMobile ? 1.6 : isTablet ? 1.85 : 2.15;
@@ -46,10 +63,13 @@ function Model({ url }: { url: string }) {
       roughness: 0.15,
       clearcoat: 1.0,
       clearcoatRoughness: 0.1,
-      envMapIntensity: 2.8,
+      envMapIntensity: isLight ? 1.2 : 2.8,
     });
 
     mat.onBeforeCompile = (shader) => {
+      // Pass the uIsLight uniform object to the shader
+      shader.uniforms.uIsLight = uniformsRef.current.uIsLight;
+
       // Внедряем vLocalZ во vertex shader
       shader.vertexShader = `
         varying float vLocalZ;
@@ -62,50 +82,60 @@ function Model({ url }: { url: string }) {
         `
       );
 
-      // Внедряем vLocalZ во fragment shader
+      // Внедряем vLocalZ и uIsLight во fragment shader
       shader.fragmentShader = `
+        uniform float uIsLight;
         varying float vLocalZ;
         ${shader.fragmentShader}
       `;
 
-      // Перекрашиваем пиксели на основе высоты рельефа
+      // Перекрашиваем пиксели на основе высоты рельефа и активной темы (избегая пересветов в Light теме)
       shader.fragmentShader = shader.fragmentShader.replace(
         "#include <color_fragment>",
         `
         #include <color_fragment>
         float absZ = abs(vLocalZ);
         
-        // Глубокий темно-зеленый лак
-        vec3 greenPaint = vec3(10.0 / 255.0, 48.0 / 255.0, 30.0 / 255.0);
+        // Цвета для Темной темы:
+        vec3 darkGreen = vec3(10.0 / 255.0, 48.0 / 255.0, 30.0 / 255.0);
+        vec3 darkGold = vec3(235.0 / 255.0, 195.0 / 255.0, 105.0 / 255.0);
         
-        // Благородное золото с плавными переливами
-        vec3 goldPaint = vec3(235.0 / 255.0, 195.0 / 255.0, 105.0 / 255.0);
+        // Цвета для Светлой темы (на основе ddc_logo_light_theme.png):
+        vec3 lightGreen = vec3(26.0 / 255.0, 61.0 / 255.0, 43.0 / 255.0); // Глубокий лесной зеленый
+        vec3 lightWhite = vec3(245.0 / 255.0, 245.0 / 255.0, 242.0 / 255.0); // Благородный матово-белый оффвайт
+        
+        vec3 greenPaint = mix(darkGreen, lightGreen, uIsLight);
+        vec3 ornamentPaint = mix(darkGold, lightWhite, uIsLight);
         
         // Порог 0.088 - 0.096 для идеального разделения основания и рельефа
         float mixFactor = smoothstep(0.088, 0.096, absZ);
         
-        diffuseColor.rgb = mix(greenPaint, goldPaint, mixFactor);
+        diffuseColor.rgb = mix(greenPaint, ornamentPaint, mixFactor);
         `
       );
 
-      // Модифицируем roughness и metalness
+      // Модифицируем roughness и metalness с учетом uIsLight (уменьшаем блеск в светлой теме для читаемости)
       shader.fragmentShader = shader.fragmentShader.replace(
         "#include <roughnessmap_fragment>",
         `
         #include <roughnessmap_fragment>
-        roughnessFactor = mix(0.22, 0.12, mixFactor);
+        float darkRoughness = mix(0.22, 0.12, mixFactor);
+        float lightRoughness = mix(0.35, 0.25, mixFactor);
+        roughnessFactor = mix(darkRoughness, lightRoughness, uIsLight);
         `
       ).replace(
         "#include <metalnessmap_fragment>",
         `
         #include <metalnessmap_fragment>
-        metalnessFactor = mix(0.05, 0.95, mixFactor);
+        float darkMetalness = mix(0.05, 0.95, mixFactor);
+        float lightMetalness = mix(0.05, 0.15, mixFactor);
+        metalnessFactor = mix(darkMetalness, lightMetalness, uIsLight);
         `
       );
     };
 
     return mat;
-  }, []);
+  }, [isLight]);
 
   // Traverse the scene and assign materials only once when the scene or material changes
   useMemo(() => {
@@ -118,6 +148,13 @@ function Model({ url }: { url: string }) {
       }
     });
   }, [scene, material]);
+
+  // Dynamically update uniforms and material properties when theme changes
+  useEffect(() => {
+    uniformsRef.current.uIsLight.value = isLight ? 1.0 : 0.0;
+    material.envMapIntensity = isLight ? 1.2 : 2.8;
+    material.needsUpdate = true;
+  }, [isLight, material]);
 
   // Clean up materials from GPU memory on unmount
   useEffect(() => {
@@ -134,6 +171,9 @@ function Model({ url }: { url: string }) {
 }
 
 export default function BaseModelViewer() {
+  const { resolvedTheme } = useTheme();
+  const isLight = resolvedTheme === "light";
+
   return (
     <div className="w-full h-full relative select-none cursor-grab active:cursor-grabbing">
       <Canvas
@@ -150,12 +190,12 @@ export default function BaseModelViewer() {
           gl.toneMappingExposure = 1.1;
         }}
       >
-        <ambientLight intensity={0.4} />
-        <directionalLight position={[5, 8, 5]} intensity={1.8} color="#FFE9C0" />
-        <directionalLight position={[-5, -4, 2]} intensity={0.8} color="#9FE0C0" />
+        <ambientLight intensity={isLight ? 0.6 : 0.4} />
+        <directionalLight position={[5, 8, 5]} intensity={isLight ? 1.0 : 1.8} color={isLight ? "#FFFFFF" : "#FFE9C0"} />
+        <directionalLight position={[-5, -4, 2]} intensity={isLight ? 0.4 : 0.8} color={isLight ? "#E0F5EB" : "#9FE0C0"} />
 
         <Suspense fallback={null}>
-          <Model url="/base.glb" />
+          <Model url="/base.glb" isLight={isLight} />
           <OrbitControls 
             enableZoom={false} 
             enablePan={false}
