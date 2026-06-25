@@ -666,6 +666,7 @@
     "trigger": "Accessibility (low vision)",
     "title": "Accessibility settings",
     "fontSize": "Font size",
+    "fontFamilyAB": "Font Family (A/B Test)",
     "scheme": "Color scheme",
     "schemeBw": "Black on white",
     "schemeWb": "White on black",

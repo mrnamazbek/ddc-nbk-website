@@ -10,6 +10,7 @@ import {
   type A11yScheme,
   type A11ySpacing,
 } from "@/components/theme/AccessibilityProvider";
+import { useFontSystem, type FontSystem } from "@/components/theme/FontSystemProvider";
 
 /**
  * Reusable trigger button for the header utility area (desktop + mobile).
@@ -55,6 +56,7 @@ const SCHEMES: { id: A11yScheme; swatchBg: string; swatchFg: string }[] = [
 export default function AccessibilityPanel() {
   const t = useTranslations("A11y");
   const a11y = useA11y();
+  const { fontSystem, setFontSystem } = useFontSystem();
   const { panelOpen: open, setPanelOpen: setOpen } = a11y;
   const titleId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
@@ -223,6 +225,28 @@ export default function AccessibilityPanel() {
                       <span className="ml-1 text-xs opacity-70">{s}%</span>
                     </Chip>
                   ))}
+                </Group>
+
+                {/* Font family A/B */}
+                <Group label={t("fontFamilyAB")}>
+                  <Chip active={fontSystem === "pair-a"} onClick={() => setFontSystem("pair-a")}>
+                    Control
+                  </Chip>
+                  <Chip active={fontSystem === "nohemi"} onClick={() => setFontSystem("nohemi")}>
+                    Nohemi
+                  </Chip>
+                  <Chip active={fontSystem === "neue-regrade"} onClick={() => setFontSystem("neue-regrade")}>
+                    Regrade
+                  </Chip>
+                  <Chip active={fontSystem === "quantify"} onClick={() => setFontSystem("quantify")}>
+                    Quantify
+                  </Chip>
+                  <Chip active={fontSystem === "neue-power"} onClick={() => setFontSystem("neue-power")}>
+                    Power
+                  </Chip>
+                  <Chip active={fontSystem === "serena"} onClick={() => setFontSystem("serena")}>
+                    Serena
+                  </Chip>
                 </Group>
 
                 {/* Color scheme */}

@@ -53,9 +53,16 @@ const GALLERY_ITEMS: EventItem[] = [
 
 export default function DDCEventGallery() {
   const t = useTranslations("EventGallery");
-  const shouldReduceMotion = useReducedMotion();
+  const shouldReduceMotionRaw = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const shouldReduceMotion = mounted ? !!shouldReduceMotionRaw : false;
 
   const handleNext = useCallback(() => {
     if (selectedIndex === null) return;
