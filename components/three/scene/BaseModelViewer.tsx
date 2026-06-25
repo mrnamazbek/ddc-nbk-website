@@ -27,10 +27,10 @@ function Model({ url }: { url: string }) {
     const centerVec = new THREE.Vector3();
     box.getCenter(centerVec);
     
-    // Scale responsive to viewport size (enlarged for prominence)
+    // Scale responsive to viewport size (optimized for fov: 35 and Z: 6.5)
     const isMobile = size.width < 500;
     const isTablet = size.width >= 500 && size.width < 1024;
-    const scaleVal = isMobile ? 1.9 : isTablet ? 2.3 : 2.8;
+    const scaleVal = isMobile ? 1.6 : isTablet ? 1.85 : 2.15;
     
     return { center: centerVec, scaleVal };
   }, [scene, size.width]);
@@ -119,9 +119,9 @@ function Model({ url }: { url: string }) {
 
 export default function BaseModelViewer() {
   return (
-    <div className="w-full h-full min-h-[350px] relative select-none cursor-grab active:cursor-grabbing">
+    <div className="w-full h-full relative select-none cursor-grab active:cursor-grabbing">
       <Canvas
-        camera={{ position: [0, 0, 5], fov: 45 }}
+        camera={{ position: [0, 0, 6.5], fov: 35 }}
         gl={{ antialias: true, powerPreference: "high-performance" }}
         onCreated={({ gl }) => {
           gl.toneMapping = THREE.ACESFilmicToneMapping;

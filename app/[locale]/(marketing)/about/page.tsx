@@ -84,7 +84,7 @@ export default function AboutPage() {
               {t("missionDesc2")}
             </p>
           </div>
-          <div className="lg:col-span-6 min-h-[400px] relative overflow-hidden flex items-center justify-center">
+          <div className="lg:col-span-6 h-[400px] sm:h-[480px] lg:h-[550px] relative flex items-center justify-center">
             <BaseModelViewer />
           </div>
         </div>
