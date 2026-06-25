@@ -4,6 +4,17 @@
 @import "../styles/a11y.css";
 @import "../styles/svgator-animations.css";
 
+/* Custom font-face for A/B testing digits, pointing to JetBrains Mono */
+@font-face {
+  font-family: 'ABNumbers';
+  src: local('JetBrains Mono Regular'), local('JetBrainsMono-Regular'), local('JetBrains Mono'),
+       url('https://fonts.gstatic.com/s/jetbrainsmono/v18/tU3p0oCfvxCg8wp9r_tCbMnVIg742GcxG6v4.woff2') format('woff2');
+  unicode-range: U+0030-0039;
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Local custom fonts for A/B testing */
 @font-face {
   font-family: 'Nohemi';
@@ -84,33 +95,33 @@ html.font-pair-b {
 
 /* Новые шрифты для A/B Тестирования */
 html.font-nohemi {
-  --font-current-sans: 'Nohemi', var(--font-golos), sans-serif;
-  --font-current-display: 'Nohemi', var(--font-source-serif), serif;
-  --font-current-soft: 'Nohemi', var(--font-ibm-plex), sans-serif;
+  --font-current-sans: 'ABNumbers', 'Nohemi', var(--font-golos), sans-serif;
+  --font-current-display: 'ABNumbers', 'Nohemi', var(--font-source-serif), serif;
+  --font-current-soft: 'ABNumbers', 'Nohemi', var(--font-ibm-plex), sans-serif;
 }
 
 html.font-neue-regrade {
-  --font-current-sans: 'Neue Regrade', var(--font-golos), sans-serif;
-  --font-current-display: 'Neue Regrade', var(--font-source-serif), serif;
-  --font-current-soft: 'Neue Regrade', var(--font-ibm-plex), sans-serif;
+  --font-current-sans: 'ABNumbers', 'Neue Regrade', var(--font-golos), sans-serif;
+  --font-current-display: 'ABNumbers', 'Neue Regrade', var(--font-source-serif), serif;
+  --font-current-soft: 'ABNumbers', 'Neue Regrade', var(--font-ibm-plex), sans-serif;
 }
 
 html.font-quantify {
-  --font-current-sans: var(--font-golos), sans-serif;
-  --font-current-display: 'Quantify', var(--font-source-serif), serif;
-  --font-current-soft: 'Quantify', var(--font-ibm-plex), sans-serif;
+  --font-current-sans: 'ABNumbers', var(--font-golos), sans-serif;
+  --font-current-display: 'ABNumbers', 'Quantify', var(--font-source-serif), serif;
+  --font-current-soft: 'ABNumbers', 'Quantify', var(--font-ibm-plex), sans-serif;
 }
 
 html.font-neue-power {
-  --font-current-sans: 'Clash Display', var(--font-golos), sans-serif;
-  --font-current-display: 'Clash Display', var(--font-source-serif), serif;
-  --font-current-soft: 'Clash Display', var(--font-ibm-plex), sans-serif;
+  --font-current-sans: 'ABNumbers', 'Clash Display', var(--font-golos), sans-serif;
+  --font-current-display: 'ABNumbers', 'Clash Display', var(--font-source-serif), serif;
+  --font-current-soft: 'ABNumbers', 'Clash Display', var(--font-ibm-plex), sans-serif;
 }
 
 html.font-serena {
-  --font-current-sans: 'Satoshi', var(--font-golos), sans-serif;
-  --font-current-display: 'Satoshi', var(--font-source-serif), serif;
-  --font-current-soft: 'Satoshi', var(--font-ibm-plex), sans-serif;
+  --font-current-sans: 'ABNumbers', 'Satoshi', var(--font-golos), sans-serif;
+  --font-current-display: 'ABNumbers', 'Satoshi', var(--font-source-serif), serif;
+  --font-current-soft: 'ABNumbers', 'Satoshi', var(--font-ibm-plex), sans-serif;
 }
 
 /* Классы переключения фонов A/B (только для темной темы) */

@@ -33,7 +33,9 @@ if (typeof console !== "undefined") {
         if (
           msg.includes("THREE.Clock: This module has been deprecated") ||
           msg.includes("Multiple instances of Three.js being imported") ||
-          msg.includes("Three.js being imported")
+          msg.includes("Three.js being imported") ||
+          msg.includes("Reduced Motion enabled") ||
+          msg.includes("Reduced Motion")
         ) {
           return;
         }

@@ -30,8 +30,8 @@ function Model({ url, isLight }: { url: string; isLight: boolean }) {
       // Use delta-time accumulation for sub-pixel rotation smoothness
       if (!reduce) {
         const safeDelta = Math.min(delta, 0.1);
-        // Increased speed (0.85 rad/s) for faster rotation
-        rotationY.current += safeDelta * 0.85;
+        // Increased speed (0.8075 rad/s) for faster rotation (reduced by 5%)
+        rotationY.current += safeDelta * 0.8075;
         // Smoothly interpolate current rotation to the target rotation to eliminate frame jitter
         groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, rotationY.current, 0.12);
       } else {

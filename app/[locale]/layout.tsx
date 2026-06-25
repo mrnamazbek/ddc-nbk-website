@@ -11,6 +11,7 @@ import { BgSystemProvider } from "@/components/theme/BgSystemProvider";
 import AccessibilityProvider from "@/components/theme/AccessibilityProvider";
 import AccessibilityPanel from "@/components/ui/AccessibilityPanel";
 import FontFloatingSwitcher from "@/components/ui/FontFloatingSwitcher";
+import InteractiveDotGrid from "@/components/ui/InteractiveDotGrid";
 
 const sourceSerif = Source_Serif_4({
   subsets: ["latin", "cyrillic", "cyrillic-ext"],
@@ -101,6 +102,7 @@ export default async function LocaleLayout({
                     <PageTransitionProvider>{children}</PageTransitionProvider>
                     <AccessibilityPanel />
                     <FontFloatingSwitcher />
+                    <InteractiveDotGrid />
                   </AccessibilityProvider>
                 </NextIntlClientProvider>
               </IconSystemProvider>

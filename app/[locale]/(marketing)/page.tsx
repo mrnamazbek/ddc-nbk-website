@@ -3,7 +3,6 @@
 import { useABTest } from "@/lib/abTest";
 import ABTestSwitcher from "@/components/ui/ABTestSwitcher";
 import dynamic from "next/dynamic";
-import InteractiveDotGrid from "@/components/ui/InteractiveDotGrid";
 import Hero from "@/components/sections/Hero";
 import Stats from "@/components/sections/Stats";
 import Services from "@/components/sections/Services";
@@ -42,9 +41,6 @@ export default function MarketingHomePage() {
 
   return (
     <>
-      {/* Interactive forest/gold dot grid behind all content (Variant A) */}
-      <InteractiveDotGrid />
-
       <div id="acts" className="relative z-10">
         <Hero />
         <Stats />

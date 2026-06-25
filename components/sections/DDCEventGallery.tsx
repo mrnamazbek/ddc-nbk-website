@@ -11,6 +11,7 @@ interface EventItem {
   id: string;
   image: string;
   translationKey: string;
+  linkedinUrl: string;
 }
 
 const GALLERY_ITEMS: EventItem[] = [
@@ -18,36 +19,43 @@ const GALLERY_ITEMS: EventItem[] = [
     id: "suleimenov",
     image: "/images/linkedin/post_17_suleimenov_meeting.jpg",
     translationKey: "suleimenov",
+    linkedinUrl: "https://www.linkedin.com/feed/update/urn:li:activity:7380833625589637120",
   },
   {
     id: "binur",
     image: "/images/linkedin/post_10_binur_meeting.jpg",
     translationKey: "binur",
+    linkedinUrl: "https://www.linkedin.com/feed/update/urn:li:activity:7448264532290064384",
   },
   {
     id: "aiPlatform",
     image: "/images/linkedin/post_0_ai_platform.jpg",
     translationKey: "aiPlatform",
+    linkedinUrl: "https://www.linkedin.com/feed/update/urn:li:activity:7473705322331791361",
   },
   {
     id: "llmLearning",
     image: "/images/linkedin/post_6_nfactorial_llm.jpg",
     translationKey: "llmLearning",
+    linkedinUrl: "https://www.linkedin.com/feed/update/urn:li:activity:7434466951747268608",
   },
   {
     id: "welcome",
     image: "/images/linkedin/post_19_welcome_meeting.jpg",
     translationKey: "welcome",
+    linkedinUrl: "https://www.linkedin.com/feed/update/urn:li:activity:7369262809072705538",
   },
   {
     id: "risks",
     image: "/images/linkedin/post_18_tech_talks_risks.jpg",
     translationKey: "risks",
+    linkedinUrl: "https://www.linkedin.com/feed/update/urn:li:activity:7379732459627814913",
   },
   {
     id: "architecture",
     image: "/images/linkedin/post_9_it_architecture.jpg",
     translationKey: "architecture",
+    linkedinUrl: "https://www.linkedin.com/feed/update/urn:li:activity:7450435545597456385",
   },
 ];
 
@@ -274,21 +282,38 @@ export default function DDCEventGallery() {
               </div>
 
               {/* Текстовая панель */}
-              <div className="p-6 bg-charcoal/90 border-t border-white/15 text-left">
-                <div className="flex items-center justify-between gap-4 mb-3">
-                  <span className="text-[10px] font-mono tracking-widest text-gold-light uppercase">
-                    {t("overline")}
-                  </span>
-                  <span className="text-xs text-zinc-400 font-mono">
+              <div className="p-6 bg-charcoal/90 border-t border-white/15 text-left flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex-1">
+                  <div className="flex items-center justify-between gap-4 mb-3">
+                    <span className="text-[10px] font-mono tracking-widest text-gold-light uppercase">
+                      {t("overline")}
+                    </span>
+                    <span className="text-xs text-zinc-400 font-mono sm:hidden">
+                      {selectedIndex + 1} / {GALLERY_ITEMS.length}
+                    </span>
+                  </div>
+                  <h3 className="text-lg sm:text-xl font-bold text-white tracking-wide mb-2">
+                    {t(`events.${GALLERY_ITEMS[selectedIndex].translationKey}.title`)}
+                  </h3>
+                  <p className="text-sm text-zinc-300 font-light leading-relaxed">
+                    {t(`events.${GALLERY_ITEMS[selectedIndex].translationKey}.desc`)}
+                  </p>
+                </div>
+                
+                <div className="flex flex-col items-end shrink-0 gap-2">
+                  <span className="text-xs text-zinc-400 font-mono hidden sm:block">
                     {selectedIndex + 1} / {GALLERY_ITEMS.length}
                   </span>
+                  <a
+                    href={GALLERY_ITEMS[selectedIndex].linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl liquid-glass text-xs font-mono font-bold text-white hover:text-gold border border-white/10 hover:border-gold/30 transition-all w-full sm:w-auto justify-center select-none"
+                  >
+                    <span>{t("viewPost")}</span>
+                    <Icon name="arrow-up-right" size={14} />
+                  </a>
                 </div>
-                <h3 className="text-lg sm:text-xl font-bold text-white tracking-wide mb-2">
-                  {t(`events.${GALLERY_ITEMS[selectedIndex].translationKey}.title`)}
-                </h3>
-                <p className="text-sm text-zinc-300 font-light leading-relaxed">
-                  {t(`events.${GALLERY_ITEMS[selectedIndex].translationKey}.desc`)}
-                </p>
               </div>
             </motion.div>
 

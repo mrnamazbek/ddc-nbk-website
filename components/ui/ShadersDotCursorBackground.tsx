@@ -5,8 +5,8 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useTheme } from "next-themes";
 import { useA11y } from "../theme/AccessibilityProvider";
+import { usePathname } from "next/navigation";
 import { getScroll } from "@/lib/scrollStore";
-import { cn } from "@/lib/utils";
 
 /* --------------------------------------------------------------------------
    GLSL Shaders for the shaders.com dot cursor background effect
@@ -30,12 +30,15 @@ const fragmentShader = /* glsl */ `
   uniform float uThemeLight;
   uniform float uScroll;
 
-  // Shader configuration parameters
-  const float spacing = 28.0;          // Grid spacing in pixels
-  const float baseDotSize = 1.2;       // Idle dot size in pixels
-  const float maxDotSize = 6.0;        // Maximum dot size at the halo edge
-  const float repulsionRadius = 180.0; // Distance of influence in pixels
-  const float repulsionStrength = 38.0; // Maximum push distance in pixels
+  // Route-specific dynamic configuration uniforms
+  uniform float uSpacing;
+  uniform float uBaseDotSize;
+  uniform float uMaxDotSize;
+  uniform float uRepulsionRadius;
+  uniform float uRepulsionStrength;
+  uniform vec3  uColorRest;
+  uniform vec3  uColorActive;
+  uniform int   uShapeType;
 
   void main() {
     vec2 pixelPos = gl_FragCoord.xy;
@@ -50,41 +53,56 @@ const fragmentShader = /* glsl */ `
     float distToMouse = length(toMouse);
 
     // 3. Apply physics-based cursor grid repulsion
-    float factor = clamp((repulsionRadius - distToMouse) / repulsionRadius, 0.0, 1.0);
+    float factor = clamp((uRepulsionRadius - distToMouse) / uRepulsionRadius, 0.0, 1.0);
     float falloff = smoothstep(0.0, 1.0, factor);
 
-    if (distToMouse < repulsionRadius && distToMouse > 0.001) {
+    if (distToMouse < uRepulsionRadius && distToMouse > 0.001) {
       vec2 dir = normalize(toMouse);
-      // Shift coordinates towards mouse, pushing grid points away visually
-      pixelPos -= dir * falloff * repulsionStrength;
+      pixelPos -= dir * falloff * uRepulsionStrength;
     }
 
     // Recalculate distance using deformed coordinates for size and color mapping
     vec2 deformedToMouse = pixelPos - mousePixel;
     float deformedDist = length(deformedToMouse);
-    float deformedFactor = clamp((repulsionRadius - deformedDist) / repulsionRadius, 0.0, 1.0);
+    float deformedFactor = clamp((uRepulsionRadius - deformedDist) / uRepulsionRadius, 0.0, 1.0);
     float deformedFalloff = smoothstep(0.0, 1.0, deformedFactor);
 
-    // 4. Dot size modulation: empty well in the middle, gold halo on the border
+    // 4. Dot size modulation
     float halo = smoothstep(0.0, 0.5, deformedFactor) * smoothstep(1.0, 0.5, deformedFactor) * 4.0;
-    float dotSize = baseDotSize * (1.0 - deformedFalloff * 0.9) + halo * maxDotSize * 0.45;
+    float dotSize = uBaseDotSize * (1.0 - deformedFalloff * 0.9) + halo * uMaxDotSize * 0.45;
 
     // 5. Generate grid centers in the deformed coordinate space
-    vec2 gridCenter = (floor(pixelPos / spacing) + 0.5) * spacing;
+    vec2 gridCenter = (floor(pixelPos / uSpacing) + 0.5) * uSpacing;
     vec2 distVec = pixelPos - gridCenter;
     float distToCenter = length(distVec);
 
-    // Render the smooth circle
     float antialias = 0.85;
-    float dotMask = smoothstep(dotSize * 0.5 + antialias, dotSize * 0.5 - antialias, distToCenter);
+    float dotMask = 0.0;
+
+    // Render the shape based on uShapeType (0: Circle, 1: Diamond, 2: Triangle)
+    if (uShapeType == 0) {
+      dotMask = smoothstep(dotSize * 0.5 + antialias, dotSize * 0.5 - antialias, distToCenter);
+    } else if (uShapeType == 1) {
+      float radius = dotSize * 1.3;
+      float d = abs(distVec.x) + abs(distVec.y);
+      dotMask = smoothstep(radius + antialias, radius - antialias, d);
+    } else {
+      float side = dotSize * 1.8;
+      float k = sqrt(3.0);
+      vec2 p = distVec;
+      p.x = abs(p.x) - side * 0.5;
+      p.y = p.y + side / (2.0 * k);
+      if (p.x + k * p.y > 0.0) p = vec2(p.x - k * p.y, -k * p.x - p.y) * 0.5;
+      p.x -= clamp(p.x, -side, 0.0);
+      float d = -length(p) * sign(p.y);
+      dotMask = smoothstep(antialias, -antialias, d);
+    }
 
     // Fade out completely as scroll increases (gone by 0.25 scroll)
     float scrollFade = 1.0 - smoothstep(0.0, 0.25, uScroll);
     dotMask *= scrollFade;
 
-    // 6. Premium Theme Color Palette (Adapted to DDC Brand)
-    // Dark theme: deep forest onyx (#050a08)
-    // Light theme: soft off-white/beige (#f5f5f0)
+    // Background color mapping
     vec3 bgColor = mix(vec3(5.0 / 255.0, 10.0 / 255.0, 8.0 / 255.0), vec3(245.0 / 255.0, 245.0 / 255.0, 240.0 / 255.0), uThemeLight);
 
     // Soft ambient glow behind the grid following the cursor
@@ -92,15 +110,19 @@ const fragmentShader = /* glsl */ `
     vec3 glowColor = mix(vec3(16.0 / 255.0, 185.0 / 255.0, 129.0 / 255.0), vec3(232.0 / 255.0, 200.0 / 255.0, 122.0 / 255.0), 0.5); // Emerald-Gold
     bgColor = mix(bgColor, bgColor + glowColor, glow);
 
-    // Idle dots: deep forest green (#163a28) or gray-green (#5d6b63)
-    vec3 baseDotColor = mix(vec3(22.0 / 255.0, 58.0 / 255.0, 40.0 / 255.0), vec3(93.0 / 255.0, 107.0 / 255.0, 99.0 / 255.0), uThemeLight);
-    
-    // Active dots: bright gold/wheat (#e8c87a)
-    vec3 activeDotColor = vec3(232.0 / 255.0, 200.0 / 255.0, 122.0 / 255.0);
+    // Dynamic Dot colors
+    vec3 baseDotColor = uColorRest;
+    vec3 activeDotColor = uColorActive;
 
     // Interpolate dot color
     float colorMix = clamp(deformedFalloff * 0.2 + halo * 1.6, 0.0, 1.0);
     vec3 dotColor = mix(baseDotColor, activeDotColor, colorMix);
+
+    // Add subtle bloom/glow for active circles
+    if (uShapeType == 0 && deformedFactor > 0.02) {
+      float bloom = smoothstep(dotSize * 2.8 + antialias, dotSize * 2.8 - antialias, distToCenter);
+      bgColor = mix(bgColor, bgColor + dotColor * 0.35, bloom * 0.12 * deformedFactor * scrollFade);
+    }
 
     // Final composition
     vec3 finalColor = mix(bgColor, dotColor, dotMask);
@@ -110,15 +132,140 @@ const fragmentShader = /* glsl */ `
 `;
 
 /* --------------------------------------------------------------------------
+   Shader Config Presets mapping per Pathname
+   -------------------------------------------------------------------------- */
+
+interface ShaderPresetConfig {
+  shapeType: number; // 0: circle, 1: diamond, 2: triangle
+  spacing: number;
+  baseDotSize: number;
+  maxDotSize: number;
+  repulsionRadius: number;
+  repulsionStrength: number;
+  colorRest: [number, number, number];
+  colorActive: [number, number, number];
+}
+
+function getPresetForPathname(pathname: string, isLight: boolean): ShaderPresetConfig {
+  const cleanPath = pathname.replace(/^\/[a-z]{2}(\/|$)/, "/"); // remove locale prefix (e.g., /ru/about -> /about)
+
+  if (cleanPath === "/" || cleanPath === "") {
+    return {
+      shapeType: 0,
+      spacing: 28.0,
+      baseDotSize: 1.2,
+      maxDotSize: 6.0,
+      repulsionRadius: 180.0,
+      repulsionStrength: 38.0,
+      colorRest: isLight ? [93/255, 107/255, 99/255] : [22/255, 58/255, 40/255],
+      colorActive: [232/255, 200/255, 122/255], // Gold
+    };
+  }
+
+  if (cleanPath.startsWith("/about")) {
+    return {
+      shapeType: 2, // triangle
+      spacing: 32.0,
+      baseDotSize: 2.0,
+      maxDotSize: 4.5,
+      repulsionRadius: 160.0,
+      repulsionStrength: 25.0,
+      colorRest: isLight ? [120/255, 120/255, 120/255] : [130/255, 130/255, 130/255],
+      colorActive: isLight ? [0, 0, 0] : [1, 1, 1], // Black/White
+    };
+  }
+
+  if (cleanPath.startsWith("/services")) {
+    return {
+      shapeType: 1, // diamond
+      spacing: 30.0,
+      baseDotSize: 1.5,
+      maxDotSize: 3.2,
+      repulsionRadius: 140.0,
+      repulsionStrength: 20.0,
+      colorRest: isLight ? [139/255, 92/255, 26/255] : [189/255, 149/255, 91/255], // Bronze
+      colorActive: [232/255, 200/255, 122/255], // Gold
+    };
+  }
+
+  if (cleanPath.startsWith("/mission")) {
+    return {
+      shapeType: 0, // circle
+      spacing: 20.0,
+      baseDotSize: 1.0,
+      maxDotSize: 3.5,
+      repulsionRadius: 180.0,
+      repulsionStrength: 40.0,
+      colorRest: isLight ? [15/255, 76/255, 35/255] : [34/255, 197/255, 94/255], // Green
+      colorActive: [163/255, 230/255, 53/255], // Lime
+    };
+  }
+
+  if (cleanPath.startsWith("/careers")) {
+    return {
+      shapeType: 1, // diamond
+      spacing: 35.0,
+      baseDotSize: 1.6,
+      maxDotSize: 5.0,
+      repulsionRadius: 150.0,
+      repulsionStrength: 30.0,
+      colorRest: isLight ? [10/255, 120/255, 90/255] : [6/255, 95/255, 70/255], // Emerald
+      colorActive: [52/255, 211/255, 153/255], // Mint
+    };
+  }
+
+  if (cleanPath.startsWith("/security")) {
+    return {
+      shapeType: 1, // diamond (shield)
+      spacing: 25.0,
+      baseDotSize: 1.0,
+      maxDotSize: 5.5,
+      repulsionRadius: 195.0,
+      repulsionStrength: 45.0,
+      colorRest: isLight ? [20/255, 40/255, 100/255] : [30/255, 58/255, 138/255], // Blue
+      colorActive: [96/255, 165/255, 250/255], // Cyan
+    };
+  }
+
+  if (cleanPath.startsWith("/contact")) {
+    return {
+      shapeType: 0, // circle
+      spacing: 24.0,
+      baseDotSize: 1.4,
+      maxDotSize: 4.5,
+      repulsionRadius: 150.0,
+      repulsionStrength: 32.0,
+      colorRest: isLight ? [90/255, 40/255, 160/255] : [124/255, 58/255, 237/255], // Violet
+      colorActive: [244/255, 63/255, 94/255], // Rose
+    };
+  }
+
+  // Digital, Analytics, Ecommerce, FAQ, News, etc.
+  return {
+    shapeType: 2, // triangle
+    spacing: 28.0,
+    baseDotSize: 1.2,
+    maxDotSize: 5.0,
+    repulsionRadius: 170.0,
+    repulsionStrength: 35.0,
+    colorRest: isLight ? [180/255, 60/255, 10/255] : [234/255, 88/255, 12/255], // Orange
+    colorActive: [253/255, 224/255, 71/255], // Yellow
+  };
+}
+
+/* --------------------------------------------------------------------------
    Three.js Mesh Rendering Component
    -------------------------------------------------------------------------- */
 
 function ShaderMesh({ isLight }: { isLight: boolean }) {
   const matRef = useRef<THREE.ShaderMaterial>(null);
   const { size, viewport } = useThree();
+  const pathname = usePathname();
   const pointer = useRef({ x: 0.5, y: 0.5 });
   const smoothPointer = useRef({ x: 0.5, y: 0.5 });
   const velocity = useRef({ x: 0, y: 0 });
+
+  const config = useMemo(() => getPresetForPathname(pathname, isLight), [pathname, isLight]);
 
   const uniforms = useMemo(
     () => ({
@@ -127,6 +274,14 @@ function ShaderMesh({ isLight }: { isLight: boolean }) {
       uMouse: { value: new THREE.Vector2(0.5, 0.5) },
       uThemeLight: { value: isLight ? 1.0 : 0.0 },
       uScroll: { value: 0 },
+      uSpacing: { value: 28.0 },
+      uBaseDotSize: { value: 1.2 },
+      uMaxDotSize: { value: 6.0 },
+      uRepulsionRadius: { value: 180.0 },
+      uRepulsionStrength: { value: 38.0 },
+      uColorRest: { value: new THREE.Color(22/255, 58/255, 40/255) },
+      uColorActive: { value: new THREE.Color(232/255, 200/255, 122/255) },
+      uShapeType: { value: 0 },
     }),
     [] // eslint-disable-line react-hooks/exhaustive-deps
   );
@@ -150,6 +305,16 @@ function ShaderMesh({ isLight }: { isLight: boolean }) {
     m.uniforms.uResolution.value.set(size.width, size.height);
     m.uniforms.uScroll.value = scroll;
     m.uniforms.uThemeLight.value = isLight ? 1.0 : 0.0;
+
+    // Apply config uniforms dynamically
+    m.uniforms.uSpacing.value = config.spacing;
+    m.uniforms.uBaseDotSize.value = config.baseDotSize;
+    m.uniforms.uMaxDotSize.value = config.maxDotSize;
+    m.uniforms.uRepulsionRadius.value = config.repulsionRadius;
+    m.uniforms.uRepulsionStrength.value = config.repulsionStrength;
+    m.uniforms.uColorRest.value.setRGB(config.colorRest[0], config.colorRest[1], config.colorRest[2]);
+    m.uniforms.uColorActive.value.setRGB(config.colorActive[0], config.colorActive[1], config.colorActive[2]);
+    m.uniforms.uShapeType.value = config.shapeType;
 
     // CPU-based Spring physics integration for organic inertia & bounce (overshoot)
     const delta = Math.min(0.03, dt); // Cap dt to prevent spring explosions during tab switching

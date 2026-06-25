@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import GlassCard from "@/components/ui/GlassCard";
+import AnimatedNumber from "@/components/ui/AnimatedNumber";
 
 const STATS = [
   { key: "s1", accent: "gold" as const },
@@ -69,7 +70,7 @@ export default function Stats() {
                     s.accent === "gold" ? "text-gradient-gold" : "text-gradient-forest"
                   }`}
                 >
-                  {t(`${s.key}.value`)}
+                  <AnimatedNumber value={t(`${s.key}.value`)} />
                 </div>
                 <h3 className="text-base font-sans font-semibold text-foreground tracking-wide mb-2">
                   {t(`${s.key}.label`)}
