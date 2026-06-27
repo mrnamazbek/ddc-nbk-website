@@ -4,6 +4,7 @@ import Badge from "@/components/ui/Badge";
 import Icon, { IconName } from "@/components/ui/Icon";
 import DDCEventGallery from "@/components/sections/DDCEventGallery";
 import { getTranslations } from "next-intl/server";
+import JobApplicationForm from "@/components/sections/JobApplicationForm";
 
 
 type Translator = (key: string, values?: Record<string, string | number>) => string;
@@ -430,6 +431,11 @@ export default async function CareersPage({ params }: CareersPageProps) {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Форма подачи отклика с ИТ-тестом */}
+        <div className="mt-24">
+          <JobApplicationForm jobs={jobs} />
         </div>
 
       </div>

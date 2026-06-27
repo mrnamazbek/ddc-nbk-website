@@ -107,6 +107,45 @@
       "desc": "Automated on the modern low-code OutSystems core."
     }
   },
+  "Readiness": {
+    "overline": "Site reliability and functionality",
+    "title": "What can be",
+    "titleAccent": "verified on the site",
+    "subtitle": "Evaluation is not only about visual effects. The key user journeys are exposed clearly: pages work in three languages, contact actions lead somewhere real, and the content is grounded in public projects, news and DDC LinkedIn material.",
+    "open": "Open scenario",
+    "chips": {
+      "build": {
+        "label": "Build",
+        "value": "Next 16"
+      },
+      "audit": {
+        "label": "Audit",
+        "value": "E2E + Axe"
+      },
+      "content": {
+        "label": "Proof",
+        "value": "LinkedIn"
+      }
+    },
+    "items": {
+      "routes": {
+        "title": "Routes and languages",
+        "desc": "Core sections are available in ru, kz and en, and navigation leads to concrete pages: services, mission, news, security, contacts and careers."
+      },
+      "contacts": {
+        "title": "Contact journeys",
+        "desc": "Users can reach Astana and Almaty offices, open maps, call 1477, or submit a request through the contact form."
+      },
+      "accessibility": {
+        "title": "Accessibility and stability",
+        "desc": "The site respects reduced motion, includes an accessibility mode, is checked for critical Axe issues and should not fail without WebGL."
+      },
+      "proof": {
+        "title": "Evidence-based content",
+        "desc": "News and gallery content use real DDC themes: AI Platform, architecture, data, leadership meetings and team development."
+      }
+    }
+  },
   "About": {
     "overline": "About our organization",
     "titleLine1": "To be a leader in",
@@ -350,7 +389,23 @@
     "careerBullet1": "<strong>SQL Optimization</strong>: understanding Query Planner behavior, `EXPLAIN ANALYZE` parsing, and avoiding `N+1` issues with ORM integration.",
     "careerBullet2": "<strong>Data Modeling</strong>: 3NF normalization for OLTP and denormalization (Kimball Dimensional Modeling) for Data Warehouses (DWH).",
     "careerBullet3": "<strong>Python for Data Engineering</strong>: writing maintainable scripts with Pydantic typing, Kafka/RabbitMQ integration, and custom Airflow operators.",
-    "careerBullet4": "<strong>Security</strong>: understanding cryptography (AES, RSA), password hashing, and database security audits."
+    "careerBullet4": "<strong>Security</strong>: understanding cryptography (AES, RSA), password hashing, and database security audits.",
+    "simulator": {
+      "title": "Monetary Policy Simulator",
+      "subtitle": "Try to keep inflation within the 5-8% target corridor",
+      "rateLabel": "Base Rate of the National Bank:",
+      "quarterLabel": "Quarter",
+      "simulateBtn": "Simulate Next Quarter",
+      "restartBtn": "Restart Simulation",
+      "inflationLabel": "Annual Inflation",
+      "kztLabel": "USD / KZT Exchange Rate",
+      "activityLabel": "Business Activity",
+      "status": {
+        "win": "Excellent monetary policy! You are successfully maintaining macroeconomic stability.",
+        "high": "High inflation! The base rate is too low for the current money supply. Raise the rate to cool down the market.",
+        "low": "Economy is cooling down! An excessively high rate is restricting business lending. Try lowering the rate to stimulate growth."
+      }
+    }
   },
   "Common": {
     "loading": "Loading Scene"
@@ -501,6 +556,47 @@
         "nonCash": "From a few seconds to days",
         "cbdc": "Instant (in real-time)"
       }
+    },
+    "simulator": {
+      "title": "Blockchain Smart Contract Simulator",
+      "subtitle": "Test the programmability of the Digital Tenge in action",
+      "scenarioLabel": "Select Target Spending Scenario",
+      "amountLabel": "Transaction Amount (KZT)",
+      "binLabel": "Recipient BIN (12 digits)",
+      "categoryLabel": "Purchased Goods Category",
+      "submitBtn": "Broadcast to DLT Network",
+      "scenarios": {
+        "food": {
+          "title": "School Nutrition Program",
+          "desc": "Marked Tenge for school hot meals. Can only be spent at certified school cafeterias on food items."
+        },
+        "agro": {
+          "title": "Agricultural Subsidies",
+          "desc": "Subsidies for purchasing domestic sowing machinery. Blocks purchasing imported equipment or non-target items."
+        },
+        "invest": {
+          "title": "National Fund Transfer",
+          "desc": "Infrastructure development project funding. Validates ESG standards and target contractor payouts."
+        }
+      },
+      "categories": {
+        "food": "Food & Meals",
+        "machinery": "Sowing Machinery",
+        "construction": "Construction Materials",
+        "luxury": "Luxury Goods / Personal Expenses"
+      },
+      "phases": {
+        "p1": "Initiating transaction...",
+        "p2": "Executing smart contract rules...",
+        "p3": "Running node consensus...",
+        "p4": "Writing to Hyperledger DLT..."
+      },
+      "result": {
+        "successTitle": "TRANSACTION SUCCESSFULLY SETTLED",
+        "successDesc": "Smart contract executed: payment purpose matches token marking. Block written to Hyperledger Fabric.",
+        "failTitle": "TRANSACTION REJECTED BY SMART CONTRACT",
+        "failDesc": "Marking conditions violation: attempted non-target spending was blocked by the smart contract bytecode."
+      }
     }
   },
   "NewsPage": {
@@ -606,7 +702,32 @@
     "v4Title": "Reliability",
     "v4Text": "Guarantee of the highest fault tolerance, security, and stability of all state IT solutions.",
     "v5Title": "Partnership",
-    "v5Text": "Close cooperation with the National Bank and its subsidiaries for effective project implementation."
+    "v5Text": "Close cooperation with the National Bank and its subsidiaries for effective project implementation.",
+    "form": {
+      "title": "Apply to the DDC Team",
+      "nameLabel": "Full Name",
+      "emailLabel": "Email Address",
+      "phoneLabel": "Phone Number",
+      "vacancyLabel": "Select Vacancy",
+      "resumeLabel": "Resume Link (Google Drive / HH)",
+      "startQuizBtn": "Take IT Architecture Quiz",
+      "submitBtn": "Submit Application",
+      "successTitle": "Application Submitted Successfully!",
+      "successDesc": "Your application and quiz results have been saved in the DDC HR database. We will contact you shortly.",
+      "quiz": {
+        "title": "IT Express Quiz (System Thinking)",
+        "desc": "Systems thinking is a core competency at DDC. Answer 3 questions to validate your expertise.",
+        "q1": "Which solution is optimal for caching real-time transactions before writing them to the DLT registry?",
+        "q1.a": "In-Memory Redis Cache",
+        "q1.b": "Writing to raw text log files",
+        "q2": "Which DBMS is more suitable for building a Unified Data Factory with millions of OLAP reports?",
+        "q2.a": "ClickHouse (column-oriented)",
+        "q2.b": "SQLite (local file-based)",
+        "q3": "How to avoid the N+1 queries issue when developing API integrations in ORM?",
+        "q3.a": "Use Eager Loading (JOIN/Select-Related)",
+        "q3.b": "Run SELECT queries in a loop"
+      }
+    }
   },
   "ContactPage": {
     "overline": "CONTACT US",

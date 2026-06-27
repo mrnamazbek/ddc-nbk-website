@@ -5,6 +5,7 @@ import FinancialInform from "@/components/ui/FinancialInform";
 import GlassCard from "@/components/ui/GlassCard";
 import Icon from "@/components/ui/Icon";
 import { useTranslations } from "next-intl";
+import MonetaryPolicySimulator from "@/components/sections/MonetaryPolicySimulator";
 
 export default function AnalyticsPage() {
   const t = useTranslations("AnalyticsPage");
@@ -124,6 +125,11 @@ export default function AnalyticsPage() {
               </div>
             </GlassCard>
           </div>
+        </div>
+
+        {/* Симулятор монетарной политики */}
+        <div className="mb-24">
+          <MonetaryPolicySimulator />
         </div>
 
         {/* Database Developer / Data Engineer School */}

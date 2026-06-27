@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Icon from "@/components/ui/Icon";
 import GlassCard from "@/components/ui/GlassCard";
 import { useTranslations } from "next-intl";
+import DigitalTengeSimulator from "@/components/sections/DigitalTengeSimulator";
 
 export default function DigitalPage() {
   const t = useTranslations("DigitalPage");
@@ -175,6 +176,11 @@ export default function DigitalPage() {
             <span>{t("swipeHint")}</span>
             <Icon name="arrow-right" size={14} className="animate-pulse" />
           </div>
+        </div>
+
+        {/* Симулятор смарт-контрактов */}
+        <div className="mb-24">
+          <DigitalTengeSimulator />
         </div>
 
         {/* Образовательный инсайт для инженеров */}
