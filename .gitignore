@@ -49,3 +49,13 @@ next-env.d.ts
 /.idea
 /.agent
 /.agents
+
+# test artifacts & MCP scratch (never commit — regenerated on every run)
+/output/
+/.playwright-mcp/
+/test-results/
+/playwright-report/
+/variant_b_*.png
+
+# large 3D binaries — keep local until tracked via Git LFS (e.g. altyn_adam.glb ~44MB)
+/public/models/
