@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSpring, useMotionValue, useInView } from "framer-motion";
 
 interface AnimatedNumberProps {
@@ -8,24 +8,30 @@ interface AnimatedNumberProps {
   className?: string;
 }
 
+function parseAnimatedNumber(value: string) {
+  const match = value.match(/^([^0-9.-]*)([0-9.-]+)(.*)$/);
+  if (!match) {
+    return { number: 0, prefix: "", suffix: value, decimals: 0 };
+  }
+
+  const prefix = match[1] || "";
+  const numStr = match[2];
+  const suffix = match[3] || "";
+  const parsedNumber = parseFloat(numStr);
+  const decimals = numStr.includes(".") ? numStr.split(".")[1].length : 0;
+
+  return {
+    number: Number.isNaN(parsedNumber) ? 0 : parsedNumber,
+    prefix,
+    suffix,
+    decimals,
+  };
+}
+
 export default function AnimatedNumber({ value, className }: AnimatedNumberProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-50px" });
-
-  // Parse the number and suffixes/prefixes from the string.
-  const { number, prefix, suffix, decimals } = React.useMemo(() => {
-    // Regex matches optional non-digits at the start, followed by the decimal number, followed by the rest
-    const match = value.match(/^([^0-9\.\-]*)([0-9\.\-]+)(.*)$/);
-    if (!match) {
-      return { number: 0, prefix: "", suffix: value, decimals: 0 };
-    }
-    const pre = match[1] || "";
-    const numStr = match[2];
-    const suf = match[3] || "";
-    const num = parseFloat(numStr);
-    const dec = numStr.includes(".") ? numStr.split(".")[1].length : 0;
-    return { number: isNaN(num) ? 0 : num, prefix: pre, suffix: suf, decimals: dec };
-  }, [value]);
+  const { number, prefix, suffix, decimals } = parseAnimatedNumber(value);
 
   const motionValue = useMotionValue(0);
   const springValue = useSpring(motionValue, {

@@ -38,7 +38,7 @@ export default function DigitalShowcase() {
   const currentTab = tabs.find((t) => t.id === activeTab) || tabs[0];
 
   return (
-    <section id="digital" className="relative w-full py-24 sm:py-32 bg-[#0E2419]/55 overflow-hidden">
+    <section id="digital" className="relative w-full py-24 sm:py-32 bg-background overflow-hidden">
       {/* Технологическая подсветка на фоне */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-forest/5 rounded-full blur-[160px] pointer-events-none" />
 
@@ -248,4 +248,3 @@ export default function DigitalShowcase() {
     </section>
   );
 }
-

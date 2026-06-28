@@ -7,7 +7,7 @@ import GlassCard from "@/components/ui/GlassCard";
 import Timeline from "@/components/sections/Timeline";
 import Leadership from "@/components/sections/Leadership";
 import DDCEventGallery from "@/components/sections/DDCEventGallery";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import dynamic from "next/dynamic";
 
@@ -16,6 +16,7 @@ const BaseModelViewer = dynamic(() => import("@/components/three/scene/BaseModel
 
 export default function AboutPage() {
   const t = useTranslations("AboutPage");
+  const locale = useLocale();
   const router = useRouter();
 
   const containerVariants = {
@@ -84,7 +85,7 @@ export default function AboutPage() {
               {t("missionDesc2")}
             </p>
           </div>
-          <div className="lg:col-span-6 h-[400px] sm:h-[480px] lg:h-[550px] relative flex items-center justify-center">
+          <div className="relative isolate flex h-[400px] min-h-0 items-center justify-center overflow-hidden rounded-[var(--radius-card)] sm:h-[480px] lg:col-span-6 lg:h-[550px]">
             <BaseModelViewer />
           </div>
         </div>

@@ -15,6 +15,12 @@ const eslintConfig = defineConfig([
     // Scraped reference material (Node crawler + crawled markdown/images) — not part
     // of the Next app build, and crawler.js legitimately uses CommonJS require().
     "extracted/**",
+    "public/draco/**",
+    "output/**",
+    ".playwright-mcp/**",
+    "test-results/**",
+    "playwright-report/**",
+    ".agents/**",
     // Local Claude Code agent worktrees and their build artifacts (gitignored).
     ".claude/**",
   ]),

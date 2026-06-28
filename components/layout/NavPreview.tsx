@@ -138,7 +138,7 @@ export default function NavPreviewCard({
   return (
     <div
       onClick={() => router.push(link.href)}
-      className="relative w-[400px] overflow-hidden rounded-2xl border border-gold/20 bg-[#060a08]/98 backdrop-blur-3xl p-5 text-left shadow-2xl cursor-pointer hover:border-gold/40 hover:bg-white/[0.03] active:scale-[0.99] transition-all duration-300 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70"
+      className="nav-preview-card relative w-[400px] overflow-hidden rounded-2xl border border-gold/20 bg-[#060a08]/98 backdrop-blur-3xl p-5 text-left shadow-2xl cursor-pointer hover:border-gold/40 hover:bg-white/[0.03] active:scale-[0.99] transition-all duration-300 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70"
       role="link"
       tabIndex={0}
       onKeyDown={(e) => {
@@ -175,9 +175,9 @@ export default function NavPreviewCard({
         {data.highlights.map((h, i) => (
           <motion.li
             key={i}
-            initial={{ opacity: 0, x: -6 }}
+            initial={{ opacity: 0, x: -4 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.25, delay: 0.04 + i * 0.05 }}
+            transition={{ duration: 0.16, delay: 0.01 + i * 0.015, ease: [0.22, 1, 0.36, 1] }}
             className="flex items-center gap-2.5 text-xs text-zinc-200"
           >
             <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-white/[0.06] text-gold/90">

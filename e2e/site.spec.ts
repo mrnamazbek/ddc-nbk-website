@@ -14,7 +14,7 @@ test.describe("DDC Website E2E Tests", () => {
 
     // Переходим на казахскую локаль и проверяем казахские символы
     await page.goto("/kz");
-    const kzPositionText = page.locator("text=әғқңөұүһі АО Цифровое развитие");
+    const kzPositionText = page.locator("text=Цифрлық даму орталығы").first();
     await expect(kzPositionText).toBeVisible();
   });
 
@@ -85,8 +85,16 @@ test.describe("DDC Website E2E Tests", () => {
     await activeTrigger.click();
 
     // Проверяем, что панель открылась
-    const panel = page.locator('[role="dialog"]');
-    await expect(panel).toBeVisible();
+    const panels = page.locator('[role="dialog"]');
+    const panelCount = await panels.count();
+    let activePanel = panels.first();
+    for (let i = 0; i < panelCount; i++) {
+      if (await panels.nth(i).isVisible()) {
+        activePanel = panels.nth(i);
+        break;
+      }
+    }
+    await expect(activePanel).toBeVisible();
 
     // Ждем анимации монтирования панели
     await page.waitForTimeout(300);
@@ -95,10 +103,10 @@ test.describe("DDC Website E2E Tests", () => {
     const isFocusInside = await page.evaluate((panelEl) => {
       if (!panelEl) return false;
       return panelEl.contains(document.activeElement);
-    }, await panel.elementHandle());
+    }, await activePanel.elementHandle());
     expect(isFocusInside).toBe(true);
 
-    const closeBtn = panel.locator("button").first();
+    const closeBtn = activePanel.locator("button").first();
     await closeBtn.focus();
     await page.keyboard.press("Escape");
     await page.waitForTimeout(100);
@@ -106,8 +114,9 @@ test.describe("DDC Website E2E Tests", () => {
     if (ariaExpanded === "true") {
       await closeBtn.click({ force: true }).catch(() => {});
     }
-    await expect(panel).not.toBeVisible();
-    
+
+    await expect(page.locator('[role="dialog"]')).toHaveCount(0);
+
     // Ждем 800мс, чтобы события фокуса успели примениться через requestAnimationFrame
     await page.waitForTimeout(800);
 

@@ -74,7 +74,7 @@ export default function FinancialInform() {
     const width = 100;
     const points = data
       .map((val, index) => {
-        const x = (index / (data.length - 1)) * width;
+        const x = data.length > 1 ? (index / (data.length - 1)) * width : 0;
         const y = height - ((val - min) / range) * (height - 6) - 3;
         return `${x},${y}`;
       })

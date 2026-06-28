@@ -5,7 +5,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import { motion, AnimatePresence } from "framer-motion";
 import * as THREE from "three";
-import DdcCoin from "@/components/three/DdcCoin";
+import AltynAdam from "@/components/three/AltynAdam";
 import { useTranslations } from "next-intl";
 import Icon, { IconName } from "@/components/ui/Icon";
 
@@ -176,14 +176,14 @@ function ParticleCloud({ scrollRef }: { scrollRef: React.RefObject<number> }) {
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
-   Центральный 3D-объект: Золотая Монета DDC
+   Центральный 3D-объект: Алтын Адам
    ────────────────────────────────────────────────────────────────────────── */
 
-function CentralGoldCoin({ scrollRef }: { scrollRef: React.RefObject<number> }) {
-  const coinRef = useRef<THREE.Group>(null);
+function CentralAltynAdam({ scrollRef }: { scrollRef: React.RefObject<number> }) {
+  const modelRef = useRef<THREE.Group>(null);
 
   useFrame((state, dt) => {
-    if (!coinRef.current) return;
+    if (!modelRef.current) return;
     const scroll = scrollRef.current;
 
     // Phase scaling: Intro 1.0 -> Showcase 0.85 -> Climax 1.5 (close-up).
@@ -193,21 +193,18 @@ function CentralGoldCoin({ scrollRef }: { scrollRef: React.RefObject<number> }) 
     } else if (scroll >= 0.8) {
       targetScale = THREE.MathUtils.lerp(0.85, 1.5, (scroll - 0.8) / 0.2);
     }
-    coinRef.current.scale.setScalar(
-      THREE.MathUtils.damp(coinRef.current.scale.x, targetScale, 4, dt)
+    modelRef.current.scale.setScalar(
+      THREE.MathUtils.damp(modelRef.current.scale.x, targetScale, 4, dt)
     );
 
     // Nudge forward in the climax for emphasis.
     const targetZ = scroll >= 0.8 ? THREE.MathUtils.lerp(0.0, 1.0, (scroll - 0.8) / 0.2) : 0;
-    coinRef.current.position.z += (targetZ - coinRef.current.position.z) * Math.min(1, dt * 5);
+    modelRef.current.position.z += (targetZ - modelRef.current.position.z) * Math.min(1, dt * 5);
   });
 
-  // DdcCoin brings its own studio Environment (so the gold reads correctly even
-  // when the scene lights dim in the climax) and faces the camera with a gentle
-  // sway -- coinRef only handles the scroll-driven scale/zoom.
   return (
-    <group ref={coinRef} position={[0, 0, 0]}>
-      <DdcCoin scale={1} />
+    <group ref={modelRef} position={[0, -0.2, 0]}>
+      <AltynAdam scale={1} targetHeight={3.5} />
     </group>
   );
 }
@@ -500,7 +497,7 @@ function WebGLScene({ items, scrollRef, onSelectCard }: SceneProps) {
 
       <BackgroundIntroText scrollRef={scrollRef} />
       <ParticleCloud scrollRef={scrollRef} />
-      <CentralGoldCoin scrollRef={scrollRef} />
+      <CentralAltynAdam scrollRef={scrollRef} />
       
       <group>
         {items.map((item, idx) => (

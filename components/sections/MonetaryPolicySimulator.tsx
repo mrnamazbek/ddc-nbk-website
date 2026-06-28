@@ -111,7 +111,7 @@ export default function MonetaryPolicySimulator() {
     
     const points = data
       .map((val, index) => {
-        const x = (index / (data.length - 1)) * width;
+        const x = data.length > 1 ? (index / (data.length - 1)) * width : 0;
         const y = height - ((val - min) / range) * (height - 8) - 4;
         return `${x},${y}`;
       })
@@ -127,7 +127,7 @@ export default function MonetaryPolicySimulator() {
           points={points}
         />
         {data.map((val, index) => {
-          const x = (index / (data.length - 1)) * width;
+          const x = data.length > 1 ? (index / (data.length - 1)) * width : 0;
           const y = height - ((val - min) / range) * (height - 8) - 4;
           return (
             <circle
@@ -176,7 +176,7 @@ export default function MonetaryPolicySimulator() {
         <div className="lg:col-span-5 flex flex-col justify-between space-y-6 text-left">
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label htmlFor="rate-range" className="text-xs font-mono uppercase tracking-wider text-zinc-400">
                 {t("rateLabel")}
               </label>
               <span className="text-xl font-mono font-bold text-gold">
@@ -185,6 +185,7 @@ export default function MonetaryPolicySimulator() {
             </div>
             
             <input
+              id="rate-range"
               type="range"
               min="5.00"
               max="20.00"

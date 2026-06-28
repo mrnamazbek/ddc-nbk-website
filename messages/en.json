@@ -718,14 +718,14 @@
         "title": "IT Express Quiz (System Thinking)",
         "desc": "Systems thinking is a core competency at DDC. Answer 3 questions to validate your expertise.",
         "q1": "Which solution is optimal for caching real-time transactions before writing them to the DLT registry?",
-        "q1.a": "In-Memory Redis Cache",
-        "q1.b": "Writing to raw text log files",
+        "q1_a": "In-Memory Redis Cache",
+        "q1_b": "Writing to raw text log files",
         "q2": "Which DBMS is more suitable for building a Unified Data Factory with millions of OLAP reports?",
-        "q2.a": "ClickHouse (column-oriented)",
-        "q2.b": "SQLite (local file-based)",
+        "q2_a": "ClickHouse (column-oriented)",
+        "q2_b": "SQLite (local file-based)",
         "q3": "How to avoid the N+1 queries issue when developing API integrations in ORM?",
-        "q3.a": "Use Eager Loading (JOIN/Select-Related)",
-        "q3.b": "Run SELECT queries in a loop"
+        "q3_a": "Use Eager Loading (JOIN/Select-Related)",
+        "q3_b": "Run SELECT queries in a loop"
       }
     }
   },

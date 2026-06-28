@@ -30,8 +30,8 @@ function Model({ url, isLight }: { url: string; isLight: boolean }) {
       // Use delta-time accumulation for sub-pixel rotation smoothness
       if (!reduce) {
         const safeDelta = Math.min(delta, 0.1);
-        // Increased speed (0.8075 rad/s) for faster rotation (reduced by 5%)
-        rotationY.current += safeDelta * 0.8075;
+        // Auto-rotation tuned 8% slower for calmer reading beside mission copy.
+        rotationY.current += safeDelta * 0.684;
         // Smoothly interpolate current rotation to the target rotation to eliminate frame jitter
         groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, rotationY.current, 0.12);
       } else {
@@ -50,7 +50,7 @@ function Model({ url, isLight }: { url: string; isLight: boolean }) {
     // Scale responsive to viewport size (optimized for fov: 35 and Z: 7.2)
     const isMobile = size.width < 500;
     const isTablet = size.width >= 500 && size.width < 1024;
-    const scaleVal = isMobile ? 1.6 : isTablet ? 1.85 : 2.15;
+    const scaleVal = isMobile ? 1.48 : isTablet ? 1.72 : 1.98;
     
     return { center: centerVec, scaleVal };
   }, [scene, size.width]);
@@ -175,7 +175,7 @@ export default function BaseModelViewer() {
   const isLight = resolvedTheme === "light";
 
   return (
-    <div className="w-full h-full relative select-none cursor-grab active:cursor-grabbing">
+    <div className="relative h-full w-full cursor-grab select-none overflow-hidden rounded-[var(--radius-card)] active:cursor-grabbing">
       <Canvas
         camera={{ position: [0, 0, 7.2], fov: 35 }} // Moved camera back from 6.5 to 7.2 to prevent vertical clipping/cutting
         dpr={[1, 2]} // Limit DPR to 2 for performance optimization on Retina screens
@@ -185,6 +185,7 @@ export default function BaseModelViewer() {
           stencil: false, // Save memory and bandwidth by disabling stencil buffer
           depth: true
         }}
+        style={{ display: "block", height: "100%", width: "100%" }}
         onCreated={({ gl }) => {
           gl.toneMapping = THREE.ACESFilmicToneMapping;
           gl.toneMappingExposure = 1.1;

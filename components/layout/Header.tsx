@@ -6,7 +6,6 @@ import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
-import Button from "../ui/Button";
 import TransitionLink from "../motion/TransitionLink";
 import CinematicThemeSwitcher from "../ui/cinematic-theme-switcher";
 import Icon from "../ui/Icon";
@@ -69,7 +68,8 @@ export default function Header() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const frame = window.requestAnimationFrame(() => setMounted(true));
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   const logoSrc = mounted && resolvedTheme === "light"
@@ -291,12 +291,14 @@ export default function Header() {
       <AnimatePresence>
         {hoveredLink && (
           <motion.div
-            initial={{ opacity: 0, y: 15, scale: 0.95, rotateX: -12, left: targetLeft }}
-            animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0, left: targetLeft }}
-            exit={{ opacity: 0, y: 10, scale: 0.95, rotateX: 8 }}
+            initial={{ opacity: 0, y: 18, scale: 0.92, rotateX: -14, filter: "blur(10px)", left: targetLeft }}
+            animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0, filter: "blur(0px)", left: targetLeft }}
+            exit={{ opacity: 0, y: 12, scale: 0.94, rotateX: 8, filter: "blur(8px)" }}
             transition={{
-              left: { type: "spring", stiffness: 220, damping: 26 },
-              default: { duration: 0.25, ease: [0.16, 1, 0.3, 1] }
+              left: { type: "spring", stiffness: 260, damping: 30 },
+              opacity: { duration: 0.18, ease: "easeOut" },
+              filter: { duration: 0.22, ease: [0.16, 1, 0.3, 1] },
+              default: { duration: 0.34, ease: [0.16, 1, 0.3, 1] }
             }}
             onMouseEnter={() => {
               if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
@@ -305,6 +307,8 @@ export default function Header() {
             style={{
               perspective: 1000,
               transformStyle: "preserve-3d",
+              transformOrigin: "50% 0%",
+              willChange: "transform, opacity, filter, left",
             }}
             className="hidden xl:block fixed top-[5.25rem] z-[60] pointer-events-auto"
           >

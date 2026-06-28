@@ -102,6 +102,8 @@ export default function DDCEventGallery() {
     return hoveredIndex === index ? 3.2 : 0.6;
   };
 
+  const selectedItem = selectedIndex === null ? null : GALLERY_ITEMS[selectedIndex];
+
   return (
     <section className="py-24 relative overflow-hidden">
       {/* Декорации на фоне */}
@@ -145,14 +147,20 @@ export default function DDCEventGallery() {
                 onClick={() => setSelectedIndex(idx)}
               >
                 {/* Изображение */}
-                <Image
-                  src={item.image}
-                  alt={itemTitle}
-                  fill
-                  sizes="(max-w-768px) 100vw, 400px"
-                  priority={idx < 3}
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
+                <motion.div
+                  layoutId={`event-image-${item.id}`}
+                  className="absolute inset-0"
+                  transition={{ layout: { duration: 0.68, ease: [0.22, 1, 0.36, 1] } }}
+                >
+                  <Image
+                    src={item.image}
+                    alt={itemTitle}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 400px"
+                    priority={idx < 3}
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </motion.div>
 
                 {/* Градиентный оверлей */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent z-10 transition-opacity duration-300" />
@@ -207,13 +215,19 @@ export default function DDCEventGallery() {
                 onClick={() => setSelectedIndex(idx)}
               >
                 <div className="relative h-48 w-full">
-                  <Image
-                    src={item.image}
-                    alt={itemTitle}
-                    fill
-                    sizes="(max-w-768px) 100vw, 400px"
-                    className="object-cover"
-                  />
+                  <motion.div
+                    layoutId={`event-mobile-image-${item.id}`}
+                    className="absolute inset-0"
+                    transition={{ layout: { duration: 0.68, ease: [0.22, 1, 0.36, 1] } }}
+                  >
+                    <Image
+                      src={item.image}
+                      alt={itemTitle}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 400px"
+                      className="object-cover"
+                    />
+                  </motion.div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
                 </div>
                 <div className="p-5 flex-grow text-left">
@@ -233,12 +247,13 @@ export default function DDCEventGallery() {
 
       {/* Полноэкранный Лайтбокс */}
       <AnimatePresence>
-        {selectedIndex !== null && (
+        {selectedItem && selectedIndex !== null && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-md p-4"
+            transition={{ duration: shouldReduceMotion ? 0.18 : 0.45, ease: [0.22, 1, 0.36, 1] }}
+            className="event-lightbox-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 backdrop-blur-md"
             onClick={() => setSelectedIndex(null)}
           >
             {/* Кнопка закрытия */}
@@ -264,21 +279,27 @@ export default function DDCEventGallery() {
 
             {/* Контейнер с изображением и деталями */}
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="relative max-w-4xl max-h-[90vh] w-full flex flex-col bg-charcoal/80 border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
+              initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 34, scale: 0.92, rotateX: 6, filter: "blur(12px)" }}
+              animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1, rotateX: 0, filter: "blur(0px)" }}
+              exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 18, scale: 0.96, filter: "blur(8px)" }}
+              transition={{ duration: shouldReduceMotion ? 0.18 : 0.72, ease: [0.22, 1, 0.36, 1] }}
+              className="event-lightbox-shell relative flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-charcoal/80 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Фото */}
               <div className="relative w-full h-[50vh] sm:h-[60vh] bg-black">
-                <Image
-                  src={GALLERY_ITEMS[selectedIndex].image}
-                  alt={t(`events.${GALLERY_ITEMS[selectedIndex].translationKey}.title`)}
-                  fill
-                  className="object-contain"
-                />
+                <motion.div
+                  layoutId={`event-image-${selectedItem.id}`}
+                  className="absolute inset-0"
+                  transition={{ layout: { duration: 0.68, ease: [0.22, 1, 0.36, 1] } }}
+                >
+                  <Image
+                    src={selectedItem.image}
+                    alt={t(`events.${selectedItem.translationKey}.title`)}
+                    fill
+                    className="object-contain"
+                  />
+                </motion.div>
               </div>
 
               {/* Текстовая панель */}
@@ -293,10 +314,10 @@ export default function DDCEventGallery() {
                     </span>
                   </div>
                   <h3 className="text-lg sm:text-xl font-bold text-white tracking-wide mb-2">
-                    {t(`events.${GALLERY_ITEMS[selectedIndex].translationKey}.title`)}
+                    {t(`events.${selectedItem.translationKey}.title`)}
                   </h3>
                   <p className="text-sm text-zinc-300 font-light leading-relaxed">
-                    {t(`events.${GALLERY_ITEMS[selectedIndex].translationKey}.desc`)}
+                    {t(`events.${selectedItem.translationKey}.desc`)}
                   </p>
                 </div>
                 
@@ -305,7 +326,7 @@ export default function DDCEventGallery() {
                     {selectedIndex + 1} / {GALLERY_ITEMS.length}
                   </span>
                   <a
-                    href={GALLERY_ITEMS[selectedIndex].linkedinUrl}
+                    href={selectedItem.linkedinUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl liquid-glass text-xs font-mono font-bold text-white hover:text-gold border border-white/10 hover:border-gold/30 transition-all w-full sm:w-auto justify-center select-none"

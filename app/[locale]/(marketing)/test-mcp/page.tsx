@@ -14,6 +14,7 @@ import {
   IconCheck
 } from '@tabler/icons-react';
 import { useFontSystem, type FontSystem } from '@/components/theme/FontSystemProvider';
+import { Link } from '@/i18n/navigation';
 
 export default function TestMcpPage() {
   const { fontSystem, setFontSystem } = useFontSystem();
@@ -276,12 +277,12 @@ export default function TestMcpPage() {
         </div>
 
         <div className="text-center">
-          <a
+          <Link
             href="/"
             className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-emerald-900/20 hover:bg-emerald-900/40 border border-emerald-500/30 text-emerald-300 transition text-sm font-semibold"
           >
             Вернуться на главную
-          </a>
+          </Link>
         </div>
       </div>
     </main>

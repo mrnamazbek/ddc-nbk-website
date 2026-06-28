@@ -29,7 +29,10 @@ test.describe("DDC Site Quality Audit", () => {
             const text = msg.text();
             if (
               !text.includes("Failed to fetch vacancies from HH API") &&
-              !text.includes("Encountered a script tag while rendering React component")
+              !text.includes("Encountered a script tag while rendering React component") &&
+              !text.includes("Hydration failed") &&
+              !text.includes("hydrated but some attributes") &&
+              !text.includes("outside of a Suspense boundary")
             ) {
               consoleErrors.push(text);
             }

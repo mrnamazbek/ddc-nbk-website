@@ -138,7 +138,7 @@ function Medallion({ pointer, reduced }: { pointer: React.RefObject<{ x: number;
 
   useFrame((state, dt) => {
     const d = Math.min(dt, 0.05);
-    if (spin.current && !reduced) spin.current.rotation.y += d * 0.32;
+    if (spin.current && !reduced) spin.current.rotation.y += d * 0.2944;
     if (tilt.current) {
       const p = pointer.current ?? { x: 0, y: 0 };
       const ty = reduced ? 0.32 : p.x * 0.35;

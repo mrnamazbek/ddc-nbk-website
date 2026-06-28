@@ -317,7 +317,7 @@ export default function ContactPage() {
           </motion.div>
 
             {/* Container for Maps */}
-            <div className="relative overflow-hidden bg-charcoal/10 border border-white/5 rounded-3xl p-8 sm:p-12 min-h-[480px] flex items-center justify-center">
+            <div className="relative overflow-visible bg-transparent p-0 min-h-[480px] flex items-center justify-center">
               <div className="w-full">
                 <KazakhstanMap />
               </div>

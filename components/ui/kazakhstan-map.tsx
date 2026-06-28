@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Icon from "@/components/ui/Icon";
@@ -18,7 +19,10 @@ export interface MapOffice {
   phone: string;
   googleMaps: string;
   twoGis: string;
+  cityLogo: string;
 }
+
+type PositionedOffice = MapOffice & { x: number; y: number };
 
 const OFFICES: MapOffice[] = [
   {
@@ -32,6 +36,7 @@ const OFFICES: MapOffice[] = [
     phone: "+7 (7172) 76-74-00",
     googleMaps: "https://maps.app.goo.gl/34rQ98a9hEaTf7rU9",
     twoGis: "https://2gis.kz/astana/geo/9570147374971439",
+    cityLogo: "/images/cities/astana-emblem.svg",
   },
   {
     id: "almaty",
@@ -44,6 +49,7 @@ const OFFICES: MapOffice[] = [
     phone: "+7 (727) 330-24-00",
     googleMaps: "https://maps.app.goo.gl/uXpLqJAGc1Yg5i3Q6",
     twoGis: "https://2gis.kz/almaty/geo/9430047374971439",
+    cityLogo: "/images/cities/almaty-coat-of-arms.svg",
   }
 ];
 
@@ -59,30 +65,85 @@ function latLngToXY(lat: number, lng: number): { x: number; y: number } {
   return { x, y };
 }
 
+function PreviewBeam({ isTopHalf, reduce }: { isTopHalf: boolean; reduce: boolean }) {
+  return (
+    <motion.div
+      aria-hidden
+      initial={{ opacity: 0, scaleY: 0.68 }}
+      animate={{ opacity: 1, scaleY: 1 }}
+      exit={{ opacity: 0, scaleY: 0.68 }}
+      transition={{ duration: 0.24, ease: "easeOut" }}
+      style={{ transformOrigin: isTopHalf ? "bottom" : "top" }}
+      className={cn(
+        "pointer-events-none absolute left-1/2 z-20 flex h-16 w-24 -translate-x-1/2 justify-center",
+        isTopHalf ? "bottom-full -mb-1" : "top-full -mt-1"
+      )}
+    >
+      <span className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-gradient-to-b from-gold/0 via-gold-light to-gold/10 shadow-[0_0_18px_rgba(255,242,204,0.7)]" />
+      <span
+        className={cn(
+          "absolute left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-gold-light shadow-[0_0_18px_rgba(255,242,204,0.95)]",
+          isTopHalf ? "bottom-0" : "top-0"
+        )}
+      />
+      {!reduce &&
+        [0, 1].map((index) => (
+          <motion.span
+            key={index}
+            className={cn(
+              "absolute left-1/2 h-14 w-14 -translate-x-1/2 rounded-full border border-gold/18 bg-gold/[0.035] shadow-[0_0_24px_rgba(201,168,76,0.14)]",
+              isTopHalf ? "bottom-[-1.45rem]" : "top-[-1.45rem]"
+            )}
+            initial={{ opacity: 0, scale: 0.45 }}
+            animate={{ opacity: [0, 0.62, 0], scale: [0.45, 1.05, 1.32] }}
+            transition={{ duration: 2.8, repeat: Infinity, delay: index * 1.25, ease: "easeOut" }}
+          />
+        ))}
+    </motion.div>
+  );
+}
+
 export function KazakhstanMap() {
   const t = useTranslations("ContactPage");
   const reduce = useReducedMotion();
   const [mounted, setMounted] = useState(false);
   const [hoveredOffice, setHoveredOffice] = useState<MapOffice | null>(null);
+  const [isMapHovered, setIsMapHovered] = useState(false);
   
   // Parallax mouse state
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setMounted(true);
+    const frame = window.requestAnimationFrame(() => setMounted(true));
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const updateMapMotionFromPointer = (clientX: number, clientY: number) => {
     if (reduce || !containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    const x = (clientX - rect.left) / rect.width - 0.5;
+    const y = (clientY - rect.top) / rect.height - 0.5;
     setMousePos({ x: x * 15, y: y * 10 });
   };
 
-  const handleMouseLeave = () => {
+  const handleOfficePointerMove = (
+    office: PositionedOffice,
+    e: React.PointerEvent<HTMLDivElement>
+  ) => {
+    setHoveredOffice(office);
+    setIsMapHovered(true);
+    updateMapMotionFromPointer(e.clientX, e.clientY);
+  };
+
+  const handleMapPointerLeave = () => {
     setMousePos({ x: 0, y: 0 });
+    setIsMapHovered(false);
+  };
+
+  const handleOfficePointerLeave = () => {
+    setHoveredOffice(null);
+    handleMapPointerLeave();
   };
 
   if (!mounted) {
@@ -108,22 +169,33 @@ export function KazakhstanMap() {
       {/* Interactive Map Box */}
       <div
         ref={containerRef}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        className="relative w-full overflow-hidden bg-charcoal/5 border border-white/5 rounded-3xl p-6 sm:p-12 aspect-[1000/549] select-none"
+        onMouseLeave={handleMapPointerLeave}
+        className="relative w-full overflow-visible bg-transparent p-0 sm:p-4 aspect-[1000/549] select-none"
       >
         {/* Parallax layer wrapper */}
         <motion.div
           animate={{ x: mousePos.x, y: mousePos.y }}
           transition={{ type: "spring", stiffness: 80, damping: 20 }}
-          className="relative w-full h-full"
+          className="relative w-full h-full origin-center scale-[1.08] sm:scale-[1.12]"
+          style={{ perspective: 1200 }}
         >
           {/* Main SVG Map */}
-          <svg
-            viewBox="0 0 1000 549"
-            className="w-full h-full filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.8)]"
+          <motion.div
+            aria-hidden
+            animate={
+              isMapHovered && !reduce
+                ? { rotateX: 58, scale: 0.9, y: 30 }
+                : { rotateX: 0, scale: 1, y: 0 }
+            }
+            transition={{ type: "spring", stiffness: 90, damping: 18, mass: 0.75 }}
+            style={{ transformStyle: "preserve-3d", transformOrigin: "50% 68%" }}
+            className="absolute inset-0 will-change-transform"
           >
-            <defs>
+            <svg
+              viewBox="0 0 1000 549"
+              className="w-full h-full filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.8)]"
+            >
+              <defs>
               {/* Gold border glow filter */}
               <filter id="gold-glow" x="-20%" y="-20%" width="140%" height="140%">
                 <feGaussianBlur stdDeviation="6" result="blur" />
@@ -155,7 +227,7 @@ export function KazakhstanMap() {
               stroke="url(#gold-grad)"
               strokeWidth={1.5}
               filter="url(#gold-glow)"
-              className="transition-colors duration-500 hover:fill-forest/20 cursor-pointer"
+              className="pointer-events-none transition-colors duration-500"
               initial={{ pathLength: 0, opacity: 0 }}
               animate={{ pathLength: 1, opacity: 1 }}
               transition={{ duration: 1.8, ease: "easeOut" }}
@@ -172,7 +244,8 @@ export function KazakhstanMap() {
               animate={{ pathLength: 1, opacity: 0.7 }}
               transition={{ duration: 2, delay: 0.8, ease: "easeInOut" }}
             />
-          </svg>
+            </svg>
+          </motion.div>
 
           {/* Office Markers overlay (HTML overlay for responsive, crisp texts) */}
           {pins.map((p) => {
@@ -188,28 +261,43 @@ export function KazakhstanMap() {
                 }}
               >
                 <div
-                  onMouseEnter={() => setHoveredOffice(p)}
-                  onMouseLeave={() => setHoveredOffice(null)}
-                  className="relative flex flex-col items-center cursor-pointer group"
+                  onPointerEnter={(e) => handleOfficePointerMove(p, e)}
+                  onPointerMove={(e) => handleOfficePointerMove(p, e)}
+                  onPointerLeave={handleOfficePointerLeave}
+                  className="relative z-20 flex flex-col items-center cursor-pointer group"
                 >
-                  {/* Pulsing base ring */}
-                  {!reduce && (
-                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 h-3.5 w-3.5 rounded-full bg-gold">
-                      <span className="absolute inset-0 animate-ping rounded-full bg-gold opacity-75" />
-                    </span>
-                  )}
-                  {/* Gold map pin */}
+                  <span
+                    aria-hidden
+                    className="absolute -bottom-16 left-1/2 z-0 h-44 w-44 -translate-x-1/2 rounded-full bg-gold/0 transition-colors duration-300 group-hover:bg-gold/[0.04]"
+                  />
                   <motion.div
-                    animate={{ y: isHovered ? -5 : 0 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                    className="relative -mb-1 text-gold drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]"
+                    animate={
+                      hoveredOffice
+                        ? { opacity: 0, y: -9, scale: 0.82, filter: "blur(6px)" }
+                        : { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
+                    }
+                    transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                    className="pointer-events-none relative z-20 flex flex-col items-center"
                   >
-                    <Icon name="map-pin" size={32} animate={false} />
+                    {/* Pulsing base ring */}
+                    {!reduce && (
+                      <span className="absolute bottom-0 left-1/2 -translate-x-1/2 h-3.5 w-3.5 rounded-full bg-gold">
+                        <span className="absolute inset-0 animate-ping rounded-full bg-gold opacity-75" />
+                      </span>
+                    )}
+                    {/* Gold map pin */}
+                    <motion.div
+                      animate={{ y: isHovered ? -5 : 0 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                      className="relative z-20 -mb-1 text-gold drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]"
+                    >
+                      <Icon name="map-pin" size={32} animate={false} />
+                    </motion.div>
+                    {/* City Label */}
+                    <span className="mt-1.5 whitespace-nowrap rounded-full border border-gold/30 bg-black/90 px-3 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gold backdrop-blur-md shadow-lg transition-transform duration-300 group-hover:scale-105">
+                      {t(p.cityKey)}
+                    </span>
                   </motion.div>
-                  {/* City Label */}
-                  <span className="mt-1.5 whitespace-nowrap rounded-full border border-gold/30 bg-black/90 px-3 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gold backdrop-blur-md shadow-lg transition-transform duration-300 group-hover:scale-105">
-                    {t(p.cityKey)}
-                  </span>
 
                   {/* Desktop Preview Card */}
                   <AnimatePresence>
@@ -217,36 +305,82 @@ export function KazakhstanMap() {
                       const isTopHalf = p.y < 274.5;
                       return (
                         <motion.div
-                          initial={{ opacity: 0, y: isTopHalf ? 10 : -10, scale: 0.95 }}
-                          animate={{ opacity: 1, y: isTopHalf ? 8 : -8, scale: 1 }}
-                          exit={{ opacity: 0, y: isTopHalf ? 10 : -10, scale: 0.95 }}
-                          transition={{ duration: 0.2, ease: "easeOut" }}
+                          initial={{
+                            opacity: 0,
+                            x: "-50%",
+                            y: isTopHalf ? 16 : -16,
+                            scale: 0.9,
+                            rotateX: isTopHalf ? 34 : -14,
+                            filter: "blur(8px)",
+                          }}
+                          animate={{
+                            opacity: 1,
+                            x: "-50%",
+                            y: isTopHalf ? 12 : -12,
+                            scale: 1,
+                            rotateX: isTopHalf ? 10 : -5,
+                            filter: "blur(0px)",
+                          }}
+                          exit={{
+                            opacity: 0,
+                            x: "-50%",
+                            y: isTopHalf ? 16 : -16,
+                            scale: 0.92,
+                            rotateX: isTopHalf ? 24 : -12,
+                            filter: "blur(6px)",
+                          }}
+                          transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
                           style={
                             isTopHalf
                               ? {
                                   left: "50%",
-                                  transform: "translate(-50%, 0)",
                                   top: "100%",
+                                  perspective: 1000,
+                                  transformStyle: "preserve-3d",
+                                  transformOrigin: "50% 0%",
                                 }
                               : {
                                   left: "50%",
-                                  transform: "translate(-50%, -100%)",
                                   bottom: "100%",
+                                  perspective: 1000,
+                                  transformStyle: "preserve-3d",
+                                  transformOrigin: "50% 100%",
                                 }
                           }
                           className={cn(
-                            "absolute z-30 w-[300px] pointer-events-auto",
-                            isTopHalf ? "mt-4" : "mb-4"
+                            "absolute z-50 w-[320px] pointer-events-auto",
+                            isTopHalf ? "mt-10" : "mb-10"
                           )}
                         >
+                          <PreviewBeam isTopHalf={isTopHalf} reduce={Boolean(reduce)} />
+                          <motion.div
+                            initial={{ opacity: 0, y: isTopHalf ? -8 : 8, scale: 0.92 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: isTopHalf ? -8 : 8, scale: 0.92 }}
+                            transition={{ duration: 0.24, ease: "easeOut" }}
+                            className={cn(
+                              "pointer-events-none absolute left-1/2 z-30 -translate-x-1/2 rounded-full border border-white/10 bg-black/90 px-5 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-gold shadow-[0_0_22px_rgba(201,168,76,0.2)] backdrop-blur-xl",
+                              isTopHalf ? "-top-12" : "-bottom-12"
+                            )}
+                          >
+                            {t(p.cityKey)}
+                          </motion.div>
                           <GlassCard
                             hoverAccent="gold"
                             variant="liquid-strong"
-                            className="p-5 text-left border-gold/30 shadow-2xl relative bg-[#060a08]/98 backdrop-blur-2xl"
+                            className="relative overflow-hidden rounded-[1.35rem] border-gold/30 !bg-[#020504] p-5 text-left shadow-[0_24px_70px_rgba(0,0,0,0.65)] backdrop-blur-2xl"
                           >
-                            <div className="absolute inset-0 bg-forest/5 pointer-events-none" />
+                            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.045] via-transparent to-gold/[0.035] pointer-events-none" />
                             <h4 className="text-sm font-bold text-white mb-2 flex items-center gap-1.5">
-                              <Icon name="bank" size={16} className="text-gold" />
+                              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/25 bg-black/35 p-1.5 shadow-[0_0_18px_rgba(201,168,76,0.16)]">
+                                <Image
+                                  src={p.cityLogo}
+                                  alt={`${t(p.cityKey)} emblem`}
+                                  width={22}
+                                  height={22}
+                                  className="h-full w-full object-contain"
+                                />
+                              </span>
                               {t(p.titleKey)}
                             </h4>
                             <p className="text-[11px] text-zinc-300 font-light leading-relaxed mb-3">
@@ -303,13 +437,25 @@ export function KazakhstanMap() {
             className="p-6 text-left border-white/5 flex flex-col justify-between"
           >
             <div>
-              <span className="text-[9px] uppercase tracking-[0.2em] text-gold font-bold mb-1.5 block">
-                {t(office.cityKey)}
-              </span>
-              <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
-                <Icon name="bank" size={18} className="text-gold" />
-                {t(office.titleKey)}
-              </h3>
+              <div className="mb-4 flex items-start gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-gold/25 bg-black/20 p-2.5 shadow-[0_0_24px_rgba(201,168,76,0.14)]">
+                  <Image
+                    src={office.cityLogo}
+                    alt={`${t(office.cityKey)} emblem`}
+                    width={44}
+                    height={44}
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[9px] uppercase tracking-[0.2em] text-gold font-bold mb-1.5 block">
+                    {t(office.cityKey)}
+                  </span>
+                  <h3 className="text-lg font-bold text-white leading-snug">
+                    {t(office.titleKey)}
+                  </h3>
+                </div>
+              </div>
               <p className="text-xs text-zinc-300 font-light leading-relaxed mb-4">
                 {t(office.descKey)}
               </p>

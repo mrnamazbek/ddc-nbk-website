@@ -339,7 +339,7 @@ export default async function CareersPage({ params }: CareersPageProps) {
         </div>
 
         {/* Почему именно мы? */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24 pb-12 border-b border-white/5">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24 pb-12">
           <div className="lg:col-span-7">
             <h2 className="text-2xl font-bold text-white mb-6 tracking-wide">{t("whyUsTitle")}</h2>
             <ul className="space-y-4">

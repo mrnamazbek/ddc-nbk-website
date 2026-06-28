@@ -1,353 +1,533 @@
 "use client";
 
-import { useMemo, useRef, useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import * as THREE from "three";
 import { useTheme } from "next-themes";
-import { useA11y } from "../theme/AccessibilityProvider";
-import { getScroll } from "@/lib/scrollStore";
+import { useTranslations } from "next-intl";
+import * as THREE from "three";
 
-/* --------------------------------------------------------------------------
-   GLSL Shaders for particle morphing wave/sphere/dissolve
-   -------------------------------------------------------------------------- */
+import { useA11y } from "../theme/AccessibilityProvider";
+import { getScroll, startScrollTracking } from "@/lib/scrollStore";
+
+const LOGO_SRC = "/images/logo/ddc-emblem.svg";
 
 const vertexShader = /* glsl */ `
+  precision highp float;
+
   uniform float uTime;
-  uniform float uPr;         // Morph progress S: 0.0 -> 1.0
-  uniform float uSize;       // Particle size scaling
-  uniform float uAmplitude;  // Noise height amplitude on wave
-  uniform float uSpeed;      // Noise speed
+  uniform float uPr;
+  uniform float uSize;
+  uniform float uAmplitude;
+  uniform float uSpeed;
+  uniform float uPixelRatio;
+  uniform float uReveal;
+  uniform vec2 uViewport;
 
   attribute vec3 aSpherePos;
+  attribute vec3 aLogoPos;
   attribute float aRandom;
+  attribute float aIndex;
+  attribute float aColor;
 
   varying vec3 vPos;
-  varying float vMorph;
-  varying float vNoise;
+  varying float vPhase;
+  varying float vColor;
+  varying float vAlphaSeed;
+  varying float vReveal;
 
-  // Description : Array and textureless GLSL 2D simplex noise function.
-  //      Author : Ian McEwan, Ashima Arts.
   vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
   vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-  vec3 permute(vec3 x) { return mod289(((x*34.0)+10.0)*x); }
+  vec3 permute(vec3 x) { return mod289(((x * 34.0) + 10.0) * x); }
 
   float snoise2d(vec2 v) {
     const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
-    vec2 i  = floor(v + dot(v, C.yy) );
-    vec2 x0 = v -   i + dot(i, C.xx);
+    vec2 i = floor(v + dot(v, C.yy));
+    vec2 x0 = v - i + dot(i, C.xx);
     vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
     vec4 x12 = x0.xyxy + C.xxzz;
     x12.xy -= i1;
     i = mod289(i);
-    vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 )) + i.x + vec3(0.0, i1.x, 1.0 ));
-    vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
-    m = m*m ;
-    m = m*m ;
+    vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
+    vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy), dot(x12.zw, x12.zw)), 0.0);
+    m = m * m;
+    m = m * m;
     vec3 x = 2.0 * fract(p * C.www) - 1.0;
     vec3 h = abs(x) - 0.5;
     vec3 ox = floor(x + 0.5);
     vec3 a0 = x - ox;
-    m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
+    m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
     vec3 g;
-    g.x  = a0.x  * x0.x  + h.x  * x0.y;
+    g.x = a0.x * x0.x + h.x * x0.y;
+    g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+    return 130.0 * dot(m, g);
+  }
+
+  float sat(float v) {
+    return clamp(v, 0.0, 1.0);
+  }
+
+  float ease(float v) {
+    return smoothstep(0.0, 1.0, sat(v));
+  }
+
+  void main() {
+    float t = mod(uTime, 100.0) * uSpeed;
+    float stagger = (aIndex - 0.5) * 0.68;
+    float orbit = aIndex * 205.39816 + aRandom * 6.28318;
+    float ringRadius = 0.18 + fract(aIndex * 89.37) * 1.05;
+    float ringPulse = snoise2d(vec2(aIndex * 18.0, t * 0.42)) * 0.18;
+
+    // First scroll beat: a small premium wheel appears near the lower screen.
+    vec3 wheel = vec3(
+      cos(orbit + t * 0.28) * (ringRadius + ringPulse),
+      sin(orbit + t * 0.28) * (ringRadius + ringPulse) - 2.55,
+      (aRandom - 0.5) * 0.54
+    );
+    wheel.xy *= vec2(1.14, 0.82);
+    wheel.z += sin(orbit * 0.7 + t) * 0.16;
+
+    // Second beat: the wheel resolves into the company emblem.
+    vec3 logo = aLogoPos * vec3(0.92, 0.92, 1.0);
+    logo.y -= 0.82;
+    logo.z += sin((aLogoPos.x + aLogoPos.y) * 4.4 + t * 0.72) * 0.12;
+
+    // Final beat: hold the logo, breathe it, and leave room for left/right text.
+    vec3 settledLogo = aLogoPos * vec3(1.04, 1.04, 1.0);
+    settledLogo.y -= 0.68;
+    settledLogo.z += sin((aLogoPos.x - aLogoPos.y) * 5.0 + t * 0.55) * 0.08;
+
+    float pLogo = ease((uPr - 0.72 - stagger * 0.34) / 1.55);
+    float pSettle = ease((uPr - 2.28 + stagger * 0.16) / 1.28);
+
+    vec3 pos = mix(wheel, logo, pLogo);
+    pos = mix(pos, settledLogo, pSettle);
+
+    pos.x += sin(uTime * 0.10 + aRandom * 6.28318) * 0.028;
+    pos.y += cos(uTime * 0.09 + aRandom * 6.28318) * 0.022;
+    pos.y -= (1.0 - uReveal) * 0.46;
+
+    vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+    gl_Position = projectionMatrix * mvPosition;
+
+    float perspectiveSize = uSize / max(0.001, length(mvPosition.xyz));
+    float phaseSize = mix(0.86, 0.62, pSettle);
+    gl_PointSize = perspectiveSize * phaseSize * uPixelRatio * max(0.01, uReveal);
+
+    vPos = pos;
+    vPhase = max(pLogo, pSettle);
+    vColor = aColor;
+    vAlphaSeed = aRandom;
+    vReveal = uReveal;
+  }
+`;
+
+const fragmentShader = /* glsl */ `
+  precision highp float;
+
+  uniform vec3 uEmerald;
+  uniform vec3 uGold;
+  uniform vec3 uTeal;
+  uniform float uAlpha;
+  uniform float uTime;
+  uniform float uThemeLight;
+
+  varying vec3 vPos;
+  varying float vPhase;
+  varying float vColor;
+  varying float vAlphaSeed;
+  varying float vReveal;
+
+  vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+  vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+  vec3 permute(vec3 x) { return mod289(((x * 34.0) + 10.0) * x); }
+
+  float snoise2d(vec2 v) {
+    const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
+    vec2 i = floor(v + dot(v, C.yy));
+    vec2 x0 = v - i + dot(i, C.xx);
+    vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+    vec4 x12 = x0.xyxy + C.xxzz;
+    x12.xy -= i1;
+    i = mod289(i);
+    vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
+    vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy), dot(x12.zw, x12.zw)), 0.0);
+    m = m * m;
+    m = m * m;
+    vec3 x = 2.0 * fract(p * C.www) - 1.0;
+    vec3 h = abs(x) - 0.5;
+    vec3 ox = floor(x + 0.5);
+    vec3 a0 = x - ox;
+    m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
+    vec3 g;
+    g.x = a0.x * x0.x + h.x * x0.y;
     g.yz = a0.yz * x12.xz + h.yz * x12.yw;
     return 130.0 * dot(m, g);
   }
 
   void main() {
-    float t = uTime * uSpeed;
+    float d = distance(gl_PointCoord, vec2(0.5)) * 2.0;
+    if (d > 1.0) discard;
 
-    // 1. Phase 1 (S = 0.0 - 0.25): Dome peeking from bottom
-    // We shape it into a bottom dome using a cosine falloff envelope from center
-    vec3 pos0 = position;
-    float distFromCenter = length(pos0.xz);
-    pos0.y = -2.8 + cos(clamp(distFromCenter / 18.0, 0.0, 1.0) * 3.14159 * 0.5) * 2.8;
-    
-    // Add vertical wave noise (bottom -> up flow direction achieved by moving Z offset in noise)
-    float waveNoise = snoise2d(vec2(pos0.x * 0.1, pos0.z * 0.06 - t * 0.5)) * uAmplitude;
-    pos0.y += waveNoise;
+    float core = smoothstep(1.0, 0.58, d);
+    float rim = smoothstep(0.92, 0.34, d);
+    float luminance = clamp(vPos.y * 0.16 + vColor, 0.0, 1.0);
+    vec3 color = mix(uEmerald, uGold, luminance);
+    color = mix(color, uTeal, smoothstep(0.25, 1.0, vPhase) * (1.0 - vColor) * 0.62);
 
-    // 2. Phase 2 (S = 0.45 - 0.75): Full Centered 3D Sphere
-    vec3 pos1 = aSpherePos;
-    // Add orbital swirling noise
-    float swirl = uTime * 0.22;
-    pos1.x += sin(pos1.y * 1.8 + swirl) * 0.15 * aRandom;
-    pos1.z += cos(pos1.x * 1.8 + swirl) * 0.15 * aRandom;
+    float grain = (snoise2d(vPos.xz * 0.36 + uTime * 0.08) + 1.22) * 0.28;
+    float alpha = uAlpha * vReveal * core * (0.62 + rim * 0.38 + vAlphaSeed * 0.18);
+    alpha -= grain * mix(0.18, 0.08, vPhase);
 
-    // 3. Phase 3 (S = 0.75 - 1.0): Diagonal Yield Curve wave
-    // Particles expand and ripple diagonally left-to-right
-    vec3 pos2 = position * 3.2;
-    float diagonal = (pos2.x + pos2.z) * 0.08;
-    pos2.y += sin(diagonal * 3.14159 * 1.5 - t * 1.8) * uAmplitude * 1.8;
+    if (uThemeLight > 0.5) {
+      color = mix(color * 0.54, vec3(0.12, 0.20, 0.16), 0.22);
+      alpha *= 0.78;
+    }
 
-    // 4. Easing mix between morph targets
-    float pr0 = smoothstep(0.25, 0.45, uPr);      // Wave to Sphere
-    float pr1 = smoothstep(0.75, 1.00, uPr);      // Sphere to Yield-Curve
-
-    vec3 pos = mix(pos0, pos1, pr0);
-    pos = mix(pos, pos2, pr1);
-
-    // Project coordinates
-    vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-    gl_Position = projectionMatrix * mvPosition;
-
-    // Point size depends on camera distance
-    gl_PointSize = (uSize / length(mvPosition.xyz));
-
-    vPos = pos;
-    vMorph = uPr;
-    vNoise = waveNoise;
+    if (alpha <= 0.001) discard;
+    gl_FragColor = vec4(color, alpha);
   }
 `;
 
-const fragmentShader = /* glsl */ `
-  precision mediump float;
-  varying vec3 vPos;
-  varying float vMorph;
-  varying float vNoise;
+function seededRandom(seed: number) {
+  let t = seed + 0x6d2b79f5;
+  t = Math.imul(t ^ (t >>> 15), t | 1);
+  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
 
-  uniform vec3 uColor1;       // Primary Forest Green (#2D6A4F)
-  uniform vec3 uColor2;       // Active Gold Accent (#E8C87A)
-  uniform float uAlpha;       // Base opacity multiplier
-  uniform float uThemeLight;  // Adaptive theme state
-
-  void main() {
-    // Perfect circular points
-    float dist = distance(gl_PointCoord, vec2(0.5)) * 2.0;
-    if (dist > 1.0) discard;
-
-    float alphaMask = smoothstep(1.0, 0.76, dist);
-
-    // Mix color based on particle height and scroll morph state
-    float colorFactor = clamp(vPos.y * 0.15 + 0.5, 0.0, 1.0);
-    
-    // During sphere morph, highlight active zones in gold
-    if (vMorph > 0.25 && vMorph < 0.75) {
-      colorFactor = smoothstep(-1.5, 2.5, vPos.y);
-    } else if (vMorph >= 0.75) {
-      // In diagonal wave, blend color along the diagonal axis
-      colorFactor = clamp((vPos.x + vPos.y) * 0.08 + 0.5, 0.0, 1.0);
-    }
-
-    vec3 finalColor = mix(uColor1, uColor2, colorFactor);
-
-    // If light theme, darken dots to preserve high contrast (WCAG AA)
-    if (uThemeLight > 0.5) {
-      finalColor = mix(finalColor * 0.45, vec3(0.15, 0.18, 0.16), 0.15);
-    }
-
-    float finalAlpha = uAlpha * alphaMask;
-    
-    if (uThemeLight > 0.5) {
-      finalAlpha *= 0.7;
-    }
-
-    gl_FragColor = vec4(finalColor, finalAlpha);
+function makeFallbackLogoTargets(count: number): Float32Array<ArrayBufferLike> {
+  const data = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    const band = i % 10;
+    const lane = Math.floor(band / 2);
+    const side = band % 2 === 0 ? -1 : 1;
+    const y = (seededRandom(i * 7 + 11) - 0.5) * 4.6;
+    const x = side * (0.38 + lane * 0.38) + (seededRandom(i * 3 + 2) - 0.5) * 0.10;
+    data[i * 3] = x;
+    data[i * 3 + 1] = y;
+    data[i * 3 + 2] = (seededRandom(i * 5 + 4) - 0.5) * 0.36;
   }
-`;
+  return data;
+}
 
-/* --------------------------------------------------------------------------
-   Three.js Particle Generator & Mesh Component
-   -------------------------------------------------------------------------- */
+async function sampleLogoTargets(
+  count: number,
+  fallback: Float32Array<ArrayBufferLike>
+): Promise<Float32Array<ArrayBufferLike>> {
+  const img = new Image();
+  img.decoding = "async";
+  img.src = LOGO_SRC;
+
+  await new Promise<void>((resolve, reject) => {
+    img.onload = () => resolve();
+    img.onerror = () => reject(new Error("Unable to load DDC logo target"));
+  });
+
+  const canvas = document.createElement("canvas");
+  const size = 520;
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  if (!ctx) return fallback;
+
+  ctx.clearRect(0, 0, size, size);
+  const pad = 34;
+  ctx.drawImage(img, pad, pad, size - pad * 2, size - pad * 2);
+  const pixels = ctx.getImageData(0, 0, size, size).data;
+  const candidates: { x: number; y: number; alpha: number }[] = [];
+
+  for (let y = 0; y < size; y += 2) {
+    for (let x = 0; x < size; x += 2) {
+      const alpha = pixels[(y * size + x) * 4 + 3];
+      if (alpha > 42) candidates.push({ x, y, alpha });
+    }
+  }
+
+  if (candidates.length < 32) return fallback;
+
+  const data = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    const pick = candidates[Math.floor(seededRandom(i * 13 + 17) * candidates.length)];
+    const jitterX = (seededRandom(i * 19 + 3) - 0.5) * 0.025;
+    const jitterY = (seededRandom(i * 23 + 9) - 0.5) * 0.025;
+    data[i * 3] = ((pick.x / size) - 0.5) * 4.85 + jitterX;
+    data[i * 3 + 1] = (0.5 - pick.y / size) * 4.85 + jitterY;
+    data[i * 3 + 2] = (seededRandom(i * 29 + 5) - 0.5) * (0.24 + (pick.alpha / 255) * 0.28);
+  }
+
+  return data;
+}
 
 interface ShaderParticlesProps {
   isLight: boolean;
-  scrollProgress: number;
 }
 
-function ShaderParticles({ isLight, scrollProgress }: ShaderParticlesProps) {
+function ShaderParticles({ isLight }: ShaderParticlesProps) {
   const matRef = useRef<THREE.ShaderMaterial>(null);
   const pointsRef = useRef<THREE.Points>(null);
-  const { size } = useThree();
+  const prRef = useRef(0);
+  const { size, viewport, gl } = useThree();
 
-  const particleCount = 22500; // 150 x 150 grid
-  const gridSize = 150;
+  const particleCount = size.width < 700 ? 12000 : size.width < 1180 ? 24000 : 48000;
 
-  const [positions, spherePositions, randoms] = useMemo(() => {
+  const [positions, spherePositions, fallbackLogoPositions, randoms, indexes, colors] = useMemo(() => {
     const pos = new Float32Array(particleCount * 3);
-    const spherePos = new Float32Array(particleCount * 3);
+    const sphere = new Float32Array(particleCount * 3);
     const rands = new Float32Array(particleCount);
+    const index = new Float32Array(particleCount);
+    const color = new Float32Array(particleCount);
+    const fallback = makeFallbackLogoTargets(particleCount);
 
-    const radius = 3.6; // Core radius of the 3D sphere
+    const cols = Math.ceil(Math.sqrt(particleCount * 1.78));
+    const rows = Math.ceil(particleCount / cols);
+    const radius = size.width < 700 ? 2.55 : 3.35;
 
     for (let i = 0; i < particleCount; i++) {
-      // 1. Grid positions (xz plane)
-      const col = i % gridSize;
-      const row = Math.floor(i / gridSize);
-      const x = (col / (gridSize - 1)) * 36 - 18;
-      const y = 0.0;
-      const z = (row / (gridSize - 1)) * 36 - 18;
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const x = (col / Math.max(1, cols - 1)) * 28 - 14;
+      const z = (row / Math.max(1, rows - 1)) * 14.4 - 7.2;
 
       pos[i * 3] = x;
-      pos[i * 3 + 1] = y;
+      pos[i * 3 + 1] = 0;
       pos[i * 3 + 2] = z;
 
-      // 2. Fibonacci sphere positions
       const phi = Math.acos(1 - 2 * (i + 0.5) / particleCount);
       const theta = Math.sqrt(particleCount * Math.PI) * phi;
-      
-      spherePos[i * 3] = Math.sin(phi) * Math.cos(theta) * radius;
-      spherePos[i * 3 + 1] = Math.sin(phi) * Math.sin(theta) * radius;
-      spherePos[i * 3 + 2] = Math.cos(phi) * radius;
+      sphere[i * 3] = Math.sin(phi) * Math.cos(theta) * radius;
+      sphere[i * 3 + 1] = Math.sin(phi) * Math.sin(theta) * radius;
+      sphere[i * 3 + 2] = Math.cos(phi) * radius;
 
-      // 3. Random parameter for turbulence offsets
-      rands[i] = Math.random();
+      const rnd = seededRandom(i * 31 + 1);
+      rands[i] = rnd;
+      index[i] = i / Math.max(1, particleCount - 1);
+      color[i] = (index[i] < 0.38 || index[i] > 0.72) && rnd > 0.22 ? 1 : 0;
     }
 
-    return [pos, spherePos, rands] as const;
-  }, [particleCount]);
+    return [pos, sphere, fallback, rands, index, color] as const;
+  }, [particleCount, size.width]);
+
+  const [logoPositions, setLogoPositions] = useState<Float32Array<ArrayBufferLike>>(fallbackLogoPositions);
+
+  useEffect(() => {
+    let active = true;
+    setLogoPositions(fallbackLogoPositions);
+    sampleLogoTargets(particleCount, fallbackLogoPositions)
+      .then((sampled) => {
+        if (active) setLogoPositions(sampled);
+      })
+      .catch(() => {
+        if (active) setLogoPositions(fallbackLogoPositions);
+      });
+    return () => {
+      active = false;
+    };
+  }, [fallbackLogoPositions, particleCount]);
 
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
       uPr: { value: 0 },
-      uSize: { value: 16.5 },
-      uAmplitude: { value: 1.5 },
-      uSpeed: { value: 1.5 },
-      uColor1: { value: new THREE.Color("#2D6A4F") }, // Forest Green (#2D6A4F)
-      uColor2: { value: new THREE.Color("#E8C87A") }, // Gold Accent (#E8C87A)
-      uAlpha: { value: 0.85 },
-      uThemeLight: { value: isLight ? 1.0 : 0.0 },
+      uSize: { value: size.width < 700 ? 18 : 24 },
+      uAmplitude: { value: size.width < 700 ? 0.75 : 1.12 },
+      uSpeed: { value: 1 },
+      uPixelRatio: { value: 1 },
+      uReveal: { value: 0 },
+      uViewport: { value: new THREE.Vector2(size.width, size.height) },
+      uEmerald: { value: new THREE.Color("#1E6B4A") },
+      uGold: { value: new THREE.Color("#D9B45E") },
+      uTeal: { value: new THREE.Color("#18C6B8") },
+      uAlpha: { value: isLight ? 0.66 : 0.88 },
+      uThemeLight: { value: isLight ? 1 : 0 },
     }),
-    [] // eslint-disable-line react-hooks/exhaustive-deps
+    [] // Uniform objects are mutated in the render loop.
   );
 
-  const uPrSmooth = useRef(0);
-
   useFrame((state, dt) => {
-    const m = matRef.current;
-    const p = pointsRef.current;
-    if (!m || !p) return;
+    const material = matRef.current;
+    const points = pointsRef.current;
+    if (!material || !points) return;
 
-    m.uniforms.uTime.value = state.clock.elapsedTime;
-    m.uniforms.uThemeLight.value = isLight ? 1.0 : 0.0;
-    
-    // Smooth morph progress uPr (lerp / MathUtils.damp)
-    const targetPr = scrollProgress; // Morph target maps directly to S: 0.0 -> 1.0
-    uPrSmooth.current = THREE.MathUtils.damp(uPrSmooth.current, targetPr, 6.5, dt);
-    m.uniforms.uPr.value = uPrSmooth.current;
+    const scroll = getScroll().smooth;
+    const story = THREE.MathUtils.clamp((scroll - 0.05) / 0.45, 0, 1);
+    const targetPr = story * 3.7;
+    prRef.current += (targetPr - prRef.current) * (1 - Math.exp(-2.35 * dt));
 
-    // Slow rotation of particles
-    p.rotation.y = state.clock.elapsedTime * 0.035;
-    p.rotation.x = Math.sin(state.clock.elapsedTime * 0.015) * 0.04;
+    material.uniforms.uTime.value = state.clock.elapsedTime;
+    material.uniforms.uPr.value = prRef.current;
+    material.uniforms.uThemeLight.value = isLight ? 1 : 0;
+    material.uniforms.uAlpha.value = isLight ? 0.66 : 0.88;
+    material.uniforms.uReveal.value = THREE.MathUtils.smoothstep(story, 0.01, 0.15);
+    material.uniforms.uPixelRatio.value = Math.min(1.65, gl.getPixelRatio());
+    material.uniforms.uViewport.value.set(size.width, size.height);
 
-    // Camera movements from specification
-    // S=0 -> Z=9.0, Y=-0.5
-    // S=0.5 -> Z=7.8, Y=0.0
-    // S=1.0 -> Z=10.5, Y=0.5
-    let targetZ = 9.0;
-    let targetY = -0.5;
+    const pr = prRef.current;
+    const wheel = THREE.MathUtils.smoothstep(pr, 0.05, 1.3);
+    const logo = THREE.MathUtils.smoothstep(pr, 1.0, 2.55);
+    const settle = THREE.MathUtils.smoothstep(pr, 2.2, 3.7);
 
-    if (scrollProgress < 0.5) {
-      const factor = scrollProgress / 0.5;
-      targetZ = THREE.MathUtils.lerp(9.0, 7.8, factor);
-      targetY = THREE.MathUtils.lerp(-0.5, 0.0, factor);
-    } else {
-      const factor = (scrollProgress - 0.5) / 0.5;
-      targetZ = THREE.MathUtils.lerp(7.8, 10.5, factor);
-      targetY = THREE.MathUtils.lerp(0.0, 0.5, factor);
-    }
+    points.rotation.y = THREE.MathUtils.damp(points.rotation.y, wheel * 0.18 - settle * 0.08, 2.6, dt);
+    points.rotation.x = THREE.MathUtils.damp(points.rotation.x, -0.04 + logo * 0.08 - settle * 0.05, 2.6, dt);
+    points.rotation.z = THREE.MathUtils.damp(points.rotation.z, -0.05 + wheel * 0.34 - settle * 0.16, 2.6, dt);
 
-    state.camera.position.z += (targetZ - state.camera.position.z) * Math.min(1.0, dt * 4.0);
-    state.camera.position.y += (targetY - state.camera.position.y) * Math.min(1.0, dt * 4.0);
+    const camX = THREE.MathUtils.mapLinear(
+      THREE.MathUtils.clamp(pr, 0.0, 3.7),
+      0.0,
+      3.7,
+      viewport.width * 0.02,
+      0
+    );
+    const camY =
+      -0.55 +
+      THREE.MathUtils.smoothstep(pr, 0.4, 1.7) * 0.25 +
+      settle * 0.34;
+    const camZ =
+      8.4 -
+      THREE.MathUtils.smoothstep(pr, 0.5, 2.2) * 1.2 +
+      settle * 1.05;
+
+    state.camera.position.x = THREE.MathUtils.damp(state.camera.position.x, camX, 2.8, dt);
+    state.camera.position.y = THREE.MathUtils.damp(state.camera.position.y, camY, 2.8, dt);
+    state.camera.position.z = THREE.MathUtils.damp(state.camera.position.z, camZ, 2.8, dt);
     state.camera.lookAt(0, 0, 0);
   });
 
   return (
-    <points ref={pointsRef}>
+    <points ref={pointsRef} frustumCulled={false}>
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         <bufferAttribute attach="attributes-aSpherePos" args={[spherePositions, 3]} />
+        <bufferAttribute attach="attributes-aLogoPos" args={[logoPositions, 3]} />
         <bufferAttribute attach="attributes-aRandom" args={[randoms, 1]} />
+        <bufferAttribute attach="attributes-aIndex" args={[indexes, 1]} />
+        <bufferAttribute attach="attributes-aColor" args={[colors, 1]} />
       </bufferGeometry>
       <shaderMaterial
         ref={matRef}
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
         uniforms={uniforms}
-        depthTest={true}
+        depthTest
         depthWrite={false}
-        transparent={true}
+        transparent
+        blending={THREE.AdditiveBlending}
       />
     </points>
   );
 }
 
-/* --------------------------------------------------------------------------
-   Main Background Wrapper
-   -------------------------------------------------------------------------- */
-
 export default function SecuredFiBackground() {
   const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
   const { resolvedTheme } = useTheme();
+  const t = useTranslations("Stats");
   const isLight = resolvedTheme === "light";
-  const containerRef = useRef<HTMLDivElement>(null);
-  
   const [visible, setVisible] = useState(true);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [storyProgress, setStoryProgress] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const storyProgressRef = useRef(0);
 
   useEffect(() => {
     if (a11yEnabled || prefersReducedMotion) return;
-    
-    // Bind scroll progression to React state
-    const handleScroll = () => {
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = docHeight > 0 ? window.scrollY / docHeight : 0;
-      setScrollProgress(Math.min(Math.max(progress, 0.0), 1.0));
+
+    startScrollTracking();
+
+    const handleVisibility = () => setVisible(document.visibilityState === "visible");
+    const updateStoryProgress = () => {
+      const smooth = getScroll().smooth;
+      const next = Math.min(1, Math.max(0, (smooth - 0.05) / 0.45));
+      if (Math.abs(next - storyProgressRef.current) > 0.003) {
+        storyProgressRef.current = next;
+        setStoryProgress(next);
+      }
+    };
+    let raf = 0;
+    const tick = () => {
+      updateStoryProgress();
+      raf = window.requestAnimationFrame(tick);
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-
-    // Intersection observer for visibility
-    const el = containerRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setVisible(entry.isIntersecting),
-      { threshold: 0.01 }
-    );
-    observer.observe(el);
+    document.addEventListener("visibilitychange", handleVisibility);
+    handleVisibility();
+    tick();
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibility);
+      window.cancelAnimationFrame(raf);
     };
   }, [a11yEnabled, prefersReducedMotion]);
 
   if (a11yEnabled || prefersReducedMotion) {
-    return <div className="fixed inset-0 -z-10 bg-background" />;
+    return null;
   }
 
-  // Smooth color transitions in DDC palette:
-  // Bright Forest Green (#0E2419) -> Deep/Near-Black (#040C08)
-  const forestHex = 0x0e2419;
-  const blackHex = 0x040c08;
-  
-  const cForest = new THREE.Color(forestHex);
-  const cBlack = new THREE.Color(blackHex);
-  
-  // Interpolate background color based on scroll
-  const currentBgColor = cForest.clone().lerp(cBlack, Math.min(scrollProgress * 1.25, 1.0));
-  const bgString = isLight ? "#F5F5F0" : `#${currentBgColor.getHexString()}`;
+  const textReveal = Math.min(1, Math.max(0, (storyProgress - 0.58) / 0.34));
+  const canvasOpacity = Math.min(1, Math.max(0, storyProgress / 0.16));
+  const stats = ["s1", "s2", "s3", "s4"];
 
   return (
     <div
       ref={containerRef}
-      style={{ backgroundColor: bgString }}
-      className="fixed inset-0 w-full h-screen -z-10 block pointer-events-none transition-colors duration-200"
+      className="fixed inset-0 z-[12] block h-screen w-full overflow-hidden pointer-events-none"
     >
       {visible && (
-        <Canvas
-          gl={{ antialias: false, powerPreference: "high-performance" }}
-          dpr={[1, 1.5]}
-          camera={{ position: [0, 0, 9.0], fov: 55 }}
-          style={{ width: "100%", height: "100%" }}
-          frameloop={visible ? "always" : "never"}
+        <div
+          className="absolute inset-0"
+          style={{
+            opacity: canvasOpacity,
+            transition: "opacity 900ms cubic-bezier(0.16, 1, 0.3, 1)",
+          }}
         >
-          <ambientLight intensity={0.45} />
-          <ShaderParticles isLight={isLight} scrollProgress={scrollProgress} />
-        </Canvas>
+          <Canvas
+            gl={{ antialias: false, powerPreference: "high-performance", alpha: true }}
+            dpr={[1, 1.5]}
+            camera={{ position: [0, -0.55, 8.4], fov: 52, near: 0.1, far: 80 }}
+            style={{ width: "100%", height: "100%" }}
+            frameloop="always"
+          >
+            <ShaderParticles isLight={isLight} />
+          </Canvas>
+        </div>
       )}
+
+      <div
+        className="absolute inset-0 hidden lg:flex items-center justify-between px-16 xl:px-24"
+        style={{
+          opacity: textReveal,
+          transform: `translateY(${(1 - textReveal) * 32}px)`,
+          transition: "opacity 900ms cubic-bezier(0.16, 1, 0.3, 1), transform 900ms cubic-bezier(0.16, 1, 0.3, 1)",
+        }}
+      >
+        <div className="max-w-[360px] pt-28">
+          <div className="mb-5 font-mono text-[10px] uppercase tracking-[0.28em] text-gold-light/85">
+            {t("overline")}
+          </div>
+          <p className="font-display text-[34px] leading-tight text-white/90 drop-shadow-[0_8px_32px_rgba(0,0,0,0.55)]">
+            {t("subtitle")}
+          </p>
+        </div>
+
+        <div className="grid w-[420px] grid-cols-2 gap-4 pt-24">
+          {stats.map((key, index) => (
+            <div
+              key={key}
+              className="rounded-2xl border border-gold/18 bg-[#07150e]/58 p-5 shadow-2xl shadow-black/20 backdrop-blur-xl"
+              style={{
+                opacity: textReveal,
+                transform: `translateX(${(1 - textReveal) * (index % 2 === 0 ? 24 : -24)}px)`,
+                transition: `opacity 850ms cubic-bezier(0.16, 1, 0.3, 1) ${index * 80}ms, transform 850ms cubic-bezier(0.16, 1, 0.3, 1) ${index * 80}ms`,
+              }}
+            >
+              <div className="mb-2 font-numbers text-4xl font-semibold tracking-tight text-gold-light">
+                {t(`${key}.value`)}
+              </div>
+              <div className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-white/86">
+                {t(`${key}.label`)}
+              </div>
+              <p className="text-sm leading-relaxed text-white/58">{t(`${key}.desc`)}</p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

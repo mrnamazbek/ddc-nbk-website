@@ -63,7 +63,7 @@ const Cursor = ({ position }: { position: { left: number; width: number; opacity
     <motion.li
       animate={position}
       transition={{ type: "spring", stiffness: 400, damping: 30 }}
-      className="absolute z-0 h-8 rounded-full bg-white/[0.08] border border-gold/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]"
+      className="absolute z-0 h-8 rounded-full border border-forest/25 bg-forest/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]"
       style={{
         top: "6px",
       }}

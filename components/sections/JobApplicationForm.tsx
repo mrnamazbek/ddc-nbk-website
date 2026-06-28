@@ -95,10 +95,11 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* ФИО */}
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
+                <label htmlFor="fullname" className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
                   {t("nameLabel")}
                 </label>
                 <input
+                  id="fullname"
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
@@ -109,10 +110,11 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
 
               {/* Вакансия */}
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
+                <label htmlFor="vacancy" className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
                   {t("vacancyLabel")}
                 </label>
                 <select
+                  id="vacancy"
                   value={formData.vacancy}
                   onChange={(e) => setFormData((prev) => ({ ...prev, vacancy: e.target.value }))}
                   className="w-full bg-charcoal/50 border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:border-gold/30 focus:outline-none transition-colors cursor-pointer"
@@ -127,10 +129,11 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
 
               {/* Email */}
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
+                <label htmlFor="email" className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
                   {t("emailLabel")}
                 </label>
                 <input
+                  id="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
@@ -141,10 +144,11 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
 
               {/* Телефон */}
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
+                <label htmlFor="phone" className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
                   {t("phoneLabel")}
                 </label>
                 <input
+                  id="phone"
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
@@ -156,10 +160,11 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
 
             {/* Ссылка на резюме */}
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
+              <label htmlFor="resume" className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
                 {t("resumeLabel")}
               </label>
               <input
+                id="resume"
                 type="url"
                 placeholder="https://drive.google.com/... или https://hh.ru/resume/..."
                 value={formData.resume}
@@ -212,7 +217,7 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
                       : "bg-white/[0.02] border-white/5 text-zinc-400 hover:bg-white/[0.05]"
                   }`}
                 >
-                  A) {t("quiz.q1.a")}
+                  A) {t("quiz.q1_a")}
                 </button>
                 <button
                   type="button"
@@ -223,7 +228,7 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
                       : "bg-white/[0.02] border-white/5 text-zinc-400 hover:bg-white/[0.05]"
                   }`}
                 >
-                  B) {t("quiz.q1.b")}
+                  B) {t("quiz.q1_b")}
                 </button>
               </div>
             </div>
@@ -241,7 +246,7 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
                       : "bg-white/[0.02] border-white/5 text-zinc-400 hover:bg-white/[0.05]"
                   }`}
                 >
-                  A) {t("quiz.q2.a")}
+                  A) {t("quiz.q2_a")}
                 </button>
                 <button
                   type="button"
@@ -252,7 +257,7 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
                       : "bg-white/[0.02] border-white/5 text-zinc-400 hover:bg-white/[0.05]"
                   }`}
                 >
-                  B) {t("quiz.q2.b")}
+                  B) {t("quiz.q2_b")}
                 </button>
               </div>
             </div>
@@ -270,7 +275,7 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
                       : "bg-white/[0.02] border-white/5 text-zinc-400 hover:bg-white/[0.05]"
                   }`}
                 >
-                  A) {t("quiz.q3.a")}
+                  A) {t("quiz.q3_a")}
                 </button>
                 <button
                   type="button"
@@ -281,7 +286,7 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
                       : "bg-white/[0.02] border-white/5 text-zinc-400 hover:bg-white/[0.05]"
                   }`}
                 >
-                  B) {t("quiz.q3.b")}
+                  B) {t("quiz.q3_b")}
                 </button>
               </div>
             </div>

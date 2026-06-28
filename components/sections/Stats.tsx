@@ -66,7 +66,7 @@ export default function Stats() {
             <motion.div key={s.key} variants={cardVariants}>
               <GlassCard hoverAccent={s.accent} className="h-full flex flex-col p-8">
                 <div
-                  className={`font-display text-5xl sm:text-6xl font-bold tracking-tight mb-4 ${
+                  className={`font-numbers text-5xl sm:text-6xl font-bold tracking-tight mb-4 ${
                     s.accent === "gold" ? "text-gradient-gold" : "text-gradient-forest"
                   }`}
                 >

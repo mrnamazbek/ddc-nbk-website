@@ -74,7 +74,7 @@ export default function Technologies() {
   ];
 
   return (
-    <section className="relative w-full py-24 bg-background overflow-hidden font-sans border-t border-white/5">
+    <section className="relative w-full py-24 bg-background overflow-hidden font-sans">
       {/* Background soft glows */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-forest/5 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-gold/5 blur-[120px] pointer-events-none" />

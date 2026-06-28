@@ -163,10 +163,11 @@ export default function DigitalTengeSimulator() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Сумма */}
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
+              <label htmlFor="amount" className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
                 {t("amountLabel")}
               </label>
               <input
+                id="amount"
                 type="number"
                 value={amount}
                 disabled={isSimulating}
@@ -178,10 +179,11 @@ export default function DigitalTengeSimulator() {
 
             {/* Категория */}
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
+              <label htmlFor="category" className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
                 {t("categoryLabel")}
               </label>
               <select
+                id="category"
                 value={category}
                 disabled={isSimulating}
                 onChange={(e) => setCategory(e.target.value as CategoryKey)}
@@ -199,7 +201,7 @@ export default function DigitalTengeSimulator() {
           {/* БИН */}
           <div>
             <div className="flex justify-between items-center mb-2">
-              <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label htmlFor="bin" className="block text-xs font-mono uppercase tracking-wider text-zinc-400">
                 {t("binLabel")}
               </label>
               <button
@@ -212,6 +214,7 @@ export default function DigitalTengeSimulator() {
               </button>
             </div>
             <input
+              id="bin"
               type="text"
               value={bin}
               maxLength={12}

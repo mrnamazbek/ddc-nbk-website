@@ -58,7 +58,7 @@ test.describe("Variant B Animation & Scroll Verification", () => {
       // Verify header/text content exists on screen
       if (milestone.pct === 0) {
         // Hero screen active
-        const mainHeader = page.locator("h1");
+        const mainHeader = page.locator("h1").first();
         await expect(mainHeader).toBeVisible();
       } else if (milestone.pct === 50) {
         // Stats screen active
@@ -97,7 +97,7 @@ test.describe("Variant B Animation & Scroll Verification", () => {
     expect(canvasCount).toBe(0);
 
     // Verify that key text content is still present
-    const mainHeader = page.locator("h1");
+    const mainHeader = page.locator("h1").first();
     await expect(mainHeader).toBeVisible();
   });
 });

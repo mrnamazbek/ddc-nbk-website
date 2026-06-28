@@ -5,7 +5,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import { motion, AnimatePresence } from "framer-motion";
 import * as THREE from "three";
-import DdcCoin from "@/components/three/DdcCoin";
+import AltynAdam from "@/components/three/AltynAdam";
 import { useTranslations } from "next-intl";
 
 interface MissionStep {
@@ -166,10 +166,10 @@ function ParticleCloud({ scrollRef }: { scrollRef: React.RefObject<number> }) {
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
-   Процедурный преломляющий Шанырак из золотого стекла
+   Центральный 3D-объект: Алтын Адам
    ────────────────────────────────────────────────────────────────────────── */
 
-function CentralRefractiveShanyrak({ scrollRef }: { scrollRef: React.RefObject<number> }) {
+function CentralAltynAdam({ scrollRef }: { scrollRef: React.RefObject<number> }) {
   const coreRef = useRef<THREE.Group>(null);
 
   useFrame((state, dt) => {
@@ -191,11 +191,9 @@ function CentralRefractiveShanyrak({ scrollRef }: { scrollRef: React.RefObject<n
     coreRef.current.position.z += (targetZ - coreRef.current.position.z) * Math.min(1, dt * 5);
   });
 
-  // Reuse the DDC coin as the central object (the old gold-glass shanyrak read as
-  // a dark blob and lagged). DdcCoin carries its own Environment + faces camera.
   return (
-    <group ref={coreRef} position={[0, 0, 0]}>
-      <DdcCoin scale={1} />
+    <group ref={coreRef} position={[0, -0.18, 0]}>
+      <AltynAdam scale={1} targetHeight={3.35} />
     </group>
   );
 }
@@ -499,7 +497,7 @@ function WebGLScene({ items, scrollRef, onSelectCard }: SceneProps) {
 
       <BackgroundIntroText scrollRef={scrollRef} />
       <ParticleCloud scrollRef={scrollRef} />
-      <CentralRefractiveShanyrak scrollRef={scrollRef} />
+      <CentralAltynAdam scrollRef={scrollRef} />
       
       <group>
         {items.map((item, idx) => (
