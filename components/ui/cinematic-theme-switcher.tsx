@@ -89,13 +89,13 @@ export default function CinematicThemeSwitcher() {
         style={{
           background: isDark
             ? 'radial-gradient(ellipse at top left, #1A3D2B 0%, #0F241A 45%, #08080a 100%)'
-            : 'radial-gradient(ellipse at top left, #ffffff 0%, #f1f5f9 40%, #cbd5e1 100%)',
+            : 'radial-gradient(ellipse at top left, #ffffff 0%, #f4f1e6 42%, #d7e0d5 100%)',
           boxShadow: isDark
             ? 'inset 4px 4px 9px rgba(0,0,0,0.85), inset -4px -4px 9px rgba(45,106,79,0.35), inset 0 2px 4px rgba(0,0,0,0.9), 0 2px 6px rgba(0,0,0,0.4), 0 10px 22px rgba(0,0,0,0.3)'
-            : 'inset 4px 4px 9px rgba(148,163,184,0.5), inset -4px -4px 9px rgba(255,255,255,1), inset 0 2px 4px rgba(148,163,184,0.4), 0 2px 4px rgba(0,0,0,0.1), 0 10px 22px rgba(0,0,0,0.06)',
+            : 'inset 4px 4px 9px rgba(11,31,21,0.18), inset -4px -4px 9px rgba(255,255,255,1), inset 0 2px 4px rgba(11,31,21,0.12), 0 2px 4px rgba(11,31,21,0.1), 0 10px 22px rgba(11,31,21,0.06)',
           border: isDark
             ? '1.5px solid rgba(82,183,136,0.35)'
-            : '1.5px solid rgba(203,213,225,0.6)',
+            : '1.5px solid rgba(11,31,21,0.18)',
         }}
         aria-label={t("themeToggle")}
         role="switch"
@@ -108,30 +108,30 @@ export default function CinematicThemeSwitcher() {
           style={{
             background: isDark
               ? 'linear-gradient(to bottom, rgba(82,183,136,0.18) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.3) 100%)'
-              : 'linear-gradient(to bottom, rgba(255,255,255,0.7) 0%, transparent 30%, transparent 70%, rgba(148,163,184,0.15) 100%)',
+              : 'linear-gradient(to bottom, rgba(255,255,255,0.72) 0%, transparent 30%, transparent 70%, rgba(11,31,21,0.1) 100%)',
             mixBlendMode: 'overlay',
           }}
         />
 
         {/* Фоновые иконки */}
-        <div className="absolute inset-0 flex items-center justify-between px-[10px]">
-          <Icon name="sun" size={16} animate={false} className={isDark ? 'text-gold-light/70' : 'text-amber-600'} />
-          <Icon name="moon" size={16} animate={false} className={isDark ? 'text-gold-light/70' : 'text-slate-700'} />
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-between px-[10px]">
+          <Icon name="sun" size={16} animate={false} className={isDark ? 'text-gold-light/70' : 'text-gold'} />
+          <Icon name="moon" size={16} animate={false} className={isDark ? 'text-gold-light/70' : 'text-forest'} />
         </div>
 
         {/* Бегунок */}
         <motion.div
-          className="relative z-10 flex h-[32px] w-[32px] items-center justify-center rounded-full overflow-hidden"
+          className="relative z-10 grid h-[32px] w-[32px] place-items-center overflow-hidden rounded-full"
           style={{
             background: isDark
               ? 'linear-gradient(145deg, #2D6A4F 0%, #1A3D2B 50%, #0F241A 100%)'
-              : 'linear-gradient(145deg, #ffffff 0%, #fefefe 50%, #f8fafc 100%)',
+              : 'linear-gradient(145deg, #ffffff 0%, #fbf8ee 50%, #edf2e9 100%)',
             boxShadow: isDark
               ? 'inset 2px 2px 4px rgba(82,183,136,0.4), inset -2px -2px 4px rgba(0,0,0,0.8), 0 6px 18px rgba(0,0,0,0.55), 0 2px 4px rgba(0,0,0,0.4)'
-              : 'inset 2px 2px 4px rgba(203,213,225,0.3), inset -2px -2px 4px rgba(255,255,255,1), 0 6px 18px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.08)',
+              : 'inset 2px 2px 4px rgba(11,31,21,0.12), inset -2px -2px 4px rgba(255,255,255,1), 0 6px 18px rgba(11,31,21,0.14), 0 2px 4px rgba(11,31,21,0.08)',
             border: isDark
               ? '1.5px solid rgba(82,183,136,0.4)'
-              : '1.5px solid rgba(255,255,255,0.9)',
+              : '1.5px solid rgba(11,31,21,0.14)',
           }}
           animate={{ x: isDark ? 28 : 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -158,7 +158,7 @@ export default function CinematicThemeSwitcher() {
                     height: '8px',
                     background: isDark
                       ? 'radial-gradient(circle, rgba(82,183,136,0.6) 0%, rgba(82,183,136,0) 70%)'
-                      : 'radial-gradient(circle, rgba(232,200,122,0.7) 0%, rgba(232,200,122,0) 70%)',
+                      : 'radial-gradient(circle, rgba(26,61,43,0.34) 0%, rgba(26,61,43,0) 70%)',
                   }}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: isDark ? 6 : 8, opacity: [0, 1, 0] }}
@@ -171,11 +171,11 @@ export default function CinematicThemeSwitcher() {
               </motion.div>
             ))}
 
-          <div className="relative z-10">
+          <div className="relative z-10 grid h-full w-full place-items-center leading-none [&>svg]:block">
             {isDark ? (
               <Icon name="moon" size={16} animate={false} className="text-gold-light" />
             ) : (
-              <Icon name="sun" size={16} animate={false} className="text-amber-500" />
+              <Icon name="sun" size={16} animate={false} className="text-gold" />
             )}
           </div>
         </motion.div>

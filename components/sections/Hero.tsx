@@ -103,12 +103,14 @@ export default function Hero() {
       ref={containerRef}
       className="relative w-full min-h-screen lg:h-screen lg:max-h-[820px] xl:max-h-[880px] flex flex-col justify-center items-start overflow-hidden bg-transparent pt-16"
     >
-      {/* Левый градиент-скрим для читаемости текста поверх живой 3D-сцены */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0E2419] from-10% via-[#0E2419]/60 via-55% to-transparent pointer-events-none z-[6]" />
+      {/* Левый градиент-скрим для читаемости текста поверх живой 3D-сцены.
+          Theme-aware: deep-forest scrim in dark, warm-cream scrim in light — so
+          the hero text always reads and the light theme never goes dark. */}
+      <div className="hero-text-scrim absolute inset-0 pointer-events-none z-[6]" />
 
       {/* Bottom fade so the WebGL dot/bokeh background dissolves smoothly into the
           next (solid) section instead of cutting off with a hard edge. */}
-      <div className="absolute inset-x-0 bottom-0 h-40 sm:h-56 bg-gradient-to-t from-background via-background/70 to-transparent pointer-events-none z-[7]" />
+      <div className="absolute inset-x-0 bottom-0 h-64 sm:h-80 bg-gradient-to-t from-background/35 via-forest/10 to-transparent pointer-events-none z-[2]" />
 
       {/* Мягкие фоновые свечения для премиальной глубины */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-forest/15 blur-[120px] pointer-events-none z-0" />
@@ -237,4 +239,3 @@ export default function Hero() {
     </section>
   );
 }
-

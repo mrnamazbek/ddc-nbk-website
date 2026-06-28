@@ -209,6 +209,12 @@ h1, h2, .font-display {
   font-family: var(--font-current-display), Georgia, serif !important;
 }
 
+.font-numbers {
+  font-family: var(--font-source-serif), Georgia, serif !important;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: -0.025em;
+}
+
 h3, h4, h5, h6, body, button, input, select, textarea {
   font-family: var(--font-current-sans), system-ui, sans-serif;
 }
@@ -216,6 +222,18 @@ h3, h4, h5, h6, body, button, input, select, textarea {
 p {
   max-width: 72ch; /* Рекомендованная длина строки 65-75ch */
   line-height: 1.6;
+}
+
+/* Hero text-readability scrim — theme-aware (forest in dark, cream in light) so
+   the left side never renders a dark vignette in light mode. */
+.hero-text-scrim {
+  background-image: linear-gradient(
+    to right,
+    var(--hero-scrim-strong) 0%,
+    var(--hero-scrim-strong) 10%,
+    var(--hero-scrim-soft) 55%,
+    transparent 100%
+  );
 }
 
 /* ============================================================
@@ -231,20 +249,153 @@ html.light body {
   background-color: var(--background);
   color: var(--foreground);
 }
+
+html.light {
+  --light-fg: #0B1F15;
+  --light-fg-soft: #203C2D;
+  --light-fg-muted: #486153;
+  --light-fg-faint: #5D7166;
+  --light-surface: #FBF8EE;
+  --light-surface-strong: #FFFFFF;
+  --light-border: rgba(11, 31, 21, 0.16);
+  --light-border-soft: rgba(11, 31, 21, 0.1);
+  --light-forest-glass: rgba(11, 31, 21, 0.07);
+  --light-gold-readable: #5A4312;
+  --light-gold-soft: #6F561D;
+  --light-forest-readable: #1A3D2B;
+  --light-forest-soft: #2D6A4F;
+}
+
 html.light .bg-black,
-html.light .bg-\[\#000000\] {
+html.light .bg-black\/80,
+html.light .bg-black\/90,
+html.light .bg-black\/95,
+html.light .bg-\[\#000000\],
+html.light .bg-\[\#08080a\],
+html.light .bg-\[\#0A0A0A\],
+html.light .bg-\[\#030504\],
+html.light .bg-\[\#030a06\],
+html.light .bg-\[\#040C08\],
+html.light .bg-\[\#040c08\],
+html.light .bg-\[\#050807\],
+html.light .bg-\[\#070f0a\] {
   background-color: var(--background) !important;
 }
-html.light .text-white {
-  color: var(--foreground) !important;
+
+html.light .bg-\[\#050807\]\/95,
+html.light .bg-\[\#060a08\]\/98,
+html.light .bg-\[\#07150e\]\/58,
+html.light .bg-\[\#061814\]\/50,
+html.light .bg-\[\#020504\],
+html.light .bg-\[\#020705\] {
+  background-color: rgba(251, 248, 238, 0.94) !important;
 }
+
+html.light .text-white,
+html.light .text-zinc-50,
+html.light .text-zinc-100,
+html.light .text-neutral-50,
+html.light .text-neutral-100,
+html.light .text-slate-50,
+html.light .text-slate-100,
+html.light .text-gray-50,
+html.light .text-gray-100 {
+  color: var(--light-fg) !important;
+}
+
+html.light .text-white\/90,
+html.light .text-white\/80,
+html.light .text-white\/75,
 html.light .text-zinc-400,
+html.light .text-zinc-500,
+html.light .text-neutral-400,
+html.light .text-neutral-500,
+html.light .text-slate-400,
+html.light .text-slate-500,
+html.light .text-gray-400,
+html.light .text-gray-500,
 html.light .text-white\/70 {
-  color: #4b5563 !important;
+  color: var(--light-fg-muted) !important;
 }
+
+html.light .text-white\/50,
+html.light .text-white\/40,
+html.light .text-white\/30,
+html.light .text-zinc-600,
+html.light .text-zinc-700,
+html.light .text-zinc-800,
+html.light .text-zinc-900,
+html.light .text-neutral-600,
+html.light .text-neutral-700,
+html.light .text-neutral-800,
+html.light .text-neutral-900,
+html.light .text-slate-600,
+html.light .text-slate-700,
+html.light .text-slate-800,
+html.light .text-slate-900,
+html.light .text-gray-600,
+html.light .text-gray-700,
+html.light .text-gray-800,
+html.light .text-gray-900 {
+  color: var(--light-fg-faint) !important;
+}
+
+html.light .text-zinc-300,
+html.light .text-zinc-200,
+html.light .text-neutral-300,
+html.light .text-neutral-200,
+html.light .text-slate-300,
+html.light .text-slate-200,
+html.light .text-gray-300,
+html.light .text-gray-200,
+html.light .text-white\/60 {
+  color: var(--light-fg-soft) !important;
+}
+
+html.light .text-amber-400,
+html.light .text-amber-500,
+html.light .text-amber-600,
+html.light .text-yellow-400,
+html.light .text-yellow-500,
+html.light .text-yellow-600,
+html.light .text-\[\#E8C87A\],
+html.light .text-gold,
+html.light .text-gold-light,
+html.light .text-gold\/90,
+html.light .text-gold\/80,
+html.light .text-gold\/70,
+html.light .text-gold\/60,
+html.light .text-gold\/50,
+html.light .text-gold-light\/90,
+html.light .text-gold-light\/80,
+html.light .text-gold-light\/70,
+html.light .text-gold-light\/60,
+html.light .text-gold-light\/50 {
+  color: var(--light-gold-readable) !important;
+}
+
+html.light .text-forest-light,
+html.light .text-forest-light\/90,
+html.light .text-forest-light\/80,
+html.light .text-forest-light\/70,
+html.light .text-forest,
+html.light .text-forest-mid {
+  color: var(--light-forest-readable) !important;
+}
+
+html.light .bg-\[\#E8C87A\],
+html.light .bg-\[\#E8C87A\]\/10 {
+  background-color: rgba(111, 86, 29, 0.12) !important;
+}
+
+html.light .border-\[\#E8C87A\],
+html.light .border-\[\#E8C87A\]\/20 {
+  border-color: rgba(111, 86, 29, 0.26) !important;
+}
+
 html.light .border-white\/\[0\.05\],
 html.light .border-white\/10 {
-  border-color: rgba(15, 36, 26, 0.12) !important;
+  border-color: var(--light-border-soft) !important;
 }
 /* Стеклянные поверхности (навбар, карточки) в светлой теме:
    чистое матовое белое стекло с тонкой тёмно-зелёной гранью и мягкой тенью. */
@@ -252,11 +403,13 @@ html.light .liquid-glass,
 html.light .liquid-glass-strong,
 html.light .glass-panel,
 html.light .glass-card {
-  background: rgba(255, 255, 255, 0.78) !important;
+  /* Pure-white cards on the warm-cream surface → clear separation + premium depth. */
+  background: #FFFFFF !important;
   background-blend-mode: normal !important;
-  border-color: rgba(15, 36, 26, 0.1) !important;
-  box-shadow: 0 4px 24px rgba(15, 36, 26, 0.08),
-    inset 0 1px 1px rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(11, 31, 21, 0.1) !important;
+  box-shadow: 0 14px 38px rgba(11, 31, 21, 0.1),
+    0 2px 8px rgba(11, 31, 21, 0.05),
+    inset 0 1px 1px rgba(255, 255, 255, 1) !important;
 }
 /* Псевдо-грань карточек: в светлой теме делаем её мягкой тёмно-зелёной,
    а не белой (иначе грань сливается с белым фоном). */
@@ -265,10 +418,10 @@ html.light .liquid-glass::before,
 html.light .liquid-glass-strong::before {
   --glass-border-gradient: linear-gradient(
     180deg,
-    rgba(15, 36, 26, 0.16) 0%,
-    rgba(15, 36, 26, 0.04) 35%,
-    rgba(15, 36, 26, 0.04) 65%,
-    rgba(15, 36, 26, 0.16) 100%
+    rgba(11, 31, 21, 0.18) 0%,
+    rgba(11, 31, 21, 0.05) 35%,
+    rgba(11, 31, 21, 0.05) 65%,
+    rgba(11, 31, 21, 0.18) 100%
   ) !important;
   background: var(--glass-border-gradient) !important;
 }
@@ -276,42 +429,205 @@ html.light .liquid-glass-strong::before {
 html.light .spotlight-glow {
   opacity: 0.25 !important;
 }
-/* Точечный/нав-текст и подзаголовки */
-html.light .text-zinc-500,
-html.light .text-white\/60 {
-  color: #6b7280 !important;
-}
 html.light .bg-charcoal\/20 {
-  background-color: rgba(15, 36, 26, 0.04) !important;
+  background-color: rgba(11, 31, 21, 0.05) !important;
+}
+
+/* Faint white-tint surfaces/borders (inner chips, nested tiles) — in light these
+   vanish on white cards, so give them a subtle forest-tinted fill + readable edge. */
+html.light .bg-white\/\[0\.02\],
+html.light .bg-white\/\[0\.03\],
+html.light .bg-white\/\[0\.04\],
+html.light .bg-white\/\[0\.05\],
+html.light .bg-white\/5 {
+  background-color: rgba(11, 31, 21, 0.045) !important;
+}
+html.light .border-white\/\[0\.08\],
+html.light .border-white\/\[0\.06\] {
+  border-color: rgba(11, 31, 21, 0.12) !important;
 }
 html.light .bg-charcoal\/30 {
-  background-color: rgba(15, 36, 26, 0.06) !important;
+  background-color: rgba(11, 31, 21, 0.07) !important;
 }
 html.light .bg-charcoal\/40 {
-  background-color: rgba(15, 36, 26, 0.08) !important;
+  background-color: rgba(11, 31, 21, 0.09) !important;
+}
+html.light .bg-charcoal\/50 {
+  background-color: rgba(251, 248, 238, 0.88) !important;
 }
 html.light .bg-charcoal {
-  background-color: rgba(15, 36, 26, 0.03) !important;
+  background-color: rgba(11, 31, 21, 0.04) !important;
+}
+html.light .bg-black\/40 {
+  background-color: rgba(251, 248, 238, 0.82) !important;
 }
 html.light .border-white\/5,
 html.light .border-white\/\[0\.05\] {
-  border-color: rgba(15, 36, 26, 0.06) !important;
+  border-color: rgba(11, 31, 21, 0.08) !important;
 }
 html.light .border-white\/10,
 html.light .border-white\/\[0\.08\] {
-  border-color: rgba(15, 36, 26, 0.1) !important;
+  border-color: rgba(11, 31, 21, 0.12) !important;
 }
 html.light .border-white\/20 {
-  border-color: rgba(15, 36, 26, 0.16) !important;
+  border-color: rgba(11, 31, 21, 0.18) !important;
 }
 html.light .bg-white\/10 {
-  background-color: rgba(15, 36, 26, 0.06) !important;
+  background-color: rgba(11, 31, 21, 0.07) !important;
 }
 html.light .bg-white\/\[0\.03\] {
-  background-color: rgba(15, 36, 26, 0.02) !important;
+  background-color: rgba(11, 31, 21, 0.035) !important;
+}
+html.light .bg-white\/\[0\.01\],
+html.light .bg-white\/\[0\.02\] {
+  background-color: rgba(11, 31, 21, 0.035) !important;
+}
+html.light .bg-white\/\[0\.05\],
+html.light .bg-white\/\[0\.06\] {
+  background-color: rgba(11, 31, 21, 0.055) !important;
 }
 html.light .bg-white\/\[0\.08\] {
-  background-color: rgba(15, 36, 26, 0.05) !important;
+  background-color: rgba(11, 31, 21, 0.06) !important;
+}
+
+html.light .bg-forest\/30 {
+  background-color: rgba(26, 61, 43, 0.1) !important;
+}
+html.light .bg-forest\/20,
+html.light .bg-forest-light\/20,
+html.light .bg-forest\/10 {
+  background-color: rgba(26, 61, 43, 0.07) !important;
+}
+html.light .border-forest-light,
+html.light .border-forest-light\/30,
+html.light .border-forest-light\/20,
+html.light .border-forest-light\/10 {
+  border-color: rgba(26, 61, 43, 0.24) !important;
+}
+html.light .border-gold\/50,
+html.light .border-gold\/40,
+html.light .border-gold\/30,
+html.light .border-gold\/25,
+html.light .border-gold\/20,
+html.light .border-gold\/10 {
+  border-color: rgba(90, 67, 18, 0.24) !important;
+}
+
+html.light input,
+html.light textarea,
+html.light select {
+  color: var(--light-fg) !important;
+  background-color: rgba(251, 248, 238, 0.9) !important;
+  border-color: var(--light-border) !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: var(--light-fg-faint) !important;
+}
+
+html.light .nav-preview-card {
+  color: var(--foreground) !important;
+  background: linear-gradient(145deg, rgba(251, 248, 238, 0.98), rgba(231, 238, 229, 0.96)) !important;
+  border-color: rgba(11, 31, 21, 0.18) !important;
+  box-shadow: 0 24px 70px rgba(11, 31, 21, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
+}
+
+html.light .nav-preview-card .text-white,
+html.light .nav-preview-card .text-zinc-200 {
+  color: var(--foreground) !important;
+}
+
+html.light .nav-preview-card .text-zinc-300 {
+  color: var(--light-fg-muted) !important;
+}
+
+html.light .nav-preview-card .text-gold,
+html.light .nav-preview-card .text-gold-light {
+  color: var(--accent-gold) !important;
+}
+
+html.light .nav-preview-card .border-white\/10 {
+  border-color: rgba(26, 61, 43, 0.12) !important;
+}
+
+html.light .nav-preview-card .bg-white\/\[0\.06\] {
+  background-color: rgba(11, 31, 21, 0.08) !important;
+}
+
+html.light .site-footer {
+  color: var(--foreground) !important;
+  background: linear-gradient(180deg, #f8f5eb 0%, #eee8d8 100%) !important;
+  border-color: rgba(26, 61, 43, 0.12) !important;
+}
+
+html.light .site-footer .site-footer-glow {
+  background: radial-gradient(circle, rgba(191, 148, 42, 0.18), rgba(26, 99, 71, 0.1) 42%, transparent 70%) !important;
+}
+
+html.light .site-footer .site-footer-media {
+  opacity: 0.2 !important;
+  filter: saturate(0.85) contrast(0.92);
+  mix-blend-mode: multiply;
+}
+
+html.light .site-footer .site-footer-wash {
+  background: radial-gradient(circle at 24% 18%, rgba(191, 148, 42, 0.12), transparent 28%),
+    linear-gradient(180deg, rgba(248, 245, 235, 0.76), #eee8d8 66%) !important;
+}
+
+html.light .site-footer .site-footer-logo-tile {
+  background: #ffffff !important;
+  border-color: rgba(26, 61, 43, 0.14) !important;
+  box-shadow: 0 24px 70px rgba(16, 34, 25, 0.14) !important;
+}
+
+html.light .site-footer .site-footer-repo-card {
+  background: rgba(255, 255, 255, 0.44) !important;
+  border-color: rgba(26, 61, 43, 0.12) !important;
+  box-shadow: 0 24px 70px rgba(16, 34, 25, 0.1) !important;
+}
+
+html.light .site-footer .site-footer-token {
+  color: var(--text-muted) !important;
+  background: rgba(255, 255, 255, 0.42) !important;
+  border-color: rgba(26, 61, 43, 0.12) !important;
+}
+
+html.light .site-footer .site-footer-watermark {
+  color: rgba(26, 61, 43, 0.055) !important;
+}
+
+html.light .site-footer .text-white,
+html.light .site-footer .text-zinc-100 {
+  color: var(--foreground) !important;
+}
+
+html.light .site-footer .text-zinc-400,
+html.light .site-footer .text-zinc-500,
+html.light .site-footer .text-zinc-600 {
+  color: var(--text-muted) !important;
+}
+
+html.light .site-footer a:hover {
+  color: var(--foreground) !important;
+}
+
+html.light .event-lightbox-backdrop {
+  background: rgba(12, 22, 16, 0.9) !important;
+}
+
+html.light .event-lightbox-shell {
+  background: rgba(250, 248, 239, 0.94) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 30px 90px rgba(16, 34, 25, 0.28) !important;
+}
+
+html.light .event-lightbox-backdrop > button {
+  color: rgba(255, 255, 255, 0.84) !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
 }
 
 
@@ -374,11 +690,23 @@ html.light .bg-white\/\[0\.08\] {
   -webkit-text-fill-color: transparent;
 }
 
+html.light .text-gradient-gold {
+  background: linear-gradient(135deg, #0B1F15 0%, #1A3D2B 58%, #6F561D 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+
 .text-gradient-forest {
   background: linear-gradient(135deg, var(--color-forest-light) 0%, var(--color-forest-mid) 50%, var(--color-forest) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+html.light .text-gradient-forest {
+  background: linear-gradient(135deg, #0B1F15 0%, #1A3D2B 55%, #2D6A4F 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
 }
 
 /* Стилизация скроллбара */
@@ -967,4 +1295,123 @@ spline-viewer shadow-root #logo {
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
+}
+
+/* ============================================================
+   Seamless section flow
+   ============================================================ */
+section.relative,
+section[id],
+.hero-parallax-wrapper {
+  position: relative;
+  isolation: isolate;
+}
+
+section.relative::before,
+section[id]::before,
+section.relative::after,
+section[id]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: clamp(96px, 11vw, 190px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.16;
+  transition: opacity 300ms ease, background 300ms ease;
+}
+
+section.relative::before,
+section[id]::before {
+  top: -1px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(82, 183, 136, 0.04), transparent 68%),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--background) 32%, transparent) 0%,
+      color-mix(in srgb, var(--background) 14%, transparent) 58%,
+      transparent 100%
+    );
+}
+
+section.relative::after,
+section[id]::after {
+  bottom: -1px;
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(82, 183, 136, 0.035), transparent 68%),
+    linear-gradient(
+      to top,
+      color-mix(in srgb, var(--background) 32%, transparent) 0%,
+      color-mix(in srgb, var(--background) 14%, transparent) 58%,
+      transparent 100%
+    );
+}
+
+html.light section.relative::before,
+html.light section[id]::before {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(26, 61, 43, 0.06), transparent 64%),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--background) 26%, transparent) 0%,
+      color-mix(in srgb, var(--background) 10%, transparent) 58%,
+      transparent 100%
+    ) !important;
+}
+
+html.light section.relative::after,
+html.light section[id]::after {
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(26, 61, 43, 0.04), transparent 64%),
+    linear-gradient(
+      to top,
+      color-mix(in srgb, var(--background) 26%, transparent) 0%,
+      color-mix(in srgb, var(--background) 10%, transparent) 58%,
+      transparent 100%
+    ) !important;
+}
+
+#acts > section {
+  margin-top: -1px;
+}
+
+#acts > section + section {
+  scroll-margin-top: 96px;
+}
+
+/* Make divider utilities read as soft depth, not hard section cuts. */
+section :is(.border-t, .border-b, .border-y),
+main :is(.border-t, .border-b, .border-y),
+.site-footer :is(.border-t, .border-b, .border-y) {
+  border-color: rgba(255, 255, 255, 0.045) !important;
+}
+
+html.light section :is(.border-t, .border-b, .border-y),
+html.light main :is(.border-t, .border-b, .border-y),
+html.light .site-footer :is(.border-t, .border-b, .border-y) {
+  border-color: rgba(11, 31, 21, 0.07) !important;
+}
+
+/* Specific taller cinematic fades for Showcase / HeroParallax elements */
+.hero-parallax-wrapper::before,
+.hero-parallax-wrapper::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: clamp(160px, 16vw, 280px);
+  pointer-events: none;
+  z-index: 6;
+  opacity: 0.12;
+}
+
+.hero-parallax-wrapper::before {
+  top: -1px;
+  background: linear-gradient(to bottom, var(--background) 0%, transparent 100%) !important;
+}
+
+.hero-parallax-wrapper::after {
+  bottom: -1px;
+  background: linear-gradient(to top, var(--background) 0%, transparent 100%) !important;
 }

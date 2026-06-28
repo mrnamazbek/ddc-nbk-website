@@ -29,6 +29,7 @@ const fragmentShader = /* glsl */ `
   uniform vec2  uMouse;
   uniform float uThemeLight;
   uniform float uScroll;
+  uniform float uScrollFade;
 
   // Route-specific dynamic configuration uniforms
   uniform float uSpacing;
@@ -98,15 +99,11 @@ const fragmentShader = /* glsl */ `
       dotMask = smoothstep(antialias, -antialias, d);
     }
 
-    // Fade out completely as scroll increases (gone by 0.25 scroll)
-    float scrollFade = 1.0 - smoothstep(0.0, 0.25, uScroll);
-    dotMask *= scrollFade;
-
     // Background color mapping
     vec3 bgColor = mix(vec3(5.0 / 255.0, 10.0 / 255.0, 8.0 / 255.0), vec3(245.0 / 255.0, 245.0 / 255.0, 240.0 / 255.0), uThemeLight);
 
     // Soft ambient glow behind the grid following the cursor
-    float glow = exp(-distToMouse * 0.012) * 0.15 * scrollFade;
+    float glow = exp(-distToMouse * 0.012) * 0.15 * uScrollFade;
     vec3 glowColor = mix(vec3(16.0 / 255.0, 185.0 / 255.0, 129.0 / 255.0), vec3(232.0 / 255.0, 200.0 / 255.0, 122.0 / 255.0), 0.5); // Emerald-Gold
     bgColor = mix(bgColor, bgColor + glowColor, glow);
 
@@ -121,11 +118,11 @@ const fragmentShader = /* glsl */ `
     // Add subtle bloom/glow for active circles
     if (uShapeType == 0 && deformedFactor > 0.02) {
       float bloom = smoothstep(dotSize * 2.8 + antialias, dotSize * 2.8 - antialias, distToCenter);
-      bgColor = mix(bgColor, bgColor + dotColor * 0.35, bloom * 0.12 * deformedFactor * scrollFade);
+      bgColor = mix(bgColor, bgColor + dotColor * 0.35, bloom * 0.12 * deformedFactor * uScrollFade);
     }
 
     // Final composition
-    vec3 finalColor = mix(bgColor, dotColor, dotMask);
+    vec3 finalColor = mix(bgColor, dotColor, dotMask * uScrollFade);
 
     gl_FragColor = vec4(finalColor, 1.0);
   }
@@ -151,6 +148,7 @@ function getPresetForPathname(pathname: string, isLight: boolean): ShaderPresetC
 
   if (cleanPath === "/" || cleanPath === "") {
     return {
+      // Home hero: the earlier flowing green/gold cursor field.
       shapeType: 0,
       spacing: 28.0,
       baseDotSize: 1.2,
@@ -274,6 +272,7 @@ function ShaderMesh({ isLight }: { isLight: boolean }) {
       uMouse: { value: new THREE.Vector2(0.5, 0.5) },
       uThemeLight: { value: isLight ? 1.0 : 0.0 },
       uScroll: { value: 0 },
+      uScrollFade: { value: 1.0 },
       uSpacing: { value: 28.0 },
       uBaseDotSize: { value: 1.2 },
       uMaxDotSize: { value: 6.0 },
@@ -300,11 +299,17 @@ function ShaderMesh({ isLight }: { isLight: boolean }) {
     if (!m) return;
 
     const scroll = getScroll().smooth;
-
     m.uniforms.uTime.value = state.clock.elapsedTime;
     m.uniforms.uResolution.value.set(size.width, size.height);
     m.uniforms.uScroll.value = scroll;
     m.uniforms.uThemeLight.value = isLight ? 1.0 : 0.0;
+
+    const cleanPath = pathname.replace(/^\/[a-z]{2}(\/|$)/, "/");
+    const isHome = cleanPath === "/" || cleanPath === "";
+    const scrollFade = isHome
+      ? 1.0 - THREE.MathUtils.smoothstep(scroll, 0.02, 0.22)
+      : 1.0;
+    m.uniforms.uScrollFade.value = scrollFade;
 
     // Apply config uniforms dynamically
     m.uniforms.uSpacing.value = config.spacing;
@@ -384,7 +389,8 @@ export default function ShadersDotCursorBackground() {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 w-full h-screen -z-10 block pointer-events-none bg-background"
+      className="fixed inset-0 w-full h-screen -z-50 block pointer-events-none bg-background"
+      style={{ zIndex: -50 }}
     >
       {visible && (
         <Canvas

@@ -408,7 +408,8 @@ export default function ShaderBackground({ isLight }: { isLight: boolean }) {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 w-full h-screen -z-10 block pointer-events-none bg-background"
+      className="fixed inset-0 w-full h-screen -z-50 block pointer-events-none bg-background"
+      style={{ zIndex: -50 }}
     >
       {visible && (
         <Canvas
