@@ -10,27 +10,53 @@ import About from "@/components/sections/About";
 import CTA from "@/components/sections/CTA";
 import Showcase from "@/components/sections/Showcase";
 import Technologies from "@/components/sections/Technologies";
+import Readiness from "@/components/sections/Readiness";
 
 // Lazy-loaded components for Variant B
 const SecuredFiBackground = dynamic(() => import("@/components/ui/SecuredFiBackground"), { ssr: false });
-const SecuredFiHero = dynamic(() => import("@/components/sections/SecuredFiHero"), { ssr: false });
-const SecuredFiServices = dynamic(() => import("@/components/sections/SecuredFiServices"), { ssr: false });
+
+// Lazy-loaded component for Variant C (particle logo-morph reveal)
+const LogoParticleReveal = dynamic(() => import("@/components/three/LogoParticleReveal"), { ssr: false });
 
 export default function MarketingHomePage() {
   const activeVariant = useABTest("home_layout");
 
+  if (activeVariant === "C") {
+    return (
+      <>
+        {/* Variant C keeps Variant A's hero and uses the global flowing shader
+            there; the heavier particle morph is isolated to the stats reveal. */}
+        <div id="acts" className="relative z-10">
+          <Hero />
+          <LogoParticleReveal />
+          <Readiness />
+          <Services />
+          <Showcase />
+          <Technologies />
+          <About />
+          <CTA />
+        </div>
+
+        <ABTestSwitcher pageKey="home_layout" current={activeVariant} />
+      </>
+    );
+  }
+
   if (activeVariant === "B") {
     return (
       <>
-        {/* Morphing 3D Particle Sphere in our colors */}
+        {/* Variant B keeps the Variant A content stack and adds only the scroll morph layer. */}
         <SecuredFiBackground />
 
-        <div className="relative z-10">
-          {/* Replicating typography and scrolling presentation of Secured Finance */}
-          <SecuredFiHero />
-          
-          {/* Minimalist 6-card services list with pulsing status indicators */}
-          <SecuredFiServices />
+        <div id="acts" className="relative z-10">
+          <Hero />
+          <section id="stats" className="relative h-[190vh]" aria-label="Digital development in numbers" />
+          <Readiness />
+          <Services />
+          <Showcase />
+          <Technologies />
+          <About />
+          <CTA />
         </div>
 
         {/* Global A/B variant switcher */}
@@ -44,6 +70,7 @@ export default function MarketingHomePage() {
       <div id="acts" className="relative z-10">
         <Hero />
         <Stats />
+        <Readiness />
         <Services />
         <Showcase />
         <Technologies />
