@@ -153,7 +153,7 @@ const marqueeImages = [
 
 function FooterAnchor({ link }: { link: FooterLink }) {
   const className =
-    "group/link inline-flex items-center gap-2 text-[15px] font-medium text-zinc-400 transition-colors duration-300 hover:text-white";
+    "group/link inline-flex min-h-10 items-center gap-2 py-1 text-[15px] font-medium text-zinc-400 transition-colors duration-300 hover:text-white";
 
   if (link.external) {
     return (
