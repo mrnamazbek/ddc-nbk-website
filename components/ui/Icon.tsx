@@ -87,6 +87,8 @@ export type IconName =
   | "confluence"
   | "git"
   | "github"
+  | "linkedin"
+  | "instagram"
   | "gitlab"
   | "kubernetes"
   | "terraform"
@@ -317,6 +319,8 @@ export default function Icon({ name, className, size = 20, animate = true }: Ico
       confluence: "logos:confluence",
       git: "logos:git-icon",
       github: "logos:github-icon",
+      linkedin: "ph:linkedin-logo",
+      instagram: "ph:instagram-logo",
       gitlab: "logos:gitlab",
       kubernetes: "logos:kubernetes",
       terraform: "logos:terraform-icon",
