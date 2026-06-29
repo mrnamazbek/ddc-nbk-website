@@ -163,6 +163,7 @@ export const ProductCard = ({
     >
       <Link
         href={product.link}
+        aria-label={product.title}
         className="block h-full w-full relative"
       >
         <Image

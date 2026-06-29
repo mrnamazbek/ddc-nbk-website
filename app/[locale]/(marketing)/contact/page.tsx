@@ -261,6 +261,7 @@ export default function ContactPage() {
                     id="message"
                     rows={6}
                     {...register("message")}
+                    aria-label={t("fieldMsg")}
                     placeholder={t("placeholderMsg")}
                     className={errors.message ? "ring-1 ring-red-500" : ""}
                     aria-invalid={errors.message ? "true" : "false"}
