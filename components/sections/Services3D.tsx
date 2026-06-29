@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Text } from "@react-three/drei";
+import { RoundedBox, Text } from "@react-three/drei";
 import { motion, AnimatePresence } from "framer-motion";
 import * as THREE from "three";
 import AltynAdam from "@/components/three/AltynAdam";
@@ -181,83 +181,43 @@ function ParticleCloud({ scrollRef }: { scrollRef: React.RefObject<number> }) {
 
 function CentralAltynAdam({ scrollRef }: { scrollRef: React.RefObject<number> }) {
   const modelRef = useRef<THREE.Group>(null);
+  const innerRef = useRef<THREE.Group>(null);
 
   useFrame((state, dt) => {
     if (!modelRef.current) return;
     const scroll = scrollRef.current;
+    const showcase = THREE.MathUtils.smoothstep(scroll, 0.12, 0.72);
+    const climax = THREE.MathUtils.smoothstep(scroll, 0.78, 1);
 
-    // Phase scaling: Intro 1.0 -> Showcase 0.85 -> Climax 1.5 (close-up).
-    let targetScale = 0.85;
-    if (scroll < 0.2) {
-      targetScale = THREE.MathUtils.lerp(1.0, 0.85, scroll / 0.2);
-    } else if (scroll >= 0.8) {
-      targetScale = THREE.MathUtils.lerp(0.85, 1.5, (scroll - 0.8) / 0.2);
-    }
+    // Active Theory-like central artifact: it stays as the anchor while cards
+    // travel through depth around it, then moves closer for the final moment.
+    const targetScale = THREE.MathUtils.lerp(
+      THREE.MathUtils.lerp(1.18, 0.92, showcase),
+      1.48,
+      climax
+    );
     modelRef.current.scale.setScalar(
-      THREE.MathUtils.damp(modelRef.current.scale.x, targetScale, 4, dt)
+      THREE.MathUtils.damp(modelRef.current.scale.x, targetScale, 3.2, dt)
     );
 
-    // Nudge forward in the climax for emphasis.
-    const targetZ = scroll >= 0.8 ? THREE.MathUtils.lerp(0.0, 1.0, (scroll - 0.8) / 0.2) : 0;
-    modelRef.current.position.z += (targetZ - modelRef.current.position.z) * Math.min(1, dt * 5);
+    const targetY = THREE.MathUtils.lerp(0.18, 0.28, showcase) - climax * 0.12;
+    const targetZ = THREE.MathUtils.lerp(-0.62, 0.68, climax);
+    modelRef.current.position.y = THREE.MathUtils.damp(modelRef.current.position.y, targetY, 3.4, dt);
+    modelRef.current.position.z = THREE.MathUtils.damp(modelRef.current.position.z, targetZ, 3.4, dt);
+
+    if (innerRef.current) {
+      const targetRotY = 0.18 + scroll * 0.9 + Math.sin(state.clock.elapsedTime * 0.22) * 0.08;
+      const targetRotX = -0.08 + Math.sin(state.clock.elapsedTime * 0.18) * 0.035;
+      innerRef.current.rotation.y = THREE.MathUtils.damp(innerRef.current.rotation.y, targetRotY, 2.8, dt);
+      innerRef.current.rotation.x = THREE.MathUtils.damp(innerRef.current.rotation.x, targetRotX, 2.8, dt);
+    }
   });
 
   return (
-    <group ref={modelRef} position={[0, -0.2, 0]}>
-      <AltynAdam scale={1} targetHeight={3.5} />
-    </group>
-  );
-}
-
-/* ──────────────────────────────────────────────────────────────────────────
-   3D Текст на заднем плане (Intro typography)
-   ────────────────────────────────────────────────────────────────────────── */
-
-function BackgroundIntroText({ scrollRef }: { scrollRef: React.RefObject<number> }) {
-  const textRef = useRef<THREE.Group>(null);
-
-  useFrame((state, dt) => {
-    if (!textRef.current) return;
-    const scroll = scrollRef.current;
-    
-    // В фазе 1 (0.0 -> 0.2) текст сдвигается вверх и затухает
-    const opacity = scroll < 0.2 ? 1.0 - scroll / 0.2 : 0;
-    const targetY = scroll < 0.2 ? (scroll / 0.2) * 3.5 : 3.5;
-    
-    textRef.current.position.y += (targetY - textRef.current.position.y) * Math.min(1, dt * 6);
-    
-    // Применяем opacity к материалам текстовых сеток
-    textRef.current.traverse((child) => {
-      if (child instanceof THREE.Mesh && child.material) {
-        child.material.transparent = true;
-        child.material.opacity = opacity;
-      }
-    });
-  });
-
-  return (
-    <group ref={textRef} position={[0, 0, -4.5]}>
-      <Text
-        fontSize={0.68}
-        color="#FFFFFF"
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={8}
-        textAlign="center"
-        lineHeight={1.1}
-      >
-        DDC SERVICES
-      </Text>
-      <Text
-        position={[0, -0.45, 0]}
-        fontSize={0.22}
-        color="#C9A84C"
-        anchorX="center"
-        anchorY="middle"
-        letterSpacing={0.2}
-      >
-        STATE PLATFORMS
-      </Text>
+    <group ref={modelRef} position={[0, 0.18, -0.62]}>
+      <group ref={innerRef}>
+        <AltynAdam scale={0.98} targetHeight={5.0} />
+      </group>
     </group>
   );
 }
@@ -287,29 +247,30 @@ function CarouselCard({ item, index, total, scrollRef, onSelect }: CardProps) {
 
     const offset = scroll - focusPoint;
 
-    // Новая круговая траектория на цилиндре
-    const angleStep = 0.85; // Шаг угла между карточками в радианах
-    const theta = -offset * angleStep;
+    // Active Theory-inspired stage travel: the selected panel crosses the
+    // central object, while previous/next panels sit deeper at the sides.
+    const travel = THREE.MathUtils.clamp(offset * 5.25, -3.45, 3.45);
+    const activeFactor = Math.max(0, 1.0 - Math.abs(offset) * 4.0);
 
-    const R = 3.6; // Радиус цилиндра
-    const Z_offset = 1.6 - R; // Смещение по оси Z, чтобы в фокусе z было 1.6
+    const targetX = travel * 1.54;
+    const targetY = -0.04 + Math.sin(index * 0.8) * 0.14 + activeFactor * 0.08;
+    const targetZ = 1.45 - Math.abs(travel) * 0.62;
 
-    const targetX = R * Math.sin(theta);
-    const targetY = -0.1; // Небольшое смещение по высоте
-    const targetZ = R * Math.cos(theta) + Z_offset;
-
-    const rx = 0.08; // Легкий наклон назад
-    const ry = -theta; // Направление лицом к камере
+    const rx = 0.07 + Math.abs(travel) * 0.03;
+    const ry = -travel * 0.34;
+    const rz = travel * 0.022;
+    const targetScale = THREE.MathUtils.lerp(0.7, hovered ? 1.04 : 1.0, activeFactor);
 
     // Инерционное сглаживание движения
-    meshRef.current.position.x = THREE.MathUtils.damp(meshRef.current.position.x, targetX, 8, dt);
-    meshRef.current.position.y = THREE.MathUtils.damp(meshRef.current.position.y, targetY, 8, dt);
-    meshRef.current.position.z = THREE.MathUtils.damp(meshRef.current.position.z, targetZ, 8, dt);
-    meshRef.current.rotation.x = THREE.MathUtils.damp(meshRef.current.rotation.x, rx, 8, dt);
-    meshRef.current.rotation.y = THREE.MathUtils.damp(meshRef.current.rotation.y, ry, 8, dt);
+    meshRef.current.position.x = THREE.MathUtils.damp(meshRef.current.position.x, targetX, 5.8, dt);
+    meshRef.current.position.y = THREE.MathUtils.damp(meshRef.current.position.y, targetY, 5.8, dt);
+    meshRef.current.position.z = THREE.MathUtils.damp(meshRef.current.position.z, targetZ, 5.8, dt);
+    meshRef.current.rotation.x = THREE.MathUtils.damp(meshRef.current.rotation.x, rx, 5.8, dt);
+    meshRef.current.rotation.y = THREE.MathUtils.damp(meshRef.current.rotation.y, ry, 5.8, dt);
+    meshRef.current.rotation.z = THREE.MathUtils.damp(meshRef.current.rotation.z, rz, 5.8, dt);
+    meshRef.current.scale.setScalar(THREE.MathUtils.damp(meshRef.current.scale.x, targetScale, 5.2, dt));
 
     // Мягкое парение активной карточки
-    const activeFactor = Math.max(0, 1.0 - Math.abs(offset) * 4.0); // 1.0 когда строго в фокусе
     if (activeFactor > 0.05) {
       const hoverBounce = Math.sin(state.clock.elapsedTime * 1.5 + index) * 0.03 * activeFactor;
       meshRef.current.position.y += hoverBounce;
@@ -317,7 +278,7 @@ function CarouselCard({ item, index, total, scrollRef, onSelect }: CardProps) {
 
     // Вычисление прозрачности карточки
     // Карточка видна только в окрестности своего фокуса
-    const fadeRange = 0.22;
+    const fadeRange = 0.34;
     const opacity = Math.max(0, 1.0 - Math.abs(offset) / fadeRange);
     // Применяем плавное появление/исчезновение всей карусели
     let carouselOpacity = 1.0;
@@ -331,8 +292,12 @@ function CarouselCard({ item, index, total, scrollRef, onSelect }: CardProps) {
     // Применяем прозрачность к материалам карточки
     meshRef.current.traverse((child) => {
       if (child instanceof THREE.Mesh && child.material) {
-        child.material.transparent = true;
-        child.material.opacity = finalOpacity * (hovered ? 1.0 : 0.78);
+        const material = child.material as THREE.Material;
+        material.transparent = true;
+        material.opacity =
+          material.type === "MeshPhysicalMaterial"
+            ? finalOpacity * (hovered ? 0.82 : 0.62)
+            : finalOpacity;
       }
     });
   });
@@ -354,46 +319,52 @@ function CarouselCard({ item, index, total, scrollRef, onSelect }: CardProps) {
         document.body.style.cursor = "auto";
       }}
     >
-      {/* Стеклянное тело карточки */}
-      <mesh>
-        <planeGeometry args={[2.5, 1.5]} />
+      {/* Large refractive billboard panel, inspired by the Active Theory work rail. */}
+      <RoundedBox args={[4.7, 2.65, 0.09]} radius={0.22} smoothness={16}>
         <meshPhysicalMaterial
-          color={hovered ? "#1B4F36" : "#0D2218"}
-          transmission={0.65}
-          roughness={0.2}
-          metalness={0.15}
-          ior={1.4}
-          thickness={0.08}
+          color={hovered ? "#1A4B3E" : "#112C2C"}
+          transmission={0.58}
+          roughness={0.18}
+          metalness={0.28}
+          ior={1.36}
+          thickness={0.22}
+          clearcoat={0.85}
+          clearcoatRoughness={0.12}
+          envMapIntensity={1.85}
           side={THREE.DoubleSide}
         />
-      </mesh>
+      </RoundedBox>
 
-      {/* Тонкая рамка */}
-      <mesh position={[0, 0, 0.005]}>
-        <ringGeometry args={[1.21, 1.22, 4]} />
-        <meshBasicMaterial color={hovered ? "#E8C87A" : "#C9A84C"} opacity={0.25} transparent />
+      <RoundedBox args={[4.86, 2.81, 0.035]} radius={0.24} smoothness={16} position={[0, 0, -0.025]}>
+        <meshBasicMaterial color={hovered ? "#52B788" : "#0A4350"} opacity={0.28} transparent depthWrite={false} />
+      </RoundedBox>
+
+      <mesh position={[0.58, 0.34, 0.05]} rotation={[0, 0, -0.18]}>
+        <planeGeometry args={[1.45, 0.48]} />
+        <meshBasicMaterial color="#B5FFF1" opacity={0.02} transparent depthWrite={false} />
       </mesh>
 
       {/* Заголовок */}
       <Text
-        position={[0, 0.15, 0.02]}
-        fontSize={0.13}
+        position={[0, 0.23, 0.08]}
+        fontSize={0.21}
         color="#FFFFFF"
         anchorX="center"
         anchorY="middle"
-        maxWidth={2.1}
+        maxWidth={3.62}
+        lineHeight={1.08}
       >
-        {item.title}
+        {item.title.toUpperCase()}
       </Text>
 
       {/* Подзаголовок */}
       <Text
-        position={[0, -0.22, 0.02]}
-        fontSize={0.085}
+        position={[0, -0.4, 0.08]}
+        fontSize={0.09}
         color="#C9A84C"
         anchorX="center"
         anchorY="middle"
-        maxWidth={2.1}
+        maxWidth={3.55}
         fillOpacity={0.8}
       >
         {item.subtitle.toUpperCase()}
@@ -495,11 +466,10 @@ function WebGLScene({ items, scrollRef, onSelectCard }: SceneProps) {
         color="#E8C87A"
       />
 
-      <BackgroundIntroText scrollRef={scrollRef} />
       <ParticleCloud scrollRef={scrollRef} />
-      <CentralAltynAdam scrollRef={scrollRef} />
       
-      <group>
+      <group position={[0, -0.02, 0]}>
+        <CentralAltynAdam scrollRef={scrollRef} />
         {items.map((item, idx) => (
           <CarouselCard
             key={item.id}
@@ -611,13 +581,15 @@ export default function Services3D() {
   // Скролл-событие с плавной интерполяцией
   useEffect(() => {
     const handleScroll = () => {
-      const doc = document.documentElement;
-      const max = doc.scrollHeight - window.innerHeight;
-      if (max <= 0) return;
-      scrollTargetRef.current = window.scrollY / max;
+      const el = containerRef.current;
+      if (!el) return;
+      const start = el.getBoundingClientRect().top + window.scrollY;
+      const max = Math.max(1, el.offsetHeight - window.innerHeight);
+      scrollTargetRef.current = THREE.MathUtils.clamp((window.scrollY - start) / max, 0, 1);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
     handleScroll();
 
     let active = true;
@@ -625,7 +597,7 @@ export default function Services3D() {
       if (!active) return;
       const diff = scrollTargetRef.current - scrollCurrentRef.current;
       if (Math.abs(diff) > 0.00005) {
-        scrollCurrentRef.current += diff * 0.07;
+        scrollCurrentRef.current += diff * 0.12;
         scrollProgressRef.current = scrollCurrentRef.current;
 
         const p = scrollProgressRef.current;
@@ -657,20 +629,22 @@ export default function Services3D() {
     return () => {
       active = false;
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
     };
   }, []);
 
   const activeService = services[activeIndex] || services[0];
 
   const handleSelectCard = (index: number) => {
-    const doc = document.documentElement;
-    const max = doc.scrollHeight - window.innerHeight;
-    if (max <= 0) return;
+    const el = containerRef.current;
+    if (!el) return;
+    const start = el.getBoundingClientRect().top + window.scrollY;
+    const max = Math.max(1, el.offsetHeight - window.innerHeight);
     
     // Расчет скролла для центрирования карточки
     const targetScroll = 0.2 + 0.6 * (index / 5);
     window.scrollTo({
-      top: targetScroll * max,
+      top: start + targetScroll * max,
       behavior: "smooth"
     });
   };
@@ -701,7 +675,7 @@ export default function Services3D() {
         
         {/* Заголовок страницы (Скрывается плавно в Climax) */}
         <motion.div
-          animate={{ opacity: isClimax ? 0.05 : 1, y: isClimax ? -20 : 0 }}
+          animate={{ opacity: isIntro ? 1 : 0.04, y: isIntro ? 0 : -28 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-2xl mb-8 fixed top-24 left-6 sm:left-12 lg:left-16 pointer-events-auto"
         >
