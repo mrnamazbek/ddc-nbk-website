@@ -57,6 +57,7 @@ export type IconName =
   | "procurement"
   | "it-services"
   | "development"
+  | "code"
   | "palette"
   | "clickhouse"
   | "airflow"
@@ -161,6 +162,7 @@ const mingcuteMap: Partial<Record<IconName, string>> = {
   procurement: "mingcute:shopping-cart-1-line",
   "it-services": "mingcute:settings-1-line",
   development: "mingcute:code-line",
+  code: "mingcute:code-line",
   palette: "mingcute:palette-line",
 };
 
@@ -213,6 +215,7 @@ const solarMap: Partial<Record<IconName, string>> = {
   procurement: "solar:cart-linear",
   "it-services": "solar:settings-linear",
   development: "solar:code-linear",
+  code: "solar:code-linear",
   palette: "solar:palette-linear",
 };
 
@@ -266,6 +269,7 @@ const iconsaxMap: Partial<Record<IconName, React.ComponentType<any>>> = {
   procurement: Iconsax.ShoppingCart,
   "it-services": Iconsax.Setting2,
   development: Iconsax.Code,
+  code: Iconsax.Code,
   palette: Iconsax.Colorfilter,
 };
 

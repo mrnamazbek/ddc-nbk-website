@@ -57,21 +57,26 @@ export default function Technologies() {
       key: "openSource",
       title: t("openSourceTitle"),
       desc: t("openSourceDesc"),
-      icon: "code" as IconName,
+      icon: "code",
     },
     {
       key: "bigData",
       title: t("bigDataTitle"),
       desc: t("bigDataDesc"),
-      icon: "database" as IconName,
+      icon: "database",
     },
     {
       key: "ai",
       title: t("aiTitle"),
       desc: t("aiDesc"),
-      icon: "cpu" as IconName,
+      icon: "cpu",
     },
-  ];
+  ] satisfies Array<{
+    key: string;
+    title: string;
+    desc: string;
+    icon: IconName;
+  }>;
 
   return (
     <section className="relative w-full py-24 bg-background overflow-hidden font-sans">
