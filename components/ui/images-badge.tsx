@@ -44,7 +44,7 @@ export function ImagesBadge({
       rel={target === "_blank" ? "noopener noreferrer" : undefined}
       aria-label={href ? text : undefined}
       className={cn(
-        "group inline-flex cursor-pointer items-center gap-2 [perspective:1000px] [transform-style:preserve-3d]",
+        "group inline-flex min-h-11 cursor-pointer items-center gap-2 py-1 [perspective:1000px] [transform-style:preserve-3d]",
         className,
       )}
       onMouseEnter={() => setIsHovered(true)}

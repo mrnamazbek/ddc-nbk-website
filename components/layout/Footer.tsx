@@ -300,7 +300,7 @@ export default function Footer() {
                         href={signal.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-2 inline-flex items-center gap-2 text-xl font-semibold tracking-[-0.02em] text-white"
+                        className="mt-2 inline-flex min-h-11 items-center gap-2 py-1 text-xl font-semibold tracking-[-0.02em] text-white"
                       >
                         {signal.name}
                         <Icon name="arrow-up-right" size={16} className="text-gold" />

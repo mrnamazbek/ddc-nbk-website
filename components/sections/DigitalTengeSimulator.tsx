@@ -207,7 +207,7 @@ export default function DigitalTengeSimulator() {
               <button
                 type="button"
                 onClick={() => !isSimulating && setBin(SCENARIOS[selectedScenario].bin)}
-                className="text-[10px] text-gold hover:text-gold-light underline font-mono cursor-pointer"
+                className="inline-flex min-h-11 items-center text-[10px] font-mono text-gold underline hover:text-gold-light cursor-pointer"
                 disabled={isSimulating}
               >
                 Вставить аккредитованный БИН
