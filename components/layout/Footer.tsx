@@ -66,66 +66,66 @@ const footerSections: { title: string; links: FooterLink[] }[] = [
   },
 ];
 
-const portfolioRepos = [
+const proofSignals = [
   {
-    name: "mrnamazbek",
-    href: "https://github.com/mrnamazbek/mrnamazbek",
-    language: "JavaScript",
-    updated: "Jun 25, 2026",
+    name: "Data Factory",
+    href: "https://www.linkedin.com/feed/update/urn:li:activity:7385921757829808128",
+    category: "Data platform",
+    source: "LinkedIn",
     description:
-      "Self-updating GitHub profile and personal website with CI pipelines, Python automation and vanilla JS.",
+      "Industrial data processing capability for National Bank infrastructure, built around governed pipelines and reliable data products.",
     images: [
-      "/images/showcase/site-preview.jpg",
-      "/images/linkedin/post_0_ai_platform.jpg",
       "/images/linkedin/post_15_data_factory.jpg",
-    ],
-  },
-  {
-    name: "content_machine",
-    href: "https://github.com/mrnamazbek/content_machine",
-    language: "Python",
-    updated: "May 15, 2026",
-    description: "Automation workspace for content pipelines, generation flows and repeatable publishing tasks.",
-    images: [
-      "/images/linkedin/post_11_llm_learning.jpg",
-      "/images/linkedin/post_6_nfactorial_llm.jpg",
-      "/images/linkedin/post_18_tech_talks_risks.jpg",
-    ],
-  },
-  {
-    name: "Final_project",
-    href: "https://github.com/mrnamazbek/Final_project",
-    language: "HTML",
-    updated: "May 12, 2026",
-    description: "Frontend foundation work: static UI, layout experiments and early product interface patterns.",
-    images: [
-      "/images/backgrounds/liquid_glass_flow.png",
-      "/images/showcase/news-1.jpeg",
-      "/images/showcase/news-2.jpeg",
-    ],
-  },
-  {
-    name: "gmail-drive-ai-suite",
-    href: "https://github.com/mrnamazbek/gmail-drive-ai-suite",
-    language: "JavaScript",
-    updated: "May 09, 2026",
-    description: "AI-powered Gmail and Google Drive automation suite using Apps Script and Gemini AI.",
-    images: [
-      "/images/linkedin/post_1_digital_services.jpg",
       "/images/linkedin/post_9_it_architecture.jpg",
+      "/images/nbk_architecture.png",
+    ],
+  },
+  {
+    name: "Key National Bank Projects",
+    href: "https://www.linkedin.com/feed/update/urn:li:activity:7384573685673840640",
+    category: "Core systems",
+    source: "LinkedIn",
+    description: "A public proof point for the Center's role in complex, high-stakes systems across the financial regulator's ecosystem.",
+    images: [
+      "/images/linkedin/post_16_key_projects.jpg",
+      "/images/linkedin/post_1_digital_services.jpg",
       "/images/linkedin/post_13_kfgd_automation.jpg",
     ],
   },
   {
-    name: "egov_site",
-    href: "https://github.com/mrnamazbek/egov_site",
-    language: "CSS",
-    updated: "Mar 29, 2026",
-    description: "Government-services UI practice with responsive styling and public-sector layout details.",
+    name: "AI Platform Discussions",
+    href: "https://www.linkedin.com/feed/update/urn:li:activity:7473705322331791361",
+    category: "AI adoption",
+    source: "LinkedIn",
+    description: "Internal AI capability building and practical adoption of generative technologies for public-sector digital work.",
     images: [
-      "/images/3d/tenge-coin-gold.webp",
-      "/images/3d/shanyrak-gold.webp",
-      "/images/saka_core_render.png",
+      "/images/linkedin/post_0_ai_platform.jpg",
+      "/images/linkedin/post_11_llm_learning.jpg",
+      "/images/linkedin/post_6_nfactorial_llm.jpg",
+    ],
+  },
+  {
+    name: "KFGD Automation",
+    href: "https://www.linkedin.com/feed/update/urn:li:activity:7392499128875941889",
+    category: "Automation",
+    source: "LinkedIn",
+    description: "Digital automation work connected to government-financial data exchange and operational reliability.",
+    images: [
+      "/images/linkedin/post_13_kfgd_automation.jpg",
+      "/images/linkedin/post_15_data_factory.jpg",
+      "/images/linkedin/post_16_key_projects.jpg",
+    ],
+  },
+  {
+    name: "Strategic Dialogue",
+    href: "https://www.linkedin.com/feed/update/urn:li:activity:7380833625589637120",
+    category: "Leadership",
+    source: "LinkedIn",
+    description: "Leadership and stakeholder meetings that reinforce DDC's connection to the National Bank's digital agenda.",
+    images: [
+      "/images/linkedin/post_17_suleimenov_meeting.jpg",
+      "/images/linkedin/post_10_binur_meeting.jpg",
+      "/images/showcase/news-2.jpeg",
     ],
   },
 ];
@@ -272,16 +272,16 @@ export default function Footer() {
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         >
           <div>
-            <p className="font-mono text-xs uppercase tracking-[0.34em] text-gold">Portfolio signal</p>
+            <p className="font-mono text-xs uppercase tracking-[0.34em] text-gold">Company proof</p>
             <h3 className="mt-4 max-w-sm font-heading text-3xl font-semibold tracking-[-0.03em] text-white md:text-5xl">
-              Five recent repositories, treated as a compact delivery wall.
+              Public signals from DDC&apos;s digital delivery work.
             </h3>
           </div>
 
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {portfolioRepos.map((repo, index) => (
+            {proofSignals.map((signal, index) => (
               <motion.article
-                key={repo.name}
+                key={signal.name}
                 className="site-footer-repo-card group relative min-h-[230px] overflow-hidden rounded-[1.6rem] border border-white/[0.08] bg-white/[0.035] p-5 shadow-[0_24px_90px_rgba(0,0,0,0.35)] backdrop-blur-xl"
                 initial={reduce ? false : { opacity: 0, y: 24, scale: 0.98 }}
                 whileInView={reduce ? undefined : { opacity: 1, y: 0, scale: 1 }}
@@ -295,27 +295,27 @@ export default function Footer() {
                 <div className="relative z-10 flex h-full flex-col">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold/85">{repo.language}</p>
+                      <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold/85">{signal.category}</p>
                       <a
-                        href={repo.href}
+                        href={signal.href}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="mt-2 inline-flex items-center gap-2 text-xl font-semibold tracking-[-0.02em] text-white"
                       >
-                        {repo.name}
+                        {signal.name}
                         <Icon name="arrow-up-right" size={16} className="text-gold" />
                       </a>
                     </div>
-                    <Icon name="github" size={24} className="opacity-70" />
+                    <Icon name="linkedin" size={24} className="opacity-70" animate={false} />
                   </div>
-                  <p className="mt-4 flex-1 text-sm leading-relaxed text-zinc-400">{repo.description}</p>
+                  <p className="mt-4 flex-1 text-sm leading-relaxed text-zinc-400">{signal.description}</p>
                   <div className="mt-6 flex items-center justify-between gap-4 border-t border-white/[0.035] pt-4">
-                    <span className="text-xs text-zinc-500">Updated {repo.updated}</span>
+                    <span className="text-xs text-zinc-500">Source: {signal.source}</span>
                     <ImagesBadge
                       text="Preview"
-                      href={repo.href}
+                      href={signal.href}
                       target="_blank"
-                      images={repo.images}
+                      images={signal.images}
                       folderSize={{ width: 30, height: 23 }}
                       teaserImageSize={{ width: 19, height: 13 }}
                       hoverImageSize={{ width: 52, height: 34 }}
