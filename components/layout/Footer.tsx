@@ -5,12 +5,13 @@ import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } fro
 import { Link } from "@/i18n/navigation";
 import { ImagesBadge } from "@/components/ui/images-badge";
 import { ThreeDMarquee } from "@/components/ui/3d-marquee";
-import Icon from "../ui/Icon";
+import Icon, { IconName } from "../ui/Icon";
 
 type FooterLink = {
   name: string;
   href: string;
   external?: boolean;
+  icon?: IconName;
 };
 
 const footerSections: { title: string; links: FooterLink[] }[] = [
@@ -32,6 +33,13 @@ const footerSections: { title: string; links: FooterLink[] }[] = [
         name: "LinkedIn",
         href: "https://www.linkedin.com/company/bank-service-bureau/posts/?feedView=all",
         external: true,
+        icon: "linkedin",
+      },
+      {
+        name: "Instagram",
+        href: "https://www.instagram.com/ddc.kz",
+        external: true,
+        icon: "instagram",
       },
       { name: "GitHub", href: "https://github.com/mrnamazbek", external: true },
       { name: "National Bank", href: "https://nationalbank.kz", external: true },
@@ -150,6 +158,7 @@ function FooterAnchor({ link }: { link: FooterLink }) {
   if (link.external) {
     return (
       <a href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" className={className}>
+        {link.icon && <Icon name={link.icon} size={17} className="text-gold/90" animate={false} />}
         {link.name}
         <Icon
           name="arrow-up-right"
@@ -162,6 +171,7 @@ function FooterAnchor({ link }: { link: FooterLink }) {
 
   return (
     <Link href={link.href} className={className}>
+      {link.icon && <Icon name={link.icon} size={17} className="text-gold/90" animate={false} />}
       {link.name}
       <Icon
         name="arrow-up-right"
