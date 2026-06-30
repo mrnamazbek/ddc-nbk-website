@@ -364,7 +364,7 @@ export default function Leadership() {
                   onClick={() => setShowPillars(!showPillars)}
                   aria-expanded={showPillars}
                   aria-controls="strategic-pillars"
-                  className="mt-4 px-5 py-2.5 rounded-full border border-gold/30 hover:border-gold bg-charcoal/50 hover:bg-forest/20 text-gold text-xs font-mono uppercase tracking-[0.1em] transition-all duration-300 flex items-center gap-2 cursor-pointer shadow-lg hover:shadow-gold/10 z-10"
+                  className="mt-4 flex min-h-11 items-center gap-2 rounded-full border border-gold/30 bg-charcoal/50 px-5 py-2.5 text-xs font-mono uppercase tracking-[0.1em] text-gold transition-all duration-300 hover:border-gold hover:bg-forest/20 cursor-pointer shadow-lg hover:shadow-gold/10 z-10"
                 >
                   <Icon name={showPillars ? "minus" : "eye"} size={14} className="text-gold" />
                   {locale === "en" ? "Strategic Vision" : locale === "kz" ? "Стратегиялық көзқарас" : "Стратегическое видение"}

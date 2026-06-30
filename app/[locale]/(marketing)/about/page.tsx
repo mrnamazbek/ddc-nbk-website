@@ -116,7 +116,7 @@ export default function AboutPage() {
               href="https://nationalbank.kz"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm font-semibold text-gold flex items-center gap-1 hover:text-gold-light transition-colors duration-300 shrink-0 relative z-10"
+              className="flex min-h-11 shrink-0 items-center gap-1 text-sm font-semibold text-gold hover:text-gold-light transition-colors duration-300 relative z-10"
             >
               {t("founderLink")}
               <Icon name="arrow-up-right" size={16} />

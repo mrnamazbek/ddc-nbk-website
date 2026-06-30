@@ -109,7 +109,7 @@ export default function FinancialInform() {
           <button
             onClick={() => generateData(true)}
             disabled={isRefreshing}
-            className="h-11 w-11 rounded-full bg-glass border border-glass-border flex items-center justify-center text-muted hover:text-gold hover:bg-glass active:scale-95 transition-all duration-300 disabled:opacity-50 select-none cursor-pointer"
+            className="h-11 min-w-11 shrink-0 rounded-full bg-glass border border-glass-border flex items-center justify-center text-muted hover:text-gold hover:bg-glass active:scale-95 transition-all duration-300 disabled:opacity-50 select-none cursor-pointer"
             title={t("refreshBtn")}
           >
             <Icon name="refresh" size={16} animate={false} className={isRefreshing ? "animate-spin text-gold" : ""} />
