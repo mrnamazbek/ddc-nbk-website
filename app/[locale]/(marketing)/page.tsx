@@ -20,10 +20,8 @@ const SecuredFiBackground = dynamic(() => import("@/components/ui/SecuredFiBackg
 // Lazy-loaded component for Variant C (particle logo-morph reveal)
 const LogoParticleReveal = dynamic(() => import("@/components/three/LogoParticleReveal"), { ssr: false });
 
-export default function MarketingHomePage() {
-  const activeVariant = useABTest("home_layout");
-
-  const DeferredSections = () => (
+function DeferredSections() {
+  return (
     <>
       <LazyOnVisible minHeight="720px">
         <Readiness />
@@ -45,6 +43,10 @@ export default function MarketingHomePage() {
       </LazyOnVisible>
     </>
   );
+}
+
+export default function MarketingHomePage() {
+  const activeVariant = useABTest("home_layout");
 
   if (activeVariant === "C") {
     return (

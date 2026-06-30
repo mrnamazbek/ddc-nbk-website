@@ -6,8 +6,6 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
-import dynamic from "next/dynamic";
-import ShimmerButton from "@/components/ui/ShimmerButton";
 import Magnetic from "@/components/motion/Magnetic";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 import { MetalButton } from "@/components/ui/liquid-glass-button";
