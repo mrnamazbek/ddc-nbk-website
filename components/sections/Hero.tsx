@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
@@ -25,16 +24,7 @@ export default function Hero() {
   const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const logoSrc = mounted && resolvedTheme === "light"
-    ? "/images/logo/ddc_logo_light_theme.png"
-    : "/images/logo/ddc_logo_for_dark_theme.png";
+  const logoSrc = "/images/logo/ddc-logo.svg";
   
   const [isMobileDevice, setIsMobileDevice] = useState(true);
 

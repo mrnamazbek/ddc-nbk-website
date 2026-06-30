@@ -1,11 +1,10 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import Image from "next/image";
-import { useTheme } from "next-themes";
 import GlassCard from "@/components/ui/GlassCard";
 import ShimmerButton from "@/components/ui/ShimmerButton";
 import PartnerMarquee from "@/components/ui/PartnerMarquee";
@@ -18,16 +17,7 @@ export default function CTA() {
   const t = useTranslations("CTA");
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const logoSrc = mounted && resolvedTheme === "light"
-    ? "/images/logo/ddc_logo_light_theme.png"
-    : "/images/logo/ddc_logo_for_dark_theme.png";
+  const logoSrc = "/images/logo/ddc-logo.svg";
   const cardRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
@@ -165,4 +155,3 @@ export default function CTA() {
     </section>
   );
 }
-
