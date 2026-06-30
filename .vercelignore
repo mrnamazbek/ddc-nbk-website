@@ -1,0 +1,17 @@
+.next
+node_modules
+output
+coverage
+test-results
+playwright-report
+.playwright-mcp
+.codex
+.claude
+.cursor
+.idea
+.agent
+.agents
+.vscode
+.DS_Store
+*.tsbuildinfo
+variant_b_*.png
