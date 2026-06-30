@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 
 // Official technology and brand SVG icons fetched from SVGL API.
 // Used for showcasing the DDC technology stack.
@@ -37,9 +37,15 @@ export const PythonIcon: React.FC<PythonIconProps> = ({
   className,
   style,
   ...props
-}) => (
-  <svg className={className} style={{ width: size, height: size, ...style }} {...props} fill="none" viewBox="16 16 32 32"><path fill="url(#a)" d="M31.885 16c-8.124 0-7.617 3.523-7.617 3.523l.01 3.65h7.752v1.095H21.197S16 23.678 16 31.876c0 8.196 4.537 7.906 4.537 7.906h2.708v-3.804s-.146-4.537 4.465-4.537h7.688s4.32.07 4.32-4.175v-7.019S40.374 16 31.885 16zm-4.275 2.454a1.394 1.394 0 1 1 0 2.79 1.393 1.393 0 0 1-1.395-1.395c0-.771.624-1.395 1.395-1.395z"/><path fill="url(#b)" d="M32.115 47.833c8.124 0 7.617-3.523 7.617-3.523l-.01-3.65H31.97v-1.095h10.832S48 40.155 48 31.958c0-8.197-4.537-7.906-4.537-7.906h-2.708v3.803s.146 4.537-4.465 4.537h-7.688s-4.32-.07-4.32 4.175v7.019s-.656 4.247 7.833 4.247zm4.275-2.454a1.393 1.393 0 0 1-1.395-1.395 1.394 1.394 0 1 1 1.395 1.395z"/><defs><linearGradient id="a" x1="19.075" x2="34.898" y1="18.782" y2="34.658" gradientUnits="userSpaceOnUse"><stop stopColor="#387EB8"/><stop offset="1" stopColor="#366994"/></linearGradient><linearGradient id="b" x1="28.809" x2="45.803" y1="28.882" y2="45.163" gradientUnits="userSpaceOnUse"><stop stopColor="#FFE052"/><stop offset="1" stopColor="#FFC331"/></linearGradient></defs></svg>
-);
+}) => {
+  const id = useId().replace(/:/g, "");
+  const gradA = `${id}-python-a`;
+  const gradB = `${id}-python-b`;
+
+  return (
+    <svg className={className} style={{ width: size, height: size, ...style }} {...props} fill="none" viewBox="16 16 32 32"><path fill={`url(#${gradA})`} d="M31.885 16c-8.124 0-7.617 3.523-7.617 3.523l.01 3.65h7.752v1.095H21.197S16 23.678 16 31.876c0 8.196 4.537 7.906 4.537 7.906h2.708v-3.804s-.146-4.537 4.465-4.537h7.688s4.32.07 4.32-4.175v-7.019S40.374 16 31.885 16zm-4.275 2.454a1.394 1.394 0 1 1 0 2.79 1.393 1.393 0 0 1-1.395-1.395c0-.771.624-1.395 1.395-1.395z"/><path fill={`url(#${gradB})`} d="M32.115 47.833c8.124 0 7.617-3.523 7.617-3.523l-.01-3.65H31.97v-1.095h10.832S48 40.155 48 31.958c0-8.197-4.537-7.906-4.537-7.906h-2.708v3.803s.146 4.537-4.465 4.537h-7.688s-4.32-.07-4.32 4.175v7.019s-.656 4.247 7.833 4.247zm4.275-2.454a1.393 1.393 0 0 1-1.395-1.395 1.394 1.394 0 1 1 1.395 1.395z"/><defs><linearGradient id={gradA} x1="19.075" x2="34.898" y1="18.782" y2="34.658" gradientUnits="userSpaceOnUse"><stop stopColor="#387EB8"/><stop offset="1" stopColor="#366994"/></linearGradient><linearGradient id={gradB} x1="28.809" x2="45.803" y1="28.882" y2="45.163" gradientUnits="userSpaceOnUse"><stop stopColor="#FFE052"/><stop offset="1" stopColor="#FFC331"/></linearGradient></defs></svg>
+  );
+};
 
 interface DockerIconProps extends React.SVGProps<SVGSVGElement> {
   size?: number;
@@ -76,9 +82,20 @@ export const NodeJSIcon: React.FC<NodeJSIconProps> = ({
   className,
   style,
   ...props
-}) => (
-  <svg className={className} style={{ width: size, height: size, ...style }} {...props} viewBox="0 0 256 292"><defs><linearGradient id="a" x1="68.188%" x2="27.823%" y1="17.487%" y2="89.755%"><stop offset="0%" stopColor="#41873F"/><stop offset="32.88%" stopColor="#418B3D"/><stop offset="63.52%" stopColor="#419637"/><stop offset="93.19%" stopColor="#3FA92D"/><stop offset="100%" stopColor="#3FAE2A"/></linearGradient><linearGradient id="c" x1="43.277%" x2="159.245%" y1="55.169%" y2="-18.306%"><stop offset="13.76%" stopColor="#41873F"/><stop offset="40.32%" stopColor="#54A044"/><stop offset="71.36%" stopColor="#66B848"/><stop offset="90.81%" stopColor="#6CC04A"/></linearGradient><linearGradient id="f" x1="-4.389%" x2="101.499%" y1="49.997%" y2="49.997%"><stop offset="9.192%" stopColor="#6CC04A"/><stop offset="28.64%" stopColor="#66B848"/><stop offset="59.68%" stopColor="#54A044"/><stop offset="86.24%" stopColor="#41873F"/></linearGradient><path id="b" d="M134.923 1.832c-4.344-2.443-9.502-2.443-13.846 0L6.787 67.801C2.443 70.244 0 74.859 0 79.745v132.208c0 4.887 2.715 9.502 6.787 11.945l114.29 65.968c4.344 2.444 9.502 2.444 13.846 0l114.29-65.968c4.344-2.443 6.787-7.058 6.787-11.945V79.745c0-4.886-2.715-9.501-6.787-11.944L134.923 1.832Z"/><path id="e" d="M134.923 1.832c-4.344-2.443-9.502-2.443-13.846 0L6.787 67.801C2.443 70.244 0 74.859 0 79.745v132.208c0 4.887 2.715 9.502 6.787 11.945l114.29 65.968c4.344 2.444 9.502 2.444 13.846 0l114.29-65.968c4.344-2.443 6.787-7.058 6.787-11.945V79.745c0-4.886-2.715-9.501-6.787-11.944L134.923 1.832Z"/></defs><path fill="url(#a)" d="M134.923 1.832c-4.344-2.443-9.502-2.443-13.846 0L6.787 67.801C2.443 70.244 0 74.859 0 79.745v132.208c0 4.887 2.715 9.502 6.787 11.945l114.29 65.968c4.344 2.444 9.502 2.444 13.846 0l114.29-65.968c4.344-2.443 6.787-7.058 6.787-11.945V79.745c0-4.886-2.715-9.501-6.787-11.944L134.923 1.832Z"/><mask id="d" fill="#fff"><use xlinkHref="#b"/></mask><path fill="url(#c)" d="M249.485 67.8 134.65 1.833c-1.086-.542-2.443-1.085-3.529-1.357L2.443 220.912c1.086 1.357 2.444 2.443 3.8 3.258l114.834 65.968c3.258 1.9 7.059 2.443 10.588 1.357L252.47 70.515c-.815-1.086-1.9-1.9-2.986-2.714Z" mask="url(#d)"/><mask id="g" fill="#fff"><use xlinkHref="#e"/></mask><path fill="url(#f)" d="M249.756 223.898c3.258-1.9 5.701-5.158 6.787-8.687L130.579.204c-3.258-.543-6.787-.272-9.773 1.628L6.786 67.53l122.979 224.238c1.628-.272 3.529-.815 5.158-1.63l114.833-66.239Z" mask="url(#g)"/></svg>
-);
+}) => {
+  const id = useId().replace(/:/g, "");
+  const gradA = `${id}-node-a`;
+  const gradC = `${id}-node-c`;
+  const gradF = `${id}-node-f`;
+  const pathB = `${id}-node-b`;
+  const pathE = `${id}-node-e`;
+  const maskD = `${id}-node-d`;
+  const maskG = `${id}-node-g`;
+
+  return (
+    <svg className={className} style={{ width: size, height: size, ...style }} {...props} viewBox="0 0 256 292"><defs><linearGradient id={gradA} x1="68.188%" x2="27.823%" y1="17.487%" y2="89.755%"><stop offset="0%" stopColor="#41873F"/><stop offset="32.88%" stopColor="#418B3D"/><stop offset="63.52%" stopColor="#419637"/><stop offset="93.19%" stopColor="#3FA92D"/><stop offset="100%" stopColor="#3FAE2A"/></linearGradient><linearGradient id={gradC} x1="43.277%" x2="159.245%" y1="55.169%" y2="-18.306%"><stop offset="13.76%" stopColor="#41873F"/><stop offset="40.32%" stopColor="#54A044"/><stop offset="71.36%" stopColor="#66B848"/><stop offset="90.81%" stopColor="#6CC04A"/></linearGradient><linearGradient id={gradF} x1="-4.389%" x2="101.499%" y1="49.997%" y2="49.997%"><stop offset="9.192%" stopColor="#6CC04A"/><stop offset="28.64%" stopColor="#66B848"/><stop offset="59.68%" stopColor="#54A044"/><stop offset="86.24%" stopColor="#41873F"/></linearGradient><path id={pathB} d="M134.923 1.832c-4.344-2.443-9.502-2.443-13.846 0L6.787 67.801C2.443 70.244 0 74.859 0 79.745v132.208c0 4.887 2.715 9.502 6.787 11.945l114.29 65.968c4.344 2.444 9.502 2.444 13.846 0l114.29-65.968c4.344-2.443 6.787-7.058 6.787-11.945V79.745c0-4.886-2.715-9.501-6.787-11.944L134.923 1.832Z"/><path id={pathE} d="M134.923 1.832c-4.344-2.443-9.502-2.443-13.846 0L6.787 67.801C2.443 70.244 0 74.859 0 79.745v132.208c0 4.887 2.715 9.502 6.787 11.945l114.29 65.968c4.344 2.444 9.502 2.444 13.846 0l114.29-65.968c4.344-2.443 6.787-7.058 6.787-11.945V79.745c0-4.886-2.715-9.501-6.787-11.944L134.923 1.832Z"/></defs><path fill={`url(#${gradA})`} d="M134.923 1.832c-4.344-2.443-9.502-2.443-13.846 0L6.787 67.801C2.443 70.244 0 74.859 0 79.745v132.208c0 4.887 2.715 9.502 6.787 11.945l114.29 65.968c4.344 2.444 9.502 2.444 13.846 0l114.29-65.968c4.344-2.443 6.787-7.058 6.787-11.945V79.745c0-4.886-2.715-9.501-6.787-11.944L134.923 1.832Z"/><mask id={maskD} fill="#fff"><use xlinkHref={`#${pathB}`}/></mask><path fill={`url(#${gradC})`} d="M249.485 67.8 134.65 1.833c-1.086-.542-2.443-1.085-3.529-1.357L2.443 220.912c1.086 1.357 2.444 2.443 3.8 3.258l114.834 65.968c3.258 1.9 7.059 2.443 10.588 1.357L252.47 70.515c-.815-1.086-1.9-1.9-2.986-2.714Z" mask={`url(#${maskD})`}/><mask id={maskG} fill="#fff"><use xlinkHref={`#${pathE}`}/></mask><path fill={`url(#${gradF})`} d="M249.756 223.898c3.258-1.9 5.701-5.158 6.787-8.687L130.579.204c-3.258-.543-6.787-.272-9.773 1.628L6.786 67.53l122.979 224.238c1.628-.272 3.529-.815 5.158-1.63l114.833-66.239Z" mask={`url(#${maskG})`}/></svg>
+  );
+};
 
 interface SolidityIconProps extends React.SVGProps<SVGSVGElement> {
   size?: number;
@@ -141,9 +158,16 @@ export const SolanaIcon: React.FC<SolanaIconProps> = ({
   className,
   style,
   ...props
-}) => (
-  <svg className={className} style={{ width: size, height: size, ...style }} {...props} viewBox="0 0 36 36"><defs><linearGradient x1="90.737%" y1="34.776%" x2="35.509%" y2="55.415%" id="a"><stop stopColor="#00FFA3" offset="0%"/><stop stopColor="#DC1FFF" offset="100%"/></linearGradient><linearGradient x1="66.588%" y1="43.8%" x2="11.36%" y2="64.439%" id="b"><stop stopColor="#00FFA3" offset="0%"/><stop stopColor="#DC1FFF" offset="100%"/></linearGradient><linearGradient x1="78.586%" y1="39.317%" x2="23.358%" y2="59.956%" id="c"><stop stopColor="#00FFA3" offset="0%"/><stop stopColor="#DC1FFF" offset="100%"/></linearGradient></defs><g fill="none"><circle fill="#181E33" cx="18" cy="18" r="18"/><path d="M3.9 14.355a.785.785 0 0 1 .554-.23h19.153c.35 0 .525.423.277.67l-3.783 3.784a.785.785 0 0 1-.555.23H.393a.392.392 0 0 1-.277-.67l3.783-3.784z" fill="url(#a)" transform="translate(6 9)"/><path d="M3.9.23c.15-.146.35-.23.554-.23h19.153c.35 0 .525.422.277.67l-3.783 3.783a.785.785 0 0 1-.555.23H.393a.392.392 0 0 1-.277-.67L3.899.229z" fill="url(#b)" transform="translate(6 9)"/><path d="M20.1 7.247a.785.785 0 0 0-.554-.23H.393a.392.392 0 0 0-.277.67l3.783 3.784c.145.145.344.23.555.23h19.153c.35 0 .525-.423.277-.67l-3.783-3.784z" fill="url(#c)" transform="translate(6 9)"/></g></svg>
-);
+}) => {
+  const id = useId().replace(/:/g, "");
+  const gradA = `${id}-solana-a`;
+  const gradB = `${id}-solana-b`;
+  const gradC = `${id}-solana-c`;
+
+  return (
+    <svg className={className} style={{ width: size, height: size, ...style }} {...props} viewBox="0 0 36 36"><defs><linearGradient x1="90.737%" y1="34.776%" x2="35.509%" y2="55.415%" id={gradA}><stop stopColor="#00FFA3" offset="0%"/><stop stopColor="#DC1FFF" offset="100%"/></linearGradient><linearGradient x1="66.588%" y1="43.8%" x2="11.36%" y2="64.439%" id={gradB}><stop stopColor="#00FFA3" offset="0%"/><stop stopColor="#DC1FFF" offset="100%"/></linearGradient><linearGradient x1="78.586%" y1="39.317%" x2="23.358%" y2="59.956%" id={gradC}><stop stopColor="#00FFA3" offset="0%"/><stop stopColor="#DC1FFF" offset="100%"/></linearGradient></defs><g fill="none"><circle fill="#181E33" cx="18" cy="18" r="18"/><path d="M3.9 14.355a.785.785 0 0 1 .554-.23h19.153c.35 0 .525.423.277.67l-3.783 3.784a.785.785 0 0 1-.555.23H.393a.392.392 0 0 1-.277-.67l3.783-3.784z" fill={`url(#${gradA})`} transform="translate(6 9)"/><path d="M3.9.23c.15-.146.35-.23.554-.23h19.153c.35 0 .525.422.277.67l-3.783 3.783a.785.785 0 0 1-.555.23H.393a.392.392 0 0 1-.277-.67L3.899.229z" fill={`url(#${gradB})`} transform="translate(6 9)"/><path d="M20.1 7.247a.785.785 0 0 0-.554-.23H.393a.392.392 0 0 0-.277.67l3.783 3.784c.145.145.344.23.555.23h19.153c.35 0 .525-.423.277-.67l-3.783-3.784z" fill={`url(#${gradC})`} transform="translate(6 9)"/></g></svg>
+  );
+};
 
 interface SpringIconProps extends React.SVGProps<SVGSVGElement> {
   size?: number;

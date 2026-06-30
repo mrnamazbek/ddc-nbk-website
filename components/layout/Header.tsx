@@ -40,7 +40,7 @@ function LanguageSwitcher({
             aria-label={lng.toUpperCase()}
             aria-pressed={active}
             className={`font-mono font-bold tracking-wider rounded-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 flex items-center justify-center relative transition-colors duration-300 ${
-              size === "lg" ? "px-4 min-h-[44px] min-w-[44px] text-sm" : "px-3 py-1.5 min-h-10 min-w-10 text-xs"
+              size === "lg" ? "px-4 min-h-[44px] min-w-[44px] text-sm" : "px-3 py-1.5 min-h-11 min-w-11 text-xs"
             } ${active ? "text-black z-10 font-bold" : "text-muted hover:text-gold z-10"}`}
           >
             {active && (
@@ -227,7 +227,7 @@ export default function Header() {
                 >
                   <TransitionLink
                     href={link.href}
-                    className={`relative flex min-h-10 items-center px-3 py-2 rounded-full text-[13px] font-medium tracking-wide whitespace-nowrap transition-colors duration-300 ${
+                    className={`relative flex min-h-11 items-center px-3 py-2 rounded-full text-[13px] font-medium tracking-wide whitespace-nowrap transition-colors duration-300 ${
                       isActive ? "text-gold" : "text-muted hover:text-foreground"
                     }`}
                   >

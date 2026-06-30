@@ -169,6 +169,7 @@ export default function DigitalTengeSimulator() {
               <input
                 id="amount"
                 type="number"
+                aria-label={t("amountLabel")}
                 value={amount}
                 disabled={isSimulating}
                 onChange={(e) => setAmount(e.target.value)}
@@ -184,6 +185,7 @@ export default function DigitalTengeSimulator() {
               </label>
               <select
                 id="category"
+                aria-label={t("categoryLabel")}
                 value={category}
                 disabled={isSimulating}
                 onChange={(e) => setCategory(e.target.value as CategoryKey)}
@@ -216,6 +218,7 @@ export default function DigitalTengeSimulator() {
             <input
               id="bin"
               type="text"
+              aria-label={t("binLabel")}
               value={bin}
               maxLength={12}
               disabled={isSimulating}

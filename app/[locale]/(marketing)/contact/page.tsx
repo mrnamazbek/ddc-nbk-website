@@ -206,6 +206,7 @@ export default function ContactPage() {
                       id="name"
                       type="text"
                       {...register("name")}
+                      aria-label={t("fieldName")}
                       placeholder={t("placeholderName")}
                       className={errors.name ? "ring-1 ring-red-500" : ""}
                       aria-invalid={errors.name ? "true" : "false"}
@@ -224,6 +225,7 @@ export default function ContactPage() {
                       id="email"
                       type="email"
                       {...register("email")}
+                      aria-label={t("fieldEmail")}
                       placeholder={t("placeholderEmail")}
                       className={errors.email ? "ring-1 ring-red-500" : ""}
                       aria-invalid={errors.email ? "true" : "false"}
@@ -243,6 +245,7 @@ export default function ContactPage() {
                     id="organization"
                     type="text"
                     {...register("organization")}
+                    aria-label={t("fieldOrg")}
                     placeholder={t("placeholderOrg")}
                     className={errors.organization ? "ring-1 ring-red-500" : ""}
                     aria-invalid={errors.organization ? "true" : "false"}

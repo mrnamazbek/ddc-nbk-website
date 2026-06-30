@@ -187,13 +187,14 @@ export default function MonetaryPolicySimulator() {
             <input
               id="rate-range"
               type="range"
+              aria-label={t("rateLabel")}
               min="5.00"
               max="20.00"
               step="0.25"
               value={selectedRate}
               disabled={isSimulating || state.quarter >= 4}
               onChange={(e) => setSelectedRate(parseFloat(e.target.value))}
-              className="w-full h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-gold disabled:opacity-50"
+              className="w-full h-11 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-gold disabled:opacity-50"
             />
             
             <div className="flex justify-between text-[10px] font-mono text-zinc-500">

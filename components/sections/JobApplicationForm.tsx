@@ -101,6 +101,7 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
                 <input
                   id="fullname"
                   type="text"
+                  aria-label={t("nameLabel")}
                   value={formData.name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
                   className="w-full bg-charcoal/50 border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:border-gold/30 focus:outline-none transition-colors"
@@ -135,6 +136,7 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
                 <input
                   id="email"
                   type="email"
+                  aria-label={t("emailLabel")}
                   value={formData.email}
                   onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
                   className="w-full bg-charcoal/50 border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:border-gold/30 focus:outline-none transition-colors"
@@ -150,6 +152,7 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
                 <input
                   id="phone"
                   type="tel"
+                  aria-label={t("phoneLabel")}
                   value={formData.phone}
                   onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
                   className="w-full bg-charcoal/50 border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:border-gold/30 focus:outline-none transition-colors"
@@ -166,6 +169,7 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
               <input
                 id="resume"
                 type="url"
+                aria-label={t("resumeLabel")}
                 placeholder="https://drive.google.com/... или https://hh.ru/resume/..."
                 value={formData.resume}
                 onChange={(e) => setFormData((prev) => ({ ...prev, resume: e.target.value }))}

@@ -38,7 +38,7 @@ export default function FontFloatingSwitcher() {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-full liquid-glass text-white border border-gold/20 shadow-[0_4px_20px_rgba(0,0,0,0.4)] hover:border-gold/50 transition-all font-mono text-xs focus:outline-none"
+          className="flex min-h-12 items-center gap-2 px-4 py-2.5 rounded-full liquid-glass text-white border border-gold/20 shadow-[0_4px_20px_rgba(0,0,0,0.4)] hover:border-gold/50 transition-all font-mono text-xs focus:outline-none"
         >
           <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
           <span>Шрифт: {currentFontLabel}</span>

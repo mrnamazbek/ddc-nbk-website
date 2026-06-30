@@ -388,14 +388,14 @@ function Steps({
               variants={stepVariants}
               transition={{ duration: 0.3 }}
               className={cn(
-                "relative z-50 min-h-11 rounded-full px-3 py-1 transition-all duration-300 ease-in-out md:flex",
+                "relative z-50 min-h-14 rounded-full px-3 py-1 transition-all duration-300 ease-in-out md:flex",
                 isCompleted ? "bg-neutral-500/20" : "bg-neutral-500/10"
               )}
             >
               <button
                 type="button"
                 className={cn(
-                  "group flex min-h-11 w-full cursor-pointer items-center focus:outline-none focus-visible:ring-2 bg-transparent text-left border-none p-0",
+                  "group flex min-h-14 w-full cursor-pointer items-center focus:outline-none focus-visible:ring-2 bg-transparent text-left border-none p-0",
                   isCurrent && "pointer-events-none"
                 )}
                 onClick={() => onChange(stepIdx)}
