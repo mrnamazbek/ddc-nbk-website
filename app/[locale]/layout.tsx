@@ -92,7 +92,7 @@ export default async function LocaleLayout({
                 <NextIntlClientProvider messages={messages}>
                   <AccessibilityProvider>
                     {/* Faint grain overlay (opacity 0.03) for organic texture */}
-                    <div data-decorative className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] bg-[url('/images/textures/bg-texture-noise.png')] bg-repeat" />
+                    <div data-decorative className="ddc-noise-overlay fixed inset-0 pointer-events-none z-[9999] opacity-[0.03]" />
                     <PageTransitionProvider>{children}</PageTransitionProvider>
                     <AccessibilityPanel />
                     <FontFloatingSwitcher />

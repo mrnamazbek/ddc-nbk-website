@@ -1415,6 +1415,11 @@ html.light section[id]::after {
   scroll-margin-top: 96px;
 }
 
+.ddc-noise-overlay {
+  background-image: url("/images/textures/bg-texture-noise.png");
+  background-repeat: repeat;
+}
+
 /* Make divider utilities read as soft depth, not hard section cuts. */
 section :is(.border-t, .border-b, .border-y),
 main :is(.border-t, .border-b, .border-y),
