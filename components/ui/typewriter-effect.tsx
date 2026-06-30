@@ -1,8 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion, stagger, useAnimate, useInView } from "framer-motion";
-import { useEffect } from "react";
+import { motion } from "framer-motion";
 
 export const TypewriterEffect = ({
   words,
@@ -16,59 +15,6 @@ export const TypewriterEffect = ({
   className?: string;
   cursorClassName?: string;
 }) => {
-  // split text inside of words into array of characters
-  const wordsArray = words.map((word) => {
-    return {
-      ...word,
-      text: word.text.split(""),
-    };
-  });
-
-  const [scope, animate] = useAnimate();
-  const isInView = useInView(scope);
-  useEffect(() => {
-    if (isInView) {
-      animate(
-        "span",
-        {
-          display: "inline-block",
-          opacity: 1,
-          width: "fit-content",
-        },
-        {
-          duration: 0.3,
-          delay: stagger(0.08),
-          ease: "easeInOut",
-        }
-      );
-    }
-  }, [isInView, animate]);
-
-  const renderWords = () => {
-    return (
-      <motion.div ref={scope} className="inline">
-        {wordsArray.map((word, idx) => {
-          return (
-            <div key={`word-${idx}`} className="inline-block">
-              {word.text.map((char, index) => (
-                <motion.span
-                  initial={{}}
-                  key={`char-${index}`}
-                  className={cn(
-                    `text-foreground opacity-0 hidden`,
-                    word.className
-                  )}
-                >
-                  {char}
-                </motion.span>
-              ))}
-              &nbsp;
-            </div>
-          );
-        })}
-      </motion.div>
-    );
-  };
   const fullText = words.map(w => w.text).join(" ");
   return (
     <div
@@ -79,7 +25,14 @@ export const TypewriterEffect = ({
     >
       <span className="sr-only">{fullText}</span>
       <div aria-hidden="true" className="inline">
-        {renderWords()}
+        <span className="inline">
+          {words.map((word, idx) => (
+            <span key={`word-${idx}`} className={cn("inline-block text-foreground", word.className)}>
+              {word.text}
+              {idx < words.length - 1 ? "\u00a0" : ""}
+            </span>
+          ))}
+        </span>
         <motion.span
           initial={{
             opacity: 0,
