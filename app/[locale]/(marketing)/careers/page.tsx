@@ -421,7 +421,7 @@ export default async function CareersPage({ params }: CareersPageProps) {
                     </div>
                   </div>
 
-                  <a href={job.url} target="_blank" rel="noopener noreferrer" className="self-start md:self-auto">
+                  <a href={job.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 self-start md:self-auto">
                     <Button variant="outline" className="flex items-center justify-center gap-2 group whitespace-nowrap">
                       {t("applyBtn")}
                       <Icon name="arrow-right" size={16} className="transition-transform duration-300 group-hover:translate-x-1" />

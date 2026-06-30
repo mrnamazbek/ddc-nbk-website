@@ -395,7 +395,7 @@ function Steps({
               <button
                 type="button"
                 className={cn(
-                  "group flex w-full cursor-pointer items-center focus:outline-none focus-visible:ring-2 bg-transparent text-left border-none p-0",
+                  "group flex min-h-10 w-full cursor-pointer items-center focus:outline-none focus-visible:ring-2 bg-transparent text-left border-none p-0",
                   isCurrent && "pointer-events-none"
                 )}
                 onClick={() => onChange(stepIdx)}

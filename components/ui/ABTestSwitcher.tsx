@@ -34,7 +34,7 @@ export default function ABTestSwitcher({ pageKey, current }: ABTestSwitcherProps
       <button
         onClick={toggle}
         className={cn(
-          "px-4 py-2.5 rounded-full text-xs font-mono font-medium tracking-wider shadow-2xl border transition-all duration-300 flex items-center gap-2.5 cursor-pointer backdrop-blur-md",
+          "min-h-11 px-4 py-2.5 rounded-full text-xs font-mono font-medium tracking-wider shadow-2xl border transition-all duration-300 flex items-center gap-2.5 cursor-pointer backdrop-blur-md",
           current === "C"
             ? "bg-forest/30 text-gold border-gold/50 hover:border-gold hover:shadow-gold/25"
             : current === "B"
