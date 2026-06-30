@@ -14,7 +14,7 @@ interface ServiceItem {
   iconName: IconName;
 }
 
-export default function Services() {
+export default function Services({ id = "services" }: { id?: string | null }) {
   const t = useTranslations("Services");
   const containerRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -109,7 +109,7 @@ export default function Services() {
 
   return (
     <section 
-      id="services" 
+      id={id ?? undefined} 
       ref={containerRef}
       className="relative w-full py-24 sm:py-32 bg-background overflow-hidden"
     >
@@ -188,4 +188,3 @@ export default function Services() {
     </section>
   );
 }
-

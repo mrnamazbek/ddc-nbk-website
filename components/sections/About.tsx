@@ -14,7 +14,7 @@ interface ValueItem {
   iconName: IconName;
 }
 
-export default function About() {
+export default function About({ id = "about" }: { id?: string | null }) {
   const t = useTranslations("About");
   const containerRef = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
@@ -101,7 +101,7 @@ export default function About() {
 
   return (
     <section 
-      id="about" 
+      id={id ?? undefined} 
       ref={containerRef}
       className="relative w-full py-24 sm:py-32 bg-background overflow-hidden"
     >
