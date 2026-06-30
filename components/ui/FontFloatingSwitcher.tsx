@@ -32,7 +32,7 @@ export default function FontFloatingSwitcher() {
   const currentFontLabel = fonts.find((f) => f.id === fontSystem)?.label || "Control";
 
   return (
-    <div ref={containerRef} className="fixed bottom-6 right-6 z-[999]">
+    <div ref={containerRef} className="fixed bottom-24 right-6 z-[999]">
       <div className="relative">
         {/* Toggle Button */}
         <button
