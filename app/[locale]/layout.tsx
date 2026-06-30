@@ -80,7 +80,10 @@ export default async function LocaleLayout({
       className={`${sourceSerif.variable} ${golosText.variable} ${lora.variable} ${ibmPlexSans.variable} ${manrope.variable} ${jetbrainsMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head />
+      <head>
+        <link rel="preload" href="/fonts/neue-regrade/NeueRegrade-Regular.otf" as="font" type="font/otf" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/neue-regrade/NeueRegrade-Semibold.otf" as="font" type="font/otf" crossOrigin="anonymous" />
+      </head>
       <body className="min-h-full flex flex-col text-white">
         <ThemeProvider>
           <BgSystemProvider>
