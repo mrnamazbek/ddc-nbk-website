@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 import GlassCard from "@/components/ui/GlassCard";
 import ShimmerButton from "@/components/ui/ShimmerButton";
 import PartnerMarquee from "@/components/ui/PartnerMarquee";
@@ -15,9 +16,12 @@ import { useRouter } from "@/i18n/navigation";
 
 export default function CTA() {
   const t = useTranslations("CTA");
+  const { resolvedTheme } = useTheme();
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
-  const logoSrc = "/images/logo/ddc-logo.svg";
+  const logoSrc = resolvedTheme === "light"
+    ? "/images/logo/ddc_logo_light_theme.png"
+    : "/images/logo/ddc_logo_for_dark_theme.png";
   const cardRef = useRef<HTMLDivElement>(null);
 
   useGSAP(

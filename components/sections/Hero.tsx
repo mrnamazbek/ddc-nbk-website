@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
@@ -20,9 +21,12 @@ const ROBOT_SCENE = "/spline/scene.splinecode";
 export default function Hero() {
   const t = useTranslations("Hero");
   const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
+  const { resolvedTheme } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  const logoSrc = "/images/logo/ddc-logo.svg";
+  const logoSrc = resolvedTheme === "light"
+    ? "/images/logo/ddc_logo_light_theme.png"
+    : "/images/logo/ddc_logo_for_dark_theme.png";
   
   const [isMobileDevice, setIsMobileDevice] = useState(true);
 

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "next-themes";
 import TransitionLink from "../motion/TransitionLink";
 import CinematicThemeSwitcher from "../ui/cinematic-theme-switcher";
 import Icon from "../ui/Icon";
@@ -63,7 +64,10 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hoveredLink, setHoveredLink] = useState<{ name: string; href: string; left: number; width: number } | null>(null);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const logoSrc = "/images/logo/ddc-logo.svg";
+  const { resolvedTheme } = useTheme();
+  const logoSrc = resolvedTheme === "light"
+    ? "/images/logo/ddc_logo_light_theme.png"
+    : "/images/logo/ddc_logo_for_dark_theme.png";
 
   const t = useTranslations("Header");
   const tA11y = useTranslations("A11y");
@@ -176,7 +180,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`!fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1300px] transition-all duration-500 rounded-full py-3 px-6 sm:px-8 ${
+        className={`!fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1300px] transition-all duration-500 rounded-full py-2.5 px-5 sm:px-7 ${
           isScrolled
             ? "liquid-glass-strong shadow-card"
             : "liquid-glass shadow-lg"
@@ -192,8 +196,8 @@ export default function Header() {
             <Image
               src={logoSrc}
               alt="DDC — Центр цифрового развития НБК"
-              width={44}
-              height={44}
+              width={42}
+              height={42}
               priority
               className="transition-transform duration-500 ease-out group-hover:scale-105 group-active:scale-95 pointer-events-none"
             />
@@ -227,7 +231,7 @@ export default function Header() {
                 >
                   <TransitionLink
                     href={link.href}
-                    className={`relative flex min-h-11 items-center px-3 py-2 rounded-full text-[13px] font-medium tracking-wide whitespace-nowrap transition-colors duration-300 ${
+                    className={`relative flex items-center px-3 py-2 rounded-full text-[13px] font-medium tracking-wide whitespace-nowrap transition-colors duration-300 ${
                       isActive ? "text-gold" : "text-muted hover:text-foreground"
                     }`}
                   >

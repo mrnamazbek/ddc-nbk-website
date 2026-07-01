@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 import TextReveal from "@/components/ui/TextReveal";
 import Icon, { IconName } from "@/components/ui/Icon";
 
@@ -15,8 +16,11 @@ interface ValueItem {
 
 export default function About({ id = "about" }: { id?: string | null }) {
   const t = useTranslations("About");
+  const { resolvedTheme } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
-  const logoSrc = "/images/logo/ddc-logo.svg";
+  const logoSrc = resolvedTheme === "light"
+    ? "/images/logo/ddc_logo_light_theme.png"
+    : "/images/logo/ddc_logo_for_dark_theme.png";
   const bgImgRef = useRef<HTMLDivElement>(null);
   const fgImgRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
