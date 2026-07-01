@@ -6,9 +6,10 @@ import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion
 import { useTranslations } from "next-intl";
 
 /**
- * Variant C centerpiece — a scroll-driven GPU particle field that starts as the
- * restored DDC green/gold flowing dot shader, then morphs into the DDC emblem and
- * settles while the four key stats reveal on the left and right.
+ * Variant A/C centerpiece — a scroll-driven GPU particle field that starts as
+ * the restored DDC green/gold flowing dot shader. Variant A holds that brand
+ * terrain; Variant C continues into a SecuredFi-like diagonal ribbon and then
+ * morphs into the DDC emblem while the four key stats reveal.
  *
  * Technique (matches the reference's architecture, rebuilt from scratch):
  *   - one THREE.Points cloud; each vertex carries a flowing wave target (aWheel)
@@ -26,13 +27,17 @@ const VERT = /* glsl */ `
   uniform float uTime;
   uniform float uSize;
   uniform float uPixelRatio;
+  uniform float uRibbonMode;
+  uniform float uLogoMode;
 
   attribute vec3 aWheel;
+  attribute vec3 aRibbon;
   attribute vec3 aLogo;
   attribute float aRand;
   attribute float aScale;
 
   varying float vMix;
+  varying float vRibbon;
   varying float vRand;
 
   // --- Ashima simplex noise (snoise) ---
@@ -82,34 +87,39 @@ const VERT = /* glsl */ `
   }
 
   void main(){
-    // Hold the diagonal composition first; morph only after the story has room.
-    float form = smoothstep(0.3, 0.72, uProgress);
+    // Stage 1: old DDC green/gold terrain. Stage 2: SecuredFi-like diagonal
+    // ribbon. Stage 3 (Variant C only): precise DDC logo formation.
+    float ribbon = smoothstep(0.16, 0.42, uProgress) * uRibbonMode;
+    float form = smoothstep(0.58, 0.86, uProgress) * uLogoMode;
     vMix = form;
+    vRibbon = ribbon * (1.0 - form);
     vRand = aRand;
 
-    vec3 pos = mix(aWheel, aLogo, form);
+    vec3 flowPos = mix(aWheel, aRibbon, ribbon);
+    vec3 pos = mix(flowPos, aLogo, form);
 
     // Slow floating motion while the diagonal ribbon is still visible.
     float hold = 1.0 - form;
-    pos.x += sin(uTime * 0.28 + aRand * 20.0) * 0.055 * hold;
-    pos.y += cos(uTime * 0.22 + aRand * 17.0) * 0.045 * hold;
-    pos.z += sin(uTime * 0.18 + aRand * 11.0) * 0.12 * hold;
+    pos.x += sin(uTime * 0.2 + aRand * 20.0) * 0.035 * hold;
+    pos.y += cos(uTime * 0.18 + aRand * 17.0) * 0.032 * hold;
+    pos.z += sin(uTime * 0.14 + aRand * 11.0) * 0.08 * hold;
 
-    // Soft reassembly energy that peaks during morph, deliberately restrained.
-    float burst = sin(clamp((uProgress - 0.28) / 0.48, 0.0, 1.0) * 3.14159265);
+    // Soft reassembly energy that peaks during logo morph, deliberately restrained.
+    float burst = sin(clamp((uProgress - 0.58) / 0.28, 0.0, 1.0) * 3.14159265) * uLogoMode;
     float n = snoise(pos * 0.9 + vec3(uTime * 0.08, uTime * 0.05, aRand * 10.0));
     vec3 dir = normalize(pos + vec3(0.0001));
-    pos += dir * n * burst * 0.42;
-    pos.z += snoise(pos * 1.4 + uTime * 0.1) * burst * 0.34;
+    pos += dir * n * burst * 0.24;
+    pos.z += snoise(pos * 1.4 + uTime * 0.1) * burst * 0.2;
 
     // gentle idle drift once formed
-    pos += dir * snoise(pos * 0.6 + uTime * 0.15) * 0.04 * form;
+    pos += dir * snoise(pos * 0.6 + uTime * 0.15) * 0.028 * form;
 
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mv;
     float sizeTaper = mix(1.12, 0.82, form);
     gl_PointSize = uSize * sizeTaper * aScale * uPixelRatio * (150.0 / -mv.z);
-    gl_PointSize = clamp(gl_PointSize, 0.75, 3.65 * uPixelRatio);
+    float maxPoint = mix(3.65, 2.1, form) * uPixelRatio;
+    gl_PointSize = clamp(gl_PointSize, 0.65, maxPoint);
   }
 `;
 
@@ -117,9 +127,12 @@ const FRAG = /* glsl */ `
   precision mediump float;
   uniform vec3 uColorA;  // forest
   uniform vec3 uColorB;  // gold
+  uniform vec3 uRibbonA;
+  uniform vec3 uRibbonB;
   uniform float uOpacity;
 
   varying float vMix;
+  varying float vRibbon;
   varying float vRand;
 
   void main(){
@@ -129,9 +142,11 @@ const FRAG = /* glsl */ `
     float alpha = smoothstep(0.5, 0.08, d);
     if (alpha < 0.01) discard;
 
-    // gold weighted toward formed logo + a per-particle sparkle
+    // Gold/green for DDC terrain and logo, cyan/blue only during the ribbon stage.
     float t = clamp(0.22 + vMix * 0.58 + vRand * 0.5, 0.0, 1.0);
-    vec3 col = mix(uColorA, uColorB, t);
+    vec3 brandCol = mix(uColorA, uColorB, t);
+    vec3 ribbonCol = mix(uRibbonA, uRibbonB, clamp(0.25 + vRand * 0.75, 0.0, 1.0));
+    vec3 col = mix(brandCol, ribbonCol, vRibbon);
     gl_FragColor = vec4(col, alpha * uOpacity);
   }
 `;
@@ -290,14 +305,17 @@ function loadImage(src: string) {
   });
 }
 
-function ParticleCanvas() {
+type RevealMode = "terrain" | "logo";
+
+function ParticleCanvas({ mode }: { mode: RevealMode }) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const smooth = useRef(0);
+  const logoMode = mode === "logo";
 
   useEffect(() => {
     const wrap = wrapRef.current;
     if (!wrap) return;
-    const section = wrap.closest("section"); // the tall 340vh scroll track
+    const section = wrap.closest("section"); // the tall scroll track
 
     // Self-contained scroll progress (0..1) across the section — robust to the
     // page's Lenis smooth-scroll, since it reads layout position each frame.
@@ -328,8 +346,10 @@ function ParticleCanvas() {
 
     // attributes
     const wheel = new Float32Array(COUNT * 3);
+    const ribbon = new Float32Array(COUNT * 3);
     const rand = new Float32Array(COUNT);
     const scaleArr = new Float32Array(COUNT);
+    const ribbonCols = Math.max(96, Math.floor(Math.sqrt(COUNT) * 1.45));
     for (let i = 0; i < COUNT; i++) {
       // Restored flowing shader: a wide green/gold particle
       // terrain across the lower screen, not a diagonal ribbon.
@@ -347,6 +367,24 @@ function ParticleCanvas() {
       wheel[i * 3] = x + (seeded(i * 43 + 12) - 0.5) * viewWidth * 0.035;
       wheel[i * 3 + 1] = y;
       wheel[i * 3 + 2] = depth + (seeded(i * 47 + 6) - 0.5) * 0.55;
+
+      // Wide diagonal particle ribbon inspired by the reference, sized beyond
+      // the viewport so it reads as a full-screen background form rather than a
+      // small strip. Kept static in orientation; no counter-clockwise rotation.
+      const col = i % ribbonCols;
+      const row = Math.floor(i / ribbonCols);
+      const ru = col / Math.max(1, ribbonCols - 1);
+      const rv = seeded(i * 73 + 19) - 0.5;
+      const strand = ((row % 46) / 45) - 0.5;
+      const curve = Math.sin(ru * Math.PI * 2.25 + 0.35);
+      const bend = Math.sin(ru * Math.PI * 4.2 - 0.8) * 0.09;
+      const centerX = (ru - 0.5) * viewWidth * 1.72;
+      const centerY = viewHeight * 0.42 - ru * viewHeight * 0.88 + curve * viewHeight * 0.16;
+      const thickness = viewHeight * (0.19 + Math.sin(ru * Math.PI) * 0.17);
+      ribbon[i * 3] = centerX + rv * viewWidth * 0.1 + strand * viewWidth * 0.026;
+      ribbon[i * 3 + 1] = centerY + (strand + rv * 0.5 + bend) * thickness;
+      ribbon[i * 3 + 2] = depth * 0.22 + Math.sin(ru * Math.PI * 3.0 + strand * 3.2) * 0.5;
+
       rand[i] = seeded(i * 61 + 13);
       scaleArr[i] = 0.65 + seeded(i * 67 + 14) * 0.85;
     }
@@ -356,6 +394,7 @@ function ParticleCanvas() {
 
     geo.setAttribute("position", new THREE.BufferAttribute(wheel.slice(), 3));
     geo.setAttribute("aWheel", new THREE.BufferAttribute(wheel, 3));
+    geo.setAttribute("aRibbon", new THREE.BufferAttribute(ribbon, 3));
     geo.setAttribute("aLogo", new THREE.BufferAttribute(logoFallback, 3));
     geo.setAttribute("aRand", new THREE.BufferAttribute(rand, 1));
     geo.setAttribute("aScale", new THREE.BufferAttribute(scaleArr, 1));
@@ -378,8 +417,12 @@ function ParticleCanvas() {
       uTime: { value: 0 },
       uSize: { value: baseSize * theme.size },
       uPixelRatio: { value: pixelRatio },
+      uRibbonMode: { value: logoMode ? 1 : 0 },
+      uLogoMode: { value: logoMode ? 1 : 0 },
       uColorA: { value: new THREE.Color(theme.a) },
       uColorB: { value: new THREE.Color(theme.b) },
+      uRibbonA: { value: new THREE.Color("#00B7D8") },
+      uRibbonB: { value: new THREE.Color("#4A58D4") },
       uOpacity: { value: 0 },
     };
 
@@ -429,7 +472,6 @@ function ParticleCanvas() {
 
     let raf = 0;
     let last = performance.now();
-    let spin = 0;
     const clock = { t: 0 };
 
     const loop = () => {
@@ -441,7 +483,7 @@ function ParticleCanvas() {
       // slow lerp toward scroll target = cinematic
       smooth.current += (readProgress() - smooth.current) * 0.075;
       const p = smooth.current;
-      const form = THREE.MathUtils.smoothstep(p, 0.3, 0.72);
+      const form = logoMode ? THREE.MathUtils.smoothstep(p, 0.58, 0.86) : 0;
 
       uniforms.uProgress.value = p;
       uniforms.uTime.value = clock.t;
@@ -449,13 +491,10 @@ function ParticleCanvas() {
       uniforms.uOpacity.value =
         theme.mul * THREE.MathUtils.smoothstep(p, 0.0, 0.14) * (1.0 - THREE.MathUtils.smoothstep(p, 0.98, 1.0));
 
-      // Tiny ribbon drift, then a near-static formed logo.
-      const spinSpeed = THREE.MathUtils.lerp(0.055, 0.008, form);
-      spin += dt * spinSpeed;
-      points.rotation.z = spin * (1.0 - form * form);
-      points.rotation.y = 0.08 * (1.0 - form);
-      points.rotation.x = 0.04 * (1.0 - form);
-      points.position.y = THREE.MathUtils.lerp(0, -0.25, form);
+      // Keep orientation locked. The reference ribbon was captured mid-rotation,
+      // but this build intentionally avoids counter-clockwise spin.
+      points.rotation.set(0, 0, 0);
+      points.position.y = THREE.MathUtils.lerp(0, -0.22, form);
 
       renderer.render(scene, camera);
       raf = requestAnimationFrame(loop);
@@ -471,7 +510,7 @@ function ParticleCanvas() {
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, []);
+  }, [logoMode]);
 
   return <div ref={wrapRef} className="absolute inset-0" aria-hidden="true" />;
 }
@@ -502,9 +541,10 @@ function Stat({
   );
 }
 
-export default function LogoParticleReveal() {
+export default function LogoParticleReveal({ mode = "logo" }: { mode?: RevealMode }) {
   const t = useTranslations("Stats");
   const reduce = useReducedMotion();
+  const logoMode = mode === "logo";
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -533,28 +573,30 @@ export default function LogoParticleReveal() {
             {t("title")} <span className="text-gradient-forest">{t("titleAccent")}</span>
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-muted">{t("subtitle")}</p>
-          <div className="mt-12 grid grid-cols-2 gap-8 md:grid-cols-4">
-            {(["s1", "s2", "s3", "s4"] as const).map((k) => (
-              <Stat key={k} align="left" value={t(`${k}.value`)} label={t(`${k}.label`)} desc={t(`${k}.desc`)} />
-            ))}
-          </div>
+          {logoMode && (
+            <div className="mt-12 grid grid-cols-2 gap-8 md:grid-cols-4">
+              {(["s1", "s2", "s3", "s4"] as const).map((k) => (
+                <Stat key={k} align="left" value={t(`${k}.value`)} label={t(`${k}.label`)} desc={t(`${k}.desc`)} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
     );
   }
 
   return (
-    <section ref={sectionRef} className="relative w-full bg-background" style={{ height: "430vh" }}>
+    <section ref={sectionRef} className="relative w-full bg-background" style={{ height: logoMode ? "430vh" : "190vh" }}>
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         <div className="pointer-events-none absolute inset-x-0 top-0 z-[5] h-56 bg-gradient-to-b from-background/28 via-forest/8 to-transparent" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-56 bg-gradient-to-t from-background/28 via-forest/8 to-transparent" />
         {/* particle field */}
-        {mounted && <ParticleCanvas />}
+        {mounted && <ParticleCanvas mode={mode} />}
 
         {/* heading */}
         <motion.div
           style={{ opacity: headOpacity, y: headY }}
-          className="pointer-events-none absolute inset-x-0 top-[11vh] z-20 flex flex-col items-center px-6 text-center"
+          className="pointer-events-none absolute inset-x-0 top-[18vh] z-20 flex flex-col items-center px-6 text-center sm:top-[11vh]"
         >
           <span className="text-xs uppercase tracking-[0.3em] text-gold font-mono font-medium">
             {t("overline")}
@@ -567,23 +609,27 @@ export default function LogoParticleReveal() {
           </p>
         </motion.div>
 
-        {/* left stats */}
-        <motion.div
-          style={{ opacity: leftOpacity, x: leftX }}
-          className="pointer-events-none absolute left-6 sm:left-10 lg:left-20 top-1/2 z-30 flex -translate-y-1/2 flex-col gap-10"
-        >
-          <Stat align="left" value={t("s1.value")} label={t("s1.label")} desc={t("s1.desc")} />
-          <Stat align="left" value={t("s2.value")} label={t("s2.label")} desc={t("s2.desc")} />
-        </motion.div>
+        {logoMode && (
+          <>
+            {/* left stats */}
+            <motion.div
+              style={{ opacity: leftOpacity, x: leftX }}
+              className="pointer-events-none absolute top-1/2 left-6 z-30 hidden -translate-y-1/2 flex-col gap-10 md:flex lg:left-20"
+            >
+              <Stat align="left" value={t("s1.value")} label={t("s1.label")} desc={t("s1.desc")} />
+              <Stat align="left" value={t("s2.value")} label={t("s2.label")} desc={t("s2.desc")} />
+            </motion.div>
 
-        {/* right stats */}
-        <motion.div
-          style={{ opacity: rightOpacity, x: rightX }}
-          className="pointer-events-none absolute right-6 sm:right-10 lg:right-20 top-1/2 z-30 flex -translate-y-1/2 flex-col items-start gap-10 md:items-end"
-        >
-          <Stat align="right" value={t("s3.value")} label={t("s3.label")} desc={t("s3.desc")} />
-          <Stat align="right" value={t("s4.value")} label={t("s4.label")} desc={t("s4.desc")} />
-        </motion.div>
+            {/* right stats */}
+            <motion.div
+              style={{ opacity: rightOpacity, x: rightX }}
+              className="pointer-events-none absolute top-1/2 right-6 z-30 hidden -translate-y-1/2 flex-col items-end gap-10 md:flex lg:right-20"
+            >
+              <Stat align="right" value={t("s3.value")} label={t("s3.label")} desc={t("s3.desc")} />
+              <Stat align="right" value={t("s4.value")} label={t("s4.label")} desc={t("s4.desc")} />
+            </motion.div>
+          </>
+        )}
       </div>
     </section>
   );
