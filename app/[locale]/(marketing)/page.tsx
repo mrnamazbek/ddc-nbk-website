@@ -7,15 +7,11 @@ import dynamic from "next/dynamic";
 import Hero from "@/components/sections/Hero";
 
 const Stats = dynamic(() => import("@/components/sections/Stats"), { ssr: false });
-const Readiness = dynamic(() => import("@/components/sections/Readiness"), { ssr: false });
 const Services = dynamic(() => import("@/components/sections/Services"), { ssr: false });
 const Showcase = dynamic(() => import("@/components/sections/Showcase"), { ssr: false });
 const Technologies = dynamic(() => import("@/components/sections/Technologies"), { ssr: false });
 const About = dynamic(() => import("@/components/sections/About"), { ssr: false });
 const CTA = dynamic(() => import("@/components/sections/CTA"), { ssr: false });
-
-// Lazy-loaded components for Variant B
-const SecuredFiBackground = dynamic(() => import("@/components/ui/SecuredFiBackground"), { ssr: false });
 
 // Lazy-loaded component for Variant C (particle logo-morph reveal)
 const LogoParticleReveal = dynamic(() => import("@/components/three/LogoParticleReveal"), { ssr: false });
@@ -23,9 +19,6 @@ const LogoParticleReveal = dynamic(() => import("@/components/three/LogoParticle
 function DeferredSections() {
   return (
     <>
-      <LazyOnVisible minHeight="720px">
-        <Readiness />
-      </LazyOnVisible>
       <LazyOnVisible id="services" minHeight="1050px">
         <Services id={null} />
       </LazyOnVisible>
@@ -61,24 +54,6 @@ export default function MarketingHomePage() {
           <DeferredSections />
         </div>
 
-        <ABTestSwitcher pageKey="home_layout" current={activeVariant} />
-      </>
-    );
-  }
-
-  if (activeVariant === "B") {
-    return (
-      <>
-        {/* Variant B keeps the Variant A content stack and adds only the scroll morph layer. */}
-        <SecuredFiBackground />
-
-        <div id="acts" className="relative z-10">
-          <Hero />
-          <section id="stats" className="relative h-[190vh]" aria-label="Digital development in numbers" />
-          <DeferredSections />
-        </div>
-
-        {/* Global A/B variant switcher */}
         <ABTestSwitcher pageKey="home_layout" current={activeVariant} />
       </>
     );

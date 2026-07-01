@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from "react";
 
-export type ABVariant = "A" | "B" | "C";
+export type ABVariant = "A" | "C";
 
 /**
  * A hook to determine which A/B testing variant to display.
  * Resolves to null during SSR to prevent hydration mismatches, then loads the active variant.
  *
- * Variant C is opt-in only (via ?variant=C or localStorage) — the random split
- * stays A/B so live traffic never lands on the in-progress C experience.
+ * Variant C is opt-in via ?variant=C or localStorage. The middle WebGL variant
+ * was retired after visual QA, so old assignments are normalized back to A.
  */
 export function useABTest(pageKey: string): ABVariant | null {
   const [variant, setVariant] = useState<ABVariant | null>(null);
@@ -17,24 +17,33 @@ export function useABTest(pageKey: string): ABVariant | null {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // 1. Check URL query parameter (e.g. ?variant=B, ?variant=A or ?variant=C)
+    // 1. Check URL query parameter (e.g. ?variant=A or ?variant=C)
     const params = new URLSearchParams(window.location.search);
     const urlVariant = params.get("variant")?.toUpperCase();
-    if (urlVariant === "A" || urlVariant === "B" || urlVariant === "C") {
+    if (urlVariant === "A" || urlVariant === "C") {
       setVariant(urlVariant as ABVariant);
+      return;
+    }
+    if (urlVariant === "B") {
+      setVariant("A");
       return;
     }
 
     // 2. Check localStorage
     const storageKey = `ddc_ab_variant_${pageKey}`;
     const stored = localStorage.getItem(storageKey);
-    if (stored === "A" || stored === "B" || stored === "C") {
+    if (stored === "A" || stored === "C") {
       setVariant(stored as ABVariant);
       return;
     }
+    if (stored === "B") {
+      localStorage.setItem(storageKey, "A");
+      setVariant("A");
+      return;
+    }
 
-    // 3. Fallback to random 50/50 split
-    const randomVariant: ABVariant = Math.random() < 0.5 ? "A" : "B";
+    // 3. Fallback to the stable default. C stays opt-in.
+    const randomVariant: ABVariant = "A";
     try {
       localStorage.setItem(storageKey, randomVariant);
     } catch (e) {

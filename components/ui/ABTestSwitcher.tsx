@@ -19,8 +19,8 @@ export default function ABTestSwitcher({ pageKey, current }: ABTestSwitcherProps
   if (!mounted || !current) return null;
 
   const toggle = () => {
-    // Cycle A → B → C → A
-    const next: ABVariant = current === "A" ? "B" : current === "B" ? "C" : "A";
+    // Cycle between the standard homepage and the particle-logo experiment.
+    const next: ABVariant = current === "A" ? "C" : "A";
     setABVariant(pageKey, next);
     
     // Add query parameter dynamically or reload to apply changes cleanly
@@ -37,11 +37,9 @@ export default function ABTestSwitcher({ pageKey, current }: ABTestSwitcherProps
           "min-h-11 px-4 py-2.5 rounded-full text-xs font-mono font-medium tracking-wider shadow-2xl border transition-all duration-300 flex items-center gap-2.5 cursor-pointer backdrop-blur-md",
           current === "C"
             ? "bg-forest/30 text-gold border-gold/50 hover:border-gold hover:shadow-gold/25"
-            : current === "B"
-            ? "bg-forest-light/20 text-gold-light border-gold/40 hover:border-gold hover:shadow-gold/20"
             : "bg-charcoal/80 text-zinc-300 border-white/10 hover:border-white/30 hover:shadow-white/5"
         )}
-        title="Переключить вариант A/B/C тестирования"
+        title="Переключить вариант A/C тестирования"
       >
         <span className="relative flex h-2 w-2">
           <span className={cn(
@@ -55,7 +53,7 @@ export default function ABTestSwitcher({ pageKey, current }: ABTestSwitcherProps
         </span>
         <span>A/B TEST: VARIANT {current}</span>
         <span className="text-[10px] text-zinc-400 border-l border-white/10 pl-2">
-          {current === "A" ? "Standard" : current === "B" ? "WebGL 3D" : "Particle Logo"}
+          {current === "A" ? "Standard" : "Particle Logo"}
         </span>
       </button>
     </div>

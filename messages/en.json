@@ -107,45 +107,6 @@
       "desc": "Automated on the modern low-code OutSystems core."
     }
   },
-  "Readiness": {
-    "overline": "Site reliability and functionality",
-    "title": "What can be",
-    "titleAccent": "verified on the site",
-    "subtitle": "Evaluation is not only about visual effects. The key user journeys are exposed clearly: pages work in three languages, contact actions lead somewhere real, and the content is grounded in public projects, news and DDC LinkedIn material.",
-    "open": "Open scenario",
-    "chips": {
-      "build": {
-        "label": "Build",
-        "value": "Next 16"
-      },
-      "audit": {
-        "label": "Audit",
-        "value": "E2E + Axe"
-      },
-      "content": {
-        "label": "Proof",
-        "value": "LinkedIn"
-      }
-    },
-    "items": {
-      "routes": {
-        "title": "Routes and languages",
-        "desc": "Core sections are available in ru, kz and en, and navigation leads to concrete pages: services, mission, news, security, contacts and careers."
-      },
-      "contacts": {
-        "title": "Contact journeys",
-        "desc": "Users can reach Astana and Almaty offices, open maps, call 1477, or submit a request through the contact form."
-      },
-      "accessibility": {
-        "title": "Accessibility and stability",
-        "desc": "The site respects reduced motion, includes an accessibility mode, is checked for critical Axe issues and should not fail without WebGL."
-      },
-      "proof": {
-        "title": "Evidence-based content",
-        "desc": "News and gallery content use real DDC themes: AI Platform, architecture, data, leadership meetings and team development."
-      }
-    }
-  },
   "About": {
     "overline": "About our organization",
     "titleLine1": "To be a leader in",

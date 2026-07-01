@@ -331,7 +331,7 @@ function ParticleCanvas() {
     const rand = new Float32Array(COUNT);
     const scaleArr = new Float32Array(COUNT);
     for (let i = 0; i < COUNT; i++) {
-      // Restored Variant B-like flowing shader: a wide green/gold particle
+      // Restored flowing shader: a wide green/gold particle
       // terrain across the lower screen, not a diagonal ribbon.
       const u = seeded(i * 17 + 1);
       const v = seeded(i * 31 + 4);
