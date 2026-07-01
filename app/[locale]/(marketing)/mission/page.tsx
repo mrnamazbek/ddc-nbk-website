@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
@@ -8,6 +7,7 @@ import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { useABTest } from "@/lib/abTest";
 import ABTestSwitcher from "@/components/ui/ABTestSwitcher";
 import { useA11y } from "@/components/theme/AccessibilityProvider";
+import TerminalGridBackground from "@/components/ui/TerminalGridBackground";
 
 const FeatureCarousel = dynamic(
   () => import("@/components/ui/feature-carousel").then((mod) => mod.FeatureCarousel),
@@ -58,6 +58,7 @@ function Mission2D() {
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[360px] h-[360px] rounded-full bg-forest/10 blur-[80px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[300px] h-[300px] rounded-full bg-gold/5 blur-[70px] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(#52B78803_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
+      <TerminalGridBackground className="opacity-75" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10 w-full">
         <ContainerScroll
@@ -143,4 +144,3 @@ export default function MissionPage() {
     </>
   );
 }
-

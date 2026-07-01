@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { useABTest } from "@/lib/abTest";
 import ABTestSwitcher from "@/components/ui/ABTestSwitcher";
 import { useA11y } from "@/components/theme/AccessibilityProvider";
+import TerminalGridBackground from "@/components/ui/TerminalGridBackground";
 
 const Services3D = dynamic(() => import("@/components/sections/Services3D"), {
   ssr: false,
@@ -102,6 +103,7 @@ function Services2D() {
       {/* Декоративный бэкграунд */}
       <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gold/5 rounded-full blur-[120px] pointer-events-none" />
+      <TerminalGridBackground density="dense" className="opacity-85" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         
@@ -220,4 +222,3 @@ export default function ServicesPage() {
     </>
   );
 }
-
