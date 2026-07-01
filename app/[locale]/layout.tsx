@@ -1,50 +1,15 @@
 import type { Metadata } from "next";
-import { Source_Serif_4, Golos_Text, Lora, IBM_Plex_Sans, Manrope, JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import "../globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import PageTransitionProvider from "@/components/motion/PageTransition";
 import ThemeProvider from "@/components/theme/ThemeProvider";
 import { IconSystemProvider } from "@/components/theme/IconSystemProvider";
-import { FontSystemProvider } from "@/components/theme/FontSystemProvider";
 import { BgSystemProvider } from "@/components/theme/BgSystemProvider";
 import AccessibilityProvider from "@/components/theme/AccessibilityProvider";
 import AccessibilityPanel from "@/components/ui/AccessibilityPanel";
-import FontFloatingSwitcher from "@/components/ui/FontFloatingSwitcher";
 import InteractiveDotGrid from "@/components/ui/InteractiveDotGrid";
-
-const sourceSerif = Source_Serif_4({
-  subsets: ["latin", "cyrillic", "cyrillic-ext"],
-  variable: "--font-source-serif",
-  display: "swap",
-});
-
-const golosText = Golos_Text({
-  subsets: ["latin", "cyrillic", "cyrillic-ext"],
-  variable: "--font-golos",
-  display: "swap",
-});
-
-const lora = Lora({
-  subsets: ["latin", "cyrillic", "cyrillic-ext"],
-  variable: "--font-lora",
-  display: "swap",
-});
-
-const ibmPlexSans = IBM_Plex_Sans({
-  subsets: ["latin", "cyrillic", "cyrillic-ext"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-ibm-plex",
-  display: "swap",
-});
-
-// Styrene-like grotesque for the "Anthropic" pair (Cyrillic-capable; Kazakh
-// glyphs Manrope may lack are caught by the Golos fallback in the CSS stack).
-const manrope = Manrope({
-  subsets: ["latin", "cyrillic", "cyrillic-ext"],
-  variable: "--font-manrope",
-  display: "swap",
-});
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin", "cyrillic", "cyrillic-ext"],
@@ -58,7 +23,7 @@ export const metadata: Metadata = {
   description: "Официальный веб-сайт Центра цифрового развития Национального Банка РК. Разработка передовых финансовых платформ, интеграция Цифрового Тенге и обеспечение государственной кибербезопасности.",
   keywords: "Национальный Банк Казахстана, DDC, Цифровой Тенге, финтех Казахстан, Центральный Банк, базы данных, Data Engineering",
   icons: {
-    icon: [{ url: "/images/logo/ddc-logo.svg", type: "image/svg+xml" }],
+    icon: [{ url: "/images/logo/ddc_logo_for_dark_theme.png", type: "image/png" }],
   },
 };
 
@@ -77,30 +42,27 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale === "kz" ? "kk" : locale}
-      className={`${sourceSerif.variable} ${golosText.variable} ${lora.variable} ${ibmPlexSans.variable} ${manrope.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${jetbrainsMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
-        <link rel="preload" href="/fonts/neue-regrade/NeueRegrade-Regular.otf" as="font" type="font/otf" crossOrigin="anonymous" />
-        <link rel="preload" href="/fonts/neue-regrade/NeueRegrade-Semibold.otf" as="font" type="font/otf" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/nohemi/Nohemi-Regular.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/nohemi/Nohemi-SemiBold.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
       </head>
       <body className="min-h-full flex flex-col text-white">
         <ThemeProvider>
           <BgSystemProvider>
-            <FontSystemProvider>
-              <IconSystemProvider>
-                <NextIntlClientProvider messages={messages}>
-                  <AccessibilityProvider>
-                    {/* Faint grain overlay (opacity 0.03) for organic texture */}
-                    <div data-decorative className="ddc-noise-overlay fixed inset-0 pointer-events-none z-[9999] opacity-[0.03]" />
-                    <PageTransitionProvider>{children}</PageTransitionProvider>
-                    <AccessibilityPanel />
-                    <FontFloatingSwitcher />
-                    <InteractiveDotGrid />
-                  </AccessibilityProvider>
-                </NextIntlClientProvider>
-              </IconSystemProvider>
-            </FontSystemProvider>
+            <IconSystemProvider>
+              <NextIntlClientProvider messages={messages}>
+                <AccessibilityProvider>
+                  {/* Faint grain overlay (opacity 0.03) for organic texture */}
+                  <div data-decorative className="ddc-noise-overlay fixed inset-0 pointer-events-none z-[9999] opacity-[0.03]" />
+                  <PageTransitionProvider>{children}</PageTransitionProvider>
+                  <AccessibilityPanel />
+                  <InteractiveDotGrid />
+                </AccessibilityProvider>
+              </NextIntlClientProvider>
+            </IconSystemProvider>
           </BgSystemProvider>
         </ThemeProvider>
       </body>
