@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Icon as IconifyIcon } from "@iconify/react";
-import * as Iconsax from "iconsax-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useIconSystem } from "../theme/IconSystemProvider";
 import { cn } from "@/lib/utils";
@@ -221,58 +220,56 @@ const solarMap: Partial<Record<IconName, string>> = {
   palette: "solar:palette-linear",
 };
 
-// Маппинг для Iconsax (локальные React компоненты)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const iconsaxMap: Partial<Record<IconName, React.ComponentType<any>>> = {
-  menu: Iconsax.HambergerMenu,
-  x: Iconsax.CloseCircle,
-  "arrow-right": Iconsax.ArrowRight,
-  "arrow-left": Iconsax.ArrowLeft,
-  "arrow-up-right": Iconsax.ArrowRight, // Iconsax doesn't export ArrowUpRight directly, fallback to ArrowRight
-  sun: Iconsax.Sun1,
-  moon: Iconsax.Moon,
-  "trending-up": Iconsax.TrendUp,
-  "trending-down": Iconsax.TrendDown,
-  percent: Iconsax.PercentageCircle,
-  calendar: Iconsax.Calendar,
-  refresh: Iconsax.Refresh,
-  home: Iconsax.Home3,
-  plus: Iconsax.AddCircle,
-  minus: Iconsax.MinusCirlce,
-  help: Iconsax.MessageQuestion,
-  database: Iconsax.Data,
-  cpu: Iconsax.Cpu,
-  server: Iconsax.Data, // Iconsax doesn't export Server directly, fallback to Data
-  check: Iconsax.TickCircle,
-  "shield-check": Iconsax.ShieldSecurity,
-  lock: Iconsax.Lock,
-  alert: Iconsax.Danger,
-  key: Iconsax.Key,
-  globe: Iconsax.Global,
-  eye: Iconsax.Eye,
-  layers: Iconsax.Hierarchy,
-  coins: Iconsax.Coin,
-  zap: Iconsax.Flash,
-  share: Iconsax.Share,
-  chart: Iconsax.Chart,
-  bank: Iconsax.Bank,
-  "check-circle": Iconsax.TickCircle,
-  "map-pin": Iconsax.Location,
-  phone: Iconsax.Call,
-  mail: Iconsax.Sms,
-  clock: Iconsax.Clock,
-  send: Iconsax.Send2,
-  users: Iconsax.People,
-  compass: Iconsax.Discover,
-  award: Iconsax.Award,
-  shield: Iconsax.Shield,
-  users2: Iconsax.Profile2User,
-  "contact-center": Iconsax.Headphone,
-  procurement: Iconsax.ShoppingCart,
-  "it-services": Iconsax.Setting2,
-  development: Iconsax.Code,
-  code: Iconsax.Code,
-  palette: Iconsax.Colorfilter,
+const phosphorMap: Partial<Record<IconName, string>> = {
+  menu: "ph:list",
+  x: "ph:x-circle",
+  "arrow-right": "ph:arrow-right",
+  "arrow-left": "ph:arrow-left",
+  "arrow-up-right": "ph:arrow-up-right",
+  sun: "ph:sun",
+  moon: "ph:moon",
+  "trending-up": "ph:trend-up",
+  "trending-down": "ph:trend-down",
+  percent: "ph:percent",
+  calendar: "ph:calendar",
+  refresh: "ph:arrows-clockwise",
+  home: "ph:house",
+  plus: "ph:plus-circle",
+  minus: "ph:minus-circle",
+  help: "ph:question",
+  database: "ph:database",
+  cpu: "ph:cpu",
+  server: "ph:server",
+  check: "ph:check",
+  "shield-check": "ph:shield-check",
+  lock: "ph:lock",
+  alert: "ph:info",
+  key: "ph:key",
+  globe: "ph:globe",
+  eye: "ph:eye",
+  layers: "ph:stack",
+  coins: "ph:coins",
+  zap: "ph:lightning",
+  share: "ph:share-network",
+  chart: "ph:chart-line-up",
+  bank: "ph:bank",
+  "check-circle": "ph:check-circle",
+  "map-pin": "ph:map-pin",
+  phone: "ph:phone",
+  mail: "ph:envelope",
+  clock: "ph:clock",
+  send: "ph:paper-plane-tilt",
+  users: "ph:users-three",
+  compass: "ph:compass",
+  award: "ph:trophy",
+  shield: "ph:shield",
+  users2: "ph:users",
+  "contact-center": "ph:headset",
+  procurement: "ph:shopping-cart",
+  "it-services": "ph:gear-six",
+  development: "ph:code",
+  code: "ph:code",
+  palette: "ph:palette",
 };
 
 export default function Icon({ name, className, size = 20, animate = true }: IconProps) {
@@ -351,12 +348,10 @@ export default function Icon({ name, className, size = 20, animate = true }: Ico
       return <IconifyIcon icon={brandIcon} width={size} height={size} className="w-full h-full" />;
     }
 
-    if (iconSystem === "iconsax") {
-      const IconsaxComponent = iconsaxMap[name];
-      if (IconsaxComponent) {
-        // color="currentColor" is REQUIRED — Iconsax defaults to #292D32 (dark),
-        // which is invisible on our dark theme. This is why Iconsax "wasn't working".
-        return <IconsaxComponent size={size} variant="Linear" color="currentColor" className="w-full h-full" />;
+    if (iconSystem === "phosphor") {
+      const phosphorIcon = phosphorMap[name];
+      if (phosphorIcon) {
+        return <IconifyIcon icon={phosphorIcon} width={size} height={size} className="w-full h-full" />;
       }
     }
 
