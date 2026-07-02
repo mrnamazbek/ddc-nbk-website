@@ -2,11 +2,12 @@
 
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment, Lightformer } from "@react-three/drei";
+import { Environment, Lightformer, useProgress } from "@react-three/drei";
 import { AnimatePresence, motion } from "framer-motion";
 import * as THREE from "three";
 import AltynAdam from "@/components/three/AltynAdam";
 import Icon, { IconName } from "@/components/ui/Icon";
+import ThreeModelLoadingOverlay from "@/components/ui/ThreeModelLoadingOverlay";
 import { cn } from "@/lib/utils";
 
 export interface CinematicChapter {
@@ -214,6 +215,7 @@ export default function CinematicAltynAdamExperience({
   const lastStateRef = useRef(0);
   const [progress, setProgress] = useState(0);
   const [visible, setVisible] = useState(true);
+  const { active: assetsLoading, progress: assetProgress } = useProgress();
 
   useEffect(() => {
     const element = containerRef.current;
@@ -269,6 +271,7 @@ export default function CinematicAltynAdamExperience({
   const introOpacity = 1 - THREE.MathUtils.smoothstep(progress, 0.16, 0.31);
   const detailsOpacity = THREE.MathUtils.smoothstep(progress, 0.26, 0.42) * (1 - THREE.MathUtils.smoothstep(progress, 0.82, 0.94));
   const finaleOpacity = THREE.MathUtils.smoothstep(progress, 0.84, 0.98);
+  const showAssetLoader = visible && assetsLoading && assetProgress > 1 && assetProgress < 99;
 
   const scrollToChapter = (index: number) => {
     const element = containerRef.current;
@@ -298,6 +301,14 @@ export default function CinematicAltynAdamExperience({
             </Canvas>
           ) : null}
         </div>
+
+        <ThreeModelLoadingOverlay
+          mode="absolute"
+          visible={showAssetLoader}
+          progress={assetProgress}
+          label="Loading 3D model"
+          className="z-30"
+        />
 
         <motion.div
           style={{

@@ -8,6 +8,7 @@ import { useABTest } from "@/lib/abTest";
 import ABTestSwitcher from "@/components/ui/ABTestSwitcher";
 import { useA11y } from "@/components/theme/AccessibilityProvider";
 import TerminalGridBackground from "@/components/ui/TerminalGridBackground";
+import ThreeModelLoadingOverlay from "@/components/ui/ThreeModelLoadingOverlay";
 
 const FeatureCarousel = dynamic(
   () => import("@/components/ui/feature-carousel").then((mod) => mod.FeatureCarousel),
@@ -16,7 +17,7 @@ const FeatureCarousel = dynamic(
 
 const Mission3D = dynamic(() => import("@/components/sections/Mission3D"), {
   ssr: false,
-  loading: () => <Mission2D />,
+  loading: () => <Mission3DLoadingFallback />,
 });
 
 import type { Step } from "@/components/ui/feature-carousel";
@@ -123,6 +124,15 @@ function Mission2D() {
           />
         </ContainerScroll>
       </div>
+    </div>
+  );
+}
+
+function Mission3DLoadingFallback() {
+  return (
+    <div className="relative">
+      <Mission2D />
+      <ThreeModelLoadingOverlay label="Loading 3D mission" />
     </div>
   );
 }

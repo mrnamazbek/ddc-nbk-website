@@ -8,10 +8,11 @@ import { useABTest } from "@/lib/abTest";
 import ABTestSwitcher from "@/components/ui/ABTestSwitcher";
 import { useA11y } from "@/components/theme/AccessibilityProvider";
 import TerminalGridBackground from "@/components/ui/TerminalGridBackground";
+import ThreeModelLoadingOverlay from "@/components/ui/ThreeModelLoadingOverlay";
 
 const Services3D = dynamic(() => import("@/components/sections/Services3D"), {
   ssr: false,
-  loading: () => <Services2D />,
+  loading: () => <Services3DLoadingFallback />,
 });
 
 interface ServiceDetail {
@@ -199,6 +200,15 @@ function Services2D() {
         </motion.div>
 
       </div>
+    </div>
+  );
+}
+
+function Services3DLoadingFallback() {
+  return (
+    <div className="relative">
+      <Services2D />
+      <ThreeModelLoadingOverlay label="Loading 3D services" />
     </div>
   );
 }
