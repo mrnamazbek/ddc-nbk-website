@@ -2,8 +2,6 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
@@ -11,6 +9,7 @@ import Magnetic from "@/components/motion/Magnetic";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 import { MetalButton } from "@/components/ui/liquid-glass-button";
 import Icon from "@/components/ui/Icon";
+import DDCLogo from "@/components/ui/DDCLogo";
 
 import { SplineScene } from "@/components/ui/splite";
 
@@ -21,12 +20,8 @@ const ROBOT_SCENE = "/spline/scene.splinecode";
 export default function Hero() {
   const t = useTranslations("Hero");
   const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
-  const { resolvedTheme } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  const logoSrc = resolvedTheme === "light"
-    ? "/images/logo/ddc_logo_light_theme.png"
-    : "/images/logo/ddc_logo_for_dark_theme.png";
   
   const [isMobileDevice, setIsMobileDevice] = useState(true);
 
@@ -122,13 +117,9 @@ export default function Hero() {
         >
           {/* Надзаголовок-статус с зеленым маяком цифровой стабильности */}
           <motion.div variants={itemVariants} className="inline-flex items-center gap-3 mb-4 bg-white/[0.03] border border-white/[0.08] backdrop-blur-md px-4 py-2 rounded-full">
-            <Image
-              src={logoSrc}
-              alt="DDC"
-              width={16}
-              height={16}
-              priority
-              className="pointer-events-none"
+            <DDCLogo
+              title="DDC"
+              className="h-4 w-[15px] shrink-0 text-foreground"
             />
             <span className="w-1.5 h-1.5 rounded-full bg-forest-light animate-pulse" />
             <span className="text-[10px] uppercase tracking-[0.25em] text-gold-light font-mono font-medium">

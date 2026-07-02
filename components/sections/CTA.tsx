@@ -4,24 +4,19 @@ import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
-import Image from "next/image";
-import { useTheme } from "next-themes";
 import GlassCard from "@/components/ui/GlassCard";
 import ShimmerButton from "@/components/ui/ShimmerButton";
 import PartnerMarquee from "@/components/ui/PartnerMarquee";
 import Magnetic from "@/components/motion/Magnetic";
 import Icon from "@/components/ui/Icon";
+import DDCLogo from "@/components/ui/DDCLogo";
 
 import { useRouter } from "@/i18n/navigation";
 
 export default function CTA() {
   const t = useTranslations("CTA");
-  const { resolvedTheme } = useTheme();
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
-  const logoSrc = resolvedTheme === "light"
-    ? "/images/logo/ddc_logo_light_theme.png"
-    : "/images/logo/ddc_logo_for_dark_theme.png";
   const cardRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
@@ -94,13 +89,9 @@ export default function CTA() {
 
             {/* Company Logo in Saka style */}
             <div className="flex justify-center mb-6 relative z-10">
-              <Image
-                src={logoSrc}
-                alt="DDC"
-                width={48}
-                height={48}
-                priority
-                className="pointer-events-none transition-transform duration-[2s] hover:rotate-[360deg]"
+              <DDCLogo
+                title="DDC"
+                className="h-12 w-11 text-foreground transition-transform duration-[2s] hover:rotate-[360deg]"
               />
             </div>
 

@@ -5,9 +5,9 @@ import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import Image from "next/image";
-import { useTheme } from "next-themes";
 import TextReveal from "@/components/ui/TextReveal";
 import Icon, { IconName } from "@/components/ui/Icon";
+import DDCLogo from "@/components/ui/DDCLogo";
 
 interface ValueItem {
   key: string;
@@ -16,11 +16,7 @@ interface ValueItem {
 
 export default function About({ id = "about" }: { id?: string | null }) {
   const t = useTranslations("About");
-  const { resolvedTheme } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
-  const logoSrc = resolvedTheme === "light"
-    ? "/images/logo/ddc_logo_light_theme.png"
-    : "/images/logo/ddc_logo_for_dark_theme.png";
   const bgImgRef = useRef<HTMLDivElement>(null);
   const fgImgRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
@@ -105,13 +101,9 @@ export default function About({ id = "about" }: { id?: string | null }) {
           {/* Левая сторона: Описание и таймлайн */}
           <div className="lg:col-span-7 flex flex-col justify-center">
             <div className="flex items-center gap-3 mb-4">
-              <Image
-                src={logoSrc}
-                alt="DDC"
-                width={24}
-                height={24}
-                priority
-                className="pointer-events-none"
+              <DDCLogo
+                title="DDC"
+                className="h-6 w-[22px] shrink-0 text-foreground"
               />
               <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-mono font-medium block">
                 {t("overline")}

@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   description: "Официальный веб-сайт Центра цифрового развития Национального Банка РК. Разработка передовых финансовых платформ, интеграция Цифрового Тенге и обеспечение государственной кибербезопасности.",
   keywords: "Национальный Банк Казахстана, DDC, Цифровой Тенге, финтех Казахстан, Центральный Банк, базы данных, Data Engineering",
   icons: {
-    icon: [{ url: "/images/logo/ddc_logo_for_dark_theme.png", type: "image/png" }],
+    icon: [{ url: "/images/logo/ddc-emblem.svg", type: "image/svg+xml" }],
   },
 };
 

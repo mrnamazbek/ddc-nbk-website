@@ -192,6 +192,48 @@ html.a11y header nav {
   flex-wrap: wrap !important;
   max-width: none !important;
 }
+
+html.a11y header > div {
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.75rem !important;
+}
+
+html.a11y header [role="listbox"] {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.25rem !important;
+  max-width: 100% !important;
+  padding: 0.25rem !important;
+}
+
+html.a11y header [role="option"] {
+  min-width: 4rem !important;
+  min-height: 44px !important;
+}
+
+html.a11y header a {
+  overflow-wrap: anywhere !important;
+}
+
+@media (max-width: 640px) {
+  html.a11y [role="listbox"] {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 0.25rem !important;
+    padding: 0.25rem !important;
+  }
+
+  html.a11y [role="option"] {
+    flex: 1 1 calc(33.333% - 0.5rem) !important;
+    min-width: 0 !important;
+    min-height: 44px !important;
+    padding-inline: 0.25rem !important;
+  }
+}
+
 /* Hide the decorative sliding nav pill (a bare <li aria-hidden>). Must NOT use a
    blanket [aria-hidden="true"] here — Iconify renders every icon SVG with
    aria-hidden="true", so a broad rule blanks out the eye / menu / theme icons. */
@@ -203,6 +245,15 @@ html.a11y header li[aria-hidden] { display: none !important; }
    This keeps the brand mark visible & high-contrast in every scheme. */
 html.a11y header img { filter: brightness(0) !important; opacity: 1 !important; }
 html.a11y.a11y-scheme-wb header img { filter: brightness(0) invert(1) !important; }
+
+html.a11y svg[data-ddc-logo] {
+  color: var(--a11y-fg) !important;
+  opacity: 1 !important;
+}
+
+html.a11y .site-footer-logo-tile svg[data-ddc-logo] {
+  color: var(--a11y-bg) !important;
+}
 
 /* Sections: auto height + visible overflow so scaled text never overlaps. */
 html.a11y section,

@@ -1,18 +1,22 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
+import { useState, useEffect, useRef, type KeyboardEvent } from "react";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "next-themes";
 import TransitionLink from "../motion/TransitionLink";
 import CinematicThemeSwitcher from "../ui/cinematic-theme-switcher";
 import Icon from "../ui/Icon";
 import { AccessibilityTrigger } from "../ui/AccessibilityPanel";
 import NavPreviewCard from "./NavPreview";
+import DDCLogo from "../ui/DDCLogo";
 
 const LANGUAGES = ["kz", "ru", "en"];
+const LANGUAGE_LABELS: Record<string, string> = {
+  kz: "Қазақша",
+  ru: "Русский",
+  en: "English",
+};
 
 // Accessible segmented KZ / RU / EN switcher, styled as a liquid-glass pill.
 // Hoisted to module scope so it isn't re-created on every Header render.
@@ -25,10 +29,33 @@ function LanguageSwitcher({
   onSwitch: (lng: string) => void;
   size?: "sm" | "lg";
 }) {
+  const activeIndex = Math.max(0, LANGUAGES.indexOf(locale));
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    let nextIndex = activeIndex;
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      nextIndex = (activeIndex + 1) % LANGUAGES.length;
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      nextIndex = (activeIndex - 1 + LANGUAGES.length) % LANGUAGES.length;
+    } else if (event.key === "Home") {
+      nextIndex = 0;
+    } else if (event.key === "End") {
+      nextIndex = LANGUAGES.length - 1;
+    } else {
+      return;
+    }
+
+    event.preventDefault();
+    onSwitch(LANGUAGES[nextIndex]);
+  };
+
   return (
     <div
-      role="group"
+      role="listbox"
+      tabIndex={0}
       aria-label="Тіл / Язык / Language"
+      aria-activedescendant={`language-option-${size}-${locale}`}
+      onKeyDown={handleKeyDown}
       className="inline-flex items-center gap-0.5 liquid-glass rounded-full p-1 relative z-10"
     >
       {LANGUAGES.map((lng) => {
@@ -36,10 +63,12 @@ function LanguageSwitcher({
         return (
           <button
             key={lng}
+            id={`language-option-${size}-${lng}`}
             type="button"
+            role="option"
             onClick={() => onSwitch(lng)}
-            aria-label={lng.toUpperCase()}
-            aria-pressed={active}
+            aria-label={`Switch language to ${LANGUAGE_LABELS[lng]}`}
+            aria-selected={active}
             className={`font-mono font-bold tracking-wider rounded-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 flex items-center justify-center relative transition-colors duration-300 ${
               size === "lg" ? "px-4 min-h-[44px] min-w-[44px] text-sm" : "px-3 py-1.5 min-h-11 min-w-11 text-xs"
             } ${active ? "text-black z-10 font-bold" : "text-muted hover:text-gold z-10"}`}
@@ -64,11 +93,6 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hoveredLink, setHoveredLink] = useState<{ name: string; href: string; left: number; width: number } | null>(null);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const { resolvedTheme } = useTheme();
-  const logoSrc = resolvedTheme === "light"
-    ? "/images/logo/ddc_logo_light_theme.png"
-    : "/images/logo/ddc_logo_for_dark_theme.png";
-
   const t = useTranslations("Header");
   const tA11y = useTranslations("A11y");
   const locale = useLocale();
@@ -191,15 +215,11 @@ export default function Header() {
           <TransitionLink
             href="/"
             aria-label={tA11y("logoLabel")}
-            className="flex items-center group select-none shrink-0"
+            className="flex items-center group select-none shrink-0 text-foreground"
           >
-            <Image
-              src={logoSrc}
-              alt="DDC — Центр цифрового развития НБК"
-              width={42}
-              height={42}
-              priority
-              className="transition-transform duration-500 ease-out group-hover:scale-105 group-active:scale-95 pointer-events-none"
+            <DDCLogo
+              title="DDC — Центр цифрового развития НБК"
+              className="h-[42px] w-[38px] transition-transform duration-500 ease-out group-hover:scale-105 group-active:scale-95"
             />
           </TransitionLink>
 
@@ -355,7 +375,7 @@ export default function Header() {
 
             {/* Mobile menu bottom action panel */}
             <div className="flex flex-col gap-6 mt-auto pt-6 border-t border-glass-border">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <span className="text-sm text-muted">{t("language")}</span>
                 <LanguageSwitcher locale={locale} onSwitch={switchLocale} size="lg" />
               </div>

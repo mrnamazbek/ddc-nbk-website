@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { Link } from "@/i18n/navigation";
 import { ImagesBadge } from "@/components/ui/images-badge";
 import { ThreeDMarquee } from "@/components/ui/3d-marquee";
 import Icon, { IconName } from "../ui/Icon";
+import DDCLogo from "../ui/DDCLogo";
 
 type FooterLink = {
   name: string;
@@ -222,8 +222,8 @@ export default function Footer() {
         >
           <div className="max-w-xl">
             <Link href="/" className="mb-8 inline-flex items-center gap-4 select-none">
-                <span className="site-footer-logo-tile grid h-12 w-12 place-items-center rounded-2xl border border-white/10 bg-white text-[#07100c] shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
-                <Image src="/images/logo/ddc-emblem.svg" alt="" width={28} height={28} className="h-7 w-7" />
+              <span className="site-footer-logo-tile grid h-12 w-12 place-items-center rounded-2xl border border-white/10 bg-white text-[#07100c] shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
+                <DDCLogo className="h-7 w-[26px]" />
               </span>
               <span>
                 <span className="block text-xl font-bold tracking-tight text-white">DDC</span>
