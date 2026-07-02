@@ -11,7 +11,7 @@ import TerminalGridBackground from "@/components/ui/TerminalGridBackground";
 
 const Services3D = dynamic(() => import("@/components/sections/Services3D"), {
   ssr: false,
-  loading: () => <div className="fixed inset-0 bg-[#040C08] flex items-center justify-center text-gold-light font-mono text-xs">LOADING WEBGL SCENE...</div>,
+  loading: () => <Services2D />,
 });
 
 interface ServiceDetail {

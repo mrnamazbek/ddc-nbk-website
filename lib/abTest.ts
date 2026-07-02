@@ -12,7 +12,7 @@ export type ABVariant = "A" | "C";
  * was retired after visual QA, so old assignments are normalized back to A.
  */
 export function useABTest(pageKey: string): ABVariant | null {
-  const [variant, setVariant] = useState<ABVariant | null>(null);
+  const [variant, setVariant] = useState<ABVariant | null>("A");
 
   useEffect(() => {
     if (typeof window === "undefined") return;

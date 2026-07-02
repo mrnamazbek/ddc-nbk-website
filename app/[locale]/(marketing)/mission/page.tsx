@@ -16,7 +16,7 @@ const FeatureCarousel = dynamic(
 
 const Mission3D = dynamic(() => import("@/components/sections/Mission3D"), {
   ssr: false,
-  loading: () => <div className="fixed inset-0 bg-[#040C08] flex items-center justify-center text-gold-light font-mono text-xs">LOADING WEBGL SCENE...</div>,
+  loading: () => <Mission2D />,
 });
 
 import type { Step } from "@/components/ui/feature-carousel";
