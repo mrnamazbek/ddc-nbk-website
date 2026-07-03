@@ -9,6 +9,7 @@ import ABTestSwitcher from "@/components/ui/ABTestSwitcher";
 import { useA11y } from "@/components/theme/AccessibilityProvider";
 import TerminalGridBackground from "@/components/ui/TerminalGridBackground";
 import ThreeModelLoadingOverlay from "@/components/ui/ThreeModelLoadingOverlay";
+import LottieAnimation from "@/components/ui/LottieAnimation";
 
 const FeatureCarousel = dynamic(
   () => import("@/components/ui/feature-carousel").then((mod) => mod.FeatureCarousel),
@@ -123,6 +124,29 @@ function Mission2D() {
             bgClass="!bg-transparent !border-none !shadow-none"
           />
         </ContainerScroll>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center -mt-8 md:-mt-20">
+          <div className="lg:col-span-5">
+            <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
+              {t("step3Name")}
+            </span>
+            <h2 className="font-display text-2xl sm:text-4xl font-normal tracking-tight text-foreground mb-5">
+              {t("step3Title")}
+            </h2>
+            <p className="text-sm sm:text-base text-text-secondary font-light leading-relaxed">
+              {t("step3Desc")}
+            </p>
+          </div>
+          <div className="lg:col-span-7">
+            <LottieAnimation
+              src="/animations/data-science-floating-laptop.json"
+              label="Data graphs floating from a laptop"
+              className="rounded-[28px]"
+              frameClassName="min-h-[280px] sm:min-h-[340px] lg:min-h-[420px] bg-[#04130d]/48"
+              animationClassName="scale-[1.05]"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

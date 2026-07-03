@@ -5,6 +5,7 @@ import Icon, { IconName } from "@/components/ui/Icon";
 import DDCEventGallery from "@/components/sections/DDCEventGallery";
 import { getTranslations } from "next-intl/server";
 import JobApplicationForm from "@/components/sections/JobApplicationForm";
+import LottieAnimation from "@/components/ui/LottieAnimation";
 
 
 type Translator = (key: string, values?: Record<string, string | number>) => string;
@@ -352,11 +353,15 @@ export default async function CareersPage({ params }: CareersPageProps) {
             </ul>
           </div>
           
-          <div className="lg:col-span-5 bg-charcoal/40 border border-white/5 p-8 rounded-2xl relative overflow-hidden">
+          <div className="lg:col-span-5 bg-charcoal/40 border border-white/5 p-6 sm:p-8 rounded-2xl relative overflow-hidden">
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-forest/20 rounded-full blur-2xl pointer-events-none" />
-            <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold-light mb-6">
-              <Icon name="zap" size={24} />
-            </div>
+            <LottieAnimation
+              src="/animations/career-programmer-code.json"
+              label="DDC engineer writing production code"
+              className="mb-6 rounded-2xl"
+              frameClassName="min-h-[220px] sm:min-h-[260px] bg-[#04130d]/52"
+              animationClassName="max-h-[280px] scale-[1.08]"
+            />
             <h3 className="text-base font-bold text-white mb-2">{t("startJourneyTitle")}</h3>
             <p className="text-xs text-zinc-300 font-light leading-relaxed mb-6">
               {t("startJourneyDesc")}

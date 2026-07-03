@@ -9,6 +9,7 @@ import ABTestSwitcher from "@/components/ui/ABTestSwitcher";
 import { useA11y } from "@/components/theme/AccessibilityProvider";
 import TerminalGridBackground from "@/components/ui/TerminalGridBackground";
 import ThreeModelLoadingOverlay from "@/components/ui/ThreeModelLoadingOverlay";
+import LottieAnimation from "@/components/ui/LottieAnimation";
 
 const Services3D = dynamic(() => import("@/components/sections/Services3D"), {
   ssr: false,
@@ -23,6 +24,11 @@ interface ServiceDetail {
   features: string[];
   techStack: string;
   techStackIcons?: IconName[];
+  visual?: {
+    src: string;
+    label: string;
+    className?: string;
+  };
 }
 
 function Services2D() {
@@ -78,6 +84,11 @@ function Services2D() {
       features: [t("s4.f1"), t("s4.f2"), t("s4.f3")],
       techStack: "Fortinet, HSM, Linux, Hardware Crypto Units",
       techStackIcons: ["shield-check", "lock"],
+      visual: {
+        src: "/animations/it-infrastructure-server-data.json",
+        label: "Secure server infrastructure transferring encrypted data",
+        className: "scale-[1.04]",
+      },
     },
     {
       icon: "share",
@@ -96,6 +107,11 @@ function Services2D() {
       features: [t("s6.f1"), t("s6.f2"), t("s6.f3")],
       techStack: "Hadoop, Spark, ClickHouse, Python (PyTorch), Tableau",
       techStackIcons: ["hadoop", "spark", "clickhouse", "python", "tableau"],
+      visual: {
+        src: "/animations/data-science-pc-screen.json",
+        label: "Financial analytics dashboards running on a workstation",
+        className: "scale-[1.02]",
+      },
     },
   ];
 
@@ -191,6 +207,16 @@ function Services2D() {
                         </li>
                       ))}
                     </ul>
+
+                    {service.visual ? (
+                      <LottieAnimation
+                        src={service.visual.src}
+                        label={service.visual.label}
+                        className="mt-8 rounded-3xl"
+                        frameClassName="min-h-[220px] sm:min-h-[260px] lg:min-h-[300px] bg-[#04130d]/46"
+                        animationClassName={service.visual.className}
+                      />
+                    ) : null}
                   </div>
 
                 </div>
