@@ -1,0 +1,31 @@
+---
+description: DDCNB design system, MCP, and agent coordination rules
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+# DDCNB Project Rules
+
+Read `AGENTS.md` first. For product UI work, also read:
+
+- `DESIGN_SYSTEM.md`
+- `design-system/ddcnb-website/MASTER.md`
+- `docs/agents/AGENT_DESIGN_CONTRACT.md`
+- `docs/agents/MCP_USAGE.md`
+- `docs/agents/AGENT_HANDOFF.md`
+
+Use Lazyweb before product UI changes. Use Playwright for visual QA.
+
+Use project primitives:
+
+- Buttons: `components/ui/Button.tsx`
+- Cards: `components/ui/GlassCard.tsx` or approved liquid/glass globals
+- Icons: `components/ui/Icon.tsx`
+- Tokens: `styles/tokens.css`
+
+Do not introduce one-off colors, radii, shadows, fonts, card styles, button
+styles, or animation systems. Keep first-party visuals in deep forest green,
+gold, and neutral tones.
+
+Before editing, declare the task scope. Do not edit files outside that scope.
