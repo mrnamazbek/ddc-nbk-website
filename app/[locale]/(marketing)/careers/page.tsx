@@ -359,7 +359,7 @@ export default async function CareersPage({ params }: CareersPageProps) {
               src="/animations/career-programmer-code.json"
               label="DDC engineer writing production code"
               className="mb-6 rounded-2xl"
-              frameClassName="min-h-[220px] sm:min-h-[260px] bg-[#04130d]/52"
+              frameClassName="min-h-[220px] sm:min-h-[260px] bg-background/50"
               animationClassName="max-h-[280px] scale-[1.08]"
             />
             <h3 className="text-base font-bold text-white mb-2">{t("startJourneyTitle")}</h3>

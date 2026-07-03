@@ -141,8 +141,8 @@ function Mission2D() {
             <LottieAnimation
               src="/animations/data-science-floating-laptop.json"
               label="Data graphs floating from a laptop"
-              className="rounded-[28px]"
-              frameClassName="min-h-[280px] sm:min-h-[340px] lg:min-h-[420px] bg-[#04130d]/48"
+              className="rounded-[var(--radius-card)]"
+              frameClassName="min-h-[280px] sm:min-h-[340px] lg:min-h-[420px] bg-background/50"
               animationClassName="scale-[1.05]"
             />
           </div>

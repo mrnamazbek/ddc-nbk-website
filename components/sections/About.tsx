@@ -4,10 +4,11 @@ import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
-import Image from "next/image";
 import TextReveal from "@/components/ui/TextReveal";
 import Icon, { IconName } from "@/components/ui/Icon";
+import { AnimatedIcon } from "@/components/ui/AnimatedIcon";
 import DDCLogo from "@/components/ui/DDCLogo";
+import LottieAnimation from "@/components/ui/LottieAnimation";
 
 interface ValueItem {
   key: string;
@@ -17,8 +18,6 @@ interface ValueItem {
 export default function About({ id = "about" }: { id?: string | null }) {
   const t = useTranslations("About");
   const containerRef = useRef<HTMLDivElement>(null);
-  const bgImgRef = useRef<HTMLDivElement>(null);
-  const fgImgRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
 
   cardsRef.current = [];
@@ -31,27 +30,6 @@ export default function About({ id = "about" }: { id?: string | null }) {
 
   useGSAP(
     () => {
-      // 3D-параллакс для коллажа изображений при скролле
-      gsap.to(bgImgRef.current, {
-        yPercent: -15,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-        },
-      });
-
-      gsap.to(fgImgRef.current, {
-        yPercent: 10,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-        },
-      });
-
       // Стагерное появление карточек принципов при скролле
       gsap.fromTo(
         cardsRef.current,
@@ -115,12 +93,16 @@ export default function About({ id = "about" }: { id?: string | null }) {
               <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
             </h2>
 
-            <TextReveal text={t("description")} className="mb-8" />
+            <TextReveal
+              text={t("description")}
+              className="mb-8"
+              textClassName="text-xl md:text-2xl lg:text-[2.35rem] leading-[1.35]"
+            />
 
             {/* Таймлайн / Принципы */}
             <div className="space-y-8 relative mt-4">
               {/* Золотая линия таймлайна слева */}
-              <div className="absolute left-6 top-2 bottom-2 w-[1px] bg-gradient-to-b from-gold via-brand-blue-light to-transparent opacity-30" />
+              <div className="absolute left-6 top-2 bottom-2 w-[1px] bg-gradient-to-b from-gold via-forest-light to-transparent opacity-30" />
 
               {valueItems.map((item) => {
                 return (
@@ -130,7 +112,9 @@ export default function About({ id = "about" }: { id?: string | null }) {
                     className="flex gap-6 relative z-10 group animate-hover"
                   >
                     <div className="w-12 h-12 rounded-full liquid-glass flex items-center justify-center text-gold group-hover:bg-glass transition-all duration-300 shrink-0">
-                      <Icon name={item.iconName} size={20} />
+                      <AnimatedIcon animationType={item.iconName === "check-circle" ? "bounce" : "scale"}>
+                        <Icon name={item.iconName} size={20} />
+                      </AnimatedIcon>
                     </div>
                     <div>
                       <h4 className="text-lg font-sans font-semibold text-foreground mb-2 group-hover:text-zinc-100 transition-colors">
@@ -146,41 +130,23 @@ export default function About({ id = "about" }: { id?: string | null }) {
             </div>
           </div>
 
-          {/* Правая сторона: Премиум-коллаж с параллаксом */}
-          <div className="lg:col-span-5 relative h-[500px] sm:h-[600px] w-full">
-            {/* Задний фон: nbk_architecture */}
-            <div 
-              ref={bgImgRef}
-              className="absolute top-0 right-0 w-4/5 h-4/5 rounded-card overflow-hidden border border-glass-border shadow-card transition-transform duration-700 hover:scale-[1.02]"
-            >
-              <Image
-                src="/images/nbk_architecture.png"
-                alt="Здание Национального Банка РК"
-                fill
-                priority
-                sizes="(max-w-768px) 100vw, 50vw"
-                className="object-cover brightness-95"
-              />
+          {/* Правая сторона: смысловая анимация цифровой финансовой инфраструктуры */}
+          <div className="lg:col-span-5 relative w-full">
+            <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-gold/10 blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-forest-mid/20 blur-3xl pointer-events-none" />
+            <LottieAnimation
+              src="/animations/online-banking-laptop.json"
+              label="Digital banking platform and financial data flow"
+              className="rounded-[var(--radius-card)]"
+              frameClassName="min-h-[420px] sm:min-h-[520px] lg:min-h-[600px] bg-background/50"
+              animationClassName="max-h-[520px] scale-[1.03]"
+            />
+            <div className="pointer-events-none absolute left-5 top-5 rounded-full border border-gold/20 bg-background/70 px-4 py-2 text-[0.68rem] font-medium uppercase tracking-[0.22em] text-gold-light backdrop-blur-md">
+              ISO 9001
             </div>
-            
-            {/* Передний фон: liquid_glass_flow */}
-            <div 
-              ref={fgImgRef}
-              className="absolute bottom-0 left-0 w-2/3 h-2/3 rounded-card overflow-hidden border border-gold/20 shadow-[0_8px_30px_rgba(201,168,76,0.2)] z-20 transition-transform duration-700 hover:scale-[1.03]"
-            >
-              <Image
-                src="/images/backgrounds/liquid_glass_flow.png"
-                alt="Жидкое стекло с национальным орнаментом ЦЦР"
-                fill
-                priority
-                sizes="(max-w-768px) 100vw, 50vw"
-                className="object-cover"
-              />
+            <div className="pointer-events-none absolute bottom-5 right-5 rounded-full border border-forest-light/20 bg-background/70 px-4 py-2 text-[0.68rem] font-medium uppercase tracking-[0.22em] text-forest-light backdrop-blur-md">
+              Digital Core
             </div>
-
-            {/* Мягкие свечения */}
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-gold/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-brand-blue-mid/20 rounded-full blur-3xl pointer-events-none" />
           </div>
 
         </div>

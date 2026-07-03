@@ -85,9 +85,9 @@ function Services2D() {
       techStack: "Fortinet, HSM, Linux, Hardware Crypto Units",
       techStackIcons: ["shield-check", "lock"],
       visual: {
-        src: "/animations/it-infrastructure-server-data.json",
-        label: "Secure server infrastructure transferring encrypted data",
-        className: "scale-[1.04]",
+        src: "/animations/secure-data-protection.json",
+        label: "Encrypted folder and key protecting critical financial data",
+        className: "scale-[1.03]",
       },
     },
     {
@@ -98,6 +98,11 @@ function Services2D() {
       features: [t("s5.f1"), t("s5.f2"), t("s5.f3")],
       techStack: "Node.js, Express, OAuth2, GraphQL, Kong API Gateway",
       techStackIcons: ["nodejs", "express", "graphql", "kong"],
+      visual: {
+        src: "/animations/server-data-sync.json",
+        label: "Server systems synchronizing data between internal services",
+        className: "scale-[1.02]",
+      },
     },
     {
       icon: "chart",
@@ -213,7 +218,7 @@ function Services2D() {
                         src={service.visual.src}
                         label={service.visual.label}
                         className="mt-8 rounded-3xl"
-                        frameClassName="min-h-[220px] sm:min-h-[260px] lg:min-h-[300px] bg-[#04130d]/46"
+                        frameClassName="min-h-[220px] sm:min-h-[260px] lg:min-h-[300px] bg-background/50"
                         animationClassName={service.visual.className}
                       />
                     ) : null}
