@@ -7,11 +7,13 @@ import gsap from "@/lib/gsap";
 interface TextRevealProps {
   text: string;
   className?: string;
+  textClassName?: string;
 }
 
-export default function TextReveal({ text, className = "" }: TextRevealProps) {
+export default function TextReveal({ text, className = "", textClassName = "" }: TextRevealProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const wordsRef = useRef<HTMLSpanElement[]>([]);
+  const sizeClassName = textClassName || "text-2xl md:text-3xl lg:text-4xl";
 
   wordsRef.current = [];
 
@@ -49,7 +51,10 @@ export default function TextReveal({ text, className = "" }: TextRevealProps) {
   return (
     <div ref={containerRef} className={`relative z-10 py-4 ${className}`}>
       <span className="sr-only">{text}</span>
-      <p aria-hidden="true" className="flex flex-wrap gap-x-2 gap-y-1 font-display text-2xl md:text-3xl lg:text-4xl font-light text-foreground leading-relaxed">
+      <p
+        aria-hidden="true"
+        className={`flex flex-wrap gap-x-2 gap-y-1 font-display font-light text-foreground leading-relaxed ${sizeClassName}`}
+      >
         {words.map((word, idx) => (
           <span
             key={idx}

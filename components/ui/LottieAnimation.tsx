@@ -33,6 +33,9 @@ export default function LottieAnimation({
   const shouldReduceMotion = useReducedMotion();
   const [animationData, setAnimationData] = useState<unknown>(null);
   const [hasError, setHasError] = useState(false);
+  const revealInView = shouldReduceMotion
+    ? { opacity: 1 }
+    : { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" };
 
   useEffect(() => {
     if (!isInView || animationData || hasError) return;
@@ -61,10 +64,13 @@ export default function LottieAnimation({
       ref={rootRef}
       role="img"
       aria-label={label}
-      initial={{ opacity: 0, y: 18, scale: 0.98, filter: "blur(10px)" }}
-      whileInView={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.9, delay, ease: [0.16, 1, 0.3, 1] }}
+      initial={false}
+      animate={revealInView}
+      transition={{
+        duration: shouldReduceMotion ? 0.18 : 0.9,
+        delay: shouldReduceMotion ? 0 : delay,
+        ease: [0.16, 1, 0.3, 1],
+      }}
       className={cn("relative overflow-hidden", className)}
     >
       {shell ? (
@@ -77,7 +83,7 @@ export default function LottieAnimation({
       <div
         className={cn(
           "relative flex min-h-[240px] items-center justify-center rounded-[inherit]",
-          shell && "border border-white/8 bg-[#031009]/42 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm",
+          shell && "border border-white/10 bg-background/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm",
           frameClassName,
         )}
       >
