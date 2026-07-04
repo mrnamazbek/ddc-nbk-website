@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { useGSAP } from "@gsap/react";
-import gsap from "@/lib/gsap";
 import { Timeline as UItimeline } from "@/components/ui/timeline";
+import { BubbleText } from "@/components/ui/BubbleText";
+import ScrollReveal, { ENTRANCE_DURATION } from "@/components/motion/ScrollReveal";
+import { RevealWords } from "@/components/motion/RevealWords";
 
 interface TimelineMilestone {
   key: string;
@@ -12,7 +12,6 @@ interface TimelineMilestone {
 
 export default function Timeline() {
   const t = useTranslations("Timeline");
-  const containerRef = useRef<HTMLDivElement>(null);
 
   const milestones: TimelineMilestone[] = [
     { key: "y1996" },
@@ -22,27 +21,6 @@ export default function Timeline() {
     { key: "y2020" },
     { key: "y2025" },
   ];
-
-  useGSAP(
-    () => {
-      // Smooth fade-in of the entire timeline container on scroll
-      gsap.fromTo(
-        containerRef.current,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 1.2,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 80%",
-            toggleActions: "play none none none",
-          },
-        }
-      );
-    },
-    { scope: containerRef }
-  );
 
   const timelineData = milestones.map((m) => ({
     title: t(`${m.key}.year`),
@@ -61,23 +39,34 @@ export default function Timeline() {
   return (
     <section
       id="timeline"
-      ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden"
+      className="relative w-full py-24 sm:py-32 bg-transparent overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
-        
-        {/* Section Header */}
+
+        {/* Section Header — the vertical line below starts drawing as soon as
+            this section scrolls into view; label / heading / description
+            follow it in sequence rather than appearing all at once. */}
         <div className="max-w-3xl mb-16">
-          <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
-            {t("overline")}
-          </span>
+          <ScrollReveal blur={10} duration={ENTRANCE_DURATION.label} delay={0.15}>
+            <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
+              {t("overline")}
+            </span>
+          </ScrollReveal>
           <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
-            {t("titleLine1")} <br />
-            <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
+            <RevealWords text={t("titleLine1")} delay={0.3} useBubbleText />{" "}
+            <br />
+            <RevealWords
+              text={t("titleAccent")}
+              delay={0.5}
+              useBubbleText
+              bubbleActiveClassName="text-gold font-black"
+            />
           </h2>
-          <p className="text-sm sm:text-base font-sans font-light text-muted leading-relaxed">
-            {t("subtitle")}
-          </p>
+          <ScrollReveal blur={10} duration={ENTRANCE_DURATION.subtitle} delay={0.65}>
+            <p className="text-sm sm:text-base font-sans font-light text-muted leading-relaxed">
+              <BubbleText text={t("subtitle")} />
+            </p>
+          </ScrollReveal>
         </div>
 
         {/* Upgraded scroll-linked timeline */}

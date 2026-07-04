@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { HeroParallax } from "@/components/ui/hero-parallax";
+import { BubbleText } from "@/components/ui/BubbleText";
 
 /**
  * Параллакс-витрина (HeroParallax) с реальными активами DDC:
@@ -39,11 +40,11 @@ export default function Showcase() {
       products={products}
       title={
         <>
-          {t("titleLine1")}{" "}
-          <span className="text-gradient-forest">{t("titleAccent")}</span>
+          <BubbleText text={t("titleLine1")} />{" "}
+          <span className="text-gradient-forest"><BubbleText text={t("titleAccent")} activeClassName="text-gold font-black" /></span>
         </>
       }
-      subtitle={t("subtitle")}
+      subtitle=<BubbleText text={t("subtitle")} />
     />
   );
 }

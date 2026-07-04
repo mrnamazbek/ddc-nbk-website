@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Icon, { IconName } from "@/components/ui/Icon";
+import { BubbleText } from "@/components/ui/BubbleText";
 import GlassCard from "@/components/ui/GlassCard";
 import { useTranslations } from "next-intl";
 
@@ -56,13 +57,13 @@ export default function SecurityPage() {
   ];
 
   return (
-    <div className="relative w-full bg-background overflow-hidden min-h-screen pt-32 pb-24 font-sans">
+    <div className="relative w-full bg-transparent overflow-hidden min-h-screen pt-32 pb-24 font-sans">
       {/* Мягкие свечения */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
-        
+
         {/* Заголовок */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -74,11 +75,11 @@ export default function SecurityPage() {
             {t("overline")}
           </span>
           <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
-            {t("titleLine1")} <br />
-            <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
+            <BubbleText text={t("titleLine1")} /> <br />
+            <BubbleText text={t("titleAccent")} activeClassName="text-gold font-black" />
           </h1>
           <p className="text-lg text-text-secondary font-light leading-relaxed">
-            {t("description")}
+            <BubbleText text={t("description")} />
           </p>
         </motion.div>
 
@@ -97,11 +98,11 @@ export default function SecurityPage() {
                   <div className="w-12 h-12 rounded-xl bg-forest/30 border border-forest-light/20 flex items-center justify-center text-gold mb-6 shrink-0">
                     <Icon name={pillar.icon} size={24} />
                   </div>
-                  
+
                   <h2 className="text-lg font-sans font-semibold text-foreground tracking-wide mb-3">
                     {pillar.title}
                   </h2>
-                  
+
                   <p className="text-sm font-sans font-light text-text-secondary leading-relaxed">
                     {pillar.description}
                   </p>

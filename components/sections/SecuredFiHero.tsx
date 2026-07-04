@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { SplineScene } from "@/components/ui/splite";
+import { BubbleText } from "@/components/ui/BubbleText";
 import { useA11y } from "@/components/theme/AccessibilityProvider";
 
 const ROBOT_SCENE = "/spline/scene.splinecode";
@@ -79,7 +80,7 @@ export default function SecuredFiHero() {
           className="absolute inset-0 flex flex-col items-center justify-center px-6 z-10"
         >
           <div className="max-w-5xl text-center flex flex-col items-center">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
@@ -102,7 +103,7 @@ export default function SecuredFiHero() {
               transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="max-w-2xl text-base md:text-lg text-zinc-300 font-sans font-light leading-relaxed mb-4 pointer-events-auto"
             >
-              {tStats("title")} <span className="text-gold-light font-medium">{tStats("titleAccent")}</span>
+              {tStats("title")} <span className="text-gold-light font-medium"><BubbleText text={tStats("titleAccent")} activeClassName="text-gold font-black" /></span>
             </motion.p>
             <motion.p
               initial={{ opacity: 0, y: 40 }}
@@ -110,7 +111,7 @@ export default function SecuredFiHero() {
               transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="max-w-xl text-sm md:text-base text-zinc-400 font-sans font-light leading-relaxed pointer-events-auto"
             >
-              {tStats("subtitle")}
+              <BubbleText text={tStats("subtitle")} />
             </motion.p>
           </div>
         </motion.div>
@@ -122,8 +123,8 @@ export default function SecuredFiHero() {
         >
           <div className="max-w-6xl w-full pointer-events-auto">
             <div className="text-center mb-16">
-              <h2 className="text-xs font-mono text-gold-light tracking-widest uppercase mb-4">{tStats("titleAccent")}</h2>
-              <p className="text-2xl md:text-3xl font-serif text-white font-light max-w-3xl mx-auto leading-relaxed">{tStats("subtitle")}</p>
+              <h2 className="text-xs font-mono text-gold-light tracking-widest uppercase mb-4"><BubbleText text={tStats("titleAccent")} activeClassName="text-gold font-black" /></h2>
+              <p className="text-2xl md:text-3xl font-serif text-white font-light max-w-3xl mx-auto leading-relaxed"><BubbleText text={tStats("subtitle")} /></p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
               {stats.map((stat, idx) => (

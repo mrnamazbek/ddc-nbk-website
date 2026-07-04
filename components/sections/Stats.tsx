@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import GlassCard from "@/components/ui/GlassCard";
+import { BubbleText } from "@/components/ui/BubbleText";
 import AnimatedNumber from "@/components/ui/AnimatedNumber";
 
 const STATS = [
@@ -35,7 +36,7 @@ export default function Stats({ id = "stats" }: { id?: string | null }) {
   return (
     <section
       id={id ?? undefined}
-      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden"
+      className="relative w-full py-24 sm:py-32 bg-transparent overflow-hidden"
     >
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#1A3D2B03_1px,transparent_1px),linear-gradient(to_bottom,#1A3D2B03_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
 
@@ -47,10 +48,10 @@ export default function Stats({ id = "stats" }: { id?: string | null }) {
           </span>
           <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-normal tracking-tight text-foreground mb-6">
             {t("title")}{" "}
-            <span className="text-gradient-forest font-medium">{t("titleAccent")}</span>
+            <span className="text-gradient-forest font-medium"><BubbleText text={t("titleAccent")} activeClassName="text-gold font-black" /></span>
           </h2>
           <p className="text-muted font-sans font-normal leading-relaxed text-lg">
-            {t("subtitle")}
+            <BubbleText text={t("subtitle")} />
           </p>
         </div>
 

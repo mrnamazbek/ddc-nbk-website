@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useRef, useMemo, useEffect } from "react";
+import React, { Suspense, useRef, useMemo, useEffect, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, Lightformer, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
@@ -46,14 +46,17 @@ function Model({ url, isLight }: { url: string; isLight: boolean }) {
     const box = new THREE.Box3().setFromObject(scene);
     const centerVec = new THREE.Vector3();
     box.getCenter(centerVec);
-    
-    // Scale responsive to viewport size (optimized for fov: 35 and Z: 7.2)
-    const isMobile = size.width < 500;
-    const isTablet = size.width >= 500 && size.width < 1024;
-    const scaleVal = isMobile ? 1.48 : isTablet ? 1.72 : 1.98;
-    
+
+    // Scale against the limiting axis, not width alone. Locale changes can
+    // alter the neighboring text height, so a wide-but-short canvas must not
+    // over-scale the model and clip vertically.
+    const minSide = Math.min(size.width, size.height);
+    const isMobile = minSide < 420;
+    const isTablet = minSide >= 420 && minSide < 680;
+    const scaleVal = isMobile ? 1.25 : isTablet ? 1.52 : 1.72;
+
     return { center: centerVec, scaleVal };
-  }, [scene, size.width]);
+  }, [scene, size.height, size.width]);
 
   // Create physical material once to prevent WebGL recompiling shaders on every component render/resize
   const material = useMemo(() => {
@@ -95,21 +98,21 @@ function Model({ url, isLight }: { url: string; isLight: boolean }) {
         `
         #include <color_fragment>
         float absZ = abs(vLocalZ);
-        
+
         // Цвета для Темной темы:
         vec3 darkGreen = vec3(10.0 / 255.0, 48.0 / 255.0, 30.0 / 255.0);
         vec3 darkGold = vec3(235.0 / 255.0, 195.0 / 255.0, 105.0 / 255.0);
-        
+
         // Цвета для Светлой темы (на основе ddc_logo_light_theme.png):
         vec3 lightGreen = vec3(26.0 / 255.0, 61.0 / 255.0, 43.0 / 255.0); // Глубокий лесной зеленый
         vec3 lightWhite = vec3(245.0 / 255.0, 245.0 / 255.0, 242.0 / 255.0); // Благородный матово-белый оффвайт
-        
+
         vec3 greenPaint = mix(darkGreen, lightGreen, uIsLight);
         vec3 ornamentPaint = mix(darkGold, lightWhite, uIsLight);
-        
+
         // Порог 0.088 - 0.096 для идеального разделения основания и рельефа
         float mixFactor = smoothstep(0.088, 0.096, absZ);
-        
+
         diffuseColor.rgb = mix(greenPaint, ornamentPaint, mixFactor);
         `
       );
@@ -173,44 +176,55 @@ function Model({ url, isLight }: { url: string; isLight: boolean }) {
 export default function BaseModelViewer() {
   const { resolvedTheme } = useTheme();
   const isLight = resolvedTheme === "light";
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
-    <div className="relative h-full w-full cursor-grab select-none overflow-hidden rounded-[var(--radius-card)] active:cursor-grabbing">
-      <Canvas
-        camera={{ position: [0, 0, 7.2], fov: 35 }} // Moved camera back from 6.5 to 7.2 to prevent vertical clipping/cutting
-        dpr={[1, 2]} // Limit DPR to 2 for performance optimization on Retina screens
-        gl={{ 
-          antialias: true, 
-          powerPreference: "high-performance",
-          stencil: false, // Save memory and bandwidth by disabling stencil buffer
-          depth: true
-        }}
-        style={{ display: "block", height: "100%", width: "100%" }}
-        onCreated={({ gl }) => {
-          gl.toneMapping = THREE.ACESFilmicToneMapping;
-          gl.toneMappingExposure = 1.1;
-        }}
-      >
-        <ambientLight intensity={isLight ? 0.6 : 0.4} />
-        <directionalLight position={[5, 8, 5]} intensity={isLight ? 1.0 : 1.8} color={isLight ? "#FFFFFF" : "#FFE9C0"} />
-        <directionalLight position={[-5, -4, 2]} intensity={isLight ? 0.4 : 0.8} color={isLight ? "#E0F5EB" : "#9FE0C0"} />
+    <div className="relative h-full min-h-[inherit] w-full cursor-grab select-none overflow-visible rounded-[var(--radius-card)] active:cursor-grabbing [&_canvas]:!block [&_canvas]:!h-full [&_canvas]:!w-full">
+      {mounted ? (
+        <Canvas
+          className="h-full w-full"
+          camera={{ position: [0, 0, 8.0], fov: 35 }}
+          dpr={[1, 2]} // Limit DPR to 2 for performance optimization on Retina screens
+          resize={{ scroll: false, debounce: { scroll: 50, resize: 0 } }}
+          gl={{
+            antialias: true,
+            powerPreference: "high-performance",
+            stencil: false, // Save memory and bandwidth by disabling stencil buffer
+            depth: true
+          }}
+          style={{ display: "block", height: "100%", width: "100%" }}
+          onCreated={({ gl }) => {
+            gl.toneMapping = THREE.ACESFilmicToneMapping;
+            gl.toneMappingExposure = 1.1;
+          }}
+        >
+          <ambientLight intensity={isLight ? 0.6 : 0.4} />
+          <directionalLight position={[5, 8, 5]} intensity={isLight ? 1.0 : 1.8} color={isLight ? "#FFFFFF" : "#FFE9C0"} />
+          <directionalLight position={[-5, -4, 2]} intensity={isLight ? 0.4 : 0.8} color={isLight ? "#E0F5EB" : "#9FE0C0"} />
 
-        <Suspense fallback={null}>
-          <Model url="/base.glb" isLight={isLight} />
-          <OrbitControls 
-            enableZoom={false} 
-            enablePan={false}
-            enableDamping={true} // Premium smooth drag interactions
-            dampingFactor={0.05}
-            minPolarAngle={Math.PI / 3}
-            maxPolarAngle={Math.PI / 1.8}
-          />
-          <Environment frames={1} resolution={128}>
-            <Lightformer intensity={2.5} color="#E8C87A" position={[0, 4, -6]} scale={[10, 6, 1]} />
-            <Lightformer intensity={1.2} color="#52B788" position={[-6, 0, 2]} scale={[6, 6, 1]} />
-          </Environment>
-        </Suspense>
-      </Canvas>
+          <Suspense fallback={null}>
+            <Model url="/base.glb" isLight={isLight} />
+            <OrbitControls
+              enableZoom={false}
+              enablePan={false}
+              enableDamping={true} // Premium smooth drag interactions
+              dampingFactor={0.05}
+              minPolarAngle={Math.PI / 3}
+              maxPolarAngle={Math.PI / 1.8}
+            />
+            <Environment frames={1} resolution={128}>
+              <Lightformer intensity={2.5} color="#E8C87A" position={[0, 4, -6]} scale={[10, 6, 1]} />
+              <Lightformer intensity={1.2} color="#52B788" position={[-6, 0, 2]} scale={[6, 6, 1]} />
+            </Environment>
+          </Suspense>
+        </Canvas>
+      ) : (
+        <div className="h-full w-full" aria-hidden="true" />
+      )}
     </div>
   );
 }

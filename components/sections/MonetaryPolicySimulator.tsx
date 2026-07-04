@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import Icon from "@/components/ui/Icon";
+import { BubbleText } from "@/components/ui/BubbleText";
 import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 
@@ -56,11 +57,11 @@ export default function MonetaryPolicySimulator() {
     if (isSimulating || state.quarter >= 4) return;
 
     setIsSimulating(true);
-    
+
     setTimeout(() => {
       setState((prev) => {
         const nextQuarter = prev.quarter + 1;
-        
+
         // Моделирование изменений
         // 1. Инфляция реагирует на ставку с лагом:
         // Балансовая ставка ~12%. Все что выше - снижает инфляцию, все что ниже - разгоняет.
@@ -108,7 +109,7 @@ export default function MonetaryPolicySimulator() {
     const range = max - min || 1;
     const height = 40;
     const width = 120;
-    
+
     const points = data
       .map((val, index) => {
         const x = data.length > 1 ? (index / (data.length - 1)) * width : 0;
@@ -147,7 +148,7 @@ export default function MonetaryPolicySimulator() {
     <GlassCard hoverAccent="forest" className="p-8 border border-white/5 relative overflow-hidden" isTiltEnabled={false}>
       {/* Декоративный бэкграунд */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-forest/5 rounded-full blur-3xl pointer-events-none" />
-      
+
       <div className="text-left mb-8 flex justify-between items-start">
         <div>
           <span className="text-[10px] font-mono tracking-widest text-gold uppercase block mb-1">
@@ -157,7 +158,7 @@ export default function MonetaryPolicySimulator() {
             {t("title")}
           </h3>
           <p className="text-sm text-zinc-400 font-light">
-            {t("subtitle")}
+            <BubbleText text={t("subtitle")} />
           </p>
         </div>
         <div className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-right">
@@ -171,7 +172,7 @@ export default function MonetaryPolicySimulator() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-        
+
         {/* Панель управления ставкой */}
         <div className="lg:col-span-5 flex flex-col justify-between space-y-6 text-left">
           <div className="space-y-4">
@@ -183,7 +184,7 @@ export default function MonetaryPolicySimulator() {
                 {selectedRate.toFixed(2)}%
               </span>
             </div>
-            
+
             <input
               id="rate-range"
               type="range"
@@ -196,7 +197,7 @@ export default function MonetaryPolicySimulator() {
               onChange={(e) => setSelectedRate(parseFloat(e.target.value))}
               className="w-full h-11 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-gold disabled:opacity-50"
             />
-            
+
             <div className="flex justify-between text-[10px] font-mono text-zinc-500">
               <span>5.0% (Стимулирующая)</span>
               <span>20.0% (Жесткая)</span>
@@ -246,7 +247,7 @@ export default function MonetaryPolicySimulator() {
         {/* Табло макропоказателей */}
         <div className="lg:col-span-7 flex flex-col justify-between gap-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            
+
             {/* Инфляция */}
             <div className="p-4 rounded-xl bg-white/[0.01] border border-white/5 flex flex-col justify-between h-32 relative overflow-hidden">
               <span className="text-[10px] font-mono text-zinc-400 uppercase">

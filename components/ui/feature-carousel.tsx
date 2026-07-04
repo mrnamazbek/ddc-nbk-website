@@ -10,6 +10,7 @@ import {
 } from "react";
 import Image, { type StaticImageData } from "next/image";
 import clsx from "clsx";
+import LottieAnimation from "@/components/ui/LottieAnimation";
 import {
   AnimatePresence,
   motion,
@@ -78,6 +79,12 @@ interface StepImageProps {
   width?: number;
   height?: number;
 }
+
+type StepImageElement = HTMLDivElement | HTMLImageElement;
+type StepImageExtraProps = Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  keyof StepImageProps
+>;
 
 const ANIMATION_PRESETS = {
   fadeInScale: {
@@ -211,20 +218,33 @@ const stepVariants: Variants = {
   },
 };
 
-const StepImage = forwardRef<
-  HTMLImageElement,
-  StepImageProps & {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any;
-  }
->(
+const StepImage = forwardRef<StepImageElement, StepImageProps & StepImageExtraProps>(
   (
     { src, alt, className, style, width = 1200, height = 630, ...props },
     ref
   ) => {
+    if (typeof src === "string" && src.endsWith(".json")) {
+      return (
+        <div
+          ref={ref as React.Ref<HTMLDivElement>}
+          className={className}
+          style={{
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            userSelect: "none",
+            ...style,
+          }}
+          {...props}
+        >
+          <LottieAnimation src={src} label={alt} className="w-full h-full max-h-[300px]" animationClassName="scale-[0.8]" />
+        </div>
+      );
+    }
+
     return (
       <Image
-        ref={ref}
+        ref={ref as React.Ref<HTMLImageElement>}
         alt={alt}
         className={className}
         src={src}
@@ -586,7 +606,7 @@ export const FeatureCarousel = ({
       <FeatureCard {...props} step={step} steps={steps}>
         {renderStepContent()}
       </FeatureCard>
-      
+
       {/* Steps indicators at the bottom */}
       <div className="w-full flex justify-center z-20">
         <Steps current={step} onChange={setStep} steps={steps} />

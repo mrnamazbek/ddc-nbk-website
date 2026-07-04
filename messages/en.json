@@ -105,6 +105,16 @@
       "value": "22",
       "label": "Business Processes",
       "desc": "Automated on the modern low-code OutSystems core."
+    },
+    "scene2": {
+      "overline": "Infrastructure layer",
+      "title": "A managed digital core",
+      "desc": "Data processing, procurement, contact-center operations and internal systems move through one secure technology layer."
+    },
+    "scene3": {
+      "overline": "Operational services",
+      "title": "Six services working as one",
+      "desc": "Contact Center 1477, procurement, data operations, IT services, systems development and information security form a single service constellation."
     }
   },
   "About": {
@@ -285,6 +295,12 @@
     "titleAccent": "strategic targets",
     "titleLine2": "of development",
     "subtitle": "We ensure the stability of the financial architecture of Kazakhstan through innovation, security, and advanced technology management standards.",
+    "wordHero": {
+      "leadIn": "we ",
+      "words": ["secure.", "connect.", "modernize.", "support.", "develop.", "protect."],
+      "srSummary": "We secure, connect, modernize, support, develop, and protect Kazakhstan's financial infrastructure.",
+      "tagline": "so Kazakhstan's financial infrastructure never stops."
+    },
     "step1Name": "Mission & Vision",
     "step1Title": "To be the benchmark of digital transformation",
     "step1Desc": "Our mission is to provide the National Bank of Kazakhstan and its subsidiaries with cutting-edge IT solutions that accelerate innovation, ensure the stability of the financial system, and set new quality standards in data and infrastructure management.",

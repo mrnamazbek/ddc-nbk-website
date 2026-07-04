@@ -6,10 +6,14 @@ import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import Image from "next/image";
 import { CometCard } from "@/components/ui/comet-card";
+import { BubbleText } from "@/components/ui/BubbleText";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useA11y } from "@/components/theme/AccessibilityProvider";
 import Icon from "@/components/ui/Icon";
+import ScrollReveal, { ENTRANCE_EASE, ENTRANCE_DURATION, STAGGER } from "@/components/motion/ScrollReveal";
+import { RevealWords } from "@/components/motion/RevealWords";
+import { StaggerGroup, StaggerItem } from "@/components/motion/StaggerGroup";
 
 interface Leader {
   id: string;
@@ -87,7 +91,7 @@ export default function Leadership() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [showPillars, setShowPillars] = useState(false);
   const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
-  
+
   // Данные для Совета директоров
   const boardOfDirectors: Leader[] = [
     {
@@ -257,7 +261,11 @@ export default function Leadership() {
 
   useGSAP(
     () => {
-      // Анимация центрального ствола (вертикальной линии)
+      // Анимация центрального ствола (вертикальной линии) — the tree's
+      // "trunk" reveal stays scroll-scrubbed (grows continuously as you
+      // scroll through the org chart), same idea as the Timeline section's
+      // vertical line. Branches and cards below use the shared framer-motion
+      // entrance system instead (no bounce, one-time trigger).
       gsap.fromTo(
         ".tree-spine",
         { scaleY: 0 },
@@ -273,36 +281,6 @@ export default function Leadership() {
           },
         }
       );
-
-      // Анимация горизонтальных ветвей и карточек
-      const cardElements = gsap.utils.toArray<Element>(".tree-node");
-      cardElements.forEach((node: Element) => {
-        const branch = node.querySelector(".tree-branch");
-        const card = node.querySelector(".tree-card-wrapper");
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: node,
-            start: "top 80%",
-            toggleActions: "play none none none",
-          },
-        });
-
-        if (branch) {
-          tl.fromTo(
-            branch,
-            { scaleX: 0 },
-            { scaleX: 1, duration: 0.4, ease: "power2.out" }
-          );
-        }
-
-        tl.fromTo(
-          card,
-          { opacity: 0, scale: 0.9, y: 20 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "back.out(1.2)" },
-          "-=0.2"
-        );
-      });
     },
     { scope: containerRef }
   );
@@ -311,30 +289,40 @@ export default function Leadership() {
     <section
       id="leadership"
       ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden"
+      className="relative w-full py-24 sm:py-32 bg-transparent overflow-hidden"
     >
       {/* Декоративные свечения */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-forest/5 blur-[120px] pointer-events-none" />
-      
+
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
-        
+
         {/* Заголовок секции */}
         <div className="max-w-3xl mb-20">
-          <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-mono font-medium mb-4 block">
-            {t("overline")}
-          </span>
+          <ScrollReveal blur={10} duration={ENTRANCE_DURATION.label}>
+            <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-mono font-medium mb-4 block">
+              {t("overline")}
+            </span>
+          </ScrollReveal>
           <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
-            {t("titleLine1")} <br />
-            <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
+            <RevealWords text={t("titleLine1")} delay={0.08} useBubbleText />{" "}
+            <br />
+            <RevealWords
+              text={t("titleAccent")}
+              delay={0.3}
+              useBubbleText
+              bubbleActiveClassName="text-gold font-black"
+            />
           </h2>
-          <p className="text-sm sm:text-base font-sans font-light text-muted leading-relaxed">
-            {t("subtitle")}
-          </p>
+          <ScrollReveal blur={10} duration={ENTRANCE_DURATION.subtitle} delay={0.2}>
+            <p className="text-sm sm:text-base font-sans font-light text-muted leading-relaxed">
+              <BubbleText text={t("subtitle")} />
+            </p>
+          </ScrollReveal>
         </div>
 
         {/* Интерактивное иерархическое дерево */}
         <div className="tree-container relative w-full flex flex-col items-center">
-          
+
           {/* Ствол дерева (вертикальная направляющая линия) */}
           <div className="tree-spine hidden md:block absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[2px] bg-gradient-to-b from-forest-light via-gold/60 to-forest-dark z-0" />
 
@@ -355,9 +343,9 @@ export default function Leadership() {
             <div className="flex flex-col gap-12 md:gap-4 w-full">
               {/* 1. Председатель Совета Директоров (по центру) */}
               <div className="tree-node w-full flex flex-col items-center mb-6">
-                <div className="tree-card-wrapper w-full max-w-[340px] relative z-10">
+                <ScrollReveal scale={0.94} duration={ENTRANCE_DURATION.card} className="w-full max-w-[340px] relative z-10">
                   <LeaderCard leader={boardOfDirectors[0]} locale={locale} />
-                </div>
+                </ScrollReveal>
 
                 {/* Button to toggle strategic vision */}
                 <button
@@ -385,7 +373,7 @@ export default function Leadership() {
                         {/* Glowing radial ornament background */}
                         <div className="absolute top-0 right-0 w-32 h-32 bg-gold/5 rounded-full blur-2xl pointer-events-none" />
                         <div className="absolute bottom-0 left-0 w-32 h-32 bg-forest/5 rounded-full blur-2xl pointer-events-none" />
-                        
+
                         <div className="text-left mb-6">
                           <span className="text-[10px] uppercase tracking-[0.2em] text-gold font-mono block mb-1">
                             {t("pillars.overline")}
@@ -429,7 +417,11 @@ export default function Leadership() {
                     }`}
                   >
                     {/* Горизонтальная ветвь дерева */}
-                    <div
+                    <motion.div
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: 1 }}
+                      viewport={{ once: true, margin: "-20%" }}
+                      transition={{ duration: 0.5, ease: ENTRANCE_EASE }}
                       className={`tree-branch hidden md:block absolute top-1/2 -translate-y-1/2 h-[2px] bg-gradient-to-r ${
                         isLeft
                           ? "from-transparent to-gold/30 left-[15%] w-[35%] origin-right"
@@ -440,9 +432,15 @@ export default function Leadership() {
                     {/* Точка соединения со стволом */}
                     <div className="hidden md:block absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-gold border border-black z-20" />
 
-                    <div className="tree-card-wrapper w-full max-w-[340px] relative z-10">
+                    <ScrollReveal
+                      direction={isLeft ? "left" : "right"}
+                      distance={40}
+                      duration={ENTRANCE_DURATION.card}
+                      delay={0.15}
+                      className="tree-card-wrapper w-full max-w-[340px] relative z-10"
+                    >
                       <LeaderCard leader={leader} locale={locale} />
-                    </div>
+                    </ScrollReveal>
                   </div>
                 );
               })}
@@ -465,7 +463,7 @@ export default function Leadership() {
 
             {/* 1. Председатель Правления (Карточка + Обращение) */}
             <div className="tree-node w-full flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 mb-24 max-w-5xl mx-auto">
-              <div className="tree-card-wrapper w-full max-w-[360px] flex-shrink-0">
+              <ScrollReveal direction="left" distance={40} duration={ENTRANCE_DURATION.card} className="tree-card-wrapper w-full max-w-[360px] flex-shrink-0">
                 <LeaderCard
                   leader={managementBoard[0]}
                   locale={locale}
@@ -473,12 +471,12 @@ export default function Leadership() {
                   sizes="360px"
                   cometCardClass="bg-charcoal/50 border-gold/20 shadow-2xl"
                 />
-              </div>
+              </ScrollReveal>
 
               {/* Обращение Председателя */}
-              <div className="flex-1 max-w-xl text-left bg-charcoal/20 border border-glass-border rounded-[24px] p-6 sm:p-8 backdrop-blur-md shadow-lg relative">
+              <ScrollReveal direction="right" distance={40} duration={ENTRANCE_DURATION.card} delay={0.15} className="flex-1 max-w-xl text-left bg-charcoal/20 border border-glass-border rounded-[24px] p-6 sm:p-8 backdrop-blur-md shadow-lg relative">
                 {/* Декоративная кавычка */}
-                <span className="absolute top-2 right-6 text-7xl font-serif text-gold/15 select-none pointer-events-none">“</span>
+                <span className="absolute top-2 right-6 text-7xl font-serif text-gold/15 select-none pointer-events-none">&rdquo;</span>
                 <h4 className="text-lg font-display text-gold font-medium mb-4">
                   {locale === "en"
                     ? "Welcome Message"
@@ -494,19 +492,19 @@ export default function Leadership() {
                     {managementBoard[0].name[locale]}
                   </span>
                 </div>
-              </div>
+              </ScrollReveal>
             </div>
 
             {/* 2. Заместители Председателя Правления (В ряд/Сетка) */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <StaggerGroup stagger={STAGGER.base} className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {managementBoard.slice(1).map((leader) => (
-                <div key={leader.id} className="tree-node flex flex-col items-center">
+                <StaggerItem key={leader.id} scale={0.94} duration={ENTRANCE_DURATION.card} className="tree-node flex flex-col items-center">
                   <div className="tree-card-wrapper w-full max-w-[320px]">
                     <LeaderCard leader={leader} locale={locale} isDeputy />
                   </div>
-                </div>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerGroup>
 
           </div>
 

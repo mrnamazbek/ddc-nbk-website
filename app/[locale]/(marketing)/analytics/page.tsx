@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import FinancialInform from "@/components/ui/FinancialInform";
+import { BubbleText } from "@/components/ui/BubbleText";
 import GlassCard from "@/components/ui/GlassCard";
 import Icon from "@/components/ui/Icon";
 import { useTranslations } from "next-intl";
@@ -40,13 +41,13 @@ export default function AnalyticsPage() {
   ];
 
   return (
-    <div className="relative w-full bg-background overflow-hidden min-h-screen pt-32 pb-24 font-sans">
+    <div className="relative w-full bg-transparent overflow-hidden min-h-screen pt-32 pb-24 font-sans">
       {/* Background decorations */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-forest/5 rounded-full blur-[160px] pointer-events-none" />
       <div className="absolute bottom-1/4 left-0 w-[450px] h-[450px] bg-gold/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
-        
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -58,11 +59,11 @@ export default function AnalyticsPage() {
             {t("overline")}
           </span>
           <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
-            {t("titleLine1")} <br />
-            <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
+            <BubbleText text={t("titleLine1")} /> <br />
+            <BubbleText text={t("titleAccent")} activeClassName="text-gold font-black" />
           </h1>
           <p className="text-lg text-text-secondary font-light leading-relaxed">
-            {t("description")}
+            <BubbleText text={t("description")} />
           </p>
         </motion.div>
 
@@ -85,7 +86,7 @@ export default function AnalyticsPage() {
                   </h2>
                 </div>
               </div>
-              
+
               <p className="text-sm text-text-secondary font-light leading-relaxed mb-6">
                 {t("pipelineDesc")}
               </p>
@@ -171,7 +172,7 @@ export default function AnalyticsPage() {
         {/* Career Advice Block */}
         <div className="bg-gradient-to-r from-forest-dark to-charcoal border border-border rounded-3xl p-8 sm:p-12 relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(#52B78803_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
-          
+
           <div className="flex gap-4 items-start mb-6">
             <Icon name="server" size={32} className="text-gold-light shrink-0 mt-1" />
             <div>

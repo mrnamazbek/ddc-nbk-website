@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion, useReducedMotion } from "framer-motion";
 import Icon from "@/components/ui/Icon";
+import { BubbleText } from "@/components/ui/BubbleText";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
@@ -14,6 +15,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import { KazakhstanMap } from "@/components/ui/kazakhstan-map";
 import { cn } from "@/lib/utils";
+import ScrollReveal, { ENTRANCE_DURATION, STAGGER } from "@/components/motion/ScrollReveal";
+import { RevealWords } from "@/components/motion/RevealWords";
+import { StaggerGroup, StaggerItem } from "@/components/motion/StaggerGroup";
 
 const LabelInputContainer = ({
   children,
@@ -63,97 +67,104 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="relative w-full bg-background overflow-hidden min-h-screen pt-32 pb-24 font-sans">
+    <div className="relative w-full bg-transparent overflow-hidden min-h-screen pt-32 pb-24 font-sans">
       {/* Background ambient glows */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
-        
+
         {/* Title Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-3xl mb-20"
-        >
-          <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-medium mb-4 block">
-            {t("overline")}
-          </span>
+        <div className="max-w-3xl mb-20">
+          <ScrollReveal blur={10} duration={ENTRANCE_DURATION.label}>
+            <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-medium mb-4 block">
+              {t("overline")}
+            </span>
+          </ScrollReveal>
           <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
-            {t("titleLine1")} <br />
-            <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
+            <RevealWords text={t("titleLine1")} delay={0.08} useBubbleText />{" "}
+            <br />
+            <RevealWords
+              text={t("titleAccent")}
+              delay={0.3}
+              useBubbleText
+              bubbleActiveClassName="text-gold font-black"
+            />
           </h1>
-          <p className="text-lg text-zinc-300 font-light leading-relaxed">
-            {t("subtitle")}
-          </p>
-        </motion.div>
+          <ScrollReveal blur={10} duration={ENTRANCE_DURATION.subtitle} delay={0.2}>
+            <p className="text-lg text-zinc-300 font-light leading-relaxed">
+              <BubbleText text={t("subtitle")} />
+            </p>
+          </ScrollReveal>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-          
+
           {/* Left: Contact Info */}
           <div className="lg:col-span-5 space-y-10">
             <div>
-              <h2 className="text-xl font-bold text-white mb-6 tracking-wide">{t("officeTitle")}</h2>
-              
-              <div className="space-y-6">
-                <div className="flex gap-4 items-start">
+              <ScrollReveal blur={10} duration={ENTRANCE_DURATION.label}>
+                <h2 className="text-xl font-bold text-white mb-6 tracking-wide"><BubbleText text={t("officeTitle")} /></h2>
+              </ScrollReveal>
+
+              <StaggerGroup stagger={STAGGER.base} className="space-y-6">
+                <StaggerItem duration={ENTRANCE_DURATION.subtitle} className="flex gap-4 items-start">
                   <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold-light shrink-0">
                     <Icon name="map-pin" size={20} />
                   </div>
                   <div>
                     <h5 className="text-xs text-gold-light uppercase tracking-wider font-semibold mb-1">{t("labelAddress")}</h5>
                     <p className="text-sm text-zinc-300 font-light leading-relaxed">
-                      {t("addressVal")}
+                      <BubbleText text={t("addressVal")} />
                     </p>
                   </div>
-                </div>
+                </StaggerItem>
 
-                <div className="flex gap-4 items-start">
+                <StaggerItem duration={ENTRANCE_DURATION.subtitle} className="flex gap-4 items-start">
                   <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold-light shrink-0">
                     <Icon name="phone" size={20} />
                   </div>
                   <div>
                     <h5 className="text-xs text-gold-light uppercase tracking-wider font-semibold mb-1">{t("labelPhone")}</h5>
                     <p className="text-sm text-zinc-300 font-light font-mono leading-relaxed">
-                      +7 (727) 330-24-00
+                      <BubbleText text="+7 (727) 330-24-00" />
                     </p>
                   </div>
-                </div>
+                </StaggerItem>
 
-                <div className="flex gap-4 items-start">
+                <StaggerItem duration={ENTRANCE_DURATION.subtitle} className="flex gap-4 items-start">
                   <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold-light shrink-0">
                     <Icon name="mail" size={20} />
                   </div>
                   <div>
                     <h5 className="text-xs text-gold-light uppercase tracking-wider font-semibold mb-1">{t("labelEmail")}</h5>
                     <p className="text-sm text-zinc-300 font-light font-mono leading-relaxed">
-                      info@ddc.nationalbank.kz
+                      <BubbleText text="info@ddc.nationalbank.kz" />
                     </p>
                   </div>
-                </div>
+                </StaggerItem>
 
-                <div className="flex gap-4 items-start">
+                <StaggerItem duration={ENTRANCE_DURATION.subtitle} className="flex gap-4 items-start">
                   <div className="w-10 h-10 rounded-lg bg-forest/20 border border-forest-light/10 flex items-center justify-center text-gold-light shrink-0">
                     <Icon name="clock" size={20} />
                   </div>
                   <div>
                     <h5 className="text-xs text-gold-light uppercase tracking-wider font-semibold mb-1">{t("labelClock")}</h5>
                     <p className="text-sm text-zinc-300 font-light leading-relaxed">
-                      {t("clockVal")}
+                      <BubbleText text={t("clockVal")} />
                     </p>
                   </div>
-                </div>
-              </div>
+                </StaggerItem>
+              </StaggerGroup>
             </div>
 
             {/* Status Plate */}
-            <div className="p-6 rounded-2xl bg-charcoal/30 border border-white/5">
+            <ScrollReveal duration={ENTRANCE_DURATION.card} delay={0.3} className="p-6 rounded-2xl bg-charcoal/30 border border-white/5">
               <span className="text-[10px] uppercase text-gold-light font-semibold tracking-wider block mb-2">{t("statusTitle")}</span>
               <p className="text-xs text-zinc-300 font-light leading-relaxed">
                 {t("statusDesc")}
               </p>
-            </div>
+            </ScrollReveal>
           </div>
 
           {/* Right: Contact Form */}
@@ -198,8 +209,9 @@ export default function ContactPage() {
                 </LiquidButton>
               </motion.div>
             ) : (
+              <StaggerGroup stagger={STAGGER.base}>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pointer-events-auto">
-                <div className="flex flex-col space-y-6 sm:space-y-0 sm:flex-row sm:space-x-6">
+                <StaggerItem duration={ENTRANCE_DURATION.subtitle} className="flex flex-col space-y-6 sm:space-y-0 sm:flex-row sm:space-x-6">
                   <LabelInputContainer>
                     <Label htmlFor="name">{t("fieldName")}</Label>
                     <Input
@@ -237,64 +249,71 @@ export default function ContactPage() {
                       </p>
                     )}
                   </LabelInputContainer>
-                </div>
+                </StaggerItem>
 
-                <LabelInputContainer>
-                  <Label htmlFor="organization">{t("fieldOrg")}</Label>
-                  <Input
-                    id="organization"
-                    type="text"
-                    {...register("organization")}
-                    aria-label={t("fieldOrg")}
-                    placeholder={t("placeholderOrg")}
-                    className={errors.organization ? "ring-1 ring-red-500" : ""}
-                    aria-invalid={errors.organization ? "true" : "false"}
-                    aria-describedby={errors.organization ? "organization-error" : undefined}
-                  />
-                  {errors.organization && (
-                    <p id="organization-error" className="text-xs text-red-500 mt-1 font-semibold flex items-center gap-1" role="alert">
-                      <span className="sr-only">{tA11y("errorPrefix")}: </span>⚠️ {errors.organization.message}
-                    </p>
-                  )}
-                </LabelInputContainer>
+                <StaggerItem duration={ENTRANCE_DURATION.subtitle}>
+                  <LabelInputContainer>
+                    <Label htmlFor="organization">{t("fieldOrg")}</Label>
+                    <Input
+                      id="organization"
+                      type="text"
+                      {...register("organization")}
+                      aria-label={t("fieldOrg")}
+                      placeholder={t("placeholderOrg")}
+                      className={errors.organization ? "ring-1 ring-red-500" : ""}
+                      aria-invalid={errors.organization ? "true" : "false"}
+                      aria-describedby={errors.organization ? "organization-error" : undefined}
+                    />
+                    {errors.organization && (
+                      <p id="organization-error" className="text-xs text-red-500 mt-1 font-semibold flex items-center gap-1" role="alert">
+                        <span className="sr-only">{tA11y("errorPrefix")}: </span>⚠️ {errors.organization.message}
+                      </p>
+                    )}
+                  </LabelInputContainer>
+                </StaggerItem>
 
-                <LabelInputContainer>
-                  <Label htmlFor="message">{t("fieldMsg")}</Label>
-                  <Textarea
-                    id="message"
-                    rows={6}
-                    {...register("message")}
-                    aria-label={t("fieldMsg")}
-                    placeholder={t("placeholderMsg")}
-                    className={errors.message ? "ring-1 ring-red-500" : ""}
-                    aria-invalid={errors.message ? "true" : "false"}
-                    aria-describedby={errors.message ? "message-error" : undefined}
-                  />
-                  {errors.message && (
-                    <p id="message-error" className="text-xs text-red-500 mt-1 font-semibold flex items-center gap-1" role="alert">
-                      <span className="sr-only">{tA11y("errorPrefix")}: </span>⚠️ {errors.message.message}
-                    </p>
-                  )}
-                </LabelInputContainer>
+                <StaggerItem duration={ENTRANCE_DURATION.subtitle}>
+                  <LabelInputContainer>
+                    <Label htmlFor="message">{t("fieldMsg")}</Label>
+                    <Textarea
+                      id="message"
+                      rows={6}
+                      {...register("message")}
+                      aria-label={t("fieldMsg")}
+                      placeholder={t("placeholderMsg")}
+                      className={errors.message ? "ring-1 ring-red-500" : ""}
+                      aria-invalid={errors.message ? "true" : "false"}
+                      aria-describedby={errors.message ? "message-error" : undefined}
+                    />
+                    {errors.message && (
+                      <p id="message-error" className="text-xs text-red-500 mt-1 font-semibold flex items-center gap-1" role="alert">
+                        <span className="sr-only">{tA11y("errorPrefix")}: </span>⚠️ {errors.message.message}
+                      </p>
+                    )}
+                  </LabelInputContainer>
+                </StaggerItem>
 
-                <LiquidButton
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full justify-center flex items-center gap-2 py-4 h-12 text-gold-light font-medium bg-transparent hover:scale-[1.02] transition duration-300"
-                >
-                  {isSubmitting ? (
-                    <>
-                      {t("btnSubmitting")}
-                      <Icon name="refresh" size={16} animate={false} className="animate-spin" />
-                    </>
-                  ) : (
-                    <>
-                      {t("btnSubmit")}
-                      <Icon name="send" size={16} animate={false} />
-                    </>
-                  )}
-                </LiquidButton>
+                <StaggerItem duration={ENTRANCE_DURATION.button}>
+                  <LiquidButton
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full justify-center flex items-center gap-2 py-4 h-12 text-gold-light font-medium bg-transparent hover:scale-[1.02] transition duration-300"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        {t("btnSubmitting")}
+                        <Icon name="refresh" size={16} animate={false} className="animate-spin" />
+                      </>
+                    ) : (
+                      <>
+                        {t("btnSubmit")}
+                        <Icon name="send" size={16} animate={false} />
+                      </>
+                    )}
+                  </LiquidButton>
+                </StaggerItem>
               </form>
+              </StaggerGroup>
             )}
           </div>
 
@@ -302,23 +321,23 @@ export default function ContactPage() {
 
         {/* Наши офисы — dotted Kazakhstan map with animated arc */}
         <section aria-labelledby="offices-heading" className="mt-28 sm:mt-36">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-15%" }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-3xl mb-12"
-          >
-            <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-medium mb-4 block">
-              {t("officesOverline")}
-            </span>
-            <h2 id="offices-heading" className="font-display text-3xl sm:text-5xl font-normal tracking-tight text-white mb-6">
-              {t("officesTitle")}
-            </h2>
-            <p className="text-base sm:text-lg text-zinc-300 font-light leading-relaxed">
-              {t("officesSubtitle")}
-            </p>
-          </motion.div>
+          <div className="max-w-3xl mb-12">
+            <ScrollReveal blur={10} duration={ENTRANCE_DURATION.label}>
+              <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-medium mb-4 block">
+                {t("officesOverline")}
+              </span>
+            </ScrollReveal>
+            <ScrollReveal blur={10} duration={ENTRANCE_DURATION.title} delay={0.1}>
+              <h2 id="offices-heading" className="font-display text-3xl sm:text-5xl font-normal tracking-tight text-white mb-6">
+                {t("officesTitle")}
+              </h2>
+            </ScrollReveal>
+            <ScrollReveal blur={10} duration={ENTRANCE_DURATION.subtitle} delay={0.2}>
+              <p className="text-base sm:text-lg text-zinc-300 font-light leading-relaxed">
+                {t("officesSubtitle")}
+              </p>
+            </ScrollReveal>
+          </div>
 
             {/* Container for Maps */}
             <div className="relative overflow-visible bg-transparent p-0 min-h-[480px] flex items-center justify-center">

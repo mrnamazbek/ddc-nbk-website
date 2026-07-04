@@ -1,9 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { Link } from "@/i18n/navigation";
 import { ImagesBadge } from "@/components/ui/images-badge";
 import { ThreeDMarquee } from "@/components/ui/3d-marquee";
+import { TextHoverEffect } from "@/components/ui/text-hover-effect";
+import { TextRollHover } from "@/components/ui/text-roll-hover";
 import Icon, { IconName } from "../ui/Icon";
 import DDCLogo from "../ui/DDCLogo";
 
@@ -152,14 +155,29 @@ const marqueeImages = [
 ];
 
 function FooterAnchor({ link }: { link: FooterLink }) {
+  const [hovered, setHovered] = useState(false);
   const className =
     "group/link inline-flex min-h-12 items-center gap-2 py-1 text-[15px] font-medium text-zinc-400 transition-colors duration-300 hover:text-white";
 
   if (link.external) {
     return (
-      <a href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" className={className}>
+      <a
+        href={link.href}
+        target={link.href.startsWith("http") ? "_blank" : undefined}
+        rel="noopener noreferrer"
+        className={className}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
         {link.icon && <Icon name={link.icon} size={17} className="text-gold/90" animate={false} />}
-        {link.name}
+        <TextRollHover
+          text={link.name}
+          as="span"
+          fontSize="15px"
+          hovered={hovered}
+          hoverColor="#ffffff"
+          color="currentColor"
+        />
         <Icon
           name="arrow-up-right"
           size={14}
@@ -170,9 +188,21 @@ function FooterAnchor({ link }: { link: FooterLink }) {
   }
 
   return (
-    <Link href={link.href} className={className}>
+    <Link
+      href={link.href}
+      className={className}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
       {link.icon && <Icon name={link.icon} size={17} className="text-gold/90" animate={false} />}
-      {link.name}
+      <TextRollHover
+        text={link.name}
+        as="span"
+        fontSize="15px"
+        hovered={hovered}
+        hoverColor="#ffffff"
+        color="currentColor"
+      />
       <Icon
         name="arrow-up-right"
         size={14}
@@ -346,13 +376,13 @@ export default function Footer() {
         </div>
 
         <motion.div
-          className="site-footer-watermark pointer-events-none -mb-16 mt-8 select-none text-center font-heading text-[clamp(5rem,18vw,19rem)] font-black leading-none tracking-[-0.08em] text-white/[0.035]"
+          className="site-footer-watermark pointer-events-auto -mb-16 mt-8 select-none text-center font-heading text-[clamp(5rem,18vw,19rem)] font-black leading-none tracking-[-0.08em] text-white/[0.035] w-full"
           initial={reduce ? false : { opacity: 0, y: 50 }}
           whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
         >
-          DDC
+          <TextHoverEffect text="DDC" />
         </motion.div>
       </div>
     </motion.footer>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Icon from "@/components/ui/Icon";
 import GlassCard from "@/components/ui/GlassCard";
+import { BubbleText } from "@/components/ui/BubbleText";
 
 interface FAQItem {
   question: string;
@@ -41,13 +42,13 @@ export default function FAQPage() {
   ];
 
   return (
-    <div className="relative w-full bg-background overflow-hidden min-h-screen pt-32 pb-24 font-sans">
+    <div className="relative w-full bg-transparent overflow-hidden min-h-screen pt-32 pb-24 font-sans">
       {/* Мягкие свечения */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto px-6 sm:px-12 relative z-10">
-        
+
         {/* Заголовок */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -59,11 +60,11 @@ export default function FAQPage() {
             ВОПРОСЫ И ОТВЕТЫ
           </span>
           <h1 className="font-display text-4xl sm:text-5xl font-normal tracking-tight text-white mb-6">
-            Часто задаваемые <br />
-            <span className="text-gradient-gold font-medium">вопросы</span>
+            <BubbleText text="Часто задаваемые" /> <br />
+            <BubbleText text="вопросы" activeClassName="text-gold font-black" />
           </h1>
           <p className="text-zinc-300 font-light leading-relaxed">
-            Ответы на ключевые вопросы об архитектуре систем DDC, Цифровом Тенге, открытом банкинге и стандартах кибербезопасности.
+            <BubbleText text="Ответы на ключевые вопросы об архитектуре систем DDC, Цифровом Тенге, открытом банкинге и стандартах кибербезопасности." />
           </p>
         </motion.div>
 
@@ -84,7 +85,7 @@ export default function FAQPage() {
                   <div className="flex items-center gap-4">
                     <Icon name="help" size={20} className="text-gold shrink-0" />
                     <h2 className="text-base sm:text-lg font-sans font-semibold text-white tracking-wide">
-                      {faq.question}
+                      <BubbleText text={faq.question} />
                     </h2>
                   </div>
                   <div className={`w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-zinc-400 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}>
@@ -102,7 +103,7 @@ export default function FAQPage() {
                     >
                       <div className="px-6 pb-6 sm:px-8 sm:pb-8 border-t border-white/5 pt-4">
                         <p className="text-sm sm:text-base text-zinc-400 font-sans font-light leading-relaxed">
-                          {faq.answer}
+                          <BubbleText text={faq.answer} />
                         </p>
                       </div>
                     </motion.div>

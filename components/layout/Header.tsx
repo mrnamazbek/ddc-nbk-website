@@ -10,6 +10,12 @@ import Icon from "../ui/Icon";
 import { AccessibilityTrigger } from "../ui/AccessibilityPanel";
 import NavPreviewCard from "./NavPreview";
 import DDCLogo from "../ui/DDCLogo";
+import { TextRollHover } from "../ui/text-roll-hover";
+import {
+  TextStaggerHover,
+  TextStaggerHoverActive,
+  TextStaggerHoverHidden,
+} from "../ui/text-stagger-hover";
 
 const LANGUAGES = ["kz", "ru", "en"];
 const LANGUAGE_LABELS: Record<string, string> = {
@@ -80,7 +86,16 @@ function LanguageSwitcher({
                 transition={{ type: "spring", stiffness: 380, damping: 30 }}
               />
             )}
-            {lng.toUpperCase()}
+            <TextRollHover
+              text={lng.toUpperCase()}
+              as="span"
+              fontSize={size === "lg" ? "0.875rem" : "0.75rem"}
+              staggerDelay={15}
+              duration={200}
+              hoverColor={active ? "#000000" : "#C9A84C"}
+              color="currentColor"
+              className="font-mono font-bold tracking-wider pointer-events-none"
+            />
           </button>
         );
       })}
@@ -255,7 +270,14 @@ export default function Header() {
                       isActive ? "text-gold" : "text-muted hover:text-foreground"
                     }`}
                   >
-                    {link.name}
+                    <TextStaggerHover>
+                      <TextStaggerHoverActive animation="top">
+                        {link.name}
+                      </TextStaggerHoverActive>
+                      <TextStaggerHoverHidden animation="bottom">
+                        {link.name}
+                      </TextStaggerHoverHidden>
+                    </TextStaggerHover>
                   </TransitionLink>
                 </li>
               );
@@ -366,7 +388,14 @@ export default function Header() {
                         isActive ? "text-gold font-semibold" : "text-foreground"
                       }`}
                     >
-                      {link.name}
+                      <TextStaggerHover>
+                        <TextStaggerHoverActive animation="top">
+                          {link.name}
+                        </TextStaggerHoverActive>
+                        <TextStaggerHoverHidden animation="bottom">
+                          {link.name}
+                        </TextStaggerHoverHidden>
+                      </TextStaggerHover>
                     </TransitionLink>
                   </motion.div>
                 );

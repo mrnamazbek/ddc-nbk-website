@@ -1,4 +1,5 @@
 "use client";
+import { BubbleText } from "@/components/ui/BubbleText";
 
 import { motion } from "framer-motion";
 
@@ -40,7 +41,7 @@ export default function SecuredFiServices() {
   return (
     <div className="relative min-h-screen w-full py-32 px-6 bg-gradient-to-b from-transparent to-[#091A11]/60">
       <div className="max-w-6xl mx-auto">
-        
+
         {/* Header section with clean minimalist typography */}
         <div className="mb-24 text-center md:text-left">
           <motion.div
@@ -59,8 +60,8 @@ export default function SecuredFiServices() {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="text-3xl md:text-5xl font-serif text-white font-light tracking-tight mb-6"
           >
-            {t("titleLine1")}{" "}
-            <span className="text-gold font-normal">{t("titleAccent")}</span>
+            <BubbleText text={t("titleLine1")} />{" "}
+            <span className="text-gold font-normal"><BubbleText text={t("titleAccent")} activeClassName="text-gold font-black" /></span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 30 }}
@@ -69,7 +70,7 @@ export default function SecuredFiServices() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="max-w-xl text-zinc-400 font-sans font-light leading-relaxed text-sm md:text-base"
           >
-            {t("subtitle")}
+            <BubbleText text={t("subtitle")} />
           </motion.p>
         </div>
 

@@ -7,6 +7,7 @@ import gsap from "@/lib/gsap";
 import GlassCard from "@/components/ui/GlassCard";
 import TextReveal from "@/components/ui/TextReveal";
 import Icon, { IconName } from "@/components/ui/Icon";
+import { BubbleText } from "@/components/ui/BubbleText";
 
 interface SecurityFeature {
   key: string;
@@ -105,10 +106,10 @@ export default function Security() {
   ];
 
   return (
-    <section 
-      id="security" 
+    <section
+      id="security"
       ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden"
+      className="relative w-full py-24 sm:py-32 bg-transparent overflow-hidden"
     >
       {/* Background grid and glows */}
       <div className="absolute inset-0 bg-[radial-gradient(rgba(82,183,136,0.03)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
@@ -117,7 +118,7 @@ export default function Security() {
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-          
+
           {/* Futuristic security console */}
           <div className="lg:col-span-5 flex justify-center relative order-last lg:order-first">
             <div
@@ -131,7 +132,7 @@ export default function Security() {
                 {/* Scanlines */}
                 <div className="absolute inset-0 bg-gradient-to-b from-forest-light/[0.02] via-transparent to-forest-light/[0.02] pointer-events-none" />
                 <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-forest-light/30 to-transparent animate-[scan_6s_linear_infinite]" />
-                
+
                 {/* Console header */}
                 <div className="flex items-center justify-between border-b border-glass-border pb-4">
                   <div className="flex items-center gap-2.5">
@@ -153,7 +154,7 @@ export default function Security() {
                   {/* Rotating tech rings */}
                   <div className="absolute w-44 h-44 border border-forest-light/10 rounded-full flex items-center justify-center animate-spin-slow" />
                   <div className="absolute w-36 h-36 border border-dashed border-gold/15 rounded-full animate-spin-slow [animation-direction:reverse] [animation-duration:12s]" />
-                  
+
                   {/* 3D Saka Shield SVG */}
                   <svg
                     width="110"
@@ -224,8 +225,8 @@ export default function Security() {
               </span>
 
               <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
-                {t("titleLine1")} <br />
-                <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
+                <BubbleText text={t("titleLine1")} /> <br />
+                <BubbleText text={t("titleAccent")} activeClassName="text-gold font-black" />
               </h2>
             </div>
 
@@ -235,8 +236,8 @@ export default function Security() {
             <div className="space-y-4">
               {securityFeatures.map((feat, idx) => {
                 return (
-                  <div 
-                    key={idx} 
+                  <div
+                    key={idx}
                     ref={addToRefs}
                   >
                     <GlassCard
@@ -251,10 +252,10 @@ export default function Security() {
                         </div>
                         <div>
                           <h4 className="text-base font-sans font-semibold text-foreground mb-1">
-                            {t(`${feat.key}.title`)}
+                            <BubbleText text={t(`${feat.key}.title`)} />
                           </h4>
                           <p className="text-xs font-sans font-light text-muted leading-relaxed max-w-xl">
-                            {t(`${feat.key}.desc`)}
+                            <BubbleText text={t(`${feat.key}.desc`)} />
                           </p>
                         </div>
                       </div>

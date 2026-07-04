@@ -1,29 +1,22 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { usePathname } from "next/navigation";
-import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import { useA11y } from "../theme/AccessibilityProvider";
-
-// WebGL/R3F shader background - lazy-loaded to prevent SSR issues and compile load
-const ShadersDotCursorBackground = dynamic(() => import("./ShadersDotCursorBackground"), { ssr: false });
-const FlowingHeroShaderBackground = dynamic(() => import("./ShaderBackground"), { ssr: false });
 
 export default function InteractiveDotGrid() {
   const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
-  const pathname = usePathname();
-  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // If accessibility is enabled or prefers-reduced-motion is active, disable background animations
-  if (a11yEnabled || prefersReducedMotion) {
+  if (!mounted || a11yEnabled || prefersReducedMotion) {
     return null;
   }
 
-  const cleanPath = pathname.replace(/^\/[a-z]{2}(\/|$)/, "/");
-
-  if (cleanPath === "/" || cleanPath === "") {
-    return <FlowingHeroShaderBackground isLight={resolvedTheme === "light"} />;
-  }
-
-  return <ShadersDotCursorBackground />;
+  // The calm forest/gold gradient only, on every page — no interactive canvas.
+  // The flowing shader is a Home-hero-only moment, scoped inside Hero.tsx itself.
+  return <div className="site-backdrop fixed inset-0 w-full h-screen -z-50 pointer-events-none" aria-hidden="true" />;
 }

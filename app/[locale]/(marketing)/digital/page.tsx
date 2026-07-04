@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Icon from "@/components/ui/Icon";
+import { BubbleText } from "@/components/ui/BubbleText";
 import GlassCard from "@/components/ui/GlassCard";
 import { useTranslations } from "next-intl";
 import DigitalTengeSimulator from "@/components/sections/DigitalTengeSimulator";
@@ -43,13 +44,13 @@ export default function DigitalPage() {
   ];
 
   return (
-    <div className="relative w-full bg-background overflow-hidden min-h-screen pt-32 pb-24 font-sans">
+    <div className="relative w-full bg-transparent overflow-hidden min-h-screen pt-32 pb-24 font-sans">
       {/* Мягкие свечения */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-forest/5 rounded-full blur-[160px] pointer-events-none" />
       <div className="absolute bottom-1/4 left-0 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
-        
+
         {/* Заголовок */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -61,11 +62,11 @@ export default function DigitalPage() {
             {t("overline")}
           </span>
           <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-white mb-6">
-            {t("titleLine1")} <br />
-            <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
+            <BubbleText text={t("titleLine1")} /> <br />
+            <BubbleText text={t("titleAccent")} activeClassName="text-gold font-black" />
           </h1>
           <p className="text-lg text-zinc-300 font-light leading-relaxed">
-            {t("subtitle")}
+            <BubbleText text={t("subtitle")} />
           </p>
         </motion.div>
 

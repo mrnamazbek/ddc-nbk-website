@@ -4,16 +4,18 @@ import React from 'react';
 import { BentoGrid, BentoGridItem } from '@/components/ui/bento-grid';
 import { BackgroundBeams } from '@/components/ui/background-beams';
 import { motion } from 'framer-motion';
-import { 
-  IconShield, 
-  IconActivity, 
-  IconDeviceLaptop, 
-  IconServer, 
-  IconDatabase, 
+import {
+  IconShield,
+  IconActivity,
+  IconDeviceLaptop,
+  IconServer,
+  IconDatabase,
   IconTrendingUp,
   IconCheck
 } from '@tabler/icons-react';
 import { Link } from '@/i18n/navigation';
+
+import { BubbleText } from '@/components/ui/BubbleText';
 
 export default function TestMcpPage() {
   const items = [
@@ -116,13 +118,13 @@ export default function TestMcpPage() {
       <div className="max-w-7xl w-full mx-auto relative z-10">
         <div className="text-center mb-16">
           <span className="text-[#E8C87A] text-xs font-mono uppercase tracking-widest bg-[#E8C87A]/10 px-3 py-1 rounded-full border border-[#E8C87A]/20">
-            Aceternity & shadcn MCP Playground
+            <BubbleText text="Aceternity & shadcn MCP Playground" />
           </span>
           <h1 className="text-4xl md:text-6xl font-bold mt-4 mb-6 text-gradient-gold font-display">
-            Компоненты Aceternity UI
+            <BubbleText text="Компоненты Aceternity UI" />
           </h1>
           <p className="text-zinc-400 max-w-2xl mx-auto text-base">
-            Эта страница демонстрирует работу установленных компонентов Bento Grid и Background Beams, стилизованных под цветовую палитру DDC.
+            <BubbleText text="Эта страница демонстрирует работу установленных компонентов Bento Grid и Background Beams, стилизованных под цветовую палитру DDC." />
           </p>
         </div>
 
@@ -131,8 +133,8 @@ export default function TestMcpPage() {
           {items.map((item, i) => (
             <BentoGridItem
               key={i}
-              title={item.title}
-              description={item.description}
+              title={<BubbleText text={item.title} />}
+              description={<BubbleText text={item.description} />}
               header={item.header}
               icon={item.icon}
               className={item.className}
@@ -144,10 +146,10 @@ export default function TestMcpPage() {
         <div className="max-w-5xl mx-auto mb-20 relative">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Тарифные планы для вашего масштаба
+              <BubbleText text="Тарифные планы для вашего масштаба" />
             </h2>
             <p className="text-zinc-400 text-sm max-w-lg mx-auto">
-              Исследуйте наши гибкие условия, созданные в соответствии с лучшими практиками юзабилити и оптимизации конверсий.
+              <BubbleText text="Исследуйте наши гибкие условия, созданные в соответствии с лучшими практиками юзабилити и оптимизации конверсий." />
             </p>
           </div>
 
@@ -172,7 +174,7 @@ export default function TestMcpPage() {
                   )}
                   <h3 className="text-xl font-bold text-white mb-2">{plan.name}</h3>
                   <p className="text-zinc-400 text-xs mb-6 min-h-[2.5rem]">{plan.description}</p>
-                  
+
                   <div className="flex items-baseline mb-6">
                     <span className="text-3xl md:text-4xl font-extrabold text-[#E8C87A]">{plan.price}</span>
                     {plan.period && (

@@ -1,0 +1,180 @@
+/* Scroll Word Hero — sticky word-reveal opener (Mission page).
+   Ported from a community component and rewritten for this project: every
+   selector is scoped under .scroll-word-hero (the source used bare
+   html/body/header/main/footer selectors, which would have overridden the
+   real site chrome on every page), colors follow the existing light/dark
+   token system instead of a separate hue/data-theme mechanism, and the
+   reveal panel uses position:absolute (not fixed) so it scrolls away
+   normally instead of staying pinned over later page content. */
+
+.scroll-word-hero {
+  position: relative;
+  width: 100%;
+}
+
+.scroll-word-hero__pin {
+  position: sticky;
+  /* `1.15em` (line-height) here resolves from this element's own font-size,
+     providing a robust fallback for browsers that do not support lh units. */
+  top: calc((var(--swh-count, 6) - 1) * -1.15em);
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: center;
+  margin-bottom: var(--swh-space, 40vh);
+  font-family: var(--font-current-display), serif;
+  font-weight: 500;
+  font-size: clamp(2rem, 5.5vw, 4.5rem);
+  line-height: 1.15;
+  color: var(--foreground);
+}
+
+/* Non-sticky row: holds the pinned lead-in label and the word list. */
+.scroll-word-hero__stage {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.35em;
+  width: 100%;
+  padding-top: calc(var(--swh-start, 50vh) - 0.575em);
+  margin: 0;
+}
+
+.scroll-word-hero__lead {
+  position: sticky;
+  top: calc(var(--swh-start, 50vh) - 0.575em);
+  white-space: nowrap;
+}
+
+@media (max-width: 639px) {
+  .scroll-word-hero__lead {
+    display: none;
+  }
+}
+
+.scroll-word-hero__words {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-weight: 600;
+}
+
+.scroll-word-hero__words li {
+  --swh-dimmed: color-mix(in oklch, var(--foreground), transparent 82%);
+  background: linear-gradient(
+    180deg,
+    var(--swh-dimmed) 0 calc(var(--swh-start, 50vh) - 0.575em),
+    var(--accent-gold-hover) calc(var(--swh-start, 50vh) - 0.6325em) calc(var(--swh-start, 50vh) + 0.6325em),
+    var(--swh-dimmed) calc(var(--swh-start, 50vh) + 0.575em)
+  );
+  background-attachment: fixed;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+html.light .scroll-word-hero__words li {
+  background-image: linear-gradient(
+    180deg,
+    var(--swh-dimmed) 0 calc(var(--swh-start, 50vh) - 0.575em),
+    var(--light-gold-readable, #6f561d) calc(var(--swh-start, 50vh) - 0.6325em) calc(var(--swh-start, 50vh) + 0.6325em),
+    var(--swh-dimmed) calc(var(--swh-start, 50vh) + 0.575em)
+  );
+}
+
+.scroll-word-hero__reveal {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.scroll-word-hero__panel {
+  position: absolute;
+  inset: 0;
+  border-radius: 1.5rem 1.5rem 0 0;
+  background: #040c08;
+}
+
+.scroll-word-hero__tagline {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.5rem;
+  text-align: center;
+  font-family: var(--font-current-sans), sans-serif;
+  font-weight: 500;
+  font-size: clamp(1.15rem, 3vw, 1.85rem);
+  color: #f4f1e6;
+}
+
+.scroll-word-hero__tagline > span {
+  max-width: 46rem;
+}
+
+/* Progressive enhancement: grow the panel + fade the tagline in as the
+   section enters view, and back out again as it exits — both phases are
+   required so nothing is left stuck at full opacity once scrolled past. */
+@supports (animation-timeline: view()) {
+  .scroll-word-hero__reveal {
+    view-timeline: --scroll-word-hero-panel;
+  }
+  .scroll-word-hero__panel {
+    transform-origin: 50% 100%;
+    scale: 0.92;
+    animation: scroll-word-hero-grow both ease-in-out;
+    animation-timeline: --scroll-word-hero-panel;
+    animation-range: entry 55%;
+  }
+  .scroll-word-hero__tagline {
+    animation: scroll-word-hero-reveal both ease-in-out;
+    animation-timeline: --scroll-word-hero-panel;
+    animation-range: entry 55% cover 45%;
+  }
+  @keyframes scroll-word-hero-grow {
+    to {
+      scale: 1;
+      border-radius: 0;
+    }
+  }
+  @keyframes scroll-word-hero-reveal {
+    0% {
+      opacity: 0;
+    }
+    35%,
+    65% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+}
+
+/* Static, non-sticky fallback for reduced-motion / accessibility mode. */
+.scroll-word-hero--static {
+  padding: clamp(3rem, 10vh, 6rem) 1.5rem;
+  text-align: center;
+}
+
+.scroll-word-hero__static h2 {
+  margin: 0 auto 1rem;
+  max-width: 46rem;
+  font-family: var(--font-current-display), serif;
+  font-weight: 500;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  color: var(--foreground);
+}
+
+.scroll-word-hero__static .scroll-word-hero__tagline--static {
+  position: static;
+  display: block;
+  padding: 0;
+  color: var(--text-secondary);
+  opacity: 0.85;
+}

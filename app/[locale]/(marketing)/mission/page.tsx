@@ -2,25 +2,12 @@
 
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-import dynamic from "next/dynamic";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
-import { useABTest } from "@/lib/abTest";
-import ABTestSwitcher from "@/components/ui/ABTestSwitcher";
-import { useA11y } from "@/components/theme/AccessibilityProvider";
+import { BubbleText } from "@/components/ui/BubbleText";
 import TerminalGridBackground from "@/components/ui/TerminalGridBackground";
-import ThreeModelLoadingOverlay from "@/components/ui/ThreeModelLoadingOverlay";
+import ScrollWordHero from "@/components/ui/scroll-hero-section";
 import LottieAnimation from "@/components/ui/LottieAnimation";
-
-const FeatureCarousel = dynamic(
-  () => import("@/components/ui/feature-carousel").then((mod) => mod.FeatureCarousel),
-  { ssr: false }
-);
-
-const Mission3D = dynamic(() => import("@/components/sections/Mission3D"), {
-  ssr: false,
-  loading: () => <Mission3DLoadingFallback />,
-});
-
+import { FeatureCarousel } from "@/components/ui/feature-carousel";
 import type { Step } from "@/components/ui/feature-carousel";
 
 function Mission2D() {
@@ -55,7 +42,7 @@ function Mission2D() {
   ];
 
   return (
-    <div className="relative w-full bg-background overflow-hidden min-h-screen pt-12 pb-24 font-sans flex items-center">
+    <div className="relative w-full bg-transparent overflow-hidden min-h-screen pt-12 pb-24 font-sans flex items-center">
       {/* Background radial/gradient flows to maintain premium design */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[360px] h-[360px] rounded-full bg-forest/10 blur-[80px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[300px] h-[300px] rounded-full bg-gold/5 blur-[70px] pointer-events-none" />
@@ -72,14 +59,12 @@ function Mission2D() {
                 {t("overline")}
               </span>
               <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
-                {t("titleLine1")}{" "}
-                <span className="text-gradient-gold font-medium">
-                  {t("titleAccent")}
-                </span>{" "}
+                <BubbleText text={t("titleLine1")} />{" "}
+                <BubbleText text={t("titleAccent")} activeClassName="text-gold font-black" />{" "}
                 {t("titleLine2")}
               </h1>
               <p className="text-base sm:text-lg text-text-secondary font-light leading-relaxed max-w-2xl mx-auto">
-                {t("subtitle")}
+                <BubbleText text={t("subtitle")} />
               </p>
             </div>
           }
@@ -89,36 +74,36 @@ function Mission2D() {
             description={t("subtitle")}
             steps={steps}
             step1img1Class={cn(
-              "pointer-events-none border border-border transition-all duration-500 rounded-[24px] absolute object-cover aspect-[4/3] shadow-2xl",
-              "w-[46%] max-md:rounded-[12px] left-[4%] top-[15%] md:w-[50%] md:left-[35px] md:top-[15%] md:group-hover:translate-y-2"
+              "pointer-events-none transition-all duration-500 absolute",
+              "w-[46%] left-[4%] top-[10%] h-[240px]"
             )}
             step1img2Class={cn(
-              "pointer-events-none border border-border transition-all duration-500 overflow-hidden absolute object-cover aspect-[4/3] shadow-2xl",
-              "w-[46%] max-md:rounded-[12px] left-[50%] top-[25%] md:w-[55%] md:top-[5%] md:left-[calc(45%+35px+1rem)] md:group-hover:-translate-y-6"
+              "pointer-events-none transition-all duration-500 absolute",
+              "w-[46%] left-[50%] top-[10%] h-[240px]"
             )}
             step2img1Class={cn(
-              "pointer-events-none rounded-[24px] overflow-hidden border border-border transition-all duration-500 absolute object-cover aspect-[4/3] shadow-2xl",
-              "w-[46%] max-md:rounded-[12px] left-[4%] top-[20%] md:w-[45%] md:left-[35px] md:top-[12%] md:group-hover:translate-y-2"
+              "pointer-events-none transition-all duration-500 absolute",
+              "w-[45%] left-[4%] top-[10%] h-[240px]"
             )}
             step2img2Class={cn(
-              "pointer-events-none rounded-[24px] border border-border transition-all duration-500 overflow-hidden absolute object-cover aspect-[4/3] shadow-2xl",
-              "w-[46%] max-md:rounded-[12px] left-[50%] top-[10%] md:w-[45%] md:top-[8%] md:left-[calc(45%+27px+1rem)] md:group-hover:-translate-y-6"
+              "pointer-events-none transition-all duration-500 absolute",
+              "w-[45%] left-[50%] top-[10%] h-[240px]"
             )}
             step3imgClass={cn(
-              "pointer-events-none border border-border rounded-[24px] transition-all duration-500 overflow-hidden absolute aspect-[16/9] object-cover shadow-2xl",
-              "w-[80%] md:w-[70%] left-[10%] top-[15%] md:top-[10%] md:left-[15%]"
+              "pointer-events-none transition-all duration-500 absolute",
+              "w-[80%] left-[10%] top-[5%] h-[280px]"
             )}
             step4imgClass={cn(
-              "pointer-events-none border border-border rounded-[24px] transition-all duration-500 overflow-hidden absolute aspect-[16/9] object-cover shadow-2xl",
-              "w-[80%] md:w-[70%] left-[10%] top-[15%] md:top-[10%] md:left-[15%]"
+              "pointer-events-none transition-all duration-500 absolute",
+              "w-[80%] left-[10%] top-[5%] h-[280px]"
             )}
             image={{
-              step1light1: "/images/nbk_architecture.png",
-              step1light2: "/images/3d/shanyrak-gold.png",
-              step2light1: "/images/saka_core_render.png",
-              step2light2: "/images/backgrounds/steppe-horizon-abstract.png",
-              step3light: "/images/saka_refractive_glass.png",
-              step4light: "/images/backgrounds/glass-card-bg.png",
+              step1light1: "/animations/it-infrastructure-server-data.json",
+              step1light2: "/animations/secure-data-protection.json",
+              step2light1: "/animations/server-data-sync.json",
+              step2light2: "/animations/data-science-pc-screen.json",
+              step3light: "/animations/data-science-floating-laptop.json",
+              step4light: "/animations/career-programmer-code.json",
               alt: t("step1Name"),
             }}
             bgClass="!bg-transparent !border-none !shadow-none"
@@ -141,8 +126,8 @@ function Mission2D() {
             <LottieAnimation
               src="/animations/data-science-floating-laptop.json"
               label="Data graphs floating from a laptop"
-              className="rounded-[var(--radius-card)]"
-              frameClassName="min-h-[280px] sm:min-h-[340px] lg:min-h-[420px] bg-background/50"
+              className="relative"
+              frameClassName="min-h-[280px] sm:min-h-[340px] lg:min-h-[420px]"
               animationClassName="scale-[1.05]"
             />
           </div>
@@ -152,29 +137,18 @@ function Mission2D() {
   );
 }
 
-function Mission3DLoadingFallback() {
-  return (
-    <div className="relative">
-      <Mission2D />
-      <ThreeModelLoadingOverlay label="Loading 3D mission" />
-    </div>
-  );
-}
-
 export default function MissionPage() {
-  const variant = useABTest("mission");
-  const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
-
-  if (!variant) {
-    return <div className="min-h-screen bg-background" />;
-  }
-
-  const activeVariant = (a11yEnabled || prefersReducedMotion) ? "A" : variant;
+  const wordHero = useTranslations("Mission.wordHero");
 
   return (
     <>
-      {activeVariant === "A" ? <Mission2D /> : <Mission3D />}
-      <ABTestSwitcher pageKey="mission" current={activeVariant} />
+      <ScrollWordHero
+        leadIn={wordHero("leadIn")}
+        items={wordHero.raw("words")}
+        srSummary={wordHero("srSummary")}
+        tagline={wordHero("tagline")}
+      />
+      <Mission2D />
     </>
   );
 }

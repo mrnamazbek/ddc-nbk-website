@@ -6,7 +6,7 @@
   /* ==========================================
      1. Базовая палитра (Base Colors)
      ========================================== */
-  
+
   /* Первичная палитра (DDC Forest Green) */
   --color-forest: #1A3D2B;
   --color-forest-mid: #2D6A4F;
@@ -32,31 +32,31 @@
   --color-success: #52B788;
   --color-warning: #F5C518;
   --color-error: #E63946;
-  --color-info: #457B9D;
+  --color-info: #2D6A4F;
 
   /* ==========================================
      2. Семантические цвета Темной темы (Default Dark Theme)
      ========================================== */
   --background: #08140D; /* deep forest green base (was near-black #08080a) */
-  --foreground: #FFFFFF;
-  --surface: #141419;
-  
-  --text-primary: #FFFFFF;
-  --text-secondary: #B8C8BE;
-  --text-tertiary: #7F9488;
-  
-  --accent-gold: #C9A84C;
-  --accent-gold-hover: #E8C87A;
+  --foreground: #F4F7F1;
+  --surface: #0F1F17;
+
+  --text-primary: #F4F7F1;
+  --text-secondary: #C3CEC4;
+  --text-tertiary: #8FA195;
+
+  --accent-gold: #D1B45A;
+  --accent-gold-hover: #F0D98B;
 
   /* Hero readability scrim — deep forest in dark theme */
   --hero-scrim-strong: #0E2419;
   --hero-scrim-soft: rgba(14, 36, 25, 0.6);
 
-  --border-primary: rgba(255, 255, 255, 0.08);
-  --border-secondary: rgba(255, 255, 255, 0.15);
+  --border-primary: rgba(244, 247, 241, 0.1);
+  --border-secondary: rgba(244, 247, 241, 0.18);
 
-  --glass-bg: rgba(20, 20, 25, 0.4);
-  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-bg: rgba(12, 31, 22, 0.48);
+  --glass-border: rgba(244, 247, 241, 0.12);
   --glass-border-gold: rgba(201, 168, 76, 0.2);
   --glass-border-forest: rgba(82, 183, 136, 0.2);
   --glass-blur: blur(16px) saturate(180%);
@@ -81,10 +81,10 @@
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.4);
   --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.5);
-  
+
   --shadow-gold: 0 8px 32px rgba(201, 168, 76, 0.15);
   --shadow-green: 0 8px 32px rgba(26, 61, 43, 0.25);
-  
+
   --shadow-button: 0 4px 12px rgba(0, 0, 0, 0.15);
   --shadow-card: var(--shadow-lg);
 
@@ -151,7 +151,7 @@
 
   /* Токены выделения и каретки (Темная тема) */
   --selection-bg: rgba(201, 168, 76, 0.3);
-  --selection-text: #FFFFFF;
+  --selection-text: #F4F7F1;
   --caret-color: #C9A84C;
 }
 
@@ -159,35 +159,35 @@
    7. Семантические цвета Светлой темы (Light Theme)
    ========================================== */
 html.light {
-  --background: #F4F1E6;
-  --foreground: #0B1F15;
-  --surface: #FBF8EE;
-  
-  --text-primary: #0B1F15;
-  --text-secondary: #203C2D;
-  --text-tertiary: #486153;
-  
-  --accent-gold: #6F561D; /* accessible antique gold for labels/icons, not body copy */
-  --accent-gold-hover: #4B3A12;
+  --background: #F6F2E8;
+  --foreground: #102217;
+  --surface: #FFFDF6;
+
+  --text-primary: #102217;
+  --text-secondary: #314537;
+  --text-tertiary: #64766A;
+
+  --accent-gold: #7D631F; /* accessible antique gold for labels/icons, not body copy */
+  --accent-gold-hover: #5D4918;
 
   /* Hero readability scrim — warm cream in light theme (never darkens the hero) */
-  --hero-scrim-strong: rgba(244, 241, 230, 0.94);
-  --hero-scrim-soft: rgba(244, 241, 230, 0.5);
-  
-  --border-primary: rgba(11, 31, 21, 0.16);
-  --border-secondary: rgba(11, 31, 21, 0.26);
+  --hero-scrim-strong: rgba(246, 242, 232, 0.94);
+  --hero-scrim-soft: rgba(246, 242, 232, 0.5);
 
-  --color-gray-dark: #203C2D;
-  --color-gray-mid: #486153;
-  --color-gray-light: #73877A;
-  --color-offwhite: #F4F1E6;
+  --border-primary: rgba(16, 34, 23, 0.14);
+  --border-secondary: rgba(16, 34, 23, 0.24);
 
-  --glass-bg: rgba(251, 248, 238, 0.9);
-  --glass-border: rgba(11, 31, 21, 0.16);
-  --glass-border-gold: rgba(111, 86, 29, 0.28);
-  --glass-border-forest: rgba(11, 31, 21, 0.2);
-  --glass-shadow: 0 10px 34px rgba(11, 31, 21, 0.1);
-  
+  --color-gray-dark: #314537;
+  --color-gray-mid: #64766A;
+  --color-gray-light: #879589;
+  --color-offwhite: #F6F2E8;
+
+  --glass-bg: rgba(255, 253, 246, 0.88);
+  --glass-border: rgba(16, 34, 23, 0.14);
+  --glass-border-gold: rgba(125, 99, 31, 0.26);
+  --glass-border-forest: rgba(16, 34, 23, 0.18);
+  --glass-shadow: 0 10px 34px rgba(16, 34, 23, 0.09);
+
   --shadow-button: 0 5px 14px rgba(11, 31, 21, 0.12);
   --shadow-card: 0 18px 52px rgba(11, 31, 21, 0.1);
 

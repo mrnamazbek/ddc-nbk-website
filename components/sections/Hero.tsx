@@ -3,13 +3,17 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import Magnetic from "@/components/motion/Magnetic";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
+import { BubbleText } from "@/components/ui/BubbleText";
 import { MetalButton } from "@/components/ui/liquid-glass-button";
 import Icon from "@/components/ui/Icon";
 import DDCLogo from "@/components/ui/DDCLogo";
+import FlowingHeroShaderBackground from "@/components/ui/ShaderBackground";
+import { ENTRANCE_EASE, ENTRANCE_DURATION, STAGGER } from "@/components/motion/ScrollReveal";
 
 import { SplineScene } from "@/components/ui/splite";
 
@@ -20,9 +24,10 @@ const ROBOT_SCENE = "/spline/scene.splinecode";
 export default function Hero() {
   const t = useTranslations("Hero");
   const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
+  const { resolvedTheme } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  
+
   const [isMobileDevice, setIsMobileDevice] = useState(true);
 
   useEffect(() => {
@@ -58,38 +63,75 @@ export default function Hero() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.12,
+        staggerChildren: STAGGER.base,
         delayChildren: 0.2,
       },
     },
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 40 },
+  // Label (badge): first to appear, shortest hold.
+  const labelVariants = {
+    hidden: { opacity: 0, y: 30, filter: "blur(10px)" },
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 1.0,
-        ease: [0.16, 1, 0.3, 1] as const, // premium ease-out expo
-      },
+      filter: "blur(0px)",
+      transition: { duration: ENTRANCE_DURATION.label, ease: ENTRANCE_EASE },
     },
   };
 
-  // Split translated title strings into array of word objects for localized Typewriter animation
+  // Subtitle: same shape, slightly longer settle.
+  const subtitleVariants = {
+    hidden: { opacity: 0, y: 30, filter: "blur(10px)" },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: { duration: ENTRANCE_DURATION.subtitle, ease: ENTRANCE_EASE },
+    },
+  };
+
+  // Buttons: last to appear, each scales in with a tight stagger between them
+  // (never a bounce — scale stays subtle, 0.96 -> 1).
+  const buttonContainerVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: STAGGER.tight } },
+  };
+
+  const buttonItemVariants = {
+    hidden: { opacity: 0, y: 30, scale: 0.96, filter: "blur(10px)" },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      filter: "blur(0px)",
+      transition: { duration: ENTRANCE_DURATION.button, ease: ENTRANCE_EASE },
+    },
+  };
+
+  // Split translated title strings into explicit reveal LINES (not one flat
+  // word list) — titleLine1/titleAccent/titleLine2 are the designed line
+  // breaks; TypewriterEffect reveals each with its own clip animation, so
+  // this stays true to that layout instead of depending on wherever flex-wrap
+  // happens to break at a given viewport width.
   const title1Words = t("titleLine1").split(" ").filter(Boolean).map(w => ({ text: w }));
   const titleAccentWords = t("titleAccent").split(" ").filter(Boolean).map(w => ({
     text: w,
     className: "text-gradient-gold not-italic font-medium"
   }));
   const title2Words = t("titleLine2").split(" ").filter(Boolean).map(w => ({ text: w }));
-  const typewriterWords = [...title1Words, ...titleAccentWords, ...title2Words];
+  const typewriterLines = [title1Words, titleAccentWords, title2Words].filter((line) => line.length > 0);
 
   return (
-    <section 
+    <section
       ref={containerRef}
       className="relative w-full min-h-screen lg:h-screen lg:max-h-[820px] xl:max-h-[880px] flex flex-col justify-center items-start overflow-hidden bg-transparent pt-16"
     >
+      {/* Flowing shader effect — scoped to the hero only. It's positioned
+          absolute within this section (not fixed to the viewport), so it
+          scrolls away with the hero instead of trailing into later sections. */}
+      <FlowingHeroShaderBackground isLight={resolvedTheme === "light"} />
+
       {/* Левый градиент-скрим для читаемости текста поверх живой 3D-сцены.
           Theme-aware: deep-forest scrim in dark, warm-cream scrim in light — so
           the hero text always reads and the light theme never goes dark. */}
@@ -113,10 +155,10 @@ export default function Hero() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="max-w-2xl text-left relative z-10"
+          className="text-left relative z-10"
         >
           {/* Надзаголовок-статус с зеленым маяком цифровой стабильности */}
-          <motion.div variants={itemVariants} className="inline-flex items-center gap-3 mb-4 bg-white/[0.03] border border-white/[0.08] backdrop-blur-md px-4 py-2 rounded-full">
+          <motion.div variants={labelVariants} className="inline-flex items-center gap-3 mb-4 bg-white/[0.03] border border-white/[0.08] backdrop-blur-md px-4 py-2 rounded-full">
             <DDCLogo
               title="DDC"
               className="h-4 w-[15px] shrink-0 text-foreground"
@@ -131,51 +173,55 @@ export default function Hero() {
           <div className="mb-3">
             <h1 className="font-display text-foreground">
               <TypewriterEffect
-                words={typewriterWords}
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-light tracking-tight leading-tight justify-start my-0 py-0 text-left flex flex-wrap"
-                cursorClassName="h-6 sm:h-8 lg:h-12 bg-gold align-middle"
+                lines={typewriterLines}
+                className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-light tracking-tight leading-tight"
+                cursorClassName="h-6 sm:h-8 lg:h-12 bg-gold"
               />
             </h1>
           </div>
 
           {/* Подзаголовок на Inter */}
           <motion.p
-            variants={itemVariants}
+            variants={subtitleVariants}
             className="text-sm sm:text-base lg:text-lg text-foreground/70 font-sans font-normal leading-relaxed max-w-2xl mb-6"
           >
-            {t("subtitle")}
+            <BubbleText text={t("subtitle")} />
           </motion.p>
 
           {/* Кнопки призыва к действию с тактильным откликом */}
           <motion.div
-            variants={itemVariants}
+            variants={buttonContainerVariants}
             className="flex flex-col sm:flex-row items-center gap-4 justify-start w-full sm:w-auto"
           >
-            <Magnetic>
-              <MetalButton
-                variant="gold"
-                className="w-full sm:w-auto flex items-center justify-center gap-2 group hover-target"
-                onClick={() => {
-                  const target = document.getElementById("services");
-                  target?.scrollIntoView({ behavior: "smooth" });
-                }}
-              >
-                {t("ctaPrimary")}
-                <Icon name="arrow-right" size={16} />
-              </MetalButton>
-            </Magnetic>
-            <Magnetic>
-              <MetalButton
-                variant="success"
-                className="w-full sm:w-auto flex items-center justify-center hover-target"
-                onClick={() => {
-                  const target = document.getElementById("about");
-                  target?.scrollIntoView({ behavior: "smooth" });
-                }}
-              >
-                {t("ctaSecondary")}
-              </MetalButton>
-            </Magnetic>
+            <motion.div variants={buttonItemVariants} className="w-full sm:w-auto">
+              <Magnetic>
+                <MetalButton
+                  variant="gold"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 group hover-target"
+                  onClick={() => {
+                    const target = document.getElementById("services");
+                    target?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                >
+                  {t("ctaPrimary")}
+                  <Icon name="arrow-right" size={16} />
+                </MetalButton>
+              </Magnetic>
+            </motion.div>
+            <motion.div variants={buttonItemVariants} className="w-full sm:w-auto">
+              <Magnetic>
+                <MetalButton
+                  variant="success"
+                  className="w-full sm:w-auto flex items-center justify-center hover-target"
+                  onClick={() => {
+                    const target = document.getElementById("about");
+                    target?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                >
+                  {t("ctaSecondary")}
+                </MetalButton>
+              </Magnetic>
+            </motion.div>
           </motion.div>
         </motion.div>
 
@@ -184,7 +230,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 1.2, delay: 0.4, ease: ENTRANCE_EASE }}
           className="absolute top-1/2 right-0 -translate-y-1/2 w-full md:w-[52%] lg:w-[46%] xl:w-[42%] 2xl:w-[38%] max-w-[560px] h-[80%] md:h-[92%] pointer-events-auto z-0 overflow-visible opacity-30 md:opacity-65 mix-blend-screen"
         >
           <div className="absolute inset-0 w-full h-full scale-[1.0] md:scale-[1.08] origin-center">
@@ -204,7 +250,7 @@ export default function Hero() {
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.2, duration: 0.8 }}
+        transition={{ delay: 1.2, duration: 0.8, ease: ENTRANCE_EASE }}
         className="absolute bottom-6 left-6 sm:left-12 lg:left-16 z-10 flex items-center gap-3 text-zinc-500 cursor-pointer hover:text-forest-light transition-colors duration-300 pointer-events-auto hover-target"
         onClick={() => {
           const target = document.getElementById("stats");

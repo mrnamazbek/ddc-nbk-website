@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import Icon from "@/components/ui/Icon";
+import { BubbleText } from "@/components/ui/BubbleText";
 import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 
@@ -44,7 +45,7 @@ export default function DigitalTengeSimulator() {
   const [amount, setAmount] = useState<string>("50000");
   const [bin, setBin] = useState<string>("123456789012");
   const [category, setCategory] = useState<CategoryKey>("food");
-  
+
   // Состояния симуляции
   const [isSimulating, setIsSimulating] = useState(false);
   const [currentPhase, setCurrentPhase] = useState<number>(0);
@@ -82,7 +83,7 @@ export default function DigitalTengeSimulator() {
       setTimeout(() => {
         setIsSimulating(false);
         setCurrentPhase(0);
-        
+
         // Валидация по правилам смарт-контракта
         const targetSc = SCENARIOS[selectedScenario];
         const isBinValid = bin.trim() === targetSc.bin;
@@ -91,10 +92,10 @@ export default function DigitalTengeSimulator() {
 
         if (isBinValid && isCategoryValid && isAmountValid) {
           // Генерация псевдослучайного хеша блока
-          const randomHash = "0x" + Array.from({ length: 40 }, () => 
+          const randomHash = "0x" + Array.from({ length: 40 }, () =>
             "0123456789abcdef"[Math.floor(Math.random() * 16)]
           ).join("");
-          
+
           setSimulationResult({
             success: true,
             hash: randomHash,
@@ -103,8 +104,8 @@ export default function DigitalTengeSimulator() {
         } else {
           setSimulationResult({
             success: false,
-            reason: !isBinValid 
-              ? "Неаккредитованный БИН получателя для данной госпрограммы" 
+            reason: !isBinValid
+              ? "Неаккредитованный БИН получателя для данной госпрограммы"
               : "Нецелевая категория расходов (нарушение условий маркировки токенов)",
           });
         }
@@ -118,21 +119,21 @@ export default function DigitalTengeSimulator() {
     <GlassCard className="p-8 border border-white/5 relative overflow-hidden" isTiltEnabled={false}>
       {/* Декоративный светящийся фон */}
       <div className="absolute top-0 right-0 w-48 h-48 bg-forest/10 rounded-full blur-3xl pointer-events-none" />
-      
+
       <div className="text-left mb-8">
         <h3 className="text-xl sm:text-2xl font-display font-normal text-white mb-2">
           {t("title")}{" "}
           <span className="text-gradient-gold font-medium">SDK</span>
         </h3>
         <p className="text-sm text-zinc-400 font-light">
-          {t("subtitle")}
+          <BubbleText text={t("subtitle")} />
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Форма управления */}
         <form onSubmit={handleStartSimulation} className="lg:col-span-6 space-y-6 text-left">
-          
+
           {/* Сценарий */}
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-gold-light mb-3">
@@ -256,7 +257,7 @@ export default function DigitalTengeSimulator() {
         <div className="lg:col-span-6 bg-black/40 border border-white/5 rounded-2xl p-6 min-h-[380px] flex flex-col justify-between relative overflow-hidden">
           {/* Grid background */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:1rem_1rem] pointer-events-none" />
-          
+
           <div className="flex items-center justify-between border-b border-white/5 pb-4 mb-4 z-10">
             <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-forest-light animate-ping" />
@@ -274,17 +275,17 @@ export default function DigitalTengeSimulator() {
                 {[1, 2, 3, 4].map((phaseNum) => {
                   const isActive = currentPhase === phaseNum;
                   const isCompleted = currentPhase > phaseNum;
-                  
+
                   return (
                     <motion.div
                       key={phaseNum}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       className={`flex items-center gap-3 p-3 rounded-xl border font-mono text-xs transition-colors ${
-                        isActive 
-                          ? "bg-forest/10 border-forest-light text-white" 
-                          : isCompleted 
-                          ? "bg-white/[0.01] border-white/5 text-forest-light opacity-60" 
+                        isActive
+                          ? "bg-forest/10 border-forest-light text-white"
+                          : isCompleted
+                          ? "bg-white/[0.01] border-white/5 text-forest-light opacity-60"
                           : "bg-transparent border-transparent text-zinc-600"
                       }`}
                     >
@@ -316,15 +317,15 @@ export default function DigitalTengeSimulator() {
                   className="space-y-4 text-left"
                 >
                   <div className={`p-5 rounded-xl border ${
-                    simulationResult.success 
-                      ? "bg-forest/10 border-forest-light/30" 
+                    simulationResult.success
+                      ? "bg-forest/10 border-forest-light/30"
                       : "bg-red-950/10 border-red-500/20"
                   }`}>
                     <div className="flex items-center gap-3 mb-3">
-                      <Icon 
-                        name={simulationResult.success ? "check-circle" : "alert"} 
-                        className={simulationResult.success ? "text-forest-light" : "text-red-500"} 
-                        size={24} 
+                      <Icon
+                        name={simulationResult.success ? "check-circle" : "alert"}
+                        className={simulationResult.success ? "text-forest-light" : "text-red-500"}
+                        size={24}
                       />
                       <h4 className={`text-sm font-bold tracking-wider uppercase font-mono ${
                         simulationResult.success ? "text-forest-light" : "text-red-400"
@@ -335,7 +336,7 @@ export default function DigitalTengeSimulator() {
                     <p className="text-xs text-zinc-300 font-light leading-relaxed">
                       {t(`result.${simulationResult.success ? "successDesc" : "failDesc"}`)}
                     </p>
-                    
+
                     {!simulationResult.success && simulationResult.reason && (
                       <p className="text-xs text-red-400 font-mono mt-3 border-t border-red-500/10 pt-3">
                         REASON: {simulationResult.reason}
@@ -361,7 +362,7 @@ export default function DigitalTengeSimulator() {
                   )}
                 </motion.div>
               )}
-              
+
               {!isSimulating && !simulationResult && (
                 <motion.div
                   initial={{ opacity: 0 }}

@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
 import GlassCard from "@/components/ui/GlassCard";
+import { BubbleText } from "@/components/ui/BubbleText";
 import ShimmerButton from "@/components/ui/ShimmerButton";
 import PartnerMarquee from "@/components/ui/PartnerMarquee";
 import Magnetic from "@/components/motion/Magnetic";
@@ -56,29 +57,29 @@ export default function CTA() {
   ];
 
   return (
-    <section 
+    <section
       ref={containerRef}
-      className="relative w-full py-24 sm:py-32 bg-background overflow-hidden"
+      className="relative w-full py-24 sm:py-32 bg-transparent overflow-hidden"
     >
-      
+
       {/* Декоративные вращающиеся круги на фоне */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-forest-light/5 animate-[spin_60s_linear_infinite] pointer-events-none" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full border-t border-dashed border-gold-muted/5 animate-[spin_40s_linear_infinite] pointer-events-none" />
 
       <div className="max-w-5xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10 text-center">
-        
+
         {/* Бегущая строка ключевых слов (эффект Magic UI) */}
-        <PartnerMarquee 
-          items={keywords} 
-          speed="slow" 
-          className="mb-12" 
+        <PartnerMarquee
+          items={keywords}
+          speed="slow"
+          className="mb-12"
         />
 
         <div
           ref={cardRef}
           className="relative"
         >
-          <GlassCard 
+          <GlassCard
             hoverAccent="gold"
             variant="liquid-strong"
             className="border-glass-border p-8 sm:p-16 relative overflow-hidden shadow-card"
@@ -100,12 +101,12 @@ export default function CTA() {
             </span>
 
             <h2 className="font-display text-3xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight relative z-10">
-              {t("titleLine1")} <br className="hidden sm:inline" />
-              <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
+              <BubbleText text={t("titleLine1")} /> <br className="hidden sm:inline" />
+              <BubbleText text={t("titleAccent")} activeClassName="text-gold font-black" />
             </h2>
 
             <p className="text-sm sm:text-base text-muted font-sans font-normal leading-relaxed max-w-2xl mx-auto mb-10 relative z-10">
-              {t("subtitle")}
+              <BubbleText text={t("subtitle")} />
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center relative z-10">
@@ -121,7 +122,7 @@ export default function CTA() {
                   <Icon name="mail" size={16} />
                 </ShimmerButton>
               </Magnetic>
-              
+
               <Magnetic>
                 <ShimmerButton
                   variant="forest"
@@ -139,11 +140,11 @@ export default function CTA() {
         </div>
 
         {/* Вторая бегущая строка, в обратном направлении для красивого визуального баланса */}
-        <PartnerMarquee 
-          items={[...keywords].reverse()} 
+        <PartnerMarquee
+          items={[...keywords].reverse()}
           direction="right"
-          speed="slow" 
-          className="mt-12" 
+          speed="slow"
+          className="mt-12"
         />
 
       </div>

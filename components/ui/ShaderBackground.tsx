@@ -34,7 +34,7 @@ const fragmentShaderBg = /* glsl */ `
   uniform float uScroll;
 
   float hash(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
-  
+
   float noise(vec2 p){
     vec2 i = floor(p), f = fract(p);
     float a = hash(i), b = hash(i + vec2(1.0, 0.0)), c = hash(i + vec2(0.0, 1.0)), d = hash(i + vec2(1.0, 1.0));
@@ -104,7 +104,7 @@ const vertexShaderPoints = /* glsl */ `
     // 1. Base grid layout
     vec3 grid = aGridPos;
     grid.y += getWave(grid);
-    
+
     // Infinite forward drift along Z axis
     grid.z = mod(grid.z - uTime * 0.18 - uScroll * 2.0 + 18.0, 36.0) - 18.0;
 
@@ -157,7 +157,7 @@ const fragmentShaderPoints = /* glsl */ `
     if (uLight > 0.5) {
       baseColor = mix(uForestLight * 0.4, uForestLight, 0.1);
     }
-    
+
     // Hover colors under pointer influence
     vec3 activeColor = mix(uGold, uGoldLight, vIntensity);
     vec3 finalColor = mix(baseColor, activeColor, vIntensity * 0.85);
@@ -189,28 +189,28 @@ function generateBackgroundParticles(count: number) {
   const grid = new Float32Array(count * 3);
   const sphere = new Float32Array(count * 3);
   const rands = new Float32Array(count);
-  
+
   const gridSize = Math.sqrt(count);
-  
+
   for (let i = 0; i < count; i++) {
     const x = ((i % gridSize) / gridSize) * 36 - 18;
     const y = -1.8;
     const z = (Math.floor(i / gridSize) / gridSize) * 36 - 18;
-    
+
     grid[i * 3] = x;
     grid[i * 3 + 1] = y;
     grid[i * 3 + 2] = z;
-    
+
     const phi = Math.acos(1 - 2 * (i + 0.5) / count);
     const theta = Math.sqrt(count * Math.PI) * phi;
-    
+
     sphere[i * 3] = Math.sin(phi) * Math.cos(theta);
     sphere[i * 3 + 1] = Math.sin(phi) * Math.sin(theta);
     sphere[i * 3 + 2] = Math.cos(phi);
-    
+
     rands[i] = Math.random();
   }
-  
+
   return [grid, sphere, rands] as const;
 }
 
@@ -290,7 +290,7 @@ function ShaderPlane({ isLight }: { isLight: boolean }) {
 function MorphingParticles({ isLight }: { isLight: boolean }) {
   const matRef = useRef<THREE.ShaderMaterial>(null);
   const { camera } = useThree();
-  
+
   const mouse3d = useRef(new THREE.Vector3(0, 0, -1000));
   const smoothMouse3d = useRef(new THREE.Vector3(0, 0, -1000));
 
@@ -300,7 +300,7 @@ function MorphingParticles({ isLight }: { isLight: boolean }) {
   }, [isLight]);
 
   const count = 15000;
-  
+
   const [gridPositions, spherePositions, randoms] = useMemo(() => {
     return generateBackgroundParticles(count);
   }, [count]);
@@ -324,7 +324,7 @@ function MorphingParticles({ isLight }: { isLight: boolean }) {
   useFrame((state, dt) => {
     const m = matRef.current;
     if (!m) return;
-    
+
     const scroll = getScroll().smooth;
     m.uniforms.uTime.value = state.clock.elapsedTime;
     m.uniforms.uScroll.value = scroll;
@@ -334,7 +334,7 @@ function MorphingParticles({ isLight }: { isLight: boolean }) {
     if (pointer.x !== 0 || pointer.y !== 0) {
       const vec = new THREE.Vector3(pointer.x, pointer.y, 0).unproject(camera);
       const dir = vec.clone().sub(camera.position).normalize();
-      
+
       const dist = -camera.position.z / dir.z;
       const intersection = camera.position.clone().add(dir.multiplyScalar(dist));
       mouse3d.current.copy(intersection);
@@ -346,7 +346,7 @@ function MorphingParticles({ isLight }: { isLight: boolean }) {
     // Camera animation via scroll (smooth drift forward, no oscillating bounce back)
     const targetZ = 8.5 - scroll * 4.0;
     state.camera.position.z += (targetZ - state.camera.position.z) * Math.min(1, dt * 3.5);
-    
+
     const targetY = -0.5 - scroll * 1.5;
     state.camera.position.y += (targetY - state.camera.position.y) * Math.min(1, dt * 3.5);
 
@@ -408,8 +408,7 @@ export default function ShaderBackground({ isLight }: { isLight: boolean }) {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 w-full h-screen -z-50 block pointer-events-none bg-background"
-      style={{ zIndex: -50 }}
+      className="absolute inset-0 -z-10 block pointer-events-none site-backdrop"
     >
       {visible && (
         <Canvas

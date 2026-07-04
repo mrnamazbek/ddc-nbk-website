@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Icon from "@/components/ui/Icon";
+import { BubbleText } from "@/components/ui/BubbleText";
 import GlassCard from "@/components/ui/GlassCard";
 
 interface EventItem {
@@ -111,7 +112,7 @@ export default function DDCEventGallery() {
       <div className="absolute top-1/3 right-10 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
-        
+
         {/* Заголовок секции */}
         <div className="max-w-3xl mb-16 text-left">
           <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-mono font-medium mb-4 block">
@@ -119,12 +120,10 @@ export default function DDCEventGallery() {
           </span>
           <h2 className="font-display text-3xl sm:text-5xl font-normal tracking-tight text-white mb-6">
             {t("title")}{" "}
-            <span className="text-gradient-gold font-medium">
-              {t("titleAccent")}
-            </span>
+            <BubbleText text={t("titleAccent")} activeClassName="text-gold font-black" />
           </h2>
           <p className="text-base sm:text-lg text-zinc-300 font-light leading-relaxed">
-            {t("subtitle")}
+            <BubbleText text={t("subtitle")} />
           </p>
         </div>
 
@@ -167,7 +166,7 @@ export default function DDCEventGallery() {
 
                 {/* Контент */}
                 <div className="absolute inset-0 z-20 flex flex-col justify-end p-6">
-                  <motion.div 
+                  <motion.div
                     animate={{ y: isHovered || shouldReduceMotion ? 0 : 40 }}
                     transition={{ duration: 0.4, ease: "easeOut" }}
                     className="space-y-2 text-left"
@@ -320,7 +319,7 @@ export default function DDCEventGallery() {
                     {t(`events.${selectedItem.translationKey}.desc`)}
                   </p>
                 </div>
-                
+
                 <div className="flex flex-col items-end shrink-0 gap-2">
                   <span className="text-xs text-zinc-400 font-mono hidden sm:block">
                     {selectedIndex + 1} / {GALLERY_ITEMS.length}

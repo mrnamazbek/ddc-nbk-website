@@ -2,6 +2,7 @@
 @import "../styles/tokens.css";
 @import "../styles/a11y.css";
 @import "../styles/svgator-animations.css";
+@import "../styles/scroll-word-hero.css";
 
 /* Custom font-face for A/B testing digits, pointing to JetBrains Mono */
 @font-face {
@@ -112,7 +113,7 @@ html.bg-theme-teal:not(.light) {
 
   --color-charcoal: var(--surface);
   --color-offwhite: var(--color-offwhite);
-  
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-border: var(--border-primary);
@@ -155,6 +156,23 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1), color 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Shared page backdrop — the same forest/gold radial glow + dot grain used
+   behind the AltynAdam 3D scenes (CinematicAltynAdamExperience), mounted once
+   so every page reads as one calm surface instead of a flat solid fill. */
+.site-backdrop {
+  background-image:
+    radial-gradient(circle at 50% 18%, color-mix(in srgb, var(--color-forest-light) 18%, transparent), transparent 30%),
+    radial-gradient(circle at 70% 72%, color-mix(in srgb, var(--color-gold) 12%, transparent), transparent 34%),
+    radial-gradient(color-mix(in srgb, var(--color-gold-light) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(120deg, #031009, #071b13 48%, #020806);
+  background-size: auto, auto, 22px 22px, auto;
+}
+
+html.light .site-backdrop {
+  background-image: none;
+  background-color: var(--background);
 }
 
 /* Применение шрифтов по ролям */
@@ -204,17 +222,17 @@ html.light body {
 }
 
 html.light {
-  --light-fg: #0B1F15;
-  --light-fg-soft: #203C2D;
-  --light-fg-muted: #486153;
-  --light-fg-faint: #5D7166;
-  --light-surface: #FBF8EE;
+  --light-fg: #102217;
+  --light-fg-soft: #314537;
+  --light-fg-muted: #64766A;
+  --light-fg-faint: #768579;
+  --light-surface: #FFFDF6;
   --light-surface-strong: #FFFFFF;
-  --light-border: rgba(11, 31, 21, 0.16);
-  --light-border-soft: rgba(11, 31, 21, 0.1);
-  --light-forest-glass: rgba(11, 31, 21, 0.07);
-  --light-gold-readable: #5A4312;
-  --light-gold-soft: #6F561D;
+  --light-border: rgba(16, 34, 23, 0.14);
+  --light-border-soft: rgba(16, 34, 23, 0.09);
+  --light-forest-glass: rgba(16, 34, 23, 0.06);
+  --light-gold-readable: #6B551B;
+  --light-gold-soft: #7D631F;
   --light-forest-readable: #1A3D2B;
   --light-forest-soft: #2D6A4F;
 }
@@ -764,7 +782,7 @@ body {
   background: rgba(10, 15, 12, 0.75);
   backdrop-filter: blur(32px) saturate(210%);
   -webkit-backdrop-filter: blur(32px) saturate(210%);
-  box-shadow: 
+  box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.15),
     inset 0 -1px 1px rgba(0, 0, 0, 0.2),
     0 4px 30px rgba(0, 0, 0, 0.2);
@@ -900,7 +918,7 @@ body {
 
 .glass-card:hover {
   border-color: rgba(255, 255, 255, 0.28);
-  box-shadow: 
+  box-shadow:
     inset 0 1px 2px rgba(255, 255, 255, 0.25),
     0 16px 45px rgba(0, 0, 0, 0.35);
   transform: translateY(-4px);

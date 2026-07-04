@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/Button";
+import { BubbleText } from "@/components/ui/BubbleText";
 import GlassCard from "@/components/ui/GlassCard";
 import Icon, { IconName } from "@/components/ui/Icon";
 
@@ -38,29 +39,29 @@ export default function DigitalShowcase() {
   const currentTab = tabs.find((t) => t.id === activeTab) || tabs[0];
 
   return (
-    <section id="digital" className="relative w-full py-24 sm:py-32 bg-background overflow-hidden">
+    <section id="digital" className="relative w-full py-24 sm:py-32 bg-transparent overflow-hidden">
       {/* Технологическая подсветка на фоне */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-forest/5 rounded-full blur-[160px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
-        
+
         {/* Заголовок */}
         <div className="max-w-3xl mb-16">
           <span className="text-xs uppercase tracking-[0.25em] text-gold font-mono font-medium mb-4 block">
             {t("overline")}
           </span>
           <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6">
-            {t("titleLine1")} <br />
-            <span className="text-gradient-gold font-medium">{t("titleAccent")}</span>
+            <BubbleText text={t("titleLine1")} /> <br />
+            <BubbleText text={t("titleAccent")} activeClassName="text-gold font-black" />
           </h2>
           <p className="text-muted font-sans font-light leading-relaxed text-lg">
-            {t("subtitle")}
+            <BubbleText text={t("subtitle")} />
           </p>
         </div>
 
         {/* Вкладки и Интерактивный контент */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          
+
           {/* Левая сторона: Список вкладок */}
           <div className="lg:col-span-4 flex flex-col gap-4">
             {tabs.map((tab) => {
@@ -77,7 +78,7 @@ export default function DigitalShowcase() {
                   data-hover={tab.hoverAccent}
                 >
                   <div className={`w-10 h-10 rounded-lg liquid-glass flex items-center justify-center transition-all duration-300 ${
-                    isActive 
+                    isActive
                       ? tab.hoverAccent === "gold" ? "text-gold font-bold" : "text-forest-light font-bold"
                       : "text-zinc-500"
                   }`} data-hover={tab.hoverAccent}>
@@ -158,7 +159,7 @@ export default function DigitalShowcase() {
 
                 <div className="md:col-span-5 flex items-center justify-center relative min-h-[300px] bg-background/10 rounded-card border border-glass-border overflow-hidden group">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
-                  
+
                   {activeTab === "t1" && (
                     <motion.div
                       initial={{ opacity: 0, scale: 0.8 }}

@@ -7,6 +7,7 @@ import Icon, { type IconName } from "@/components/ui/Icon";
 import GlassCard from "@/components/ui/GlassCard";
 import { KazakhstanMap } from "@/components/ui/kazakhstan-map";
 import { cn } from "@/lib/utils";
+import BezierText from "@/components/ui/BezierText";
 
 const easeOut = [0.16, 1, 0.3, 1] as const;
 
@@ -152,6 +153,16 @@ const previewItems: PreviewItem[] = [
     href: "#tech-logos",
     tags: ["Stack", "SVG", "Trust"],
     icon: "kubernetes",
+  },
+  {
+    id: "bezier-text",
+    label: "Bezier Text",
+    eyebrow: "Bezier Curve",
+    title: "Interactive text path editing",
+    description: "Bezier curve editor that draws SVG path on-the-fly and lets text float along the path.",
+    href: "#bezier-text",
+    tags: ["Bezier", "SVG", "Editor"],
+    icon: "layers",
   },
 ];
 
@@ -603,6 +614,13 @@ export default function UiLabPage() {
             </motion.article>
           ))}
         </div>
+      </section>
+
+      <section id="bezier-text" className="relative mx-auto max-w-7xl px-5 py-20 sm:px-8">
+        <SectionHeading eyebrow="04 / Bezier Text Path" title="Interactive Bezier curve with flowing text path">
+          This component renders a dynamic SVG path built from customizable Bezier curves. You can toggle path editing and drag the anchors directly to shape the text flow.
+        </SectionHeading>
+        <BezierText />
       </section>
 
       <section id="office-map" className="relative mx-auto max-w-7xl px-5 py-20 sm:px-8">
