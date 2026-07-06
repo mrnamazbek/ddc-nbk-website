@@ -21,7 +21,7 @@ export default function About({ id = "about" }: { id?: string | null }) {
   const valueItems: ValueItem[] = [
     {
       key: "v1",
-      iconName: "clock",
+      iconName: "compass",
     },
     {
       key: "v2",
