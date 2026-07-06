@@ -101,7 +101,7 @@ export default function CTA() {
             </span>
 
             <h2 className="font-display text-3xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight relative z-10">
-              <BubbleText text={t("titleLine1")} /> <br className="hidden sm:inline" />
+              <BubbleText text={t("titleLine1")} />{" "}
               <BubbleText text={t("titleAccent")} activeClassName="text-gold font-black" />
             </h2>
 

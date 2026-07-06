@@ -240,7 +240,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`!fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1300px] transition-all duration-500 rounded-full py-2.5 px-5 sm:px-7 ${
+        className={`!fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1300px] transition-all duration-500 rounded-full py-2.5 px-5 sm:px-7 !overflow-visible ${
           isScrolled
             ? "liquid-glass-strong shadow-card"
             : "liquid-glass shadow-lg"

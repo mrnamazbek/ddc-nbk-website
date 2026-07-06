@@ -51,7 +51,7 @@ export default function DigitalShowcase() {
             {t("overline")}
           </span>
           <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6">
-            <BubbleText text={t("titleLine1")} /> <br />
+            <BubbleText text={t("titleLine1")} />{" "}
             <BubbleText text={t("titleAccent")} activeClassName="text-gold font-black" />
           </h2>
           <p className="text-muted font-sans font-light leading-relaxed text-lg">

@@ -225,7 +225,7 @@ export default function Security() {
               </span>
 
               <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
-                <BubbleText text={t("titleLine1")} /> <br />
+                <BubbleText text={t("titleLine1")} />{" "}
                 <BubbleText text={t("titleAccent")} activeClassName="text-gold font-black" />
               </h2>
             </div>

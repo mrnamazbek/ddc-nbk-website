@@ -74,7 +74,6 @@ export default function Services({ id = "services" }: { id?: string | null }) {
           </ScrollReveal>
           <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6">
             <RevealWords text={t("titleLine1")} delay={0.08} useBubbleText />{" "}
-            <br />
             <RevealWords
               text={t("titleAccent")}
               delay={0.3}

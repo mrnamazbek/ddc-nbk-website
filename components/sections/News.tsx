@@ -100,7 +100,7 @@ export default function News() {
               {t("overline")}
             </span>
             <h2 className="font-display text-3xl sm:text-5xl font-normal tracking-tight text-foreground leading-tight text-left">
-              <BubbleText text={t("titleLine1")} /> <br />
+              <BubbleText text={t("titleLine1")} />{" "}
               <BubbleText text={t("titleAccent")} activeClassName="text-gold font-black" />
             </h2>
           </motion.div>

@@ -54,7 +54,6 @@ export default function Timeline() {
           </ScrollReveal>
           <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
             <RevealWords text={t("titleLine1")} delay={0.3} useBubbleText />{" "}
-            <br />
             <RevealWords
               text={t("titleAccent")}
               delay={0.5}
