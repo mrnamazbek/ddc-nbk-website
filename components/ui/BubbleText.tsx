@@ -9,6 +9,7 @@ interface BubbleTextProps {
   activeClassName?: string;
   neighborClassName?: string;
   secondNeighborClassName?: string;
+  maxBubbleLength?: number;
 }
 
 export const BubbleText: React.FC<BubbleTextProps> = ({
@@ -17,10 +18,15 @@ export const BubbleText: React.FC<BubbleTextProps> = ({
   activeClassName = "font-black text-white scale-[1.15]",
   neighborClassName = "font-bold text-zinc-200 scale-105",
   secondNeighborClassName = "font-medium text-zinc-300 scale-[1.02]",
+  maxBubbleLength = 30,
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   if (!text) return null;
+
+  if (text.length > maxBubbleLength) {
+    return <span className={className}>{text}</span>;
+  }
 
   // Split text into words to prevent breaking words across lines
   const words = text.split(" ");

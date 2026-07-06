@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { Link } from "@/i18n/navigation";
-import { ImagesBadge } from "@/components/ui/images-badge";
 import { ThreeDMarquee } from "@/components/ui/3d-marquee";
 import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 import { TextRollHover } from "@/components/ui/text-roll-hover";
@@ -65,70 +64,6 @@ const footerSections: { title: string; links: FooterLink[] }[] = [
       { name: "Astana office", href: "/contact#astana" },
       { name: "Almaty hub", href: "/contact#almaty" },
       { name: "Write to DDC", href: "mailto:info@ddc-nbk.kz", external: true },
-    ],
-  },
-];
-
-const proofSignals = [
-  {
-    name: "Data Factory",
-    href: "https://www.linkedin.com/feed/update/urn:li:activity:7385921757829808128",
-    category: "Data platform",
-    source: "LinkedIn",
-    description:
-      "Industrial data processing capability for National Bank infrastructure, built around governed pipelines and reliable data products.",
-    images: [
-      "/images/linkedin/post_15_data_factory.jpg",
-      "/images/linkedin/post_9_it_architecture.jpg",
-      "/images/nbk_architecture.png",
-    ],
-  },
-  {
-    name: "Key National Bank Projects",
-    href: "https://www.linkedin.com/feed/update/urn:li:activity:7384573685673840640",
-    category: "Core systems",
-    source: "LinkedIn",
-    description: "A public proof point for the Center's role in complex, high-stakes systems across the financial regulator's ecosystem.",
-    images: [
-      "/images/linkedin/post_16_key_projects.jpg",
-      "/images/linkedin/post_1_digital_services.jpg",
-      "/images/linkedin/post_13_kfgd_automation.jpg",
-    ],
-  },
-  {
-    name: "AI Platform Discussions",
-    href: "https://www.linkedin.com/feed/update/urn:li:activity:7473705322331791361",
-    category: "AI adoption",
-    source: "LinkedIn",
-    description: "Internal AI capability building and practical adoption of generative technologies for public-sector digital work.",
-    images: [
-      "/images/linkedin/post_0_ai_platform.jpg",
-      "/images/linkedin/post_11_llm_learning.jpg",
-      "/images/linkedin/post_6_nfactorial_llm.jpg",
-    ],
-  },
-  {
-    name: "KFGD Automation",
-    href: "https://www.linkedin.com/feed/update/urn:li:activity:7392499128875941889",
-    category: "Automation",
-    source: "LinkedIn",
-    description: "Digital automation work connected to government-financial data exchange and operational reliability.",
-    images: [
-      "/images/linkedin/post_13_kfgd_automation.jpg",
-      "/images/linkedin/post_15_data_factory.jpg",
-      "/images/linkedin/post_16_key_projects.jpg",
-    ],
-  },
-  {
-    name: "Strategic Dialogue",
-    href: "https://www.linkedin.com/feed/update/urn:li:activity:7380833625589637120",
-    category: "Leadership",
-    source: "LinkedIn",
-    description: "Leadership and stakeholder meetings that reinforce DDC's connection to the National Bank's digital agenda.",
-    images: [
-      "/images/linkedin/post_17_suleimenov_meeting.jpg",
-      "/images/linkedin/post_10_binur_meeting.jpg",
-      "/images/showcase/news-2.jpeg",
     ],
   },
 ];
@@ -294,70 +229,45 @@ export default function Footer() {
           </div>
         </motion.div>
 
-        <motion.section
-          className="relative grid gap-5 border-b border-white/[0.035] py-12 lg:grid-cols-[0.7fr_1.3fr]"
-          initial={reduce ? false : { opacity: 0, y: 30 }}
+        <motion.div
+          className="relative flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.035] py-6"
+          initial={reduce ? false : { opacity: 0, y: 20 }}
           whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-120px" }}
-          transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div>
-            <p className="font-mono text-xs uppercase tracking-[0.34em] text-gold">Company proof</p>
-            <h3 className="mt-4 max-w-sm font-heading text-3xl font-semibold tracking-[-0.03em] text-white md:text-5xl">
-              Public signals from DDC&apos;s digital delivery work.
-            </h3>
+          <p className="font-mono text-xs uppercase tracking-[0.34em] text-gold">Built by Namazbek</p>
+          <div className="flex items-center gap-5">
+            <a
+              href="https://github.com/mrnamazbek"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group/credit inline-flex min-h-8 items-center gap-1.5 text-sm font-medium text-zinc-400 transition-colors duration-300 hover:text-white"
+            >
+              <Icon name="github" size={16} className="text-gold/90" animate={false} />
+              GitHub
+              <Icon
+                name="arrow-up-right"
+                size={12}
+                className="opacity-0 -translate-x-1 translate-y-1 text-gold transition-all duration-300 group-hover/credit:translate-x-0 group-hover/credit:translate-y-0 group-hover/credit:opacity-100"
+              />
+            </a>
+            <a
+              href="https://www.linkedin.com/feed/update/urn:li:activity:7385921757829808128"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group/credit inline-flex min-h-8 items-center gap-1.5 text-sm font-medium text-zinc-400 transition-colors duration-300 hover:text-white"
+            >
+              <Icon name="linkedin" size={16} className="text-gold/90" animate={false} />
+              See the work
+              <Icon
+                name="arrow-up-right"
+                size={12}
+                className="opacity-0 -translate-x-1 translate-y-1 text-gold transition-all duration-300 group-hover/credit:translate-x-0 group-hover/credit:translate-y-0 group-hover/credit:opacity-100"
+              />
+            </a>
           </div>
-
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {proofSignals.map((signal, index) => (
-              <motion.article
-                key={signal.name}
-                className="site-footer-repo-card group relative min-h-[230px] overflow-hidden rounded-[1.6rem] border border-white/[0.08] bg-white/[0.035] p-5 shadow-[0_24px_90px_rgba(0,0,0,0.35)] backdrop-blur-xl"
-                initial={reduce ? false : { opacity: 0, y: 24, scale: 0.98 }}
-                whileInView={reduce ? undefined : { opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.62, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={reduce ? undefined : { y: -6, rotateX: 2, rotateY: index % 2 === 0 ? -2 : 2 }}
-              >
-                <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_10%,rgba(216,169,62,0.16),transparent_42%)]" />
-                </div>
-                <div className="relative z-10 flex h-full flex-col">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold/85">{signal.category}</p>
-                      <a
-                        href={signal.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-2 inline-flex min-h-12 items-center gap-2 py-1 text-xl font-semibold tracking-[-0.02em] text-white"
-                      >
-                        {signal.name}
-                        <Icon name="arrow-up-right" size={16} className="text-gold" />
-                      </a>
-                    </div>
-                    <Icon name="linkedin" size={24} className="opacity-70" animate={false} />
-                  </div>
-                  <p className="mt-4 flex-1 text-sm leading-relaxed text-zinc-400">{signal.description}</p>
-                  <div className="mt-6 flex items-center justify-between gap-4 border-t border-white/[0.035] pt-4">
-                    <span className="text-xs text-zinc-500">Source: {signal.source}</span>
-                    <ImagesBadge
-                      text="Preview"
-                      href={signal.href}
-                      target="_blank"
-                      images={signal.images}
-                      folderSize={{ width: 30, height: 23 }}
-                      teaserImageSize={{ width: 19, height: 13 }}
-                      hoverImageSize={{ width: 52, height: 34 }}
-                      hoverTranslateY={-42}
-                      hoverSpread={24}
-                    />
-                  </div>
-                </div>
-              </motion.article>
-            ))}
-          </div>
-        </motion.section>
+        </motion.div>
 
         <div className="relative flex flex-col gap-8 pt-10 md:flex-row md:items-end md:justify-between">
           <div className="text-sm text-zinc-500">
