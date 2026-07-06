@@ -206,7 +206,7 @@ const solarMap: Partial<Record<IconName, string>> = {
   phone: "solar:phone-linear",
   mail: "solar:letter-linear",
   clock: "solar:clock-circle-linear",
-  send: "solar:send-direct-linear",
+  send: "solar:send-linear",
   users: "solar:users-group-two-rounded-linear",
   compass: "solar:compass-linear",
   award: "solar:cup-linear",
@@ -298,6 +298,7 @@ export default function Icon({ name, className, size = 20, animate = true }: Ico
       nodejs: TechIcons.NodeJSIcon,
       solidity: TechIcons.SolidityIcon,
       cpp: TechIcons.CPPIcon,
+      send: TechIcons.SendIcon,
     };
 
     const brandMap: Record<string, string> = {
