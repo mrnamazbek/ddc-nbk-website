@@ -194,8 +194,8 @@ function getPresetForPathname(pathname: string, isLight: boolean): ShaderPresetC
       maxDotSize: 3.5,
       repulsionRadius: 180.0,
       repulsionStrength: 40.0,
-      colorRest: isLight ? [15/255, 76/255, 35/255] : [34/255, 197/255, 94/255], // Green
-      colorActive: [163/255, 230/255, 53/255], // Lime
+      colorRest: isLight ? [15/255, 76/255, 35/255] : [34/255, 197/255, 94/255], // Forest green
+      colorActive: [232/255, 200/255, 122/255], // Gold-light
     };
   }
 
@@ -220,8 +220,8 @@ function getPresetForPathname(pathname: string, isLight: boolean): ShaderPresetC
       maxDotSize: 5.5,
       repulsionRadius: 195.0,
       repulsionStrength: 45.0,
-      colorRest: isLight ? [20/255, 40/255, 100/255] : [30/255, 58/255, 138/255], // Blue
-      colorActive: [96/255, 165/255, 250/255], // Cyan
+      colorRest: isLight ? [10/255, 46/255, 30/255] : [10/255, 61/255, 43/255], // Deep forest
+      colorActive: [232/255, 200/255, 122/255], // Gold-light
     };
   }
 
@@ -233,8 +233,8 @@ function getPresetForPathname(pathname: string, isLight: boolean): ShaderPresetC
       maxDotSize: 4.5,
       repulsionRadius: 150.0,
       repulsionStrength: 32.0,
-      colorRest: isLight ? [90/255, 40/255, 160/255] : [124/255, 58/255, 237/255], // Violet
-      colorActive: [244/255, 63/255, 94/255], // Rose
+      colorRest: isLight ? [139/255, 111/255, 38/255] : [201/255, 168/255, 76/255], // Gold
+      colorActive: [82/255, 183/255, 136/255], // Forest-light
     };
   }
 
@@ -246,8 +246,8 @@ function getPresetForPathname(pathname: string, isLight: boolean): ShaderPresetC
     maxDotSize: 5.0,
     repulsionRadius: 170.0,
     repulsionStrength: 35.0,
-    colorRest: isLight ? [180/255, 60/255, 10/255] : [234/255, 88/255, 12/255], // Orange
-    colorActive: [253/255, 224/255, 71/255], // Yellow
+    colorRest: isLight ? [93/255, 107/255, 99/255] : [22/255, 58/255, 40/255], // Forest
+    colorActive: [232/255, 200/255, 122/255], // Gold-light
   };
 }
 
