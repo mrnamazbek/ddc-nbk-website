@@ -302,65 +302,49 @@ export function KazakhstanMap() {
                   {/* Desktop Preview Card */}
                   <AnimatePresence>
                     {isHovered && (() => {
-                      const isTopHalf = p.y < 274.5;
+                      const isTopHalf = false;
                       return (
                         <motion.div
                           initial={{
                             opacity: 0,
                             x: "-50%",
-                            y: isTopHalf ? 16 : -16,
+                            y: -16,
                             scale: 0.9,
-                            rotateX: isTopHalf ? 34 : -14,
                             filter: "blur(8px)",
                           }}
                           animate={{
                             opacity: 1,
                             x: "-50%",
-                            y: isTopHalf ? 12 : -12,
+                            y: -12,
                             scale: 1,
-                            rotateX: isTopHalf ? 10 : -5,
                             filter: "blur(0px)",
                           }}
                           exit={{
                             opacity: 0,
                             x: "-50%",
-                            y: isTopHalf ? 16 : -16,
+                            y: -16,
                             scale: 0.92,
-                            rotateX: isTopHalf ? 24 : -12,
                             filter: "blur(6px)",
                           }}
                           transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-                          style={
-                            isTopHalf
-                              ? {
-                                  left: "50%",
-                                  top: "100%",
-                                  perspective: 1000,
-                                  transformStyle: "preserve-3d",
-                                  transformOrigin: "50% 0%",
-                                }
-                              : {
-                                  left: "50%",
-                                  bottom: "100%",
-                                  perspective: 1000,
-                                  transformStyle: "preserve-3d",
-                                  transformOrigin: "50% 100%",
-                                }
-                          }
+                          style={{
+                            left: "50%",
+                            bottom: "100%",
+                          }}
                           className={cn(
                             "absolute z-50 w-[320px] pointer-events-auto",
-                            isTopHalf ? "mt-10" : "mb-10"
+                            "mb-10"
                           )}
                         >
                           <PreviewBeam isTopHalf={isTopHalf} reduce={Boolean(reduce)} />
                           <motion.div
-                            initial={{ opacity: 0, y: isTopHalf ? -8 : 8, scale: 0.92 }}
+                            initial={{ opacity: 0, y: 8, scale: 0.92 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: isTopHalf ? -8 : 8, scale: 0.92 }}
+                            exit={{ opacity: 0, y: 8, scale: 0.92 }}
                             transition={{ duration: 0.24, ease: "easeOut" }}
                             className={cn(
                               "pointer-events-none absolute left-1/2 z-30 -translate-x-1/2 rounded-full border border-white/10 bg-black/90 px-5 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-gold shadow-[0_0_22px_rgba(201,168,76,0.2)] backdrop-blur-xl",
-                              isTopHalf ? "-top-12" : "-bottom-12"
+                              "-bottom-12"
                             )}
                           >
                             {t(p.cityKey)}
