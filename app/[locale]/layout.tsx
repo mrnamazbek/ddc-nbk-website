@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono } from "next/font/google";
 import "../globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
@@ -10,13 +9,6 @@ import { BgSystemProvider } from "@/components/theme/BgSystemProvider";
 import AccessibilityProvider from "@/components/theme/AccessibilityProvider";
 import AccessibilityPanel from "@/components/ui/AccessibilityPanel";
 import InteractiveDotGrid from "@/components/ui/InteractiveDotGrid";
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin", "cyrillic", "cyrillic-ext"],
-  weight: ["400", "500"],
-  variable: "--font-mono",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "DDC — Центр цифрового развития Национального Банка Казахстана",
@@ -42,7 +34,7 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale === "kz" ? "kk" : locale}
-      className={`${jetbrainsMono.variable} h-full antialiased`}
+      className="h-full antialiased"
       suppressHydrationWarning
     >
       <head>

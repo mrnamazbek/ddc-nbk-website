@@ -1,16 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..900&display=swap');
 @import "tailwindcss";
 @import "../styles/tokens.css";
 @import "../styles/a11y.css";
 @import "../styles/svgator-animations.css";
 @import "../styles/scroll-word-hero.css";
 
-/* Custom font-face for A/B testing digits, pointing to JetBrains Mono */
+/* Custom font-face for A/B testing digits, pointing to Golos Text weights 400-900 */
 @font-face {
   font-family: 'ABNumbers';
-  src: local('JetBrains Mono Regular'), local('JetBrainsMono-Regular'), local('JetBrains Mono'),
-       url('https://fonts.gstatic.com/s/jetbrainsmono/v18/tU3p0oCfvxCg8wp9r_tCbMnVIg742GcxG6v4.woff2') format('woff2');
+  src: local('Golos Text Regular'), local('GolosText-Regular'),
+       url('https://fonts.gstatic.com/s/golostext/v7/q5uXsoe9Lv5t7Meb31EcOR9UdVTNs822plVRRQ5c.ttf') format('truetype');
   unicode-range: U+0030-0039;
-  font-weight: 100 900;
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ABNumbers';
+  src: local('Golos Text Medium'), local('GolosText-Medium'),
+       url('https://fonts.gstatic.com/s/golostext/v7/q5uXsoe9Lv5t7Meb31EcOR9UdVTNs822plVjRQ5c.ttf') format('truetype');
+  unicode-range: U+0030-0039;
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ABNumbers';
+  src: local('Golos Text SemiBold'), local('GolosText-SemiBold'),
+       url('https://fonts.gstatic.com/s/golostext/v7/q5uXsoe9Lv5t7Meb31EcOR9UdVTNs822plWPQg5c.ttf') format('truetype');
+  unicode-range: U+0030-0039;
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ABNumbers';
+  src: local('Golos Text Bold'), local('GolosText-Bold'),
+       url('https://fonts.gstatic.com/s/golostext/v7/q5uXsoe9Lv5t7Meb31EcOR9UdVTNs822plW2Qg5c.ttf') format('truetype');
+  unicode-range: U+0030-0039;
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ABNumbers';
+  src: local('Golos Text ExtraBold'), local('GolosText-ExtraBold'),
+       url('https://fonts.gstatic.com/s/golostext/v7/q5uXsoe9Lv5t7Meb31EcOR9UdVTNs822plXRQg5c.ttf') format('truetype');
+  unicode-range: U+0030-0039;
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ABNumbers';
+  src: local('Golos Text Black'), local('GolosText-Black'),
+       url('https://fonts.gstatic.com/s/golostext/v7/q5uXsoe9Lv5t7Meb31EcOR9UdVTNs822plX4Qg5c.ttf') format('truetype');
+  unicode-range: U+0030-0039;
+  font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
@@ -83,7 +134,8 @@
 :root {
   /* Single production typography: Nohemi. Digits keep the previous mono feel. */
   --font-current-sans: 'ABNumbers', 'Nohemi', system-ui, sans-serif;
-  --font-current-mono: var(--font-mono), monospace;
+  --font-mono: 'Golos Text', monospace;
+  --font-current-mono: 'Golos Text', monospace;
   --font-current-display: 'ABNumbers', 'Nohemi', system-ui, sans-serif;
   --font-current-soft: 'ABNumbers', 'Nohemi', system-ui, sans-serif;
 }

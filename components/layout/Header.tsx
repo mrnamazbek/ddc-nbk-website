@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, type KeyboardEvent } from "react";
+import { ChevronDown, Check } from "lucide-react";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
@@ -23,9 +24,13 @@ const LANGUAGE_LABELS: Record<string, string> = {
   ru: "Русский",
   en: "English",
 };
+const LANGUAGE_FLAGS: Record<string, string> = {
+  kz: "🇰🇿",
+  ru: "🇷🇺",
+  en: "🇬🇧",
+};
 
-// Accessible segmented KZ / RU / EN switcher, styled as a liquid-glass pill.
-// Hoisted to module scope so it isn't re-created on every Header render.
+// Accessible dropdown-based language selector, styled conforming to repository design.
 function LanguageSwitcher({
   locale,
   onSwitch,
@@ -35,70 +40,86 @@ function LanguageSwitcher({
   onSwitch: (lng: string) => void;
   size?: "sm" | "lg";
 }) {
-  const activeIndex = Math.max(0, LANGUAGES.indexOf(locale));
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    let nextIndex = activeIndex;
-    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-      nextIndex = (activeIndex + 1) % LANGUAGES.length;
-    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-      nextIndex = (activeIndex - 1 + LANGUAGES.length) % LANGUAGES.length;
-    } else if (event.key === "Home") {
-      nextIndex = 0;
-    } else if (event.key === "End") {
-      nextIndex = LANGUAGES.length - 1;
-    } else {
-      return;
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
     }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
-    event.preventDefault();
-    onSwitch(LANGUAGES[nextIndex]);
-  };
+  useEffect(() => {
+    const handleEscape = (e: any) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, []);
 
   return (
-    <div
-      role="listbox"
-      tabIndex={0}
-      aria-label="Тіл / Язык / Language"
-      aria-activedescendant={`language-option-${size}-${locale}`}
-      onKeyDown={handleKeyDown}
-      className="inline-flex items-center gap-0.5 liquid-glass rounded-full p-1 relative z-10"
-    >
-      {LANGUAGES.map((lng) => {
-        const active = locale === lng;
-        return (
-          <button
-            key={lng}
-            id={`language-option-${size}-${lng}`}
-            type="button"
-            role="option"
-            onClick={() => onSwitch(lng)}
-            aria-label={`Switch language to ${LANGUAGE_LABELS[lng]}`}
-            aria-selected={active}
-            className={`font-mono font-bold tracking-wider rounded-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 flex items-center justify-center relative transition-colors duration-300 ${
-              size === "lg" ? "px-4 min-h-[44px] min-w-[44px] text-sm" : "px-3 py-1.5 min-h-11 min-w-11 text-xs"
-            } ${active ? "text-black z-10 font-bold" : "text-muted hover:text-gold z-10"}`}
+    <div className="relative inline-block text-left" ref={dropdownRef}>
+      <button
+        onClick={() => setOpen((o) => !o)}
+        type="button"
+        aria-label="Select Language"
+        aria-expanded={open}
+        className={`font-mono font-bold tracking-wider rounded-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 flex items-center justify-center gap-2 transition-all duration-300 liquid-glass border border-white/10 text-white ${
+          size === "lg"
+            ? "px-5 py-2 text-sm min-h-[44px] min-w-[120px]"
+            : "px-3.5 py-1.5 text-xs min-h-11 min-w-[85px]"
+        }`}
+      >
+        <span className="text-sm select-none">{LANGUAGE_FLAGS[locale]}</span>
+        <span className="uppercase">{locale}</span>
+        <ChevronDown
+          className={`transition-transform duration-300 ${
+            size === "lg" ? "h-4 w-4" : "h-3.5 w-3.5"
+          } ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.96 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className={`absolute mt-2 w-40 rounded-card border border-glass-border bg-charcoal/95 backdrop-blur-2xl py-1 shadow-glass z-[70] overflow-hidden ${
+              size === "lg" ? "left-0" : "right-0"
+            }`}
           >
-            {active && (
-              <motion.div
-                layoutId={`activeLanguageBg-${size}`}
-                className="absolute inset-0 bg-gold rounded-full -z-10"
-                transition={{ type: "spring", stiffness: 380, damping: 30 }}
-              />
-            )}
-            <TextRollHover
-              text={lng.toUpperCase()}
-              as="span"
-              fontSize={size === "lg" ? "0.875rem" : "0.75rem"}
-              staggerDelay={15}
-              duration={200}
-              hoverColor={active ? "#000000" : "#C9A84C"}
-              color="currentColor"
-              className="font-mono font-bold tracking-wider pointer-events-none"
-            />
-          </button>
-        );
-      })}
+            {LANGUAGES.map((lng) => {
+              const active = locale === lng;
+              return (
+                <button
+                  key={lng}
+                  onClick={() => {
+                    onSwitch(lng);
+                    setOpen(false);
+                  }}
+                  className={`flex items-center gap-2.5 w-full px-4 py-2.5 text-xs text-left transition-colors font-mono tracking-wider ${
+                    active
+                      ? "text-gold font-bold bg-white/5"
+                      : "text-muted hover:text-gold hover:bg-white/5"
+                  }`}
+                >
+                  <span className="text-sm select-none">{LANGUAGE_FLAGS[lng]}</span>
+                  <span className="flex-1">{LANGUAGE_LABELS[lng]}</span>
+                  {active && <Check className="h-3.5 w-3.5 text-gold" />}
+                </button>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
