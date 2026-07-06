@@ -14,6 +14,7 @@ import Icon from "@/components/ui/Icon";
 import ScrollReveal, { ENTRANCE_EASE, ENTRANCE_DURATION, STAGGER } from "@/components/motion/ScrollReveal";
 import { RevealWords } from "@/components/motion/RevealWords";
 import { StaggerGroup, StaggerItem } from "@/components/motion/StaggerGroup";
+import { LeaderProfileModal } from "@/components/ui/LeaderProfileModal";
 
 interface Leader {
   id: string;
@@ -21,6 +22,8 @@ interface Leader {
   role: { ru: string; en: string; kz: string };
   img: string;
   desc?: { ru: string; en: string; kz: string };
+  /** Not every leader has a public profile yet — the button only renders when set. */
+  linkedinUrl?: string;
 }
 
 function LeaderCard({
@@ -29,7 +32,9 @@ function LeaderCard({
   isChairman = false,
   isDeputy = false,
   sizes = "320px",
-  cometCardClass = ""
+  cometCardClass = "",
+  viewProfileLabel,
+  onViewProfile,
 }: {
   leader: Leader;
   locale: "ru" | "en" | "kz";
@@ -37,51 +42,68 @@ function LeaderCard({
   isDeputy?: boolean;
   sizes?: string;
   cometCardClass?: string;
+  viewProfileLabel: string;
+  onViewProfile: (leader: Leader) => void;
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const tag = isChairman ? "#CHAIRMAN" : isDeputy ? "#DEPUTY" : null;
 
+  // The whole card is the click target (not just the small label below) —
+  // a real <button> wrapper gives free keyboard/focus/screen-reader behavior,
+  // and since nothing inside it is itself a nested interactive element, this
+  // stays valid, unambiguous markup.
   return (
-    <CometCard className={cn("p-4 bg-charcoal/40 border border-glass-border rounded-[16px] shadow-xl group", cometCardClass)}>
-      <div className={cn(
-        "relative aspect-[3/4] w-full rounded-[12px] overflow-hidden bg-neutral-900 border border-white/5 mb-4",
-        !isLoaded && "animate-pulse bg-zinc-800"
-      )}>
-        <Image
-          src={leader.img}
-          alt={leader.name[locale]}
-          fill
-          sizes={sizes}
-          onLoad={() => setIsLoaded(true)}
-          className={cn(
-            "object-cover saturate-[0.85] contrast-[1.05] transition-transform duration-700 ease-out group-hover:scale-105",
-            !isLoaded ? "opacity-0" : "opacity-100"
+    <button
+      type="button"
+      onClick={() => onViewProfile(leader)}
+      aria-label={`${viewProfileLabel}: ${leader.name[locale]}`}
+      className="block w-full cursor-pointer border-0 bg-transparent p-0 text-left"
+    >
+      <CometCard className={cn("p-4 bg-charcoal/40 border border-glass-border rounded-[16px] shadow-xl group transition-colors duration-300 group-hover:border-gold/20", cometCardClass)}>
+        <div className={cn(
+          "relative aspect-[3/4] w-full rounded-[12px] overflow-hidden bg-neutral-900 border border-white/5 mb-4",
+          !isLoaded && "animate-pulse bg-zinc-800"
+        )}>
+          <Image
+            src={leader.img}
+            alt={leader.name[locale]}
+            fill
+            sizes={sizes}
+            onLoad={() => setIsLoaded(true)}
+            className={cn(
+              "object-cover saturate-[0.85] contrast-[1.05] transition-transform duration-700 ease-out group-hover:scale-105",
+              !isLoaded ? "opacity-0" : "opacity-100"
+            )}
+          />
+        </div>
+        <div className="font-sans">
+          {tag && (
+            <div className={cn(
+              "text-[9px] font-mono tracking-[0.2em] uppercase mb-1",
+              isChairman ? "text-gold" : "text-zinc-500"
+            )}>
+              {tag}
+            </div>
           )}
-        />
-      </div>
-      <div className="font-sans">
-        {tag && (
-          <div className={cn(
-            "text-[9px] font-mono tracking-[0.2em] uppercase mb-1",
-            isChairman ? "text-gold" : "text-zinc-500"
+          <h4 className={cn(
+            "font-bold text-foreground mb-1 leading-tight",
+            isChairman ? "text-lg" : "text-base"
           )}>
-            {tag}
-          </div>
-        )}
-        <h4 className={cn(
-          "font-bold text-foreground mb-1 leading-tight",
-          isChairman ? "text-lg" : "text-base"
-        )}>
-          {leader.name[locale]}
-        </h4>
-        <p className={cn(
-          "font-mono uppercase tracking-wider leading-relaxed",
-          isChairman ? "text-xs text-zinc-400" : isDeputy ? "text-[10px] text-zinc-400" : "text-[10px] text-gold"
-        )}>
-          {leader.role[locale]}
-        </p>
-      </div>
-    </CometCard>
+            {leader.name[locale]}
+          </h4>
+          <p className={cn(
+            "font-mono uppercase tracking-wider leading-relaxed mb-3",
+            isChairman ? "text-xs text-zinc-400" : isDeputy ? "text-[10px] text-zinc-400" : "text-[10px] text-gold"
+          )}>
+            {leader.role[locale]}
+          </p>
+          <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-[0.15em] text-gold-light transition-colors duration-300 group-hover:text-gold">
+            {viewProfileLabel}
+            <Icon name="arrow-right" size={11} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+          </span>
+        </div>
+      </CometCard>
+    </button>
   );
 }
 
@@ -90,6 +112,7 @@ export default function Leadership() {
   const locale = useLocale() as "ru" | "en" | "kz";
   const containerRef = useRef<HTMLDivElement>(null);
   const [showPillars, setShowPillars] = useState(false);
+  const [activeLeader, setActiveLeader] = useState<Leader | null>(null);
   const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
 
   // Данные для Совета директоров
@@ -107,6 +130,7 @@ export default function Leadership() {
         kz: "Қоғамның Директорлар кеңесінің төрағасы, Қазақстан Республикасы Ұлттық Банкі Төрағасының орынбасары",
       },
       img: "/images/team/Zhalenov_Binur.jpg",
+      linkedinUrl: "https://www.linkedin.com/in/binur-zhalenov/",
     },
     {
       id: "b2",
@@ -121,6 +145,7 @@ export default function Leadership() {
         kz: "Директорлар кеңесінің мүшесі, Қазақстан Республикасы Ұлттық Банкінің Ақпараттық технологиялар департаментінің директоры",
       },
       img: "/images/team/Uzbekov_Askhat.png",
+      linkedinUrl: "https://www.linkedin.com/in/askhat-uzbekov-1781b15/",
     },
     {
       id: "b3",
@@ -135,6 +160,7 @@ export default function Leadership() {
         kz: "Қоғамның Директорлар кеңесінің мүшесі - тәуелсіз директор",
       },
       img: "/images/team/Bayan_Kb.png",
+      linkedinUrl: "https://www.linkedin.com/in/bayan-konirbayev-21934522/",
     },
     {
       id: "b4",
@@ -149,6 +175,7 @@ export default function Leadership() {
         kz: "Директорлар кеңесінің мүшесі, Сандық трансформация департаментінің директоры",
       },
       img: "/images/team/Arinova_Aizhan.jpg",
+      linkedinUrl: "https://www.linkedin.com/in/aizhanarinova/?locale=en",
     },
     {
       id: "b5",
@@ -163,6 +190,7 @@ export default function Leadership() {
         kz: "Қоғамның Директорлар кеңесінің мүшесі - тәуелсіз директор",
       },
       img: "/images/team/Alpamysov_Abai.png",
+      linkedinUrl: "https://www.linkedin.com/in/abay-alpamyssov-8965b018/",
     },
     {
       id: "b6",
@@ -177,6 +205,7 @@ export default function Leadership() {
         kz: "Қоғамның Директорлар кеңесінің мүшесі - Басқарма төрағасы",
       },
       img: "/images/team/Amardinov.jpg",
+      linkedinUrl: "https://www.linkedin.com/in/malik-amardinov-790a8498/",
     },
     {
       id: "b7",
@@ -191,6 +220,7 @@ export default function Leadership() {
         kz: "Қоғамның Директорлар кеңесінің мүшесі - тәуелсіз директор",
       },
       img: "/images/team/Marat_Askar.png",
+      linkedinUrl: "https://www.linkedin.com/in/askar-marat-05205456/",
     },
   ];
 
@@ -209,6 +239,7 @@ export default function Leadership() {
         kz: "Басқарма Төрағасы",
       },
       img: "/images/team/Amardinov.jpg",
+      linkedinUrl: "https://www.linkedin.com/in/malik-amardinov-790a8498/",
       desc: {
         ru: "Я рад приветствовать вас на официальном сайте ЦЦР! Более 20 лет ЦЦР успешно осуществляет свою деятельность на рынке ИТ-услуг, что позволило сформировать внушительный портфель сложных, но успешно реализованных ИТ-проектов для Национального Банка. Каждый сотрудник нашей компании обладает профессионализмом, стремлением работать и желанием постоянно развиваться.",
         en: "I am pleased to welcome you to the official DDC website! For over 20 years, DDC has been successfully operating in the IT services market, building a strong portfolio of complex IT projects for the National Bank. Every employee of our company possesses professionalism, drive, and a commitment to continuous growth.",
@@ -228,6 +259,12 @@ export default function Leadership() {
         kz: "Қоғам Басқармасы Төрағасының бірінші орынбасары",
       },
       img: "/images/team/Durmagambetov.jpg",
+      linkedinUrl: "https://www.linkedin.com/in/yerlan-durmagambetov-586b4082/",
+      desc: {
+        ru: "Цифровая трансформация Национального Банка требует синергии передовых технологий, сильной инженерной команды и строгих стандартов качества.",
+        en: "Digital transformation of the National Bank requires synergy of advanced technologies, a strong engineering team, and strict quality standards.",
+        kz: "Ұлттық Банктің цифрлық трансформациясы озық технологиялардың, мықты инженерлік команданың және қатаң сапа стандарттарының синергиясын талап етеді.",
+      },
     },
     {
       id: "m3",
@@ -242,12 +279,18 @@ export default function Leadership() {
         kz: "Қоғам Басқармасы Төрағасының орынбасары",
       },
       img: "/images/team/Kentbekov.jpg",
+      linkedinUrl: "https://www.linkedin.com/in/argyn-kentbekov-9a8b7a133/",
+      desc: {
+        ru: "Мы обеспечиваем бесперебойную эксплуатацию ключевых ИТ-систем и развитие государственного портала закупок, повышая прозрачность процессов.",
+        en: "We ensure the uninterrupted operation of key IT systems and the development of the state procurement portal, increasing process transparency.",
+        kz: "Біз процестердің ашықтығын арттыра отырып, негізгі АТ-жүйелерінің үздіксіз жұмысын және мемлекеттік сатып алу порталының дамуын қамтамасыз етеміз.",
+      },
     },
     {
       id: "m4",
       name: {
         ru: "Имажанов Бахытжан Гылымбекович",
-        en: "Bakhytzhan G. Imajanov",
+        en: "Bakhytzhan G. Imazhanov",
         kz: "Имажанов Бақытжан Ғылымбекұлы",
       },
       role: {
@@ -256,6 +299,12 @@ export default function Leadership() {
         kz: "Қоғам Басқармасы Төрағасының орынбасары",
       },
       img: "/images/team/Imajanov.jpg",
+      linkedinUrl: "https://www.linkedin.com/in/bakhytzhan-imazhanov-759b577b/",
+      desc: {
+        ru: "Информационная безопасность и киберустойчивость — фундамент цифрового развития финансовой инфраструктуры нашей страны.",
+        en: "Information security and cyber resilience are the foundation of the digital development of our country's financial infrastructure.",
+        kz: "Ақпараттық қауіпсіздік пен кибертұрақтылық — еліміздің қаржылық инфрақұрылымын цифрлық дамытудың негізі болып табылады.",
+      },
     },
   ];
 
@@ -344,7 +393,12 @@ export default function Leadership() {
               {/* 1. Председатель Совета Директоров (по центру) */}
               <div className="tree-node w-full flex flex-col items-center mb-6">
                 <ScrollReveal scale={0.94} duration={ENTRANCE_DURATION.card} className="w-full max-w-[340px] relative z-10">
-                  <LeaderCard leader={boardOfDirectors[0]} locale={locale} />
+                  <LeaderCard
+                    leader={boardOfDirectors[0]}
+                    locale={locale}
+                    viewProfileLabel={t("viewProfile")}
+                    onViewProfile={setActiveLeader}
+                  />
                 </ScrollReveal>
 
                 {/* Button to toggle strategic vision */}
@@ -439,7 +493,12 @@ export default function Leadership() {
                       delay={0.15}
                       className="tree-card-wrapper w-full max-w-[340px] relative z-10"
                     >
-                      <LeaderCard leader={leader} locale={locale} />
+                      <LeaderCard
+                        leader={leader}
+                        locale={locale}
+                        viewProfileLabel={t("viewProfile")}
+                        onViewProfile={setActiveLeader}
+                      />
                     </ScrollReveal>
                   </div>
                 );
@@ -470,6 +529,8 @@ export default function Leadership() {
                   isChairman
                   sizes="360px"
                   cometCardClass="bg-charcoal/50 border-gold/20 shadow-2xl"
+                  viewProfileLabel={t("viewProfile")}
+                  onViewProfile={setActiveLeader}
                 />
               </ScrollReveal>
 
@@ -500,7 +561,13 @@ export default function Leadership() {
               {managementBoard.slice(1).map((leader) => (
                 <StaggerItem key={leader.id} scale={0.94} duration={ENTRANCE_DURATION.card} className="tree-node flex flex-col items-center">
                   <div className="tree-card-wrapper w-full max-w-[320px]">
-                    <LeaderCard leader={leader} locale={locale} isDeputy />
+                    <LeaderCard
+                      leader={leader}
+                      locale={locale}
+                      isDeputy
+                      viewProfileLabel={t("viewProfile")}
+                      onViewProfile={setActiveLeader}
+                    />
                   </div>
                 </StaggerItem>
               ))}
@@ -511,6 +578,22 @@ export default function Leadership() {
         </div>
 
       </div>
+
+      <LeaderProfileModal
+        leader={
+          activeLeader
+            ? {
+                name: activeLeader.name[locale],
+                role: activeLeader.role[locale],
+                img: activeLeader.img,
+                desc: activeLeader.desc?.[locale],
+                linkedinUrl: activeLeader.linkedinUrl,
+              }
+            : null
+        }
+        closeLabel={t("closeProfile")}
+        onClose={() => setActiveLeader(null)}
+      />
     </section>
   );
 }

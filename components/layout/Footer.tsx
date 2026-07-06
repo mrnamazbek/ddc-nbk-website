@@ -68,25 +68,27 @@ const footerSections: { title: string; links: FooterLink[] }[] = [
   },
 ];
 
+// No real faces here on purpose — this marquee is ambient background texture
+// behind the whole footer, not a "meet the team" moment, so it sticks to
+// screenshots and abstract/brand renders instead of photos of people.
 const marqueeImages = [
   "/images/showcase/site-preview.jpg",
-  "/images/showcase/news-1.jpeg",
-  "/images/showcase/news-2.jpeg",
-  "/images/showcase/Zhalenov.jpg",
-  "/images/showcase/Arinova.jpg",
-  "/images/linkedin/post_0_ai_platform.jpg",
-  "/images/linkedin/post_1_digital_services.jpg",
-  "/images/linkedin/post_9_it_architecture.jpg",
-  "/images/linkedin/post_10_binur_meeting.jpg",
-  "/images/linkedin/post_11_llm_learning.jpg",
-  "/images/linkedin/post_13_kfgd_automation.jpg",
-  "/images/linkedin/post_15_data_factory.jpg",
-  "/images/linkedin/post_16_key_projects.jpg",
-  "/images/linkedin/post_17_suleimenov_meeting.jpg",
   "/images/3d/tenge-coin-gold.webp",
+  "/images/linkedin/post_1_digital_services.jpg",
   "/images/3d/shanyrak-gold.webp",
+  "/images/linkedin/post_9_it_architecture.jpg",
+  "/images/3d/burkit-eagle-gold.webp",
+  "/images/linkedin/post_11_llm_learning.jpg",
   "/images/saka_core_render.png",
+  "/images/linkedin/post_13_kfgd_automation.jpg",
+  "/images/saka_refractive_glass.png",
+  "/images/linkedin/post_15_data_factory.jpg",
+  "/images/medallion-poster.png",
+  "/images/linkedin/post_16_key_projects.jpg",
+  "/images/nbk_architecture.png",
   "/images/backgrounds/liquid_glass_flow.png",
+  "/images/backgrounds/steppe-horizon-abstract.png",
+  "/images/textures/ornament-divider-gold.png",
 ];
 
 function FooterAnchor({ link }: { link: FooterLink }) {

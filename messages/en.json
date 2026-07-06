@@ -244,6 +244,8 @@
     "titleLine1": "Leadership of",
     "titleAccent": "our organization",
     "subtitle": "Professionals in the IT industry ensuring the stability of digital solutions of Kazakhstan's financial system.",
+    "viewProfile": "View Profile",
+    "closeProfile": "Close",
     "l1": {
       "name": "Malik A. Amardinov",
       "role": "Chairman of the Board",
@@ -297,7 +299,14 @@
     "subtitle": "We ensure the stability of the financial architecture of Kazakhstan through innovation, security, and advanced technology management standards.",
     "wordHero": {
       "leadIn": "we ",
-      "words": ["secure.", "connect.", "modernize.", "support.", "develop.", "protect."],
+      "words": [
+        "secure.",
+        "connect.",
+        "modernize.",
+        "support.",
+        "develop.",
+        "protect."
+      ],
       "srSummary": "We secure, connect, modernize, support, develop, and protect Kazakhstan's financial infrastructure.",
       "tagline": "so Kazakhstan's financial infrastructure never stops."
     },
