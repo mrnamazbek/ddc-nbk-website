@@ -3,6 +3,7 @@ import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import Icon, { IconName } from "@/components/ui/Icon";
 import DDCEventGallery from "@/components/sections/DDCEventGallery";
+import CareerCenterSection from "@/components/sections/CareerCenterSection";
 import { getTranslations } from "next-intl/server";
 import JobApplicationForm from "@/components/sections/JobApplicationForm";
 import LottieAnimation from "@/components/ui/LottieAnimation";
@@ -363,6 +364,9 @@ export default async function CareersPage({ params }: CareersPageProps) {
           </StaggerGroup>
         </div>
 
+        {/* Культура CENTER */}
+        <CareerCenterSection />
+
         {/* Почему именно мы? */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24 pb-12">
           <div className="lg:col-span-7">
@@ -379,24 +383,28 @@ export default async function CareersPage({ params }: CareersPageProps) {
             </StaggerGroup>
           </div>
 
-          <ScrollReveal direction="right" distance={40} duration={ENTRANCE_DURATION.card} delay={0.15} className="lg:col-span-5 relative overflow-visible">
+          <ScrollReveal direction="right" distance={40} duration={ENTRANCE_DURATION.card} delay={0.15} className="lg:col-span-5 relative flex flex-col justify-between">
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-forest/20 rounded-full blur-2xl pointer-events-none" />
-            <LottieAnimation
-              src="/animations/career-programmer-code.json"
-              label="DDC engineer writing production code"
-              className="mb-6"
-              frameClassName="min-h-[220px] sm:min-h-[260px]"
-              animationClassName="max-h-[280px] scale-[1.08]"
-            />
-            <h3 className="text-base font-bold text-white mb-2">{t("startJourneyTitle")}</h3>
-            <p className="text-xs text-zinc-300 font-light leading-relaxed mb-6">
-              {t("startJourneyDesc")}
-            </p>
-            <a href="#jobs-list" className="w-full block">
-              <Button variant="gold" className="w-full justify-center text-xs">
-                {t("viewVacancies", { count: jobs.length })}
-              </Button>
-            </a>
+            <div className="w-full">
+              <LottieAnimation
+                src="/animations/career-programmer-code.json"
+                label="DDC engineer writing production code"
+                className="mb-0"
+                frameClassName="min-h-[320px] sm:min-h-[380px] lg:min-h-[440px]"
+                animationClassName="max-h-[440px] scale-[1.12] w-full"
+              />
+            </div>
+            <div className="mt-8">
+              <h3 className="text-base font-bold text-white mb-2">{t("startJourneyTitle")}</h3>
+              <p className="text-xs text-zinc-300 font-light leading-relaxed mb-6">
+                {t("startJourneyDesc")}
+              </p>
+              <a href="#jobs-list" className="w-full block">
+                <Button variant="gold" className="w-full justify-center text-xs">
+                  {t("viewVacancies", { count: jobs.length })}
+                </Button>
+              </a>
+            </div>
           </ScrollReveal>
         </div>
 
