@@ -1,138 +1,176 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { BubbleText } from "@/components/ui/BubbleText";
 import TerminalGridBackground from "@/components/ui/TerminalGridBackground";
 import ScrollWordHero from "@/components/ui/scroll-hero-section";
 import LottieAnimation from "@/components/ui/LottieAnimation";
-import { FeatureCarousel } from "@/components/ui/feature-carousel";
-import type { Step } from "@/components/ui/feature-carousel";
+import ScrollReveal, { ENTRANCE_DURATION } from "@/components/motion/ScrollReveal";
+import { RevealWords } from "@/components/motion/RevealWords";
 
-function Mission2D() {
+interface MissionStep {
+  key: string;
+  lottieSrc: string;
+  lottieLabel: string;
+}
+
+// One Lottie per step, matched to what each animation actually depicts
+// (checked each file's layer names) rather than left at their previous
+// mismatched, semi-random assignment.
+const STEPS: MissionStep[] = [
+  {
+    key: "step1",
+    lottieSrc: "/animations/data-science-floating-laptop.json",
+    lottieLabel: "Data charts and diagrams rising from a laptop",
+  },
+  {
+    key: "step2",
+    lottieSrc: "/animations/it-infrastructure-server-data.json",
+    lottieLabel: "Server infrastructure with active cooling and processing",
+  },
+  {
+    key: "step3",
+    lottieSrc: "/animations/secure-data-protection.json",
+    lottieLabel: "A lock, key, and password fields representing data security",
+  },
+  {
+    key: "step4",
+    lottieSrc: "/animations/data-science-pc-screen.json",
+    lottieLabel: "A magnifying glass reviewing data on a monitor",
+  },
+];
+
+function MissionSpine() {
   const t = useTranslations("Mission");
+  const listRef = useRef<HTMLDivElement>(null);
+  const scrollTargetRef = useRef<HTMLDivElement>(null);
+  const [listHeight, setListHeight] = useState(0);
 
-  // Load translations for the 4 steps of the carousel dynamically
-  const steps: readonly Step[] = [
-    {
-      id: "1",
-      name: t("step1Name"),
-      title: t("step1Title"),
-      description: t("step1Desc"),
-    },
-    {
-      id: "2",
-      name: t("step2Name"),
-      title: t("step2Title"),
-      description: t("step2Desc"),
-    },
-    {
-      id: "3",
-      name: t("step3Name"),
-      title: t("step3Title"),
-      description: t("step3Desc"),
-    },
-    {
-      id: "4",
-      name: t("step4Name"),
-      title: t("step4Title"),
-      description: t("step4Desc"),
-    },
-  ];
+  useEffect(() => {
+    if (!listRef.current) return;
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setListHeight(entry.target.getBoundingClientRect().height);
+      }
+    });
+    resizeObserver.observe(listRef.current);
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  const { scrollYProgress } = useScroll({
+    target: scrollTargetRef,
+    offset: ["start 65%", "end 65%"],
+  });
+
+  const heightTransform = useTransform(scrollYProgress, [0, 1], [0, listHeight]);
+  const opacityTransform = useTransform(scrollYProgress, [0, 0.08], [0, 1]);
 
   return (
-    <div className="relative w-full bg-transparent overflow-hidden min-h-screen pt-12 pb-24 font-sans flex items-center">
+    <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
+      {/* Section intro */}
+      <div className="max-w-3xl mx-auto text-center mb-20 sm:mb-28">
+        <ScrollReveal blur={10} duration={ENTRANCE_DURATION.label}>
+          <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
+            {t("overline")}
+          </span>
+        </ScrollReveal>
+        <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
+          <RevealWords text={t("titleLine1")} delay={0.08} useBubbleText />{" "}
+          <RevealWords
+            text={t("titleAccent")}
+            delay={0.25}
+            useBubbleText
+            bubbleActiveClassName="text-gold font-black"
+          />{" "}
+          <RevealWords text={t("titleLine2")} delay={0.45} useBubbleText />
+        </h1>
+        <ScrollReveal blur={10} duration={ENTRANCE_DURATION.subtitle} delay={0.2}>
+          <p className="text-base sm:text-lg text-text-secondary font-light leading-relaxed max-w-2xl mx-auto">
+            <BubbleText text={t("subtitle")} />
+          </p>
+        </ScrollReveal>
+      </div>
+
+      {/* Central spine — each pillar sits on alternating sides of it */}
+      <div ref={scrollTargetRef} className="relative">
+        <div
+          ref={listRef}
+          className="relative flex flex-col gap-20 sm:gap-28"
+        >
+          {/* Track (static, faint) */}
+          <div
+            style={{ height: listHeight }}
+            className="hidden md:block absolute left-1/2 -translate-x-1/2 top-0 w-[2px] overflow-hidden bg-gradient-to-b from-transparent via-glass-border to-transparent [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)]"
+          >
+            {/* Growing glow, tied to scroll progress through the pillar list */}
+            <motion.div
+              style={{ height: heightTransform, opacity: opacityTransform }}
+              className="absolute inset-x-0 top-0 w-[2px] bg-gradient-to-b from-forest-light via-gold to-gold-light rounded-full shadow-[0_0_8px_rgba(232,200,122,0.5)]"
+            />
+          </div>
+
+          {STEPS.map((step, index) => {
+            const lottieFirst = index % 2 === 1;
+            return (
+              <div key={step.key} className="relative grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+                {/* Node on the spine */}
+                <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 h-12 w-12 items-center justify-center rounded-full bg-background border border-glass-border shadow-[0_0_10px_rgba(232,200,122,0.15)]">
+                  <span className="font-mono text-sm font-bold text-gold">0{index + 1}</span>
+                </div>
+
+                <ScrollReveal
+                  direction={lottieFirst ? "right" : "left"}
+                  distance={40}
+                  duration={ENTRANCE_DURATION.card}
+                  className={cn("lg:col-span-6", lottieFirst && "lg:order-2")}
+                >
+                  <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
+                    {t(`${step.key}Name`)}
+                  </span>
+                  <h2 className="font-display text-2xl sm:text-4xl font-normal tracking-tight text-foreground mb-5 leading-snug">
+                    {t(`${step.key}Title`)}
+                  </h2>
+                  <p className="text-sm sm:text-base text-text-secondary font-light leading-relaxed max-w-lg">
+                    {t(`${step.key}Desc`)}
+                  </p>
+                </ScrollReveal>
+
+                <ScrollReveal
+                  direction={lottieFirst ? "left" : "right"}
+                  distance={40}
+                  duration={ENTRANCE_DURATION.card}
+                  delay={0.1}
+                  className={cn("lg:col-span-6", lottieFirst && "lg:order-1")}
+                >
+                  <LottieAnimation
+                    src={step.lottieSrc}
+                    label={step.lottieLabel}
+                    frameClassName="min-h-[260px] sm:min-h-[320px] lg:min-h-[380px]"
+                    animationClassName="max-h-[380px]"
+                  />
+                </ScrollReveal>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Mission2D() {
+  return (
+    <div className="relative w-full bg-transparent overflow-hidden py-24 sm:py-32 font-sans">
       {/* Background radial/gradient flows to maintain premium design */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[360px] h-[360px] rounded-full bg-forest/10 blur-[80px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[300px] h-[300px] rounded-full bg-gold/5 blur-[70px] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(#52B78803_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
       <TerminalGridBackground className="opacity-75" />
 
-      <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10 w-full">
-        <ContainerScroll
-          className="h-[55rem] sm:h-[65rem] md:h-[82rem] pt-24 md:pt-40"
-          cardClassName="min-h-[30rem] sm:min-h-[38rem] md:min-h-[44rem] h-auto w-full"
-          titleComponent={
-            <div className="max-w-3xl mx-auto text-center mb-6">
-              <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
-                {t("overline")}
-              </span>
-              <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
-                <BubbleText text={t("titleLine1")} />{" "}
-                <BubbleText text={t("titleAccent")} activeClassName="text-gold font-black" />{" "}
-                {t("titleLine2")}
-              </h1>
-              <p className="text-base sm:text-lg text-text-secondary font-light leading-relaxed max-w-2xl mx-auto">
-                <BubbleText text={t("subtitle")} />
-              </p>
-            </div>
-          }
-        >
-          <FeatureCarousel
-            title={t("titleLine1") + " " + t("titleAccent")}
-            description={t("subtitle")}
-            steps={steps}
-            step1img1Class={cn(
-              "pointer-events-none transition-all duration-500 absolute",
-              "w-[46%] left-[4%] top-[10%] h-[240px]"
-            )}
-            step1img2Class={cn(
-              "pointer-events-none transition-all duration-500 absolute",
-              "w-[46%] left-[50%] top-[10%] h-[240px]"
-            )}
-            step2img1Class={cn(
-              "pointer-events-none transition-all duration-500 absolute",
-              "w-[45%] left-[4%] top-[10%] h-[240px]"
-            )}
-            step2img2Class={cn(
-              "pointer-events-none transition-all duration-500 absolute",
-              "w-[45%] left-[50%] top-[10%] h-[240px]"
-            )}
-            step3imgClass={cn(
-              "pointer-events-none transition-all duration-500 absolute",
-              "w-[80%] left-[10%] top-[5%] h-[280px]"
-            )}
-            step4imgClass={cn(
-              "pointer-events-none transition-all duration-500 absolute",
-              "w-[80%] left-[10%] top-[5%] h-[280px]"
-            )}
-            image={{
-              step1light1: "/animations/it-infrastructure-server-data.json",
-              step1light2: "/animations/secure-data-protection.json",
-              step2light1: "/animations/server-data-sync.json",
-              step2light2: "/animations/data-science-pc-screen.json",
-              step3light: "/animations/data-science-floating-laptop.json",
-              step4light: "/animations/career-programmer-code.json",
-              alt: t("step1Name"),
-            }}
-            bgClass="!bg-transparent !border-none !shadow-none"
-          />
-        </ContainerScroll>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center -mt-8 md:-mt-20">
-          <div className="lg:col-span-5">
-            <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
-              {t("step3Name")}
-            </span>
-            <h2 className="font-display text-2xl sm:text-4xl font-normal tracking-tight text-foreground mb-5">
-              {t("step3Title")}
-            </h2>
-            <p className="text-sm sm:text-base text-text-secondary font-light leading-relaxed">
-              {t("step3Desc")}
-            </p>
-          </div>
-          <div className="lg:col-span-7">
-            <LottieAnimation
-              src="/animations/data-science-floating-laptop.json"
-              label="Data graphs floating from a laptop"
-              className="relative"
-              frameClassName="min-h-[280px] sm:min-h-[340px] lg:min-h-[420px]"
-              animationClassName="scale-[1.05]"
-            />
-          </div>
-        </div>
-      </div>
+      <MissionSpine />
     </div>
   );
 }
