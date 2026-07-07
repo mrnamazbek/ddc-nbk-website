@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, type KeyboardEvent } from "react";
+import { createPortal } from "react-dom";
 import { ChevronDown, Check } from "lucide-react";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -30,7 +31,7 @@ const LANGUAGE_FLAGS: Record<string, string> = {
   en: "🇬🇧",
 };
 
-// Accessible dropdown-based language selector, styled conforming to repository design.
+// Accessible dropdown-based language selector, rendered via React Portal to prevent clipping from navbar overflow styles.
 function LanguageSwitcher({
   locale,
   onSwitch,
@@ -41,11 +42,46 @@ function LanguageSwitcher({
   size?: "sm" | "lg";
 }) {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const [coords, setCoords] = useState<{ top: number; left: number; width: number; height: number } | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const updateCoords = () => {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setCoords({
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (open) {
+      updateCoords();
+      window.addEventListener("resize", updateCoords);
+      window.addEventListener("scroll", updateCoords);
+    }
+    return () => {
+      window.removeEventListener("resize", updateCoords);
+      window.removeEventListener("scroll", updateCoords);
+    };
+  }, [open]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      const clickedOutsideButton = dropdownRef.current && !dropdownRef.current.contains(e.target as Node);
+      const clickedOutsideMenu = menuRef.current && !menuRef.current.contains(e.target as Node);
+      
+      if (clickedOutsideButton && clickedOutsideMenu) {
         setOpen(false);
       }
     }
@@ -63,65 +99,81 @@ function LanguageSwitcher({
     return () => document.removeEventListener("keydown", handleEscape);
   }, []);
 
+  const dropdownStyle: React.CSSProperties = coords
+    ? size === "lg"
+      ? {
+          position: "fixed",
+          top: `${coords.top - 8}px`,
+          left: `${coords.left}px`,
+          transform: "translateY(-100%)",
+        }
+      : {
+          position: "fixed",
+          top: `${coords.top + coords.height + 8}px`,
+          left: `${coords.left + coords.width - 160}px`,
+        }
+    : {};
+
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
       <button
+        ref={buttonRef}
         onClick={() => setOpen((o) => !o)}
         type="button"
         aria-label="Select Language"
         aria-expanded={open}
-        className={`font-mono font-bold tracking-wider rounded-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 flex items-center justify-center gap-2 transition-all duration-300 liquid-glass border border-white/10 text-white ${
-          size === "lg"
+        className={`font-mono font-bold tracking-wider rounded-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 flex items-center justify-center gap-2 transition-all duration-300 liquid-glass border border-white/10 text-white ${size === "lg"
             ? "px-5 py-2 text-sm min-h-[44px] min-w-[120px]"
             : "px-3.5 py-1.5 text-xs min-h-11 min-w-[85px]"
-        }`}
+          }`}
       >
         <span className="text-sm select-none">{LANGUAGE_FLAGS[locale]}</span>
         <span className="uppercase">{locale}</span>
         <ChevronDown
-          className={`transition-transform duration-300 ${
-            size === "lg" ? "h-4 w-4" : "h-3.5 w-3.5"
-          } ${open ? "rotate-180" : ""}`}
+          className={`transition-transform duration-300 ${size === "lg" ? "h-4 w-4" : "h-3.5 w-3.5"
+            } ${open ? "rotate-180" : ""}`}
         />
       </button>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.96 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
-            data-hover="gold"
-            style={{ backfaceVisibility: "hidden" }}
-            className={`absolute w-40 glass-card py-1.5 shadow-glass z-[70] transform-gpu ${
-              size === "lg" ? "bottom-full mb-2 left-0" : "top-full mt-2 right-0"
-            }`}
-          >
-            {LANGUAGES.map((lng) => {
-              const active = locale === lng;
-              return (
-                <button
-                  key={lng}
-                  onClick={() => {
-                    onSwitch(lng);
-                    setOpen(false);
-                  }}
-                  className={`flex items-center gap-2.5 w-full px-4 py-2.5 text-xs text-left transition-colors font-mono tracking-wider ${
-                    active
-                      ? "text-gold font-bold bg-white/5"
-                      : "text-muted hover:text-gold hover:bg-gold/10"
-                  }`}
-                >
-                  <span className="text-sm select-none">{LANGUAGE_FLAGS[lng]}</span>
-                  <span className="flex-1">{LANGUAGE_LABELS[lng]}</span>
-                  {active && <Check className="h-3.5 w-3.5 text-gold" />}
-                </button>
-              );
-            })}
-          </motion.div>
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {open && (
+              <motion.div
+                ref={menuRef}
+                initial={{ opacity: 0, y: size === "lg" ? -8 : 8, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: size === "lg" ? -8 : 8, scale: 0.96 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
+                data-hover="gold"
+                style={{ ...dropdownStyle, backfaceVisibility: "hidden" }}
+                className="w-40 glass-card py-1.5 shadow-glass z-[9999] transform-gpu"
+              >
+                {LANGUAGES.map((lng) => {
+                  const active = locale === lng;
+                  return (
+                    <button
+                      key={lng}
+                      onClick={() => {
+                        onSwitch(lng);
+                        setOpen(false);
+                      }}
+                      className={`flex items-center gap-2.5 w-full px-4 py-2.5 text-xs text-left transition-colors font-mono tracking-wider ${active
+                          ? "text-gold font-bold bg-white/5"
+                          : "text-muted hover:text-gold hover:bg-gold/10"
+                        }`}
+                    >
+                      <span className="text-sm select-none">{LANGUAGE_FLAGS[lng]}</span>
+                      <span className="flex-1">{LANGUAGE_LABELS[lng]}</span>
+                      {active && <Check className="h-3.5 w-3.5 text-gold" />}
+                    </button>
+                  );
+                })}
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </div>
   );
 }
@@ -231,23 +283,22 @@ export default function Header() {
 
   const targetLeft = hoveredLink
     ? Math.max(
-        20,
-        Math.min(
-          hoveredLink.left - 200 + hoveredLink.width / 2,
-          typeof window !== "undefined" ? window.innerWidth - 420 : hoveredLink.left
-        )
+      20,
+      Math.min(
+        hoveredLink.left - 200 + hoveredLink.width / 2,
+        typeof window !== "undefined" ? window.innerWidth - 420 : hoveredLink.left
       )
+    )
     : 0;
 
   return (
     <>
       <header
         style={{ backfaceVisibility: "hidden", overflow: "visible" }}
-        className={`!fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1300px] transition-all duration-500 rounded-full py-2.5 px-5 sm:px-7 !overflow-visible transform-gpu ${
-          isScrolled
+        className={`!fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1300px] transition-all duration-500 rounded-full py-2.5 px-5 sm:px-7 !overflow-visible transform-gpu ${isScrolled
             ? "liquid-glass-strong shadow-card"
             : "liquid-glass shadow-lg"
-        }`}
+          }`}
       >
         <div className="w-full flex items-center justify-between">
           {/* Logo (mark only — clean & compact) */}
@@ -290,9 +341,8 @@ export default function Header() {
                 >
                   <TransitionLink
                     href={link.href}
-                    className={`relative flex items-center px-3 py-2 rounded-full text-[13px] font-medium tracking-wide whitespace-nowrap transition-colors duration-300 ${
-                      isActive ? "text-gold" : "text-muted hover:text-foreground"
-                    }`}
+                    className={`relative flex items-center px-3 py-2 rounded-full text-[13px] font-medium tracking-wide whitespace-nowrap transition-colors duration-300 ${isActive ? "text-gold" : "text-muted hover:text-foreground"
+                      }`}
                   >
                     <TextStaggerHover>
                       <TextStaggerHoverActive animation="top">
@@ -408,9 +458,8 @@ export default function Header() {
                     <TransitionLink
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className={`font-heading text-2xl tracking-wide block ${
-                        isActive ? "text-gold font-semibold" : "text-foreground"
-                      }`}
+                      className={`font-heading text-2xl tracking-wide block ${isActive ? "text-gold font-semibold" : "text-foreground"
+                        }`}
                     >
                       <TextStaggerHover>
                         <TextStaggerHoverActive animation="top">
