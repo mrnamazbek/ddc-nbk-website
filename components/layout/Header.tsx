@@ -104,13 +104,13 @@ function LanguageSwitcher({
     ? size === "lg"
       ? {
           position: "fixed",
-          top: `${coords.top - 8}px`,
+          top: `${coords.top - 12}px`,
           left: `${coords.left}px`,
           transform: "translateY(-100%)",
         }
       : {
           position: "fixed",
-          top: `${coords.top + coords.height + 8}px`,
+          top: `${coords.top + coords.height + 18}px`,
           left: `${coords.left + coords.width - 160}px`,
         }
     : {};
@@ -142,13 +142,18 @@ function LanguageSwitcher({
             {open && (
               <motion.div
                 ref={menuRef}
-                initial={{ opacity: 0, y: size === "lg" ? -8 : 8, scale: 0.96 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: size === "lg" ? -8 : 8, scale: 0.96 }}
-                transition={{ duration: 0.15, ease: "easeOut" }}
+                initial={{ opacity: 0, y: size === "lg" ? -15 : 15, scale: 0.95, rotateX: size === "lg" ? 12 : -12, filter: "blur(6px)" }}
+                animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: size === "lg" ? -10 : 10, scale: 0.95, rotateX: size === "lg" ? -8 : 8, filter: "blur(4px)" }}
+                transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
                 onMouseLeave={() => setHoveredIndex(null)}
                 data-hover="gold"
-                style={{ ...dropdownStyle, backfaceVisibility: "hidden" }}
+                style={{ 
+                  ...dropdownStyle, 
+                  backfaceVisibility: "hidden",
+                  perspective: 1000,
+                  transformStyle: "preserve-3d"
+                }}
                 className="w-40 glass-card py-1.5 shadow-glass z-[9999] transform-gpu"
               >
                 {LANGUAGES.map((lng, idx) => {
