@@ -287,7 +287,7 @@ export default async function CareersPage({ params }: CareersPageProps) {
 
         {/* Заголовок страницы */}
         <div className="max-w-3xl mb-16">
-          <ScrollReveal blur={10} duration={ENTRANCE_DURATION.label}>
+          <ScrollReveal blur={6} distance={16} duration={ENTRANCE_DURATION.label}>
             <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-mono font-medium mb-4 block">
               {t("overline")}
             </span>

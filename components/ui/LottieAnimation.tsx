@@ -74,7 +74,7 @@ export default function LottieAnimation({
         delay: shouldReduceMotion ? 0 : delay,
         ease: ENTRANCE_EASE,
       }}
-      className={cn("relative overflow-hidden", className)}
+      className={cn("relative overflow-visible", className)}
     >
       {shell ? (
         <>
@@ -84,7 +84,7 @@ export default function LottieAnimation({
 
       <div
         className={cn(
-          "relative flex min-h-[240px] items-center justify-center rounded-[inherit]",
+          "relative flex min-h-[240px] items-center justify-center overflow-visible rounded-[inherit]",
           shell && "bg-transparent",
           frameClassName,
         )}
@@ -94,7 +94,7 @@ export default function LottieAnimation({
             animationData={animationData}
             autoplay={!shouldReduceMotion}
             loop={!shouldReduceMotion && loop}
-            className={cn("h-full w-full max-h-[420px]", animationClassName)}
+            className={cn("h-full w-full max-h-[520px] overflow-visible", animationClassName)}
           />
         ) : (
           <div className="size-10 rounded-full border border-gold/20 border-t-gold-light animate-spin" />

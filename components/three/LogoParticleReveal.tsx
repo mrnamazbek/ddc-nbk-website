@@ -140,11 +140,11 @@ const VERT = /* glsl */ `
     float logoBurst = sin(clamp((uProgress - 0.36) / 0.20, 0.0, 1.0) * 3.14159265);
     float coreBurst = sin(clamp((uProgress - 0.64) / 0.14, 0.0, 1.0) * 3.14159265);
     float serviceBurst = sin(clamp((uProgress - 0.84) / 0.13, 0.0, 1.0) * 3.14159265);
-    float burst = (logoBurst * 0.85 + coreBurst * 0.55 + serviceBurst * 0.5) * uLogoMode;
+    float burst = (logoBurst * 0.68 + coreBurst * 0.36 + serviceBurst * 0.34) * uLogoMode;
     float n = snoise(pos * 0.9 + vec3(uTime * 0.08, uTime * 0.05, aRand * 10.0));
     vec3 dir = normalize(pos + vec3(0.0001));
-    pos += dir * n * burst * 0.24;
-    pos.z += snoise(pos * 1.4 + uTime * 0.1) * burst * 0.2;
+    pos += dir * n * burst * 0.18;
+    pos.z += snoise(pos * 1.4 + uTime * 0.1) * burst * 0.14;
 
     // gentle idle drift once an object is formed
     pos += dir * snoise(pos * 0.6 + uTime * 0.15) * 0.026 * vMix;
@@ -169,9 +169,9 @@ const VERT = /* glsl */ `
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mv;
     float laterObject = max(vCore, vService);
-    float sizeTaper = mix(1.12, 0.82, vMix) * mix(1.0, 0.76, laterObject);
+    float sizeTaper = mix(1.06, 0.9, vMix) * mix(1.0, 0.92, laterObject);
     gl_PointSize = uSize * sizeTaper * aScale * uPixelRatio * (150.0 / -mv.z);
-    float maxPoint = mix(mix(3.65, 2.1, vMix), 1.62, laterObject) * uPixelRatio;
+    float maxPoint = mix(mix(3.35, 2.18, vMix), 2.0, laterObject) * uPixelRatio;
     gl_PointSize = clamp(gl_PointSize, 0.65, maxPoint);
   }
 `;
@@ -201,19 +201,20 @@ const FRAG = /* glsl */ `
 
     // Gold/green throughout. As the logo forms, bias particles toward warm
     // yellow-gold so the emblem reads brighter and more premium.
-    float t = clamp(0.36 + vMix * 0.78 + vRand * 0.34, 0.0, 1.0);
+    float t = clamp(0.3 + vMix * 0.52 + vRand * 0.26, 0.0, 1.0);
     vec3 brandCol = mix(uColorA, uColorB, t);
     vec3 ribbonCol = mix(uRibbonA, uRibbonB, clamp(0.18 + vRand * 0.5, 0.0, 1.0));
-    ribbonCol = mix(ribbonCol, uColorB, 0.58);
+    ribbonCol = mix(ribbonCol, uColorB, 0.46);
     vec3 col = mix(brandCol, ribbonCol, vRibbon);
-    col = mix(col, uColorB, vMix * 0.68);
-    col = mix(col, mix(uColorB, uColorA, 0.28), vCore * 0.35);
-    col = mix(col, mix(uColorB, uColorA, 0.18), vService * 0.28);
+    col = mix(col, uColorB, vMix * 0.48);
+    col = mix(col, mix(uColorB, uColorA, 0.34), vCore * 0.42);
+    col = mix(col, mix(uColorB, uColorA, 0.24), vService * 0.34);
 
     // Cursor proximity glow: nearby particles brighten toward a hot highlight
     // and read very slightly more opaque, like embers catching the pointer.
-    col = mix(col, uHotColor, vProximity * 0.85);
-    float glowAlpha = alpha * uOpacity * mix(1.0, 1.15, vProximity);
+    col = mix(col, uHotColor, vProximity * 0.62);
+    float objectSoftness = mix(1.0, 0.84, max(vCore, vService));
+    float glowAlpha = alpha * uOpacity * objectSoftness * mix(1.0, 1.08, vProximity);
     gl_FragColor = vec4(col, glowAlpha);
   }
 `;
@@ -646,8 +647,8 @@ function ParticleCanvas({ mode }: { mode: RevealMode }) {
     // there to keep the emblem bold and forest-led.
     const palette = (light: boolean) =>
       light
-        ? { a: "#1A3D2B", b: "#AD8427", mul: 1.2, size: 1.32 }
-        : { a: "#35B873", b: "#F2D36B", mul: 1.36, size: 1.14 };
+        ? { a: "#163423", b: "#8B7035", mul: 1.05, size: 1.26 }
+        : { a: "#2D8A5A", b: "#D1B45A", mul: 1.12, size: 1.08 };
     let theme = palette(document.documentElement.classList.contains("light"));
     const baseSize = isMobile ? 2.45 : 2.62;
 
@@ -660,9 +661,9 @@ function ParticleCanvas({ mode }: { mode: RevealMode }) {
       uLogoMode: { value: logoMode ? 1 : 0 },
       uColorA: { value: new THREE.Color(theme.a) },
       uColorB: { value: new THREE.Color(theme.b) },
-      uRibbonA: { value: new THREE.Color("#F1CF64") },
-      uRibbonB: { value: new THREE.Color("#4A8E62") },
-      uHotColor: { value: new THREE.Color("#F8E6A0") },
+      uRibbonA: { value: new THREE.Color("#D1B45A") },
+      uRibbonB: { value: new THREE.Color("#2D6A4F") },
+      uHotColor: { value: new THREE.Color("#E8C87A") },
       uMouse: { value: new THREE.Vector2(0, 0) },
       uMouseActive: { value: 0 },
       uProximityRadius: { value: 1.1 },
@@ -775,7 +776,7 @@ function ParticleCanvas({ mode }: { mode: RevealMode }) {
       uniforms.uTime.value = clock.t;
       // fade in at the start, fade out near the very end
       uniforms.uOpacity.value =
-        theme.mul * THREE.MathUtils.smoothstep(p, 0.0, 0.14) * (1.0 - THREE.MathUtils.smoothstep(p, 0.98, 1.0));
+        theme.mul * THREE.MathUtils.smoothstep(p, 0.0, 0.18) * (1.0 - THREE.MathUtils.smoothstep(p, 0.98, 1.0));
 
       // Keep orientation locked. The reference ribbon was captured mid-rotation,
       // but this build intentionally avoids counter-clockwise spin.
@@ -852,14 +853,14 @@ function StoryPanel({
 }) {
   return (
     <div className={align === "right" ? "text-left md:text-right" : "text-left"}>
-      <div className="mb-4 inline-flex items-center gap-3 rounded-full border border-gold/25 bg-background/35 px-4 py-2 font-mono text-[0.68rem] uppercase tracking-[0.24em] text-gold shadow-[0_0_30px_rgba(213,180,84,0.12)] backdrop-blur-md">
-        <span className="h-1.5 w-1.5 rounded-full bg-gold-light shadow-[0_0_14px_rgba(255,232,156,0.75)]" />
+      <div className="mb-4 inline-flex items-center gap-3 rounded-full border border-gold/20 bg-background/55 px-4 py-2 font-mono text-[0.68rem] uppercase tracking-[0.24em] text-gold-light shadow-[0_0_24px_rgba(201,168,76,0.1)] backdrop-blur-md">
+        <span className="h-1.5 w-1.5 rounded-full bg-gold shadow-[0_0_12px_rgba(232,200,122,0.55)]" />
         {overline}
       </div>
-      <h3 className="font-display text-4xl font-normal tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+      <h3 className="font-display text-3xl font-normal tracking-tight text-foreground sm:text-4xl lg:text-5xl">
         {title}
       </h3>
-      <p className={align === "right" ? "mt-5 max-w-lg text-base leading-relaxed text-muted md:ml-auto" : "mt-5 max-w-lg text-base leading-relaxed text-muted"}>
+      <p className={align === "right" ? "mt-5 max-w-lg text-sm leading-relaxed text-foreground/72 sm:text-base md:ml-auto" : "mt-5 max-w-lg text-sm leading-relaxed text-foreground/72 sm:text-base"}>
         {desc}
       </p>
     </div>

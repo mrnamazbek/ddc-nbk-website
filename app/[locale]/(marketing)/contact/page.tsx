@@ -12,7 +12,7 @@ import { useTranslations } from "next-intl";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { LiquidButton } from "@/components/ui/liquid-glass-button";
+import Button from "@/components/ui/Button";
 import { KazakhstanMap } from "@/components/ui/kazakhstan-map";
 import { cn } from "@/lib/utils";
 import ScrollReveal, { ENTRANCE_DURATION, STAGGER } from "@/components/motion/ScrollReveal";
@@ -204,9 +204,9 @@ export default function ContactPage() {
                 <p className="text-sm text-zinc-300 font-light leading-relaxed max-w-md mx-auto mb-8">
                   {t("formSubmittedDesc")}
                 </p>
-                <LiquidButton variant="default" size="lg" className="h-10 text-gold-light bg-transparent" onClick={() => setIsSubmitted(false)}>
+                <Button variant="outline" size="md" className="text-gold-light" onClick={() => setIsSubmitted(false)}>
                   {t("sendAnotherBtn")}
-                </LiquidButton>
+                </Button>
               </motion.div>
             ) : (
               <StaggerGroup stagger={STAGGER.base}>
@@ -294,10 +294,12 @@ export default function ContactPage() {
                 </StaggerItem>
 
                 <StaggerItem duration={ENTRANCE_DURATION.button}>
-                  <LiquidButton
+                  <Button
                     type="submit"
+                    variant="gold"
+                    size="lg"
                     disabled={isSubmitting}
-                    className="w-full justify-center flex items-center gap-2 py-4 h-12 text-gold-light font-medium bg-transparent hover:scale-[1.02] transition duration-300"
+                    className="w-full"
                   >
                     {isSubmitting ? (
                       <>
@@ -310,7 +312,7 @@ export default function ContactPage() {
                         <Icon name="send" size={16} animate={false} />
                       </>
                     )}
-                  </LiquidButton>
+                  </Button>
                 </StaggerItem>
               </form>
               </StaggerGroup>

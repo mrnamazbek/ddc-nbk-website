@@ -2,6 +2,7 @@
 
 import { ReactNode, forwardRef } from "react";
 import { motion, HTMLMotionProps, useReducedMotion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
   children: ReactNode;
@@ -11,28 +12,24 @@ export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children">
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, variant = "gold", size = "md", isMagnetic = false, className = "", ...props }, ref) => {
+  ({ children, variant = "gold", size = "md", isMagnetic = false, className, ...props }, ref) => {
     const shouldReduceMotion = useReducedMotion();
 
-    // Базовые стили
-    const baseStyles = "inline-flex items-center justify-center font-medium transition-colors duration-200 rounded-[var(--radius-button)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer";
+    const baseStyles =
+      "inline-flex items-center justify-center rounded-[var(--radius-button)] font-semibold transition-[color,background,border-color,box-shadow,transform] duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold disabled:cursor-not-allowed disabled:opacity-50 select-none cursor-pointer [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0";
 
-    // Стили вариантов
-    let variantClass = "";
-    if (variant === "ghost") {
-      variantClass = "text-muted hover:text-foreground bg-transparent hover:bg-glass";
-    } else {
-      variantClass = "liquid-glass-button font-semibold";
-    }
+    const variantClass =
+      variant === "ghost"
+        ? "text-muted hover:text-foreground bg-transparent hover:bg-glass border border-transparent"
+        : "liquid-glass-button";
 
-    // Стили размеров
     const sizes = {
-      sm: "px-4 py-2 text-xs min-h-[36px]",
-      md: "px-6 py-3 text-sm min-h-[44px]",
-      lg: "px-8 py-4 text-base min-h-[52px]",
+      sm: "min-h-11 px-4 py-2 text-xs",
+      md: "min-h-11 px-6 py-3 text-sm",
+      lg: "min-h-[52px] px-8 py-4 text-base",
     };
 
-    const combinedClassName = `${baseStyles} ${variantClass} ${sizes[size]} ${className}`;
+    const combinedClassName = cn(baseStyles, variantClass, sizes[size], className);
 
     const content = (
       <span className="relative z-10 flex items-center justify-center gap-2">
