@@ -120,7 +120,6 @@ export default function FinancialInform() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {/* Базовая ставка Нацбанка */}
           <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-gold/25 transition-colors duration-300 relative overflow-hidden group">
-            <div className="absolute -top-10 -right-10 w-20 h-20 bg-gold/5 rounded-full blur-xl pointer-events-none group-hover:bg-gold/10 transition-colors duration-500" />
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs text-muted font-light">{t("baseRate")}</span>
               <div className="w-8 h-8 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center text-gold">
@@ -146,7 +145,6 @@ export default function FinancialInform() {
 
           {/* Инфляция годовая */}
           <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-forest/25 transition-colors duration-300 relative overflow-hidden group">
-            <div className="absolute -top-10 -right-10 w-20 h-20 bg-forest/5 rounded-full blur-xl pointer-events-none group-hover:bg-forest/10 transition-colors duration-500" />
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs text-muted font-light">{t("inflation")}</span>
               <div className="w-8 h-8 rounded-lg bg-forest/20 border border-forest-light/20 flex items-center justify-center text-forest-light">

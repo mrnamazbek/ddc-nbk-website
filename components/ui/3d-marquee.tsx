@@ -24,7 +24,7 @@ export function ThreeDMarquee({ images, className }: ThreeDMarqueeProps) {
       )}
       aria-hidden
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_35%_30%,rgba(201,168,76,0.16),transparent_34%),radial-gradient(circle_at_72%_68%,rgba(26,99,71,0.18),transparent_32%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(201,168,76,0.08),rgba(26,99,71,0.08))]" />
       <div className="absolute inset-0 [transform:rotateX(58deg)_rotateZ(-17deg)_translate3d(-6%,8%,0)] [transform-style:preserve-3d]">
         {rows.map((row, rowIndex) => {
           const direction = rowIndex % 2 === 0 ? -1 : 1;

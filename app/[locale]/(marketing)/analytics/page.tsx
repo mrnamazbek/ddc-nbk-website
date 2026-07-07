@@ -42,10 +42,6 @@ export default function AnalyticsPage() {
 
   return (
     <div className="relative w-full bg-transparent overflow-hidden min-h-screen pt-32 pb-24 font-sans">
-      {/* Background decorations */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-forest/5 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute bottom-1/4 left-0 w-[450px] h-[450px] bg-gold/5 rounded-full blur-[120px] pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
 
         {/* Header */}

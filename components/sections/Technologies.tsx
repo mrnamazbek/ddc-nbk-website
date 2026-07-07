@@ -80,10 +80,6 @@ export default function Technologies() {
 
   return (
     <section className="relative w-full py-24 bg-transparent overflow-hidden font-sans">
-      {/* Background soft glows */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-forest/5 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-gold/5 blur-[120px] pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
 
         {/* Header */}

@@ -340,9 +340,6 @@ export default function Leadership() {
       ref={containerRef}
       className="relative w-full py-24 sm:py-32 bg-transparent overflow-hidden"
     >
-      {/* Декоративные свечения */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-forest/5 blur-[120px] pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
 
         {/* Заголовок секции */}
@@ -423,10 +420,6 @@ export default function Leadership() {
                       className="w-full max-w-2xl mt-6 px-4 overflow-hidden relative z-10"
                     >
                       <div className="p-6 sm:p-8 bg-charcoal/40 border border-glass-border rounded-[24px] backdrop-blur-md shadow-2xl relative">
-                        {/* Glowing radial ornament background */}
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-gold/5 rounded-full blur-2xl pointer-events-none" />
-                        <div className="absolute bottom-0 left-0 w-32 h-32 bg-forest/5 rounded-full blur-2xl pointer-events-none" />
-
                         <div className="text-left mb-6">
                           <span className="text-[10px] uppercase tracking-[0.2em] text-gold font-mono block mb-1">
                             {t("pillars.overline")}

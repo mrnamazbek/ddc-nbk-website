@@ -451,12 +451,12 @@ export default function UiLabPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#020705] text-white">
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_18%_8%,rgba(201,168,76,0.16),transparent_28%),radial-gradient(circle_at_80%_18%,rgba(82,183,136,0.13),transparent_34%),linear-gradient(180deg,#020705_0%,#06100c_48%,#020705_100%)]" />
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(180deg,#020705_0%,#06100c_48%,#020705_100%)]" />
 
       <section className="relative min-h-[92svh] overflow-hidden pt-36 sm:pt-40">
         <CursorDotField />
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#020705] via-[#020705]/40 to-transparent" />
-        <div className="pointer-events-none absolute left-1/2 top-[56%] h-[42rem] w-[42rem] -translate-x-1/2 rounded-full border border-gold/15 bg-[radial-gradient(circle,rgba(201,168,76,0.09),rgba(6,28,20,0.36)_45%,transparent_70%)] blur-[1px]" />
+        <div className="pointer-events-none absolute left-1/2 top-[56%] h-[42rem] w-[42rem] -translate-x-1/2 rounded-full border border-gold/15 bg-forest-dark/15" />
 
         <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center px-5 text-center sm:px-8">
           <motion.div

@@ -67,19 +67,6 @@ export default function TerminalGridBackground({
         transition={{ duration: 14, repeat: Infinity, ease: [0.16, 1, 0.3, 1] }}
       />
 
-      <motion.div
-        className="absolute left-1/2 top-1/2 h-[36rem] w-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-lime-300/5 blur-[120px]"
-        animate={
-          reduceMotion
-            ? undefined
-            : {
-                scale: [0.92, 1.08, 0.96],
-                opacity: [0.28, 0.5, 0.32],
-              }
-        }
-        transition={{ duration: 18, repeat: Infinity, ease: [0.16, 1, 0.3, 1] }}
-      />
-
       {nodes.map(([left, top], index) => (
         <motion.span
           key={`${left}-${top}`}

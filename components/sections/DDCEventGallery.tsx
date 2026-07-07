@@ -107,10 +107,6 @@ export default function DDCEventGallery() {
 
   return (
     <section className="py-24 relative overflow-hidden">
-      {/* Декорации на фоне */}
-      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute top-1/3 right-10 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[120px] pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
 
         {/* Заголовок секции */}

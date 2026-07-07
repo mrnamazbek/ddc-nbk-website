@@ -97,8 +97,6 @@ export function LeaderProfileModal({ leader, closeLabel, onClose }: LeaderProfil
               data-hover="gold"
               className="relative z-10 mt-6 overflow-hidden liquid-glass-strong rounded-[28px] p-6 shadow-2xl sm:p-8 md:-ml-10 md:mt-0 md:max-w-md md:flex-1"
             >
-              <div className="pointer-events-none absolute -top-10 -right-10 h-40 w-40 rounded-full bg-gold/10 blur-3xl" />
-
               {leader.tag && (
                 <span className="relative mb-2 block font-mono text-[10px] uppercase tracking-[0.2em] text-gold">
                   {leader.tag}

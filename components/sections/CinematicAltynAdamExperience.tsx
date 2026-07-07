@@ -386,7 +386,7 @@ function ChapterCard({ chapter, index, total, progress }: { chapter: CinematicCh
  * Motion-free fallback: the same content as a plain readable page — no
  * canvas, no sticky scroll hijack, no scroll-driven transforms. Served when
  * the visitor prefers reduced motion or has the site's accessibility mode
- * on, matching how Mission/Services variant gating already treats "A".
+ * on, matching the static experience used across reduced-motion paths.
  */
 function StaticExperience({
   overline,
@@ -551,7 +551,7 @@ export default function CinematicAltynAdamExperience({
   return (
     <section ref={containerRef} className={cn("relative w-full bg-[#040c08] text-white", scrollLengthClass)}>
       <div className="sticky top-0 h-screen overflow-hidden bg-[#040c08]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(82,183,136,0.18),transparent_30%),radial-gradient(circle_at_70%_72%,rgba(201,168,76,0.12),transparent_34%),linear-gradient(120deg,#031009,#071b13_48%,#020806)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(120deg,#031009,#071b13_48%,#020806)]" />
         <div className="absolute inset-0 opacity-[0.28] bg-[radial-gradient(rgba(232,200,122,0.18)_1px,transparent_1px)] bg-[size:22px_22px]" />
         <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background via-background/35 to-transparent" />
 

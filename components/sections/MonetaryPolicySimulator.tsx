@@ -146,9 +146,6 @@ export default function MonetaryPolicySimulator() {
 
   return (
     <GlassCard hoverAccent="forest" className="p-8 border border-white/5 relative overflow-hidden" isTiltEnabled={false}>
-      {/* Декоративный бэкграунд */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-forest/5 rounded-full blur-3xl pointer-events-none" />
-
       <div className="text-left mb-8 flex justify-between items-start">
         <div>
           <span className="text-[10px] font-mono tracking-widest text-gold uppercase block mb-1">

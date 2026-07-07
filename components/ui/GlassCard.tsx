@@ -21,7 +21,6 @@ export default function GlassCard({
   onClick,
 }: GlassCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const glowRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
 
   // Motion-значения для отслеживания мыши (3D-наклон)
@@ -39,15 +38,6 @@ export default function GlassCard({
     const rect = cardRef.current.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
-
-    // Рассчитываем координаты мыши относительно левого верхнего угла элемента для Spotlight Border
-    const clientX = event.clientX - rect.left;
-    const clientY = event.clientY - rect.top;
-
-    if (glowRef.current) {
-      glowRef.current.style.left = `${clientX}px`;
-      glowRef.current.style.top = `${clientY}px`;
-    }
 
     if (!isTiltEnabled || shouldReduceMotion) return;
     
@@ -75,11 +65,6 @@ export default function GlassCard({
     gold: "hover:border-gold/30 hover:shadow-[0_8px_32px_rgba(201,168,76,0.15)]",
   };
 
-  // Цвет подсветки Spotlight Border (повышенная яркость и радиус для эффекта жидкого стекла)
-  const spotlightColor = hoverAccent === "gold"
-    ? "radial-gradient(circle, rgba(201, 168, 76, 0.22) 0%, rgba(201, 168, 76, 0) 75%)"
-    : "radial-gradient(circle, rgba(82, 183, 136, 0.22) 0%, rgba(82, 183, 136, 0) 75%)";
-
   const glassClass = variant === "liquid-strong" 
     ? "liquid-glass-strong" 
     : variant === "liquid" 
@@ -100,20 +85,8 @@ export default function GlassCard({
       data-hover={hoverAccent === "gold" ? "gold" : "forest"}
       className={`${glassClass} spotlight-card p-6 ${accentClasses[hoverAccent]} ${className}`}
     >
-      {/* Эффект Spotlight Border (светящийся синий или золотой ореол, следующий за мышкой) */}
-      <div
-        ref={glowRef}
-        className="spotlight-glow"
-        style={{ background: spotlightColor }}
-      />
-
       {/* Мягкий блик, перемещающийся по карте при наведении (из исходного дизайна) */}
       <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/3 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-      
-      {/* Слой свечения бренда в углу для придания глубины */}
-      <div className={`absolute -bottom-20 -left-20 w-40 h-40 rounded-full blur-[60px] pointer-events-none opacity-40 ${
-        hoverAccent === "gold" ? "bg-gold/25" : "bg-forest-mid/25"
-      }`} />
 
       <div style={{ transform: "translateZ(20px)" }} className="relative z-10">
         {children}

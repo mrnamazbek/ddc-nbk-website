@@ -11,10 +11,6 @@ export default function SakaScroll() {
 
   return (
     <section className="relative w-full bg-transparent overflow-hidden">
-      {/* Background glowing effects to emphasize premium editorial feel */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] rounded-full bg-forest/5 blur-[120px] pointer-events-none" />
-      <div className="absolute top-1/3 left-1/4 w-[300px] h-[300px] rounded-full bg-gold/5 blur-[100px] pointer-events-none" />
-
       <ContainerScroll
         titleComponent={
           <div className="flex flex-col items-center">

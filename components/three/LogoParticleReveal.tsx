@@ -6,10 +6,10 @@ import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion
 import { useTranslations } from "next-intl";
 
 /**
- * Variant A/C centerpiece — a scroll-driven GPU particle field that starts as
- * the restored DDC green/gold flowing dot shader. Variant A holds that brand
- * terrain; Variant C continues into a brand-color diagonal ribbon and then
- * morphs into the DDC emblem while the four key stats reveal.
+ * Production centerpiece — a scroll-driven GPU particle field that starts as
+ * the restored DDC green/gold flowing dot shader, then continues into a
+ * brand-color diagonal ribbon and morphs into the DDC emblem while the four key
+ * stats reveal.
  *
  * Technique (matches the reference's architecture, rebuilt from scratch):
  *   - one THREE.Points cloud; each vertex carries a flowing wave target (aWheel)
@@ -96,8 +96,8 @@ const VERT = /* glsl */ `
   }
 
   void main(){
-    // Variant C is a single pinned narrative:
-    // terrain -> diagonal field -> DDC logo -> digital core -> service constellation.
+    // A single pinned narrative:
+    // flowing field -> diagonal field -> DDC logo -> digital core -> service constellation.
     float ribbon = smoothstep(0.08, 0.30, uProgress) * uRibbonMode;
     float form = smoothstep(0.36, 0.56, uProgress) * uLogoMode;
     float core = smoothstep(0.64, 0.78, uProgress) * uLogoMode;
@@ -160,7 +160,7 @@ const VERT = /* glsl */ `
     // silhouette (vMix: the logo, the digital core, the service constellation),
     // it physically pushes away from the pointer instead of only glowing, so
     // those shapes feel touchable. Gating by vMix keeps the ambient flowing
-    // terrain (vMix == 0, no SVG behind it) from ever displacing — it still
+    // flowing field (vMix == 0, no SVG behind it) from ever displacing — it still
     // gets the glow above, just not the shove.
     vec2 awayFromMouse = normalize(pos.xy - uMouse + vec2(1e-4, 0.0));
     float bulge = proximityT * proximityT * uMouseActive * uBulgeStrength * vMix;
@@ -541,12 +541,9 @@ function loadImage(src: string) {
   });
 }
 
-type RevealMode = "terrain" | "logo";
-
-function ParticleCanvas({ mode }: { mode: RevealMode }) {
+function ParticleCanvas() {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const smooth = useRef(0);
-  const logoMode = mode === "logo";
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -587,8 +584,8 @@ function ParticleCanvas({ mode }: { mode: RevealMode }) {
     const scaleArr = new Float32Array(COUNT);
     const ribbonCols = Math.max(96, Math.floor(Math.sqrt(COUNT) * 1.45));
     for (let i = 0; i < COUNT; i++) {
-      // Restored flowing shader: a wide green/gold particle
-      // terrain across the lower screen, not a diagonal ribbon.
+      // Restored flowing shader: a wide green/gold particle field across the
+      // lower screen before it becomes the diagonal ribbon.
       const u = seeded(i * 17 + 1);
       const v = seeded(i * 31 + 4);
       const layer = seeded(i * 37 + 8);
@@ -647,8 +644,8 @@ function ParticleCanvas({ mode }: { mode: RevealMode }) {
     // there to keep the emblem bold and forest-led.
     const palette = (light: boolean) =>
       light
-        ? { a: "#163423", b: "#8B7035", mul: 1.05, size: 1.26 }
-        : { a: "#2D8A5A", b: "#D1B45A", mul: 1.12, size: 1.08 };
+        ? { a: "#163423", b: "#2D6A4F", mul: 1.05, size: 1.26 }
+        : { a: "#2D8A5A", b: "#1A3D2B", mul: 1.12, size: 1.08 };
     let theme = palette(document.documentElement.classList.contains("light"));
     const baseSize = isMobile ? 2.45 : 2.62;
 
@@ -657,8 +654,8 @@ function ParticleCanvas({ mode }: { mode: RevealMode }) {
       uTime: { value: 0 },
       uSize: { value: baseSize * theme.size },
       uPixelRatio: { value: pixelRatio },
-      uRibbonMode: { value: logoMode ? 1 : 0 },
-      uLogoMode: { value: logoMode ? 1 : 0 },
+      uRibbonMode: { value: 1 },
+      uLogoMode: { value: 1 },
       uColorA: { value: new THREE.Color(theme.a) },
       uColorB: { value: new THREE.Color(theme.b) },
       uRibbonA: { value: new THREE.Color("#D1B45A") },
@@ -770,7 +767,7 @@ function ParticleCanvas({ mode }: { mode: RevealMode }) {
       // slow lerp toward scroll target = cinematic
       smooth.current += (readProgress() - smooth.current) * 0.058;
       const p = smooth.current;
-      const objectSettled = logoMode ? THREE.MathUtils.smoothstep(p, 0.36, 0.56) : 0;
+      const objectSettled = THREE.MathUtils.smoothstep(p, 0.36, 0.56);
 
       uniforms.uProgress.value = p;
       uniforms.uTime.value = clock.t;
@@ -809,7 +806,7 @@ function ParticleCanvas({ mode }: { mode: RevealMode }) {
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, [logoMode]);
+  }, []);
 
   return <div ref={wrapRef} className="absolute inset-0" aria-hidden="true" />;
 }
@@ -867,10 +864,9 @@ function StoryPanel({
   );
 }
 
-export default function LogoParticleReveal({ mode = "logo" }: { mode?: RevealMode }) {
+export default function LogoParticleReveal() {
   const t = useTranslations("Stats");
   const reduce = useReducedMotion();
-  const logoMode = mode === "logo";
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -905,31 +901,27 @@ export default function LogoParticleReveal({ mode = "logo" }: { mode?: RevealMod
             {t("title")} <span className="text-gradient-forest">{t("titleAccent")}</span>
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-muted">{t("subtitle")}</p>
-          {logoMode && (
-            <>
-              <div className="mt-12 grid grid-cols-2 gap-8 md:grid-cols-4">
-                {(["s1", "s2", "s3", "s4"] as const).map((k) => (
-                  <Stat key={k} align="left" value={t(`${k}.value`)} label={t(`${k}.label`)} desc={t(`${k}.desc`)} />
-                ))}
-              </div>
-              <div className="mt-12 grid gap-8 md:grid-cols-2">
-                <StoryPanel overline={t("scene2.overline")} title={t("scene2.title")} desc={t("scene2.desc")} />
-                <StoryPanel overline={t("scene3.overline")} title={t("scene3.title")} desc={t("scene3.desc")} align="right" />
-              </div>
-            </>
-          )}
+          <div className="mt-12 grid grid-cols-2 gap-8 md:grid-cols-4">
+            {(["s1", "s2", "s3", "s4"] as const).map((k) => (
+              <Stat key={k} align="left" value={t(`${k}.value`)} label={t(`${k}.label`)} desc={t(`${k}.desc`)} />
+            ))}
+          </div>
+          <div className="mt-12 grid gap-8 md:grid-cols-2">
+            <StoryPanel overline={t("scene2.overline")} title={t("scene2.title")} desc={t("scene2.desc")} />
+            <StoryPanel overline={t("scene3.overline")} title={t("scene3.title")} desc={t("scene3.desc")} align="right" />
+          </div>
         </div>
       </section>
     );
   }
 
   return (
-    <section ref={sectionRef} className="relative w-full bg-transparent" style={{ height: logoMode ? "720vh" : "190vh" }}>
+    <section ref={sectionRef} className="relative w-full bg-transparent" style={{ height: "720vh" }}>
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         <div className="pointer-events-none absolute inset-x-0 top-0 z-[5] h-56 bg-gradient-to-b from-background/28 via-forest/8 to-transparent" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-56 bg-gradient-to-t from-background/28 via-forest/8 to-transparent" />
         {/* particle field */}
-        {mounted && <ParticleCanvas mode={mode} />}
+        {mounted && <ParticleCanvas />}
 
         {/* heading */}
         <motion.div
@@ -947,43 +939,39 @@ export default function LogoParticleReveal({ mode = "logo" }: { mode?: RevealMod
           </p>
         </motion.div>
 
-        {logoMode && (
-          <>
-            {/* left stats */}
-            <motion.div
-              style={{ opacity: leftOpacity, x: leftX }}
-              className="pointer-events-none absolute top-1/2 left-6 z-30 hidden -translate-y-1/2 flex-col gap-10 md:flex lg:left-20"
-            >
-              <Stat align="left" value={t("s1.value")} label={t("s1.label")} desc={t("s1.desc")} />
-              <Stat align="left" value={t("s2.value")} label={t("s2.label")} desc={t("s2.desc")} />
-            </motion.div>
+        {/* left stats */}
+        <motion.div
+          style={{ opacity: leftOpacity, x: leftX }}
+          className="pointer-events-none absolute top-1/2 left-6 z-30 hidden -translate-y-1/2 flex-col gap-10 md:flex lg:left-20"
+        >
+          <Stat align="left" value={t("s1.value")} label={t("s1.label")} desc={t("s1.desc")} />
+          <Stat align="left" value={t("s2.value")} label={t("s2.label")} desc={t("s2.desc")} />
+        </motion.div>
 
-            {/* right stats */}
-            <motion.div
-              style={{ opacity: rightOpacity, x: rightX }}
-              className="pointer-events-none absolute top-1/2 right-6 z-30 hidden -translate-y-1/2 flex-col items-end gap-10 md:flex lg:right-20"
-            >
-              <Stat align="right" value={t("s3.value")} label={t("s3.label")} desc={t("s3.desc")} />
-              <Stat align="right" value={t("s4.value")} label={t("s4.label")} desc={t("s4.desc")} />
-            </motion.div>
+        {/* right stats */}
+        <motion.div
+          style={{ opacity: rightOpacity, x: rightX }}
+          className="pointer-events-none absolute top-1/2 right-6 z-30 hidden -translate-y-1/2 flex-col items-end gap-10 md:flex lg:right-20"
+        >
+          <Stat align="right" value={t("s3.value")} label={t("s3.label")} desc={t("s3.desc")} />
+          <Stat align="right" value={t("s4.value")} label={t("s4.label")} desc={t("s4.desc")} />
+        </motion.div>
 
-            {/* Scene 2: logo becomes the National Bank digital core */}
-            <motion.div
-              style={{ opacity: scene2Opacity, x: scene2X, y: scene2Y }}
-              className="pointer-events-none absolute inset-x-6 bottom-[12vh] z-30 md:inset-x-auto md:left-[9vw] md:top-1/2 md:bottom-auto md:w-[min(34rem,38vw)] md:-translate-y-1/2"
-            >
-              <StoryPanel overline={t("scene2.overline")} title={t("scene2.title")} desc={t("scene2.desc")} />
-            </motion.div>
+        {/* Scene 2: logo becomes the National Bank digital core */}
+        <motion.div
+          style={{ opacity: scene2Opacity, x: scene2X, y: scene2Y }}
+          className="pointer-events-none absolute inset-x-6 bottom-[12vh] z-30 md:inset-x-auto md:left-[9vw] md:top-1/2 md:bottom-auto md:w-[min(34rem,38vw)] md:-translate-y-1/2"
+        >
+          <StoryPanel overline={t("scene2.overline")} title={t("scene2.title")} desc={t("scene2.desc")} />
+        </motion.div>
 
-            {/* Scene 3: the core opens into operational service modules */}
-            <motion.div
-              style={{ opacity: scene3Opacity, x: scene3X, y: scene3Y }}
-              className="pointer-events-none absolute inset-x-6 bottom-[12vh] z-30 md:inset-x-auto md:right-[9vw] md:top-1/2 md:bottom-auto md:w-[min(34rem,38vw)] md:-translate-y-1/2"
-            >
-              <StoryPanel overline={t("scene3.overline")} title={t("scene3.title")} desc={t("scene3.desc")} align="right" />
-            </motion.div>
-          </>
-        )}
+        {/* Scene 3: the core opens into operational service modules */}
+        <motion.div
+          style={{ opacity: scene3Opacity, x: scene3X, y: scene3Y }}
+          className="pointer-events-none absolute inset-x-6 bottom-[12vh] z-30 md:inset-x-auto md:right-[9vw] md:top-1/2 md:bottom-auto md:w-[min(34rem,38vw)] md:-translate-y-1/2"
+        >
+          <StoryPanel overline={t("scene3.overline")} title={t("scene3.title")} desc={t("scene3.desc")} align="right" />
+        </motion.div>
       </div>
     </section>
   );

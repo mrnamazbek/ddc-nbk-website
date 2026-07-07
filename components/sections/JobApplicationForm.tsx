@@ -69,10 +69,6 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
 
   return (
     <GlassCard className="max-w-3xl mx-auto p-8 border border-white/5 relative overflow-hidden" isTiltEnabled={false}>
-      {/* Декоративный фон */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-forest/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-48 h-48 bg-gold/5 rounded-full blur-2xl pointer-events-none" />
-
       <div className="text-left mb-8 border-b border-white/5 pb-6">
         <h3 className="text-xl sm:text-2xl font-display font-normal text-white mb-2">
           {t("title")}

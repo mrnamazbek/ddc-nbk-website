@@ -1,7 +1,5 @@
 "use client";
 
-import { useABTest } from "@/lib/abTest";
-import ABTestSwitcher from "@/components/ui/ABTestSwitcher";
 import LazyOnVisible from "@/components/ui/LazyOnVisible";
 import dynamic from "next/dynamic";
 import Hero from "@/components/sections/Hero";
@@ -12,8 +10,7 @@ const Technologies = dynamic(() => import("@/components/sections/Technologies"),
 const About = dynamic(() => import("@/components/sections/About"), { ssr: false });
 const CTA = dynamic(() => import("@/components/sections/CTA"), { ssr: false });
 
-// Lazy-loaded particle reveal used differently by A and C.
-const LogoParticleReveal = dynamic<{ mode?: "terrain" | "logo" }>(() => import("@/components/three/LogoParticleReveal"), { ssr: false });
+const LogoParticleReveal = dynamic(() => import("@/components/three/LogoParticleReveal"), { ssr: false });
 
 function DeferredSections() {
   return (
@@ -38,37 +35,13 @@ function DeferredSections() {
 }
 
 export default function MarketingHomePage() {
-  const activeVariant = useABTest("home_layout");
-
-  if (activeVariant === "C") {
-    return (
-      <>
-        {/* Variant C keeps Variant A's hero and uses the global flowing shader
-            there; the heavier particle morph is isolated to the stats reveal. */}
-        <div id="acts" className="relative z-10">
-          <Hero />
-          <LazyOnVisible id="stats" minHeight="430vh" rootMargin="900px 0px">
-            <LogoParticleReveal mode="logo" />
-          </LazyOnVisible>
-          <DeferredSections />
-        </div>
-
-        <ABTestSwitcher pageKey="home_layout" current={activeVariant} />
-      </>
-    );
-  }
-
   return (
-    <>
-      <div id="acts" className="relative z-10">
-        <Hero />
-        <LazyOnVisible id="stats" minHeight="190vh" rootMargin="900px 0px">
-          <LogoParticleReveal mode="terrain" />
-        </LazyOnVisible>
-        <DeferredSections />
-      </div>
-
-      <ABTestSwitcher pageKey="home_layout" current={activeVariant} />
-    </>
+    <div id="acts" className="relative z-10">
+      <Hero />
+      <LazyOnVisible id="stats" minHeight="430vh" rootMargin="900px 0px">
+        <LogoParticleReveal />
+      </LazyOnVisible>
+      <DeferredSections />
+    </div>
   );
 }

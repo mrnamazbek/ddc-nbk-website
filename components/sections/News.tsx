@@ -142,9 +142,6 @@ export default function News() {
                   {/* Тонкие геометрические паттерны линий для эффекта ценных бумаг/технологий */}
                   <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:1.5rem_1.5rem]" />
 
-                  {/* Вращающаяся золотая сфера на фоне */}
-                  <div className="absolute w-32 h-32 rounded-full bg-gold/10 blur-xl group-hover:scale-125 transition-transform duration-700 pointer-events-none" />
-
                   {news.image && (
                     <img
                       src={news.image}

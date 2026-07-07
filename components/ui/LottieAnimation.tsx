@@ -76,12 +76,6 @@ export default function LottieAnimation({
       }}
       className={cn("relative overflow-visible", className)}
     >
-      {shell ? (
-        <>
-          <div className="absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_30%_10%,rgba(232,200,122,0.1),transparent_34%),radial-gradient(circle_at_85%_80%,rgba(82,183,136,0.1),transparent_42%)]" />
-        </>
-      ) : null}
-
       <div
         className={cn(
           "relative flex min-h-[240px] items-center justify-center overflow-visible rounded-[inherit]",

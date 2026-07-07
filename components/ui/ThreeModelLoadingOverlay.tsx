@@ -41,7 +41,6 @@ export default function ThreeModelLoadingOverlay({
           )}
         >
           <div className="relative overflow-hidden rounded-full border border-gold/20 bg-[#031009]/72 px-4 py-3 shadow-[0_18px_70px_rgba(0,0,0,0.34),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(232,200,122,0.18),transparent_45%),radial-gradient(circle_at_90%_80%,rgba(82,183,136,0.16),transparent_46%)]" />
             <div className="relative flex items-center gap-3">
               <div className="flex size-10 items-center justify-center rounded-full border border-gold/15 bg-gold/[0.06] text-gold-light shadow-[0_0_24px_rgba(201,168,76,0.22)]">
                 <MorphLoader size={28} color="#E8C87A" />

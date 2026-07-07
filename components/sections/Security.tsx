@@ -111,10 +111,8 @@ export default function Security() {
       ref={containerRef}
       className="relative w-full py-24 sm:py-32 bg-transparent overflow-hidden"
     >
-      {/* Background grid and glows */}
+      {/* Background grid */}
       <div className="absolute inset-0 bg-[radial-gradient(rgba(82,183,136,0.03)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
-      <div className="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[160px] pointer-events-none transform -translate-y-1/2" />
-      <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[140px] pointer-events-none transform -translate-y-1/2" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
@@ -275,4 +273,3 @@ export default function Security() {
     </section>
   );
 }
-

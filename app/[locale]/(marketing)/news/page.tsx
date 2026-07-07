@@ -95,17 +95,6 @@ export default function NewsPage() {
 
   return (
     <div className="relative w-full bg-transparent min-h-screen pt-32 pb-24 font-sans">
-      {/* Мягкие свечения — each clipped to its own small box instead of the
-          whole page, since a page-level overflow-hidden would also become
-          the containing scroll-container for any position:sticky element
-          further down (like the stacking news cards), silently breaking it. */}
-      <div className="pointer-events-none absolute top-0 right-0 h-[560px] w-[560px] overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-forest/5 rounded-full blur-[140px]" />
-      </div>
-      <div className="pointer-events-none absolute bottom-0 left-0 h-[460px] w-[460px] overflow-hidden">
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px]" />
-      </div>
-
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
 
         {/* Заголовок */}

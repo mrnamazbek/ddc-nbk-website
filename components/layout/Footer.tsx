@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "@/i18n/navigation";
 import { ThreeDMarquee } from "@/components/ui/3d-marquee";
 import { TextHoverEffect } from "@/components/ui/text-hover-effect";
@@ -152,31 +152,18 @@ function FooterAnchor({ link }: { link: FooterLink }) {
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   const reduce = useReducedMotion();
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const glowX = useSpring(useTransform(mouseX, (value) => value - 180), { stiffness: 90, damping: 28 });
-  const glowY = useSpring(useTransform(mouseY, (value) => value - 180), { stiffness: 90, damping: 28 });
 
   return (
     <motion.footer
       className="site-footer relative overflow-hidden border-t border-transparent bg-[#030504] px-[clamp(18px,5vw,84px)] py-20 text-white"
-      onMouseMove={(event) => {
-        const rect = event.currentTarget.getBoundingClientRect();
-        mouseX.set(event.clientX - rect.left);
-        mouseY.set(event.clientY - rect.top);
-      }}
       initial={false}
       whileInView={reduce ? undefined : { opacity: 1 }}
       viewport={{ once: true, margin: "-120px" }}
     >
-      <motion.div
-        className="site-footer-glow pointer-events-none absolute z-0 h-[360px] w-[360px] rounded-full bg-[radial-gradient(circle,rgba(216,169,62,0.2),rgba(26,99,71,0.12)_42%,transparent_70%)] blur-2xl"
-        style={{ x: glowX, y: glowY }}
-      />
       <div className="site-footer-media pointer-events-none absolute inset-0 z-0 opacity-60">
         <ThreeDMarquee images={marqueeImages} />
       </div>
-      <div className="site-footer-wash pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_24%_18%,rgba(216,169,62,0.12),transparent_28%),linear-gradient(180deg,rgba(3,5,4,0.76),#030504_66%)]" />
+      <div className="site-footer-wash pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(3,5,4,0.78),#030504_66%)]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-background/70 via-background/25 to-transparent" />
 
       <div className="relative z-10 mx-auto max-w-[1500px]">

@@ -148,10 +148,6 @@ export default function NavPreviewCard({
         }
       }}
     >
-      {/* Ambient brand glows */}
-      <div className="pointer-events-none absolute -top-12 -left-12 h-28 w-28 rounded-full bg-forest/20 blur-2xl" />
-      <div className="pointer-events-none absolute -bottom-12 -right-12 h-28 w-28 rounded-full bg-gold/10 blur-2xl" />
-
       {/* Header: icon tile + title + tagline */}
       <div className="relative z-10 flex items-center gap-3">
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-gold/25 bg-gold/10 text-gold">

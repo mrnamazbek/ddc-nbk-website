@@ -99,11 +99,9 @@ export default function About({ id = "about" }: { id?: string | null }) {
 
           {/* Правая сторона: смысловая анимация цифровой финансовой инфраструктуры.
               Enters from the side — a fixed-size, non-text-driven asset, so it
-              never cuts or shrinks when the left column's text length changes
-              across locales. */}
+          never cuts or shrinks when the left column's text length changes
+          across locales. */}
           <ScrollReveal direction="left" distance={60} duration={ENTRANCE_DURATION.card} delay={0.15} className="lg:col-span-5 relative w-full">
-            <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-gold/10 blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-forest-mid/20 blur-3xl pointer-events-none" />
             <LottieAnimation
               src="/animations/online-banking-laptop.json"
               label="Digital banking platform and financial data flow"

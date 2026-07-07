@@ -137,13 +137,7 @@ export default function Hero() {
           the hero text always reads and the light theme never goes dark. */}
       <div className="hero-text-scrim absolute inset-0 pointer-events-none z-[6]" />
 
-      {/* Bottom fade so the WebGL dot/bokeh background dissolves smoothly into the
-          next (solid) section instead of cutting off with a hard edge. */}
-      <div className="absolute inset-x-0 bottom-0 h-64 sm:h-80 bg-gradient-to-t from-background/35 via-forest/10 to-transparent pointer-events-none z-[2]" />
-
-      {/* Мягкие фоновые свечения для премиальной глубины */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-forest/15 blur-[120px] pointer-events-none z-0" />
-      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[400px] h-[400px] rounded-full bg-gold/5 blur-[100px] pointer-events-none z-0" />
+      <div className="absolute inset-x-0 bottom-0 h-48 sm:h-64 bg-gradient-to-t from-background/20 to-transparent pointer-events-none z-[2]" />
 
       {/* Контентная область поверх 3D: текст слева, интерактивный 3D-робот справа.
           Фон — глобальный интерактивный dot-shader (InteractiveDotGrid в page.tsx). */}

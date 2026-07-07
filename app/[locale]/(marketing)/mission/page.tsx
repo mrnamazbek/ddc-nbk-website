@@ -165,9 +165,6 @@ function MissionSpine() {
 function Mission2D() {
   return (
     <div className="relative w-full bg-transparent overflow-hidden py-24 sm:py-32 font-sans">
-      {/* Background radial/gradient flows to maintain premium design */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[360px] h-[360px] rounded-full bg-forest/10 blur-[80px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[300px] h-[300px] rounded-full bg-gold/5 blur-[70px] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(#52B78803_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
       <TerminalGridBackground className="opacity-75" />
 

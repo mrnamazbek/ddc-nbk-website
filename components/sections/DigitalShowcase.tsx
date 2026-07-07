@@ -40,9 +40,6 @@ export default function DigitalShowcase() {
 
   return (
     <section id="digital" className="relative w-full py-24 sm:py-32 bg-transparent overflow-hidden">
-      {/* Технологическая подсветка на фоне */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-forest/5 rounded-full blur-[160px] pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
 
         {/* Заголовок */}

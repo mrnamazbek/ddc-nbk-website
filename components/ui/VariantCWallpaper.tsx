@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Variant C background — the restored "wallpaper" dot-grid preset (diamond dots,
+ * Production background — the restored "wallpaper" dot-grid preset (diamond dots,
  * bronze → gold on cursor), recovered from the pre-f825ce1 InteractiveDotGrid.
  *
  * Unlike the original (which faded OUT past the hero), this layer fades IN as the
- * user scrolls: at the top the hero looks exactly like Variant A (this layer is
- * fully transparent and the global background shows through); on scroll a deep
+ * user scrolls: at the top this layer is fully transparent and the global
+ * background shows through; on scroll a deep
  * forest veil + the diamond wallpaper smoothly appear — mirroring the reference
  * site's light→dark scroll transition, in DDC colors.
  *
@@ -20,14 +20,14 @@ import { useEffect, useRef, useState } from "react";
 const DARK_THEME = {
   rest: { r: 189, g: 149, b: 91, a: 0.4 }, // bronze
   active: { r: 232, g: 200, b: 122, a: 0.95 }, // gold
-  veil: "radial-gradient(120% 90% at 50% 30%, rgba(14,36,25,0.65) 0%, rgba(4,12,8,0.92) 60%, rgba(2,6,4,0.98) 100%)",
-  veilMul: 0.9,
+  veil: "linear-gradient(180deg, rgba(4,18,12,0.74) 0%, rgba(3,13,9,0.9) 100%)",
+  veilMul: 0.72,
 };
 const LIGHT_THEME = {
   rest: { r: 26, g: 61, b: 43, a: 0.34 }, // deep forest
   active: { r: 111, g: 86, b: 29, a: 0.82 }, // antique gold (WCAG-safe on cream)
-  veil: "radial-gradient(120% 90% at 50% 30%, rgba(26,61,43,0.05) 0%, rgba(26,61,43,0.09) 60%, rgba(15,36,26,0.12) 100%)",
-  veilMul: 0.5,
+  veil: "linear-gradient(180deg, rgba(26,61,43,0.04) 0%, rgba(15,36,26,0.1) 100%)",
+  veilMul: 0.38,
 };
 
 export default function VariantCWallpaper() {
@@ -204,8 +204,7 @@ export default function VariantCWallpaper() {
         className="absolute inset-0"
         style={{
           opacity: 0,
-          background:
-            "radial-gradient(120% 90% at 50% 30%, rgba(14,36,25,0.65) 0%, rgba(4,12,8,0.92) 60%, rgba(2,6,4,0.98) 100%)",
+          background: DARK_THEME.veil,
           transition: "opacity 120ms linear",
         }}
       />

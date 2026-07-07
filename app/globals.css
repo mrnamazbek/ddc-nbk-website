@@ -5,7 +5,7 @@
 @import "../styles/svgator-animations.css";
 @import "../styles/scroll-word-hero.css";
 
-/* Custom font-face for A/B testing digits, pointing to Golos Text weights 400-900 */
+/* Custom font-face for premium statistic digits, pointing to Golos Text weights 400-900 */
 @font-face {
   font-family: 'ABNumbers';
   src: local('Golos Text Regular'), local('GolosText-Regular'),
@@ -140,7 +140,7 @@
   --font-current-soft: 'ABNumbers', 'Nohemi', system-ui, sans-serif;
 }
 
-/* Классы переключения фонов A/B (только для темной темы) */
+/* Классы фоновых тем (только для темной темы) */
 html.bg-theme-forest:not(.light) {
   --background: rgba(8, 24, 21, 1); /* deep premium green-black */
   --accent-gold: var(--color-gold-light);
@@ -210,16 +210,13 @@ body {
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1), color 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Shared page backdrop — the same forest/gold radial glow + dot grain used
-   behind the AltynAdam 3D scenes (CinematicAltynAdamExperience), mounted once
-   so every page reads as one calm surface instead of a flat solid fill. */
+/* Shared page backdrop: calm forest surface + dot grain. Avoid radial glows
+   here; page-to-page smoke spots make the visual system feel accidental. */
 .site-backdrop {
   background-image:
-    radial-gradient(circle at 50% 18%, color-mix(in srgb, var(--color-forest-light) 18%, transparent), transparent 30%),
-    radial-gradient(circle at 70% 72%, color-mix(in srgb, var(--color-gold) 12%, transparent), transparent 34%),
     radial-gradient(color-mix(in srgb, var(--color-gold-light) 5%, transparent) 1px, transparent 1px),
     linear-gradient(120deg, #031009, #071b13 48%, #020806);
-  background-size: auto, auto, 22px 22px, auto;
+  background-size: 22px 22px, auto;
 }
 
 html.light .site-backdrop {
@@ -1348,51 +1345,43 @@ section[id]::after {
 section.relative::before,
 section[id]::before {
   top: -1px;
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(82, 183, 136, 0.04), transparent 68%),
-    linear-gradient(
-      to bottom,
-      color-mix(in srgb, var(--background) 32%, transparent) 0%,
-      color-mix(in srgb, var(--background) 14%, transparent) 58%,
-      transparent 100%
-    );
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--background) 28%, transparent) 0%,
+    color-mix(in srgb, var(--background) 10%, transparent) 58%,
+    transparent 100%
+  );
 }
 
 section.relative::after,
 section[id]::after {
   bottom: -1px;
-  background:
-    radial-gradient(ellipse at 50% 100%, rgba(82, 183, 136, 0.035), transparent 68%),
-    linear-gradient(
-      to top,
-      color-mix(in srgb, var(--background) 32%, transparent) 0%,
-      color-mix(in srgb, var(--background) 14%, transparent) 58%,
-      transparent 100%
-    );
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--background) 28%, transparent) 0%,
+    color-mix(in srgb, var(--background) 10%, transparent) 58%,
+    transparent 100%
+  );
 }
 
 html.light section.relative::before,
 html.light section[id]::before {
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(26, 61, 43, 0.06), transparent 64%),
-    linear-gradient(
-      to bottom,
-      color-mix(in srgb, var(--background) 26%, transparent) 0%,
-      color-mix(in srgb, var(--background) 10%, transparent) 58%,
-      transparent 100%
-    ) !important;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--background) 24%, transparent) 0%,
+    color-mix(in srgb, var(--background) 8%, transparent) 58%,
+    transparent 100%
+  ) !important;
 }
 
 html.light section.relative::after,
 html.light section[id]::after {
-  background:
-    radial-gradient(ellipse at 50% 100%, rgba(26, 61, 43, 0.04), transparent 64%),
-    linear-gradient(
-      to top,
-      color-mix(in srgb, var(--background) 26%, transparent) 0%,
-      color-mix(in srgb, var(--background) 10%, transparent) 58%,
-      transparent 100%
-    ) !important;
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--background) 24%, transparent) 0%,
+    color-mix(in srgb, var(--background) 8%, transparent) 58%,
+    transparent 100%
+  ) !important;
 }
 
 #acts > section {

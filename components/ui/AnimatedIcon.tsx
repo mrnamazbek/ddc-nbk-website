@@ -28,7 +28,7 @@ export const AnimatedIcon: React.FC<AnimatedIconProps> = ({
 
   return (
     <motion.div
-      className="inline-block cursor-pointer"
+      className="flex items-center justify-center w-full h-full cursor-pointer"
       {...variants[animationType]}
       transition={transition}
     >
