@@ -242,7 +242,7 @@ export default function Header() {
   return (
     <>
       <header
-        style={{ backfaceVisibility: "hidden" }}
+        style={{ backfaceVisibility: "hidden", overflow: "visible" }}
         className={`!fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1300px] transition-all duration-500 rounded-full py-2.5 px-5 sm:px-7 !overflow-visible transform-gpu ${
           isScrolled
             ? "liquid-glass-strong shadow-card"
