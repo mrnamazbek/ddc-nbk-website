@@ -43,6 +43,7 @@ function LanguageSwitcher({
 }) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -145,12 +146,16 @@ function LanguageSwitcher({
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: size === "lg" ? -8 : 8, scale: 0.96 }}
                 transition={{ duration: 0.15, ease: "easeOut" }}
+                onMouseLeave={() => setHoveredIndex(null)}
                 data-hover="gold"
                 style={{ ...dropdownStyle, backfaceVisibility: "hidden" }}
                 className="w-40 glass-card py-1.5 shadow-glass z-[9999] transform-gpu"
               >
-                {LANGUAGES.map((lng) => {
+                {LANGUAGES.map((lng, idx) => {
                   const active = locale === lng;
+                  const isHovered = hoveredIndex === idx;
+                  const showHighlight = hoveredIndex !== null ? isHovered : active;
+
                   return (
                     <button
                       key={lng}
@@ -158,14 +163,22 @@ function LanguageSwitcher({
                         onSwitch(lng);
                         setOpen(false);
                       }}
-                      className={`flex items-center gap-2.5 w-full px-4 py-2.5 text-xs text-left transition-colors font-mono tracking-wider ${active
-                          ? "text-gold font-bold bg-white/5"
-                          : "text-muted hover:text-gold hover:bg-gold/10"
-                        }`}
+                      onMouseEnter={() => setHoveredIndex(idx)}
+                      className={`relative flex items-center gap-2.5 w-full px-4 py-2.5 text-xs text-left transition-colors font-mono tracking-wider z-10 ${
+                        active ? "text-gold font-bold" : "text-muted hover:text-gold"
+                      }`}
                     >
                       <span className="text-sm select-none">{LANGUAGE_FLAGS[lng]}</span>
                       <span className="flex-1">{LANGUAGE_LABELS[lng]}</span>
                       {active && <Check className="h-3.5 w-3.5 text-gold" />}
+
+                      {showHighlight && (
+                        <motion.div
+                          layoutId="langHighlight"
+                          className="absolute inset-x-1.5 inset-y-1 rounded-lg bg-white/[0.08] border border-gold/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] -z-10"
+                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        />
+                      )}
                     </button>
                   );
                 })}
