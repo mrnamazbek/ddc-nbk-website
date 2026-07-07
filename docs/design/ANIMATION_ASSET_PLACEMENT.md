@@ -7,7 +7,7 @@ Lottie JSON animations are stored in `public/animations/` and rendered through
 
 - `career-programmer-code.json` — Careers page, near the "Why Us" block. Context: engineering culture, coding, career growth.
 - `online-banking-laptop.json` — Home About section. Context: DDC as the technological wing behind digital financial services. Replaces the previous generic building/liquid collage.
-- `secure-data-protection.json` — Services page, information security card. Context: encryption, controlled access, and protection of critical financial data.
+- `lounge-digital-data-protection-and-information-security.json` — Mission page, Step 3 (Information Security). Context: encryption, controlled access, and protection of critical financial data.
 - `server-data-sync.json` — Services page, information systems/API integration card. Context: synchronization between internal systems and service layers.
 - `data-science-pc-screen.json` — Services page, financial analytics and big data card. Context: dashboards, data factory, analytical reporting.
 - `data-science-floating-laptop.json` — Mission page, security and data operations support panel. Context: data operator role and financial flows.

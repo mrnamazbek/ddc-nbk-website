@@ -33,7 +33,7 @@ const STEPS: MissionStep[] = [
   },
   {
     key: "step3",
-    lottieSrc: "/animations/secure-data-protection.json",
+    lottieSrc: "/animations/lounge-digital-data-protection-and-information-security.json",
     lottieLabel: "A lock, key, and password fields representing data security",
   },
   {
@@ -148,8 +148,9 @@ function MissionSpine() {
                   <LottieAnimation
                     src={step.lottieSrc}
                     label={step.lottieLabel}
-                    frameClassName="min-h-[260px] sm:min-h-[320px] lg:min-h-[380px]"
-                    animationClassName="max-h-[380px]"
+                    className="overflow-visible"
+                    frameClassName="min-h-[320px] sm:min-h-[420px] lg:min-h-[500px] xl:min-h-[540px]"
+                    animationClassName="max-h-[500px] xl:max-h-[540px] scale-[1.02]"
                   />
                 </ScrollReveal>
               </div>
