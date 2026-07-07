@@ -175,8 +175,8 @@ function LanguageSwitcher({
                       {showHighlight && (
                         <motion.div
                           layoutId="langHighlight"
-                          className="absolute inset-x-1.5 inset-y-1 rounded-lg bg-white/[0.08] border border-gold/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] -z-10"
-                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                          className="absolute inset-x-1.5 inset-y-1 rounded-[18px] bg-white/[0.08] border border-gold/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] -z-10"
+                          transition={{ type: "spring", stiffness: 450, damping: 34 }}
                         />
                       )}
                     </button>
