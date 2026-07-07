@@ -369,11 +369,11 @@ export function KazakhstanMap() {
                             variant="liquid-strong"
                             className={cn(
                               "relative overflow-hidden rounded-[1.35rem] border-gold/30 p-5 text-left shadow-[0_24px_70px_rgba(0,0,0,0.35)] backdrop-blur-2xl transition-colors duration-300",
-                              isLight ? "bg-[#FAF6F0]/95 text-zinc-900" : "bg-[#020504]/95 text-white"
+                              isLight ? "bg-[#FAF6F0]/95 text-[#08140D]" : "bg-[#020504]/95 text-white"
                             )}
                           >
                             <div className="absolute inset-0 bg-gradient-to-br from-white/[0.045] via-transparent to-gold/[0.035] pointer-events-none" />
-                            <h4 className={cn("text-sm font-bold mb-2 flex items-center gap-1.5", isLight ? "text-zinc-900" : "text-white")}>
+                            <h4 className={cn("text-sm font-bold mb-2 flex items-center gap-1.5", isLight ? "text-[#08140D]" : "text-white")}>
                               <span className={cn(
                                 "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/25 p-1.5 shadow-[0_0_18px_rgba(201,168,76,0.16)]",
                                 isLight ? "bg-white/70" : "bg-black/35"
@@ -388,12 +388,12 @@ export function KazakhstanMap() {
                               </span>
                               {t(p.titleKey)}
                             </h4>
-                            <p className={cn("text-[11px] font-light leading-relaxed mb-3", isLight ? "text-zinc-600" : "text-zinc-300")}>
+                            <p className={cn("text-[11px] leading-relaxed mb-3", isLight ? "text-[#163423] font-medium" : "text-zinc-300 font-light")}>
                               {t(p.descKey)}
                             </p>
                             <p className={cn(
-                              "text-[10px] font-light leading-relaxed border-t pt-2.5 mb-3 flex items-start gap-1.5",
-                              isLight ? "border-black/5 text-zinc-500" : "border-white/5 text-zinc-400"
+                              "text-[10px] leading-relaxed border-t pt-2.5 mb-3 flex items-start gap-1.5",
+                              isLight ? "border-black/5 text-[#1A3D2B] font-medium" : "border-white/5 text-zinc-400 font-light"
                             )}>
                               <Icon name="map-pin" size={12} className="text-gold/75 shrink-0 mt-0.5" />
                               <span>{t(p.addressKey)}</span>
@@ -406,7 +406,7 @@ export function KazakhstanMap() {
                                 className={cn(
                                   "flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded text-[10px] font-semibold transition-all duration-200",
                                   isLight
-                                    ? "bg-black/5 border border-black/10 text-zinc-700 hover:text-gold hover:border-gold/50 hover:bg-gold/5"
+                                    ? "bg-black/5 border border-black/10 text-[#163423] font-semibold hover:text-gold hover:border-gold/50 hover:bg-gold/5"
                                     : "bg-white/5 border border-white/10 text-zinc-300 hover:text-gold hover:border-gold/50 hover:bg-gold/5"
                                 )}
                               >
@@ -422,7 +422,7 @@ export function KazakhstanMap() {
                                 className={cn(
                                   "flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded text-[10px] font-semibold transition-all duration-200",
                                   isLight
-                                    ? "bg-black/5 border border-black/10 text-zinc-700 hover:text-gold hover:border-gold/50 hover:bg-gold/5"
+                                    ? "bg-black/5 border border-black/10 text-[#163423] font-semibold hover:text-gold hover:border-gold/50 hover:bg-gold/5"
                                     : "bg-white/5 border border-white/10 text-zinc-300 hover:text-gold hover:border-gold/50 hover:bg-gold/5"
                                 )}
                               >
