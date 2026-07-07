@@ -645,7 +645,7 @@ function ParticleCanvas() {
     const palette = (light: boolean) =>
       light
         ? { a: "#163423", b: "#2D6A4F", mul: 1.05, size: 1.26 }
-        : { a: "#2D8A5A", b: "#1A3D2B", mul: 1.12, size: 1.08 };
+        : { a: "#2D8A5A", b: "#D1B45A", mul: 1.12, size: 1.08 };
     let theme = palette(document.documentElement.classList.contains("light"));
     const baseSize = isMobile ? 2.45 : 2.62;
 
