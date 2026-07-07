@@ -319,35 +319,42 @@ export function KazakhstanMap() {
                   {/* Desktop Preview Card */}
                   <AnimatePresence>
                     {isHovered && (() => {
-                      const isTopHalf = false;
+                      // Pins in the map's top half (e.g. Astana, north) must drop
+                      // their card BELOW the pin, or "above the pin" pushes it off
+                      // the top of the map into the header. Southern pins (Almaty)
+                      // keep the card above. This is what makes both cards sit
+                      // precisely on their location.
+                      const isTopHalf = p.y < 549 / 2;
+                      const entryY = isTopHalf ? 16 : -16;
+                      const settleY = isTopHalf ? 12 : -12;
                       return (
                         <motion.div
                           initial={{
                             opacity: 0,
                             x: "-50%",
-                            y: -16,
+                            y: entryY,
                             scale: 0.95,
                           }}
                           animate={{
                             opacity: 1,
                             x: "-50%",
-                            y: -12,
+                            y: settleY,
                             scale: 1,
                           }}
                           exit={{
                             opacity: 0,
                             x: "-50%",
-                            y: -16,
+                            y: entryY,
                             scale: 0.95,
                           }}
                           transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
                           style={{
                             left: "50%",
-                            bottom: "100%",
+                            ...(isTopHalf ? { top: "100%" } : { bottom: "100%" }),
                           }}
                           className={cn(
                             "absolute z-50 w-[320px] pointer-events-auto",
-                            "mb-10"
+                            isTopHalf ? "mt-10" : "mb-10"
                           )}
                         >
                           <PreviewBeam isTopHalf={isTopHalf} reduce={Boolean(reduce)} />
@@ -359,7 +366,7 @@ export function KazakhstanMap() {
                             className={cn(
                               "pointer-events-none absolute left-1/2 z-30 -translate-x-1/2 rounded-full px-5 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-gold shadow-[0_0_22px_rgba(201,168,76,0.2)] backdrop-blur-xl",
                               isLight ? "bg-[#FAF6F0]/95 border border-gold/30" : "bg-black/90 border border-white/10",
-                              "-bottom-12"
+                              isTopHalf ? "-top-12" : "-bottom-12"
                             )}
                           >
                             {t(p.cityKey)}
@@ -367,12 +374,15 @@ export function KazakhstanMap() {
                           <GlassCard
                             hoverAccent="gold"
                             variant="liquid-strong"
+                            isTiltEnabled={false}
                             className={cn(
-                              "relative overflow-hidden rounded-[1.35rem] border-gold/30 p-5 text-left shadow-[0_24px_70px_rgba(0,0,0,0.35)] backdrop-blur-2xl transition-colors duration-300",
-                              isLight ? "bg-[#FAF6F0]/95 text-[#08140D]" : "bg-[#020504]/95 text-white"
+                              // Opaque background (not translucent glass) so the glowing
+                              // map behind never bleeds through as haze/light, and no
+                              // extra backdrop-blur that softened the card content.
+                              "relative overflow-hidden rounded-[1.35rem] border-gold/30 p-5 text-left shadow-[0_24px_70px_rgba(0,0,0,0.45)] transition-colors duration-300",
+                              isLight ? "!bg-[#FAF6F0] text-[#08140D]" : "!bg-[#050B08] text-white"
                             )}
                           >
-                            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.045] via-transparent to-gold/[0.035] pointer-events-none" />
                             <h4 className={cn("text-sm font-bold mb-2 flex items-center gap-1.5", isLight ? "text-[#08140D]" : "text-white")}>
                               <span className={cn(
                                 "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/25 p-1.5 shadow-[0_0_18px_rgba(201,168,76,0.16)]",

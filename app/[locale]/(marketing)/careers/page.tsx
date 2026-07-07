@@ -383,30 +383,41 @@ export default async function CareersPage({ params }: CareersPageProps) {
             </StaggerGroup>
           </div>
 
-          <ScrollReveal direction="right" distance={40} duration={ENTRANCE_DURATION.card} delay={0.15} className="lg:col-span-5 relative flex flex-col justify-between">
+          {/* Правая колонка «Почему именно мы?» — только Lottie-иллюстрация */}
+          <ScrollReveal direction="right" distance={40} duration={ENTRANCE_DURATION.card} delay={0.15} className="lg:col-span-5 relative">
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-forest/20 rounded-full blur-2xl pointer-events-none" />
-            <div className="w-full">
-              <LottieAnimation
-                src="/animations/career-programmer-code.json"
-                label="DDC engineer writing production code"
-                className="mb-0"
-                frameClassName="min-h-[320px] sm:min-h-[380px] lg:min-h-[440px]"
-                animationClassName="max-h-[440px] scale-[1.12] w-full"
-              />
-            </div>
-            <div className="mt-8">
-              <h3 className="text-base font-bold text-white mb-2">{t("startJourneyTitle")}</h3>
-              <p className="text-xs text-zinc-300 font-light leading-relaxed mb-6">
-                {t("startJourneyDesc")}
-              </p>
-              <a href="#jobs-list" className="w-full block">
-                <Button variant="gold" className="w-full justify-center text-xs">
-                  {t("viewVacancies", { count: jobs.length })}
-                </Button>
-              </a>
-            </div>
+            <LottieAnimation
+              src="/animations/career-programmer-code.json"
+              label="DDC engineer writing production code"
+              className="mb-0"
+              frameClassName="min-h-[320px] sm:min-h-[380px] lg:min-h-[440px]"
+              animationClassName="max-h-[440px] scale-[1.12] w-full"
+            />
           </ScrollReveal>
         </div>
+
+        {/* Отдельная секция призыва «Начните свой путь в DDC» */}
+        <ScrollReveal blur={10} duration={ENTRANCE_DURATION.card} className="mb-24">
+          <GlassCard
+            hoverAccent="gold"
+            variant="liquid-strong"
+            isTiltEnabled={false}
+            className="relative overflow-hidden p-8 sm:p-12 flex flex-col items-center text-center"
+          >
+            <div className="absolute -top-12 -right-12 w-48 h-48 bg-gold/10 rounded-full blur-3xl pointer-events-none" />
+            <h2 className="relative text-2xl sm:text-3xl font-bold text-white mb-3 tracking-wide">
+              {t("startJourneyTitle")}
+            </h2>
+            <p className="relative text-sm sm:text-base text-zinc-300 font-light leading-relaxed max-w-2xl mb-8">
+              {t("startJourneyDesc")}
+            </p>
+            <a href="#jobs-list" className="relative">
+              <Button variant="gold" className="justify-center">
+                {t("viewVacancies", { count: jobs.length })}
+              </Button>
+            </a>
+          </GlassCard>
+        </ScrollReveal>
 
         <ScrollReveal blur={10} duration={ENTRANCE_DURATION.card}>
           <DDCEventGallery />

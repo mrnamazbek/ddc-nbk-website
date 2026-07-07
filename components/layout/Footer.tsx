@@ -164,7 +164,6 @@ export default function Footer() {
         <ThreeDMarquee images={marqueeImages} />
       </div>
       <div className="site-footer-wash pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(3,5,4,0.78),#030504_66%)]" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-background/70 via-background/25 to-transparent" />
 
       <div className="relative z-10 mx-auto max-w-[1500px]">
         <motion.div

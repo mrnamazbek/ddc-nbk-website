@@ -137,8 +137,6 @@ export default function Hero() {
           the hero text always reads and the light theme never goes dark. */}
       <div className="hero-text-scrim absolute inset-0 pointer-events-none z-[6]" />
 
-      <div className="absolute inset-x-0 bottom-0 h-48 sm:h-64 bg-gradient-to-t from-background/20 to-transparent pointer-events-none z-[2]" />
-
       {/* Контентная область поверх 3D: текст слева, интерактивный 3D-робот справа.
           Фон — глобальный интерактивный dot-shader (InteractiveDotGrid в page.tsx). */}
       <div

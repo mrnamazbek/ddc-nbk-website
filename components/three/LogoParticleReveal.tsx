@@ -201,20 +201,20 @@ const FRAG = /* glsl */ `
 
     // Gold/green throughout. As the logo forms, bias particles toward warm
     // yellow-gold so the emblem reads brighter and more premium.
-    float t = clamp(0.3 + vMix * 0.52 + vRand * 0.26, 0.0, 1.0);
+    float t = clamp(0.44 + vMix * 0.62 + vRand * 0.2, 0.0, 1.0);
     vec3 brandCol = mix(uColorA, uColorB, t);
     vec3 ribbonCol = mix(uRibbonA, uRibbonB, clamp(0.18 + vRand * 0.5, 0.0, 1.0));
-    ribbonCol = mix(ribbonCol, uColorB, 0.46);
+    ribbonCol = mix(ribbonCol, uColorB, 0.64);
     vec3 col = mix(brandCol, ribbonCol, vRibbon);
-    col = mix(col, uColorB, vMix * 0.48);
-    col = mix(col, mix(uColorB, uColorA, 0.34), vCore * 0.42);
-    col = mix(col, mix(uColorB, uColorA, 0.24), vService * 0.34);
+    col = mix(col, uColorB, vMix * 0.72);
+    col = mix(col, mix(uColorB, uColorA, 0.14), vCore * 0.24);
+    col = mix(col, mix(uColorB, uColorA, 0.1), vService * 0.2);
 
     // Cursor proximity glow: nearby particles brighten toward a hot highlight
     // and read very slightly more opaque, like embers catching the pointer.
     col = mix(col, uHotColor, vProximity * 0.62);
-    float objectSoftness = mix(1.0, 0.84, max(vCore, vService));
-    float glowAlpha = alpha * uOpacity * objectSoftness * mix(1.0, 1.08, vProximity);
+    float objectSoftness = mix(1.0, 0.96, max(vCore, vService));
+    float glowAlpha = alpha * uOpacity * objectSoftness * mix(1.0, 1.14, vProximity);
     gl_FragColor = vec4(col, glowAlpha);
   }
 `;
@@ -407,11 +407,14 @@ function sampleSceneMaskTarget(
   viewHeight: number,
   scene: "core" | "service",
 ) {
+  const sceneObjectX = Math.min(viewHeight * 0.38, 1.72);
+  const sceneObjectSize = Math.min(viewHeight * 0.42, 1.94);
+
   if (scene === "core") {
     return sampleImageMask(img, want, {
-      target: Math.min(viewHeight * 0.46, 2.12),
-      offsetX: 0,
-      offsetY: -Math.min(viewHeight * 0.02, 0.1),
+      target: sceneObjectSize,
+      offsetX: sceneObjectX,
+      offsetY: -Math.min(viewHeight * 0.01, 0.04),
       depth: 0.22,
       jitterAmount: 0.016,
       squashY: 0.94,
@@ -420,9 +423,9 @@ function sampleSceneMaskTarget(
   }
 
   return sampleImageMask(img, want, {
-    target: Math.min(viewHeight * 0.46, 2.12),
-    offsetX: 0,
-    offsetY: -Math.min(viewHeight * 0.15, 0.72),
+    target: sceneObjectSize,
+    offsetX: -sceneObjectX,
+    offsetY: -Math.min(viewHeight * 0.015, 0.06),
     depth: 0.18,
     jitterAmount: 0.014,
     fallback: () => sampleServiceConstellationTarget(want, viewHeight),
@@ -439,9 +442,9 @@ function jitter(seedBase: number, amount: number) {
 
 function sampleDigitalCoreTarget(want: number, viewHeight: number): Float32Array {
   const out = new Float32Array(want * 3);
-  const cx = 0;
-  const cy = -Math.min(viewHeight * 0.13, 0.72);
-  const size = Math.min(viewHeight * 0.3, 1.42);
+  const cx = Math.min(viewHeight * 0.38, 1.72);
+  const cy = -Math.min(viewHeight * 0.01, 0.04);
+  const size = Math.min(viewHeight * 0.28, 1.32);
   const ringRadii = [0.24, 0.45, 0.66] as const;
 
   for (let i = 0; i < want; i++) {
@@ -484,9 +487,9 @@ function sampleDigitalCoreTarget(want: number, viewHeight: number): Float32Array
 
 function sampleServiceConstellationTarget(want: number, viewHeight: number): Float32Array {
   const out = new Float32Array(want * 3);
-  const cx = 0;
-  const cy = -Math.min(viewHeight * 0.2, 0.98);
-    const size = Math.min(viewHeight * 0.38, 1.78);
+  const cx = -Math.min(viewHeight * 0.38, 1.72);
+  const cy = -Math.min(viewHeight * 0.015, 0.06);
+  const size = Math.min(viewHeight * 0.34, 1.58);
   const ring = 0.62 * size;
 
   for (let i = 0; i < want; i++) {
@@ -644,8 +647,8 @@ function ParticleCanvas() {
     // there to keep the emblem bold and forest-led.
     const palette = (light: boolean) =>
       light
-        ? { a: "#163423", b: "#2D6A4F", mul: 1.05, size: 1.26 }
-        : { a: "#2D8A5A", b: "#D1B45A", mul: 1.12, size: 1.08 };
+        ? { a: "#173826", b: "#B9891D", mul: 1.08, size: 1.26 }
+        : { a: "#3AA76D", b: "#F4C84E", mul: 1.28, size: 1.08 };
     let theme = palette(document.documentElement.classList.contains("light"));
     const baseSize = isMobile ? 2.45 : 2.62;
 
@@ -658,9 +661,9 @@ function ParticleCanvas() {
       uLogoMode: { value: 1 },
       uColorA: { value: new THREE.Color(theme.a) },
       uColorB: { value: new THREE.Color(theme.b) },
-      uRibbonA: { value: new THREE.Color("#D1B45A") },
-      uRibbonB: { value: new THREE.Color("#2D6A4F") },
-      uHotColor: { value: new THREE.Color("#E8C87A") },
+      uRibbonA: { value: new THREE.Color("#FFD66E") },
+      uRibbonB: { value: new THREE.Color("#3AA76D") },
+      uHotColor: { value: new THREE.Color("#FFE68A") },
       uMouse: { value: new THREE.Vector2(0, 0) },
       uMouseActive: { value: 0 },
       uProximityRadius: { value: 1.1 },
@@ -778,7 +781,7 @@ function ParticleCanvas() {
       // Keep orientation locked. The reference ribbon was captured mid-rotation,
       // but this build intentionally avoids counter-clockwise spin.
       points.rotation.set(0, 0, 0);
-      points.position.y = THREE.MathUtils.lerp(0, -0.18, objectSettled);
+      points.position.y = THREE.MathUtils.lerp(0, -0.04, objectSettled);
 
       // Ease the cursor glow toward the pointer's current position/activity
       // rather than snapping, matching the site's soft-follow feel elsewhere.
@@ -918,8 +921,6 @@ export default function LogoParticleReveal() {
   return (
     <section ref={sectionRef} className="relative w-full bg-transparent" style={{ height: "720vh" }}>
       <div className="sticky top-0 h-screen w-full overflow-hidden">
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-[5] h-56 bg-gradient-to-b from-background/28 via-forest/8 to-transparent" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-56 bg-gradient-to-t from-background/28 via-forest/8 to-transparent" />
         {/* particle field */}
         {mounted && <ParticleCanvas />}
 

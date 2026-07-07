@@ -553,7 +553,6 @@ export default function CinematicAltynAdamExperience({
       <div className="sticky top-0 h-screen overflow-hidden bg-[#040c08]">
         <div className="absolute inset-0 bg-[linear-gradient(120deg,#031009,#071b13_48%,#020806)]" />
         <div className="absolute inset-0 opacity-[0.28] bg-[radial-gradient(rgba(232,200,122,0.18)_1px,transparent_1px)] bg-[size:22px_22px]" />
-        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background via-background/35 to-transparent" />
 
         <div className="absolute inset-0 z-0">
           {visible ? (

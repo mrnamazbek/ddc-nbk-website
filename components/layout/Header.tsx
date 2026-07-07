@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, type KeyboardEvent } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, Check } from "lucide-react";
 import { usePathname, useRouter } from "@/i18n/navigation";
@@ -91,7 +91,7 @@ function LanguageSwitcher({
   }, []);
 
   useEffect(() => {
-    const handleEscape = (e: any) => {
+    const handleEscape = (e: globalThis.KeyboardEvent) => {
       if (e.key === "Escape") {
         setOpen(false);
       }
