@@ -92,8 +92,10 @@ function LanguageSwitcher({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className={`absolute mt-2 w-40 rounded-card border border-glass-border bg-charcoal/95 backdrop-blur-2xl py-1 shadow-glass z-[70] overflow-hidden ${
-              size === "lg" ? "left-0" : "right-0"
+            data-hover="gold"
+            style={{ backfaceVisibility: "hidden" }}
+            className={`absolute w-40 glass-card py-1.5 shadow-glass z-[70] transform-gpu ${
+              size === "lg" ? "bottom-full mb-2 left-0" : "top-full mt-2 right-0"
             }`}
           >
             {LANGUAGES.map((lng) => {
@@ -108,7 +110,7 @@ function LanguageSwitcher({
                   className={`flex items-center gap-2.5 w-full px-4 py-2.5 text-xs text-left transition-colors font-mono tracking-wider ${
                     active
                       ? "text-gold font-bold bg-white/5"
-                      : "text-muted hover:text-gold hover:bg-white/5"
+                      : "text-muted hover:text-gold hover:bg-gold/10"
                   }`}
                 >
                   <span className="text-sm select-none">{LANGUAGE_FLAGS[lng]}</span>
@@ -240,7 +242,8 @@ export default function Header() {
   return (
     <>
       <header
-        className={`!fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1300px] transition-all duration-500 rounded-full py-2.5 px-5 sm:px-7 !overflow-visible ${
+        style={{ backfaceVisibility: "hidden" }}
+        className={`!fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1300px] transition-all duration-500 rounded-full py-2.5 px-5 sm:px-7 !overflow-visible transform-gpu ${
           isScrolled
             ? "liquid-glass-strong shadow-card"
             : "liquid-glass shadow-lg"
