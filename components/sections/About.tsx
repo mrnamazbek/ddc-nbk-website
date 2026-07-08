@@ -60,9 +60,9 @@ export default function About({ id = "about" }: { id?: string | null }) {
               <RevealWords
                 text={t("titleAccent")}
                 delay={0.3}
-                wordClassName="text-gold font-black"
+                wordClassName="text-gold font-normal"
                 useBubbleText
-                bubbleActiveClassName="text-gold font-black"
+                bubbleActiveClassName="text-gold font-normal"
               />
             </h2>
 
