@@ -7,6 +7,8 @@ import * as THREE from "three";
 
 const MODEL_SRC = "/models/altyn_adam.glb";
 
+useGLTF.setDecoderPath("/draco/");
+
 function AltynAdamInner({
   scale = 1,
   targetHeight = 3.2,
@@ -15,7 +17,7 @@ function AltynAdamInner({
   targetHeight?: number;
 }) {
   const group = useRef<THREE.Group>(null);
-  const { scene } = useGLTF(MODEL_SRC);
+  const { scene } = useGLTF(MODEL_SRC, true);
 
   const material = useMemo(
     () =>
@@ -104,4 +106,4 @@ export default function AltynAdam({
   );
 }
 
-useGLTF.preload(MODEL_SRC);
+useGLTF.preload(MODEL_SRC, true);

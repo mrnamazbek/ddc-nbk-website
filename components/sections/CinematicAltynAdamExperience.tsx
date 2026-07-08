@@ -460,7 +460,14 @@ export default function CinematicAltynAdamExperience({
   const [progress, setProgress] = useState(0);
   const [visible, setVisible] = useState(true);
   const [lowPowerMode, setLowPowerMode] = useState<boolean | null>(null);
+  const [sessionDisabled3d, setSessionDisabled3d] = useState(false);
   const { active: assetsLoading, progress: assetProgress } = useProgress();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setSessionDisabled3d(window.sessionStorage.getItem("ddc_services_disable_3d") === "true");
+    }
+  }, []);
 
   useEffect(() => {
     const updateQuality = () => {
@@ -548,7 +555,7 @@ export default function CinematicAltynAdamExperience({
     window.scrollTo({ top: start + target * max, behavior: "smooth" });
   };
 
-  if (reduced || lowPowerMode !== false) {
+  if (reduced || lowPowerMode !== false || sessionDisabled3d) {
     return (
       <StaticExperience
         overline={overline}
