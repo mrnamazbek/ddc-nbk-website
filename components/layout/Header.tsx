@@ -358,7 +358,7 @@ export default function Header() {
                   Center
                 </span>
               </div>
-              <span className="font-sans font-medium text-[5.5px] sm:text-[6px] tracking-[0.04em] text-gold uppercase mt-0.5 whitespace-nowrap block">
+              <span className="font-sans font-semibold text-[7px] sm:text-[7.5px] tracking-[0.04em] text-gold uppercase mt-0.5 whitespace-nowrap block">
                 National Bank of Kazakhstan
               </span>
             </div>
