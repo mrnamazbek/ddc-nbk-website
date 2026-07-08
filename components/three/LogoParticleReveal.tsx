@@ -553,16 +553,18 @@ function ParticleCanvas() {
     if (!wrap) return;
     const section = wrap.closest("section"); // the tall scroll track
 
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
     // Self-contained scroll progress (0..1) across the section — robust to the
     // page's Lenis smooth-scroll, since it reads layout position each frame.
     const readProgress = () => {
       if (!section) return 0;
       const rect = section.getBoundingClientRect();
       const total = rect.height - window.innerHeight;
-      return total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
+      const linearProgress = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
+      return isMobile ? Math.min(1, linearProgress * 1.55) : linearProgress;
     };
 
-    const isMobile = window.matchMedia("(max-width: 767px)").matches;
     const COUNT = isMobile ? 6200 : 13000;
     const pixelRatio = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
 
