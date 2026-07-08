@@ -553,7 +553,8 @@ function ParticleCanvas() {
     if (!wrap) return;
     const section = wrap.closest("section"); // the tall scroll track
 
-    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    const isCoarse = window.matchMedia("(pointer: coarse)").matches || window.matchMedia("(hover: none)").matches;
+    const isMobile = window.matchMedia("(max-width: 767px)").matches || isCoarse;
 
     // Self-contained scroll progress (0..1) across the section — robust to the
     // page's Lenis smooth-scroll, since it reads layout position each frame.
@@ -562,11 +563,11 @@ function ParticleCanvas() {
       const rect = section.getBoundingClientRect();
       const total = rect.height - window.innerHeight;
       const linearProgress = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
-      return isMobile ? Math.min(1, linearProgress * 1.55) : linearProgress;
+      return isMobile ? Math.min(1, linearProgress * 1.12) : linearProgress;
     };
 
-    const COUNT = isMobile ? 6200 : 13000;
-    const pixelRatio = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
+    const COUNT = isMobile ? 3800 : 13000;
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 1.75);
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
@@ -652,7 +653,7 @@ function ParticleCanvas() {
         ? { a: "#173826", b: "#B9891D", mul: 1.08, size: 1.26 }
         : { a: "#3AA76D", b: "#F4C84E", mul: 1.28, size: 1.08 };
     let theme = palette(document.documentElement.classList.contains("light"));
-    const baseSize = isMobile ? 2.45 : 2.62;
+    const baseSize = isMobile ? 2.2 : 2.62;
 
     const uniforms = {
       uProgress: { value: 0 },
@@ -756,6 +757,12 @@ function ParticleCanvas() {
       }
     };
     window.addEventListener("pointermove", onPointerMove, { passive: true });
+    let pageVisible = !document.hidden;
+    const onVisibilityChange = () => {
+      pageVisible = !document.hidden;
+      last = performance.now();
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     let raf = 0;
     let last = performance.now();
@@ -764,6 +771,11 @@ function ParticleCanvas() {
     const mouseWorld = { x: 0, y: 0 };
 
     const loop = () => {
+      if (!pageVisible) {
+        raf = requestAnimationFrame(loop);
+        return;
+      }
+
       const now = performance.now();
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
@@ -805,6 +817,7 @@ function ParticleCanvas() {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onPointerMove);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       themeObserver.disconnect();
       geo.dispose();
       material.dispose();

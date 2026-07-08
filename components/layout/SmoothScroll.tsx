@@ -101,7 +101,6 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      smoothTouch: false,
     });
 
     // Expose the instance for programmatic scroll control (debugging the

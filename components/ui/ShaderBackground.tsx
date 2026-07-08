@@ -326,7 +326,7 @@ function MorphingParticles({
       uLight: { value: isLight ? 1 : 0 },
       uDistortionRadius: { value: 3.2 },
     }),
-    [dotSize]
+    [dotSize, isLight]
   );
 
   useFrame((state, dt) => {

@@ -340,7 +340,7 @@ export default function Header() {
           <TransitionLink
             href="/"
             aria-label={tA11y("logoLabel")}
-            className="flex items-center gap-2.5 group select-none shrink-0 text-foreground"
+            className="flex items-center gap-4.5 group select-none shrink-0 text-foreground"
           >
             <DDCLogo
               title="DDC — Центр цифрового развития НБК"
