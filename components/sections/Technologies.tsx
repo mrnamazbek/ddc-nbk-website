@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import GlassCard from "@/components/ui/GlassCard";
 import Icon, { IconName } from "@/components/ui/Icon";
 import { AnimatedGroup } from "@/components/ui/animated-group";
+import { useA11y } from "@/components/theme/AccessibilityProvider";
+import { cn } from "@/lib/utils";
 
 interface TechItem {
   name: IconName;
@@ -13,6 +15,7 @@ interface TechItem {
 
 export default function Technologies() {
   const t = useTranslations("Technologies");
+  const { enabled: a11yEnabled } = useA11y();
 
   const pmTools: TechItem[] = [
     { name: "jira", label: "Jira" },
@@ -170,21 +173,42 @@ export default function Technologies() {
             </p>
           </div>
 
-          <AnimatedGroup preset="scale" className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-4">
+          <AnimatedGroup
+            preset="scale"
+            className={cn(
+              a11yEnabled
+                ? "flex flex-wrap gap-4 items-stretch justify-start"
+                : "grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-4"
+            )}
+          >
             {devTools.map((tech) => (
               <div
                 key={tech.name}
-                className="group relative flex flex-col items-center justify-center p-4 rounded-xl bg-charcoal/40 border border-white/5 hover:border-forest-light/20 hover:bg-forest/5 hover:scale-105 hover:-translate-y-1 transition-all duration-300 cursor-help"
+                className={cn(
+                  "group relative flex flex-col items-center justify-center p-4 rounded-xl",
+                  a11yEnabled
+                    ? "flex-grow flex-shrink-0 min-w-[110px] max-w-[150px] bg-white border-2 border-black"
+                    : "bg-charcoal/40 border border-white/5 hover:border-forest-light/20 hover:bg-forest/5 hover:scale-105 hover:-translate-y-1 transition-all duration-300 cursor-help"
+                )}
               >
                 <div className="w-8 h-8 flex items-center justify-center mb-2">
                   <Icon name={tech.name} size={32} />
                 </div>
-                <span className="text-[10px] text-zinc-400 group-hover:text-zinc-200 transition-colors duration-200 text-center font-medium whitespace-nowrap overflow-hidden text-ellipsis w-full">
+                <span
+                  className={cn(
+                    "text-center font-medium",
+                    a11yEnabled
+                      ? "text-xs text-black leading-tight break-words whitespace-normal w-full mt-1"
+                      : "text-[10px] text-zinc-400 group-hover:text-zinc-200 transition-colors duration-200 overflow-hidden text-ellipsis w-full whitespace-nowrap"
+                  )}
+                >
                   {tech.label}
                 </span>
-                <span className="absolute -top-8 scale-0 group-hover:scale-100 transition-all duration-200 bg-black/80 text-[10px] text-zinc-200 px-2 py-0.5 rounded border border-white/10 z-20 whitespace-nowrap">
-                  {tech.label}
-                </span>
+                {!a11yEnabled && (
+                  <span className="absolute -top-8 scale-0 group-hover:scale-100 transition-all duration-200 bg-black/80 text-[10px] text-zinc-200 px-2 py-0.5 rounded border border-white/10 z-20 whitespace-nowrap">
+                    {tech.label}
+                  </span>
+                )}
               </div>
             ))}
           </AnimatedGroup>

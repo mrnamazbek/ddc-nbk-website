@@ -9,6 +9,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useA11y } from "@/components/theme/AccessibilityProvider";
 
 export const HeroParallax = ({
   products,
@@ -23,10 +24,12 @@ export const HeroParallax = ({
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
 }) => {
+  const { enabled: a11yEnabled } = useA11y();
   const firstRow = products.slice(0, 5);
   const secondRow = products.slice(5, 10);
   const thirdRow = products.slice(10, 15);
   const ref = React.useRef(null);
+
   const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {
@@ -69,6 +72,39 @@ export const HeroParallax = ({
     useTransform(scrollYProgress, [0, 0.6], [isMobile ? -80 : -450, isMobile ? 20 : 50]),
     springConfig
   );
+
+  if (a11yEnabled) {
+    return (
+      <div className="w-full py-16 px-6 max-w-7xl mx-auto flex flex-col items-start bg-white text-black font-sans">
+        <div className="max-w-3xl mb-12 text-left">
+          {title && (
+            <h2 className="font-display text-3xl sm:text-5xl text-black font-bold mb-4">
+              {title}
+            </h2>
+          )}
+          {subtitle && <p className="text-zinc-700 text-base sm:text-lg">{subtitle}</p>}
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full">
+          {products.map((product) => (
+            <div key={product.title} className="group relative rounded-[16px] overflow-hidden border-2 border-black p-4 bg-white">
+              <Link href={product.link} className="block w-full">
+                <div className="relative aspect-[16/10] w-full rounded-lg overflow-hidden mb-4 bg-zinc-100">
+                  <Image
+                    src={product.thumbnail}
+                    alt={product.title}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <h3 className="text-lg font-bold text-black underline decoration-2">{product.title}</h3>
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       ref={ref}

@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode, useEffect, useRef, useState } from "react";
+import { useA11y } from "@/components/theme/AccessibilityProvider";
 
 type LazyOnVisibleProps = {
   children: ReactNode;
@@ -17,10 +18,12 @@ export default function LazyOnVisible({
   minHeight = "560px",
   rootMargin = "520px 0px",
 }: LazyOnVisibleProps) {
+  const { enabled: a11yEnabled } = useA11y();
   const ref = useRef<HTMLDivElement>(null);
   const [shouldMount, setShouldMount] = useState(false);
 
   useEffect(() => {
+    if (a11yEnabled) return;
     const el = ref.current;
     if (!el || shouldMount) return;
 
@@ -35,7 +38,15 @@ export default function LazyOnVisible({
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [rootMargin, shouldMount]);
+  }, [rootMargin, shouldMount, a11yEnabled]);
+
+  if (a11yEnabled) {
+    return (
+      <div id={id} className={className}>
+        {children}
+      </div>
+    );
+  }
 
   return (
     <div ref={ref} id={id} className={className} style={{ minHeight }}>
