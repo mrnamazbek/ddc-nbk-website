@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 
-const Spline = dynamic(() => import("@splinetool/react-spline"), {
+const Spline = dynamic(() => import("@splinetool/react-spline/next"), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full flex items-center justify-center bg-background/40 backdrop-blur-md rounded-card border border-glass-border text-muted font-mono text-xs min-h-[300px]">

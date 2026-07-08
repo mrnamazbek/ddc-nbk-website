@@ -40,7 +40,7 @@ html.a11y body {
 /* Reset is scoped to the page chrome + content only — the accessibility panel
    (a fixed [role="dialog"] rendered OUTSIDE main/header/footer) keeps its own
    authored high-contrast styling untouched. */
-html.a11y :is(main, header, footer) *:not(svg):not(path):not(canvas) {
+html.a11y :is(main, header, footer) *:not(svg):not(path):not(canvas):not(button):not(a):not(input):not(textarea):not(select):not([role="button"]) {
   background-color: transparent !important;
   background-image: none !important;
   color: var(--a11y-fg) !important;
@@ -56,11 +56,18 @@ html.a11y .glass-card,
 html.a11y .glass-panel,
 html.a11y [class*="backdrop-blur"],
 html.a11y header,
-html.a11y nav {
+html.a11y nav,
+html.a11y .nav-preview-card {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   background-color: var(--a11y-surface) !important;
   border: 2px solid var(--a11y-border) !important;
+}
+
+/* Force legible high-contrast colors on text inside premium hover/preview cards in a11y mode */
+html.a11y :is(.nav-preview-card, .glass-card, .liquid-glass, .liquid-glass-strong, .glass-panel) *:not(svg):not(path):not(canvas) {
+  background-color: transparent !important;
+  color: var(--a11y-fg) !important;
 }
 
 /* --- Font scaling (rem-based) ------------------------------------------- */
@@ -348,6 +355,50 @@ html.a11y :is(.transition-opacity, [class*="transition-opacity"], .inline-block)
    `utilities` cascade layer. Unlayered !important loses to layered !important,
    so we must match the layer — there specificity wins (html.a11y header beats
    the single .!fixed class) and the header becomes a static top bar. */
+/* --- Flat language switcher list for low-vision accessibility mode ------- */
+html.a11y .language-switcher-trigger {
+  display: none !important;
+}
+
+html.a11y .language-switcher-menu {
+  position: static !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  gap: 0.5rem !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  width: auto !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+  transform: none !important;
+}
+
+html.a11y .language-switcher-menu button {
+  flex: 0 1 auto !important;
+  min-height: 44px !important;
+  min-width: 4.5rem !important;
+  border: 2px solid var(--a11y-border) !important;
+  border-radius: 8px !important;
+  padding: 0.5rem 0.75rem !important;
+  background-color: var(--a11y-surface) !important;
+  color: var(--a11y-fg) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.25rem !important;
+}
+
+html.a11y .language-switcher-menu button.active {
+  background-color: var(--a11y-fg) !important;
+  color: var(--a11y-bg) !important;
+}
+
+html.a11y .language-switcher-menu button.active * {
+  color: var(--a11y-bg) !important;
+}
+
 @layer utilities {
   /* Position AND the standalone transform properties Tailwind v4 emits
      (`-translate-x-1/2` compiles to the `translate` property, not `transform`)

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { useA11y } from "../theme/AccessibilityProvider";
 
 /**
  * Production centerpiece — a scroll-driven GPU particle field that starts as
@@ -884,7 +885,8 @@ function StoryPanel({
 
 export default function LogoParticleReveal() {
   const t = useTranslations("Stats");
-  const reduce = useReducedMotion();
+  const a11y = useA11y();
+  const reduce = useReducedMotion() || a11y.enabled;
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);

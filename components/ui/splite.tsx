@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 
-const Spline = dynamic(() => import('@splinetool/react-spline'), { ssr: false })
+const Spline = dynamic(() => import('@splinetool/react-spline/next'), { ssr: false })
 
 type SplineLayer = { type: string; updateTexture: (url: string) => Promise<void> }
 type SplineObj = { material?: { layers?: SplineLayer[] }; children?: SplineObj[] }
@@ -159,4 +159,3 @@ export function SplineScene({ scene, className, logoImg, logoTarget }: SplineSce
     </Suspense>
   )
 }
-

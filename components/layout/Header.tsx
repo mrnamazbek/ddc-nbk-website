@@ -10,6 +10,7 @@ import TransitionLink from "../motion/TransitionLink";
 import CinematicThemeSwitcher from "../ui/cinematic-theme-switcher";
 import Icon from "../ui/Icon";
 import { AccessibilityTrigger } from "../ui/AccessibilityPanel";
+import { useA11y } from "../theme/AccessibilityProvider";
 import NavPreviewCard from "./NavPreview";
 import DDCLogo from "../ui/DDCLogo";
 import { TextRollHover } from "../ui/text-roll-hover";
@@ -41,6 +42,7 @@ function LanguageSwitcher({
   onSwitch: (lng: string) => void;
   size?: "sm" | "lg";
 }) {
+  const a11y = useA11y();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -48,6 +50,8 @@ function LanguageSwitcher({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const [coords, setCoords] = useState<{ top: number; left: number; width: number; height: number } | null>(null);
+  
+  const showMenu = open || (mounted && a11y.enabled);
 
   useEffect(() => {
     setMounted(true);
@@ -117,7 +121,7 @@ function LanguageSwitcher({
 
   const menuContent = (
     <AnimatePresence>
-      {open && (
+      {showMenu && (
         <motion.div
           ref={menuRef}
           initial={{ opacity: 0, y: size === "lg" ? -15 : 15, scale: 0.95, rotateX: size === "lg" ? 12 : -12, filter: "blur(6px)" }}
@@ -143,7 +147,7 @@ function LanguageSwitcher({
                   transformStyle: "preserve-3d"
                 }
           }
-          className="w-40 glass-card py-1.5 shadow-glass z-[9999] transform-gpu"
+          className="language-switcher-menu w-40 glass-card py-1.5 shadow-glass z-[9999] transform-gpu"
         >
           {LANGUAGES.map((lng, idx) => {
             const active = locale === lng;
@@ -159,7 +163,7 @@ function LanguageSwitcher({
                 }}
                 onMouseEnter={() => setHoveredIndex(idx)}
                 className={`relative flex items-center gap-2.5 w-full px-4 py-2.5 text-xs text-left transition-colors font-mono tracking-wider z-10 ${
-                  active ? "text-gold font-bold" : "text-muted hover:text-gold"
+                  active ? "active text-gold font-bold" : "text-muted hover:text-gold"
                 }`}
               >
                 <span className="text-sm select-none">{LANGUAGE_FLAGS[lng]}</span>
@@ -189,7 +193,7 @@ function LanguageSwitcher({
         type="button"
         aria-label="Select Language"
         aria-expanded={open}
-        className={`font-mono font-bold tracking-wider rounded-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 flex items-center justify-center gap-2 transition-all duration-300 liquid-glass border border-white/10 text-white ${size === "lg"
+        className={`language-switcher-trigger font-mono font-bold tracking-wider rounded-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 flex items-center justify-center gap-2 transition-all duration-300 liquid-glass border border-white/10 text-white ${size === "lg"
             ? "px-5 py-2 text-sm min-h-[44px] min-w-[120px]"
             : "px-3.5 py-1.5 text-xs min-h-11 min-w-[85px]"
           }`}
