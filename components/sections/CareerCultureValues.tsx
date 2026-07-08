@@ -29,7 +29,7 @@ export default function CareerCultureValues() {
   return (
     <div className="mb-24 pb-4">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-        <StaggerGroup stagger={STAGGER.tight} className="lg:col-span-7 flex flex-col gap-3">
+        <StaggerGroup stagger={STAGGER.tight} className="lg:col-span-8 flex flex-col gap-3">
           {PILLARS.map((pillar, idx) => (
             <StaggerItem key={idx} duration={ENTRANCE_DURATION.card}>
               <GlassCard
@@ -58,7 +58,7 @@ export default function CareerCultureValues() {
           ))}
         </StaggerGroup>
 
-        <ScrollReveal direction="left" distance={40} duration={ENTRANCE_DURATION.card} delay={0.15} className="lg:col-span-5 relative">
+        <ScrollReveal direction="left" distance={40} duration={ENTRANCE_DURATION.card} delay={0.15} className="lg:col-span-4 relative">
           <div className="absolute -top-12 -right-8 w-40 h-40 bg-gold/10 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -bottom-10 -left-8 w-32 h-32 bg-forest-mid/20 rounded-full blur-3xl pointer-events-none" />
           <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-mono font-medium mb-4 block">

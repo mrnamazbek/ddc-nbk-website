@@ -172,13 +172,17 @@ export default function Hero() {
             </h1>
           </div>
 
-          {/* Подзаголовок на Inter */}
-          <motion.p
-            variants={subtitleVariants}
-            className="text-sm sm:text-base lg:text-lg text-foreground/70 font-sans font-normal leading-relaxed max-w-2xl mb-6"
-          >
-            <BubbleText text={t("subtitle")} />
-          </motion.p>
+          {/* Подзаголовок на Inter — обёрнут в div с max-width, чтобы текст не
+              заходил на робота (глобальное правило p{max-width:72ch} не даёт
+              ограничить ширину прямо на <p>). */}
+          <div className="max-w-md lg:max-w-lg xl:max-w-xl mb-6">
+            <motion.p
+              variants={subtitleVariants}
+              className="text-sm sm:text-base lg:text-lg text-foreground/70 font-sans font-normal leading-relaxed"
+            >
+              <BubbleText text={t("subtitle")} />
+            </motion.p>
+          </div>
 
           {/* Кнопки призыва к действию с тактильным откликом */}
           <motion.div

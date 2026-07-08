@@ -11,6 +11,7 @@ import { BubbleText } from "@/components/ui/BubbleText";
 import ScrollReveal, { ENTRANCE_DURATION, STAGGER } from "@/components/motion/ScrollReveal";
 import { RevealWords } from "@/components/motion/RevealWords";
 import { StaggerGroup, StaggerItem } from "@/components/motion/StaggerGroup";
+import { AutoRevealingHeading } from "@/components/motion/AutoRevealingHeading";
 
 
 type Translator = (key: string, values?: Record<string, string | number>) => string;
@@ -373,14 +374,14 @@ export default async function CareersPage({ params }: CareersPageProps) {
             <ScrollReveal blur={10} duration={ENTRANCE_DURATION.title}>
               <h2 className="text-2xl font-bold text-white mb-6 tracking-wide">{t("whyUsTitle")}</h2>
             </ScrollReveal>
-            <StaggerGroup stagger={STAGGER.tight} className="space-y-4">
+            <div className="space-y-4">
               {whyUsPoints.map((point, idx) => (
-                <StaggerItem key={idx} duration={ENTRANCE_DURATION.subtitle} className="flex items-start gap-3.5 text-sm sm:text-base text-zinc-300 font-light leading-relaxed">
+                <div key={idx} className="flex items-start gap-3.5 text-sm sm:text-base text-zinc-300 font-light leading-relaxed">
                   <Icon name="check-circle" size={20} className="text-forest-light shrink-0 mt-0.5" />
-                  <span>{point}</span>
-                </StaggerItem>
+                  <AutoRevealingHeading text={point} splitBy="word" delay={0.025} className="flex-1 min-w-0" />
+                </div>
               ))}
-            </StaggerGroup>
+            </div>
           </div>
 
           {/* Правая колонка «Почему именно мы?» — только Lottie-иллюстрация */}
