@@ -10,6 +10,8 @@ import ScrollReveal, { ENTRANCE_DURATION, STAGGER } from "@/components/motion/Sc
 import { RevealWords } from "@/components/motion/RevealWords";
 import { StaggerGroup, StaggerItem } from "@/components/motion/StaggerGroup";
 
+import { motion } from "framer-motion";
+
 interface ValueItem {
   key: string;
   iconName: IconName;
@@ -17,6 +19,10 @@ interface ValueItem {
 
 export default function About({ id = "about" }: { id?: string | null }) {
   const t = useTranslations("About");
+  
+  const titleAccentWords = t("titleAccent").split(" ");
+  const firstAccentWord = titleAccentWords[0] || "";
+  const secondAccentWord = titleAccentWords.slice(1).join(" ");
 
   const valueItems: ValueItem[] = [
     {
@@ -55,15 +61,36 @@ export default function About({ id = "about" }: { id?: string | null }) {
               </div>
             </ScrollReveal>
 
-            <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
-              <RevealWords text={t("titleLine1")} useBubbleText />{" "}
-              <RevealWords
-                text={t("titleAccent")}
-                delay={0.3}
-                wordClassName="text-gold font-normal"
-                useBubbleText
-                bubbleActiveClassName="text-gold font-normal"
-              />
+            <h2 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight flex flex-col items-start gap-1">
+              <motion.span
+                initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                className="block"
+              >
+                <BubbleText text={t("titleLine1")} />
+              </motion.span>
+              
+              <motion.span
+                initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1], delay: 0.22 }}
+                className="block text-gold font-normal"
+              >
+                <BubbleText text={firstAccentWord} activeClassName="text-gold font-normal" />
+              </motion.span>
+
+              <motion.span
+                initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1], delay: 0.44 }}
+                className="block text-gold font-normal"
+              >
+                <BubbleText text={secondAccentWord} activeClassName="text-gold font-normal" />
+              </motion.span>
             </h2>
 
             <ScrollReveal blur={10} duration={ENTRANCE_DURATION.subtitle} delay={0.1} className="mb-8">
