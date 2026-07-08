@@ -287,7 +287,15 @@ function ShaderPlane({ isLight }: { isLight: boolean }) {
   );
 }
 
-function MorphingParticles({ isLight }: { isLight: boolean }) {
+function MorphingParticles({
+  isLight,
+  particleCount,
+  dotSize,
+}: {
+  isLight: boolean;
+  particleCount: number;
+  dotSize: number;
+}) {
   const matRef = useRef<THREE.ShaderMaterial>(null);
   const { camera } = useThree();
 
@@ -299,7 +307,7 @@ function MorphingParticles({ isLight }: { isLight: boolean }) {
     isLightRef.current = isLight;
   }, [isLight]);
 
-  const count = 15000;
+  const count = particleCount;
 
   const [gridPositions, spherePositions, randoms] = useMemo(() => {
     return generateBackgroundParticles(count);
@@ -309,7 +317,7 @@ function MorphingParticles({ isLight }: { isLight: boolean }) {
     () => ({
       uTime: { value: 0 },
       uScroll: { value: 0 },
-      uDotSize: { value: 14.5 },
+      uDotSize: { value: dotSize },
       uMouse3d: { value: new THREE.Vector3(0, 0, -1000) },
       uMouseStrength: { value: 0.9 },
       uForestLight: { value: hexToRgb("#52B788") },
@@ -318,7 +326,7 @@ function MorphingParticles({ isLight }: { isLight: boolean }) {
       uLight: { value: isLight ? 1 : 0 },
       uDistortionRadius: { value: 3.2 },
     }),
-    [] // eslint-disable-line react-hooks/exhaustive-deps
+    [dotSize]
   );
 
   useFrame((state, dt) => {
@@ -382,6 +390,19 @@ export default function ShaderBackground({ isLight }: { isLight: boolean }) {
   const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
   const containerRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(true);
+  const [lowPowerMode, setLowPowerMode] = useState(true);
+
+  useEffect(() => {
+    const updateQuality = () => {
+      const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+      const noHover = window.matchMedia("(hover: none)").matches;
+      setLowPowerMode(coarsePointer || noHover || window.innerWidth < 1024);
+    };
+
+    updateQuality();
+    window.addEventListener("resize", updateQuality);
+    return () => window.removeEventListener("resize", updateQuality);
+  }, []);
 
   useEffect(() => {
     if (a11yEnabled || prefersReducedMotion) return;
@@ -412,15 +433,19 @@ export default function ShaderBackground({ isLight }: { isLight: boolean }) {
     >
       {visible && (
         <Canvas
-          gl={{ antialias: false, powerPreference: "high-performance" }}
-          dpr={[1, 1.5]}
+          gl={{ antialias: false, powerPreference: lowPowerMode ? "low-power" : "high-performance" }}
+          dpr={[1, lowPowerMode ? 1 : 1.45]}
           camera={{ position: [0, 0, 8.5], fov: 60 }}
           style={{ width: "100%", height: "100%" }}
           frameloop={visible ? "always" : "never"}
         >
           <ambientLight intensity={0.5} />
           <ShaderPlane isLight={isLight} />
-          <MorphingParticles isLight={isLight} />
+          <MorphingParticles
+            isLight={isLight}
+            particleCount={lowPowerMode ? 5600 : 15000}
+            dotSize={lowPowerMode ? 11.5 : 14.5}
+          />
         </Canvas>
       )}
     </div>

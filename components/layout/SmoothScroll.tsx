@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import Lenis from "lenis";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import gsap from "@/lib/gsap";
@@ -15,6 +15,20 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
   const pathname = usePathname();
   const isPopStateRef = useRef(false);
   const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
+  const [useNativeScroll, setUseNativeScroll] = useState(true);
+
+  useEffect(() => {
+    const updateScrollMode = () => {
+      const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+      const noHover = window.matchMedia("(hover: none)").matches;
+      const narrowViewport = window.innerWidth < 1024;
+      setUseNativeScroll(coarsePointer || noHover || narrowViewport);
+    };
+
+    updateScrollMode();
+    window.addEventListener("resize", updateScrollMode);
+    return () => window.removeEventListener("resize", updateScrollMode);
+  }, []);
 
   useEffect(() => {
     const handlePopState = () => {
@@ -71,8 +85,10 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
   }, [pathname]);
 
   useEffect(() => {
-    // Disable smooth scroll if accessibility mode or prefers-reduced-motion is active
-    if (a11yEnabled || prefersReducedMotion) {
+    // Keep touch devices and mobile browsers on native scrolling. Lenis wheel
+    // smoothing is great for desktop storytelling, but on phones it competes
+    // with the browser compositor and can freeze scroll-heavy WebGL sections.
+    if (a11yEnabled || prefersReducedMotion || useNativeScroll) {
       if (typeof window !== "undefined") {
         delete window.__lenis;
       }
@@ -85,6 +101,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
+      smoothTouch: false,
     });
 
     // Expose the instance for programmatic scroll control (debugging the
@@ -114,7 +131,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
         delete window.__lenis;
       }
     };
-  }, [a11yEnabled, prefersReducedMotion]);
+  }, [a11yEnabled, prefersReducedMotion, useNativeScroll]);
 
   return <>{children}</>;
 }

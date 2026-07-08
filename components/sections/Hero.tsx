@@ -43,6 +43,18 @@ export default function Hero() {
 
   useGSAP(
     () => {
+      if (
+        !containerRef.current ||
+        !textRef.current ||
+        a11yEnabled ||
+        prefersReducedMotion ||
+        window.matchMedia("(pointer: coarse)").matches ||
+        window.matchMedia("(hover: none)").matches ||
+        window.innerWidth < 1024
+      ) {
+        return;
+      }
+
       // Параллакс-эффект ухода контента под экран при скролле
       gsap.to(textRef.current, {
         yPercent: -20,
@@ -55,7 +67,7 @@ export default function Hero() {
         },
       });
     },
-    { scope: containerRef }
+    { scope: containerRef, dependencies: [a11yEnabled, prefersReducedMotion] }
   );
 
   const containerVariants = {

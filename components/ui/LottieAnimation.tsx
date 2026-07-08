@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
-import Lottie from "lottie-react";
+import Lottie, { type LottieRefCurrentProps } from "lottie-react";
 import { cn } from "@/lib/utils";
 import { ENTRANCE_EASE } from "@/components/motion/ScrollReveal";
 
@@ -28,7 +28,9 @@ export default function LottieAnimation({
   shell = false,
 }: LottieAnimationProps) {
   const rootRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(rootRef, { once: true, margin: "160px" });
+  const lottieRef = useRef<LottieRefCurrentProps>(null);
+  const shouldLoad = useInView(rootRef, { once: true, margin: "180px" });
+  const isActive = useInView(rootRef, { once: false, margin: "80px" });
   const shouldReduceMotion = useReducedMotion();
   const [animationData, setAnimationData] = useState<unknown>(null);
   const [hasError, setHasError] = useState(false);
@@ -40,7 +42,7 @@ export default function LottieAnimation({
     : { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" };
 
   useEffect(() => {
-    if (!isInView || animationData || hasError) return;
+    if (!shouldLoad || animationData || hasError) return;
 
     const controller = new AbortController();
 
@@ -59,7 +61,18 @@ export default function LottieAnimation({
       });
 
     return () => controller.abort();
-  }, [animationData, hasError, isInView, src]);
+  }, [animationData, hasError, shouldLoad, src]);
+
+  useEffect(() => {
+    const animation = lottieRef.current;
+    if (!animation || shouldReduceMotion) return;
+
+    if (isActive) {
+      animation.play();
+    } else {
+      animation.pause();
+    }
+  }, [isActive, shouldReduceMotion, animationData]);
 
   return (
     <motion.div
@@ -85,8 +98,9 @@ export default function LottieAnimation({
       >
         {animationData ? (
           <Lottie
+            lottieRef={lottieRef}
             animationData={animationData}
-            autoplay={!shouldReduceMotion}
+            autoplay={!shouldReduceMotion && isActive}
             loop={!shouldReduceMotion && loop}
             className={cn("h-full w-full max-h-[520px] overflow-visible", animationClassName)}
           />
