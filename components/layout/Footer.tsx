@@ -229,7 +229,7 @@ export default function Footer() {
               href="https://github.com/mrnamazbek"
               target="_blank"
               rel="noopener noreferrer"
-              className="group/credit inline-flex min-h-8 items-center gap-1.5 text-sm font-medium text-zinc-400 transition-colors duration-300 hover:text-white"
+              className="group/credit inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-zinc-400 transition-colors duration-300 hover:text-white"
             >
               <Icon name="github" size={16} className="text-gold/90" animate={false} />
               GitHub
@@ -243,7 +243,7 @@ export default function Footer() {
               href="https://www.linkedin.com/feed/update/urn:li:activity:7385921757829808128"
               target="_blank"
               rel="noopener noreferrer"
-              className="group/credit inline-flex min-h-8 items-center gap-1.5 text-sm font-medium text-zinc-400 transition-colors duration-300 hover:text-white"
+              className="group/credit inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-zinc-400 transition-colors duration-300 hover:text-white"
             >
               <Icon name="linkedin" size={16} className="text-gold/90" animate={false} />
               See the work

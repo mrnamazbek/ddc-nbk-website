@@ -7,6 +7,20 @@ import Image from "next/image";
 import Icon from "@/components/ui/Icon";
 import { BubbleText } from "@/components/ui/BubbleText";
 import GlassCard from "@/components/ui/GlassCard";
+import { useA11y } from "@/components/theme/AccessibilityProvider";
+import { cn } from "@/lib/utils";
+
+/** Enter/Space activates a div-based card the same way a click would —
+ * needed because these cards carry framer-motion layoutId shared-element
+ * transitions into the lightbox, which a plain <button> would complicate. */
+function onCardKeyDown(onActivate: () => void) {
+  return (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onActivate();
+    }
+  };
+}
 
 interface EventItem {
   id: string;
@@ -62,6 +76,7 @@ const GALLERY_ITEMS: EventItem[] = [
 
 export default function DDCEventGallery() {
   const t = useTranslations("EventGallery");
+  const { enabled: a11yEnabled } = useA11y();
   const shouldReduceMotionRaw = useReducedMotion();
   const [mounted, setMounted] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -123,8 +138,12 @@ export default function DDCEventGallery() {
           </p>
         </div>
 
-        {/* Сетка / Карусель */}
-        <div className="hidden md:flex gap-4 h-[460px] w-full items-stretch">
+        {/* Сетка / Карусель — the narrow hover-to-expand accordion depends on
+            mouse hover with no keyboard equivalent, and its collapsed strips
+            (~145px wide against a fixed 460px height) crop titles far more
+            aggressively at the low-vision mode's larger type. Low-vision mode
+            uses the plain grid below instead, same as small screens. */}
+        <div className={cn("hidden gap-4 h-[460px] w-full items-stretch", !a11yEnabled && "md:flex")}>
           {GALLERY_ITEMS.map((item, idx) => {
             const itemTitle = t(`events.${item.translationKey}.title`);
             const itemDesc = t(`events.${item.translationKey}.desc`);
@@ -133,13 +152,19 @@ export default function DDCEventGallery() {
             return (
               <motion.div
                 key={item.id}
-                className="relative cursor-pointer overflow-hidden rounded-2xl border border-white/5 bg-charcoal/20 select-none group"
+                role="button"
+                tabIndex={0}
+                aria-label={itemTitle}
+                className="relative cursor-pointer overflow-hidden rounded-2xl border border-white/5 bg-charcoal/20 select-none group focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold focus-visible:outline-offset-2"
                 style={{ flex: 1 }}
                 animate={{ flex: getFlexValue(idx) }}
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 onMouseEnter={() => setHoveredIndex(idx)}
                 onMouseLeave={() => setHoveredIndex(null)}
+                onFocus={() => setHoveredIndex(idx)}
+                onBlur={() => setHoveredIndex(null)}
                 onClick={() => setSelectedIndex(idx)}
+                onKeyDown={onCardKeyDown(() => setSelectedIndex(idx))}
               >
                 {/* Изображение */}
                 <motion.div
@@ -194,20 +219,28 @@ export default function DDCEventGallery() {
           })}
         </div>
 
-        {/* Мобильная версия (Вертикальный скролл карточек) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:hidden">
+        {/* Мобильная версия (Вертикальный скролл карточек) — also the
+            low-vision fallback for the desktop accordion above: full-size,
+            untruncated titles and a normal aspect ratio, and (unlike the
+            accordion) a real keyboard-focusable, Enter/Space-activatable
+            target via the wrapping button. */}
+        <div className={cn("grid grid-cols-1 sm:grid-cols-2 gap-6", !a11yEnabled && "md:hidden")}>
           {GALLERY_ITEMS.map((item, idx) => {
             const itemTitle = t(`events.${item.translationKey}.title`);
             const itemDesc = t(`events.${item.translationKey}.desc`);
 
             return (
-              <GlassCard
+              <button
                 key={item.id}
+                type="button"
+                onClick={() => setSelectedIndex(idx)}
+                className="block w-full text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold focus-visible:outline-offset-2 rounded-2xl"
+              >
+              <GlassCard
                 hoverAccent="gold"
                 variant="liquid"
                 isTiltEnabled={false}
                 className="overflow-hidden p-0 rounded-2xl flex flex-col cursor-pointer border border-white/5"
-                onClick={() => setSelectedIndex(idx)}
               >
                 <div className="relative h-48 w-full">
                   <motion.div
@@ -234,6 +267,7 @@ export default function DDCEventGallery() {
                   </p>
                 </div>
               </GlassCard>
+              </button>
             );
           })}
         </div>

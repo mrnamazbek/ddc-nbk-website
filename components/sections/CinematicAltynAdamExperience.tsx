@@ -473,7 +473,7 @@ export default function CinematicAltynAdamExperience({
     const updateQuality = () => {
       const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
       const noHover = window.matchMedia("(hover: none)").matches;
-      setLowPowerMode(coarsePointer || noHover || window.innerWidth < 1024);
+      setLowPowerMode(coarsePointer || noHover || window.innerWidth < 1280);
     };
 
     updateQuality();
@@ -649,7 +649,7 @@ export default function CinematicAltynAdamExperience({
                   type="button"
                   onClick={() => scrollToChapter(index)}
                   className={cn(
-                    "flex w-full items-center gap-3 rounded-2xl px-3 py-2 text-left transition-all duration-500",
+                    "flex w-full min-h-11 items-center gap-3 rounded-2xl px-3 py-2 text-left transition-all duration-500",
                     active ? "bg-gold/14 text-white" : "text-white/45 hover:bg-white/[0.04] hover:text-white",
                   )}
                 >

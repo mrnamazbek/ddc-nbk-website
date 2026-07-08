@@ -412,7 +412,7 @@ export default async function CareersPage({ params }: CareersPageProps) {
             <p className="relative text-sm sm:text-base text-zinc-300 font-light leading-relaxed max-w-2xl mb-8">
               {t("startJourneyDesc")}
             </p>
-            <a href="#jobs-list" className="relative">
+            <a href="#jobs-list" className="relative inline-block">
               <Button variant="gold" className="justify-center">
                 {t("viewVacancies", { count: jobs.length })}
               </Button>

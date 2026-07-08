@@ -259,7 +259,7 @@ export default function Hero() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.2, duration: 0.8, ease: ENTRANCE_EASE }}
-        className="absolute bottom-6 left-6 sm:left-12 lg:left-16 z-10 flex items-center gap-3 text-zinc-500 cursor-pointer hover:text-forest-light transition-colors duration-300 pointer-events-auto hover-target"
+        className="absolute bottom-6 left-6 sm:left-12 lg:left-16 z-10 hidden items-center gap-3 text-zinc-500 cursor-pointer hover:text-forest-light transition-colors duration-300 pointer-events-auto hover-target [@media(min-height:700px)]:flex"
         onClick={() => {
           const target = document.getElementById("stats");
           target?.scrollIntoView({ behavior: "smooth" });

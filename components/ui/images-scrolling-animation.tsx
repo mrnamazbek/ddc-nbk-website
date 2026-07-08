@@ -33,7 +33,9 @@ interface CardItemProps {
   readMoreText: string;
 }
 
-const accentColors = ["#E8C87A", "#52B788", "#C9A84C", "#7FD8A8", "#8B7035", "#D8B85F", "#2D6A4F"];
+// #8B7035 (--color-gold-muted) measured ~3.88:1 against the photo scrim — below
+// WCAG's 4.5:1 text minimum — so it's swapped for the brighter --color-gold tone.
+const accentColors = ["#E8C87A", "#52B788", "#C9A84C", "#7FD8A8", "#C9A84C", "#D8B85F", "#2D6A4F"];
 
 // Each card rests `STICKY_TOP_STEP_PX` further down than the one before it,
 // so once it's stuck, only a thin sliver of every earlier card — the accent
@@ -167,7 +169,7 @@ function CardItem({ card, i, total, progress, readMoreText }: CardItemProps) {
             href={card.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded text-[12px] font-semibold uppercase tracking-[0.15em] transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+            className="inline-flex min-h-11 items-center gap-2 rounded py-2 text-[12px] font-semibold uppercase tracking-[0.15em] transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
             style={{ color: card.accentColor, fontFamily: "var(--font-mono, monospace)" }}
             aria-label={`${readMoreText}: ${plainTitle}`}
           >

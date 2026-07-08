@@ -69,20 +69,10 @@ html.a11y.a11y-font-125 { font-size: 125%; }
 html.a11y.a11y-font-150 { font-size: 150%; }
 html.a11y.a11y-font-200 { font-size: 200%; }
 
-/* Override fluid clamp() heading sizes so they actually grow with the scaler.
-   Large display headings (e.g. the homepage's TypewriterEffect word-spans)
-   author their letter-spacing as an em-value resolved against their ORIGINAL
-   ~60-140px size (a barely-visible -1 to -2px pull, fine at that size). Since
-   letter-spacing is an inherited px value (not re-resolved against a child's
-   own font-size), those word-spans keep that px pull-together unchanged even
-   after collapsing to 1rem here — at 16-32px that same px value becomes a
-   double-digit percentage of the glyph width and merges adjacent words
-   ("Digital solutions" -> "Digitalsolutions"). Resetting letter-spacing here,
-   for every element this rule also resizes, removes the mismatch at its
-   source instead of chasing it component-by-component. */
-html.a11y h1 { font-size: 2.2rem !important; letter-spacing: normal !important; }
-html.a11y h2 { font-size: 1.8rem !important; letter-spacing: normal !important; }
-html.a11y h3 { font-size: 1.4rem !important; letter-spacing: normal !important; }
+/* Override fluid clamp() heading sizes so they actually grow with the scaler */
+html.a11y h1 { font-size: 2.2rem !important; }
+html.a11y h2 { font-size: 1.8rem !important; }
+html.a11y h3 { font-size: 1.4rem !important; }
 html.a11y p,
 html.a11y li,
 html.a11y a,
@@ -90,7 +80,21 @@ html.a11y span,
 html.a11y button,
 html.a11y label,
 html.a11y input,
-html.a11y textarea { font-size: 1rem !important; line-height: 1.6 !important; letter-spacing: normal !important; }
+html.a11y textarea { font-size: 1rem !important; line-height: 1.6 !important; }
+
+/* Large display headings (e.g. the homepage's TypewriterEffect word-spans)
+   author their letter-spacing as an em-value resolved against their ORIGINAL
+   ~60-140px size (a barely-visible -1 to -2px pull, fine at that size). Since
+   letter-spacing is an inherited px value (not re-resolved against a child's
+   own font-size), those word-spans keep that px pull-together unchanged even
+   after collapsing to 1rem above — at 16-32px that same px value becomes a
+   double-digit percentage of the glyph width and merges adjacent words
+   ("Digital solutions" -> "Digitalsolutions"). Reset it to normal at the
+   source, but only for the default "n" spacing mode — the wider -m/-l modes
+   below intentionally set their own letter-spacing and must still win. */
+html.a11y.a11y-spacing-n :is(h1, h2, h3, p, li, a, span, button, label, input, textarea) {
+  letter-spacing: normal !important;
+}
 
 /* --- Letter spacing ------------------------------------------------------ */
 html.a11y.a11y-spacing-m body { letter-spacing: 0.06em !important; }
@@ -271,7 +275,9 @@ html.a11y main,
 html.a11y main > div,
 html.a11y main [class*="min-h-screen"],
 html.a11y main [class*="h-screen"],
-html.a11y main [class*="max-h-"] {
+html.a11y main [class*="max-h-"],
+html.a11y footer,
+html.a11y footer > div {
   height: auto !important;
   min-height: 0 !important;
   max-height: none !important;
@@ -281,6 +287,25 @@ html.a11y main [class*="max-h-"] {
 html.a11y main [style*="transform"] { transform: none !important; }
 html.a11y main .pointer-events-none[class*="bg-gradient"],
 html.a11y main [class*="blur-"] { display: none !important; }
+
+/* Footer link grid: "Legal"/"Contacts" sit side by side, and at a11y's
+   larger 1rem body size some labels ("Procurement portal") wrap to 2 lines.
+   Without an explicit top-aligned/auto-row rule the taller wrapped column
+   can crowd the row below it in a neighbouring column. Force each column to
+   size to its own content, top-aligned, and collapse to one column so no
+   two columns ever compete for the same row. */
+html.a11y footer .grid {
+  align-items: start !important;
+  grid-auto-rows: max-content !important;
+}
+html.a11y footer .grid.grid-cols-2 {
+  grid-template-columns: 1fr !important;
+}
+
+/* The 3D image marquee is ambient background texture behind the footer —
+   decorative, and its <img> tiles aren't caught by the canvas/[data-decorative]
+   hide rule above. Hiding it removes the image bleed-through behind footer text. */
+html.a11y .site-footer-media { display: none !important; }
 
 /* Buttons: solid high-contrast, keep our rounded pill shape & weight.
    `[class]` qualifiers lift specificity above the :not()-inflated reset rule. */

@@ -1072,6 +1072,17 @@ body {
     rgba(201, 168, 76, 0.5) 100%);
 }
 
+/* Light theme: the dark-theme gold token (#E8C87A) sits on a near-white
+   glass background here, ~1.4:1 contrast. Swap in the theme's own
+   accessible antique-gold text tokens (already defined for this exact
+   light-on-light problem) instead of the dark-theme highlight color. */
+html.light .liquid-glass-button[data-variant="gold"] {
+  color: var(--accent-gold);
+}
+html.light .liquid-glass-button[data-variant="gold"]:hover {
+  color: var(--accent-gold-hover);
+}
+
 /* Зеленый вариант кнопки (Forest Liquid Glass) */
 .liquid-glass-button[data-variant="forest"] {
   background: rgba(26, 61, 43, 0.2);

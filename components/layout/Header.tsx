@@ -115,6 +115,72 @@ function LanguageSwitcher({
         }
     : {};
 
+  const menuContent = (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          ref={menuRef}
+          initial={{ opacity: 0, y: size === "lg" ? -15 : 15, scale: 0.95, rotateX: size === "lg" ? 12 : -12, filter: "blur(6px)" }}
+          animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0, filter: "blur(0px)" }}
+          exit={{ opacity: 0, y: size === "lg" ? -10 : 10, scale: 0.95, rotateX: size === "lg" ? -8 : 8, filter: "blur(4px)" }}
+          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          onMouseLeave={() => setHoveredIndex(null)}
+          data-hover="gold"
+          style={
+            size === "lg"
+              ? {
+                  position: "absolute",
+                  bottom: "calc(100% + 8px)",
+                  right: "0",
+                  backfaceVisibility: "hidden",
+                  perspective: 1000,
+                  transformStyle: "preserve-3d"
+                }
+              : {
+                  ...dropdownStyle,
+                  backfaceVisibility: "hidden",
+                  perspective: 1000,
+                  transformStyle: "preserve-3d"
+                }
+          }
+          className="w-40 glass-card py-1.5 shadow-glass z-[9999] transform-gpu"
+        >
+          {LANGUAGES.map((lng, idx) => {
+            const active = locale === lng;
+            const isHovered = hoveredIndex === idx;
+            const showHighlight = hoveredIndex !== null ? isHovered : active;
+
+            return (
+              <button
+                key={lng}
+                onClick={() => {
+                  onSwitch(lng);
+                  setOpen(false);
+                }}
+                onMouseEnter={() => setHoveredIndex(idx)}
+                className={`relative flex items-center gap-2.5 w-full px-4 py-2.5 text-xs text-left transition-colors font-mono tracking-wider z-10 ${
+                  active ? "text-gold font-bold" : "text-muted hover:text-gold"
+                }`}
+              >
+                <span className="text-sm select-none">{LANGUAGE_FLAGS[lng]}</span>
+                <span className="flex-1">{LANGUAGE_LABELS[lng]}</span>
+                {active && <Check className="h-3.5 w-3.5 text-gold" />}
+
+                {showHighlight && (
+                  <motion.div
+                    layoutId={size === "lg" ? "langHighlightMobile" : "langHighlightDesktop"}
+                    className="absolute inset-x-1.5 inset-y-1 rounded-[18px] bg-white/[0.08] border border-gold/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] -z-10"
+                    transition={{ type: "spring", stiffness: 450, damping: 34 }}
+                  />
+                )}
+              </button>
+            );
+          })}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
       <button
@@ -136,62 +202,11 @@ function LanguageSwitcher({
         />
       </button>
 
-      {mounted &&
-        createPortal(
-          <AnimatePresence>
-            {open && (
-              <motion.div
-                ref={menuRef}
-                initial={{ opacity: 0, y: size === "lg" ? -15 : 15, scale: 0.95, rotateX: size === "lg" ? 12 : -12, filter: "blur(6px)" }}
-                animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: size === "lg" ? -10 : 10, scale: 0.95, rotateX: size === "lg" ? -8 : 8, filter: "blur(4px)" }}
-                transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                onMouseLeave={() => setHoveredIndex(null)}
-                data-hover="gold"
-                style={{ 
-                  ...dropdownStyle, 
-                  backfaceVisibility: "hidden",
-                  perspective: 1000,
-                  transformStyle: "preserve-3d"
-                }}
-                className="w-40 glass-card py-1.5 shadow-glass z-[9999] transform-gpu"
-              >
-                {LANGUAGES.map((lng, idx) => {
-                  const active = locale === lng;
-                  const isHovered = hoveredIndex === idx;
-                  const showHighlight = hoveredIndex !== null ? isHovered : active;
-
-                  return (
-                    <button
-                      key={lng}
-                      onClick={() => {
-                        onSwitch(lng);
-                        setOpen(false);
-                      }}
-                      onMouseEnter={() => setHoveredIndex(idx)}
-                      className={`relative flex items-center gap-2.5 w-full px-4 py-2.5 text-xs text-left transition-colors font-mono tracking-wider z-10 ${
-                        active ? "text-gold font-bold" : "text-muted hover:text-gold"
-                      }`}
-                    >
-                      <span className="text-sm select-none">{LANGUAGE_FLAGS[lng]}</span>
-                      <span className="flex-1">{LANGUAGE_LABELS[lng]}</span>
-                      {active && <Check className="h-3.5 w-3.5 text-gold" />}
-
-                      {showHighlight && (
-                        <motion.div
-                          layoutId="langHighlight"
-                          className="absolute inset-x-1.5 inset-y-1 rounded-[18px] bg-white/[0.08] border border-gold/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] -z-10"
-                          transition={{ type: "spring", stiffness: 450, damping: 34 }}
-                        />
-                      )}
-                    </button>
-                  );
-                })}
-              </motion.div>
-            )}
-          </AnimatePresence>,
-          document.body
-        )}
+      {mounted && (
+        size === "lg" 
+          ? menuContent 
+          : createPortal(menuContent, document.body)
+      )}
     </div>
   );
 }
@@ -340,7 +355,7 @@ export default function Header() {
           <TransitionLink
             href="/"
             aria-label={tA11y("logoLabel")}
-            className="flex items-center gap-4.5 group select-none shrink-0 text-foreground"
+            className="flex min-h-11 min-w-11 items-center gap-4.5 group select-none shrink-0 text-foreground"
           >
             <DDCLogo
               title="DDC — Центр цифрового развития НБК"
@@ -528,6 +543,10 @@ export default function Header() {
 
             {/* Mobile menu bottom action panel */}
             <div className="flex flex-col gap-6 mt-auto pt-6 border-t border-glass-border">
+              <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <span className="text-sm text-muted">{t("theme")}</span>
+                <CinematicThemeSwitcher />
+              </div>
               <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <span className="text-sm text-muted">{t("language")}</span>
                 <LanguageSwitcher locale={locale} onSwitch={switchLocale} size="lg" />

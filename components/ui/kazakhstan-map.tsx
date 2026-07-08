@@ -278,7 +278,12 @@ export function KazakhstanMap() {
                   onPointerEnter={(e) => handleOfficePointerMove(p, e)}
                   onPointerMove={(e) => handleOfficePointerMove(p, e)}
                   onPointerLeave={handleOfficePointerLeave}
-                  className="relative z-20 flex flex-col items-center cursor-pointer group"
+                  onFocus={() => setHoveredOffice(p)}
+                  onBlur={handleOfficePointerLeave}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={t(p.cityKey)}
+                  className="relative z-20 flex flex-col items-center cursor-pointer group focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold focus-visible:outline-offset-4 focus-visible:rounded-full"
                 >
                   <span
                     aria-hidden

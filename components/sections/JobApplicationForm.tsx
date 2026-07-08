@@ -114,7 +114,7 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
                   id="vacancy"
                   value={formData.vacancy}
                   onChange={(e) => setFormData((prev) => ({ ...prev, vacancy: e.target.value }))}
-                  className="w-full bg-charcoal/50 border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:border-gold/30 focus:outline-none transition-colors cursor-pointer"
+                  className="w-full min-h-11 bg-charcoal/50 border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:border-gold/30 focus:outline-none transition-colors cursor-pointer"
                 >
                   {jobs.map((job, idx) => (
                     <option key={idx} value={job.title} className="bg-charcoal text-white text-xs">
