@@ -1,13 +1,14 @@
 'use client'
 
-import { Suspense, useEffect, useState } from 'react'
-import dynamic from 'next/dynamic'
-
-const Spline = dynamic(() => import('@splinetool/react-spline/next'), { ssr: false })
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 
 type SplineLayer = { type: string; updateTexture: (url: string) => Promise<void> }
 type SplineObj = { material?: { layers?: SplineLayer[] }; children?: SplineObj[] }
-type SplineApp = { findObjectByName: (name: string) => SplineObj | undefined }
+type SplineApp = {
+  findObjectByName: (name: string) => SplineObj | undefined;
+  load: (scene: string) => Promise<void>;
+  dispose?: () => void;
+}
 
 interface SplineSceneProps {
   scene: string
@@ -45,6 +46,58 @@ function uninstallSplineErrorFilter() {
     console.error = originalConsoleError
     originalConsoleError = null
   }
+}
+
+function SplineRuntimeCanvas({
+  scene,
+  className,
+  onLoad,
+}: {
+  scene: string;
+  className?: string;
+  onLoad?: (app: SplineApp) => void | Promise<void>;
+}) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    let app: SplineApp | null = null;
+    let cancelled = false;
+
+    async function mountSpline() {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      try {
+        const { Application } = await import("@splinetool/runtime");
+        if (cancelled || !canvasRef.current) return;
+
+        app = new Application(canvasRef.current, { renderOnDemand: true }) as SplineApp;
+        await app.load(scene);
+        if (!cancelled) {
+          await onLoad?.(app);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          console.error("Failed to load Spline scene:", err);
+        }
+      }
+    }
+
+    mountSpline();
+
+    return () => {
+      cancelled = true;
+      app?.dispose?.();
+    };
+  }, [onLoad, scene]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className={className}
+      style={{ display: "block", width: "100%", height: "100%" }}
+    />
+  );
 }
 
 export function SplineScene({ scene, className, logoImg, logoTarget }: SplineSceneProps) {
@@ -105,7 +158,7 @@ export function SplineScene({ scene, className, logoImg, logoTarget }: SplineSce
     };
   }, [shouldLoad]);
 
-  const handleLoad = async (splineApp: unknown) => {
+  const handleLoad = useCallback(async (splineApp: SplineApp) => {
     const app = splineApp as SplineApp;
     if (logoImg && logoTarget) {
       try {
@@ -133,7 +186,7 @@ export function SplineScene({ scene, className, logoImg, logoTarget }: SplineSce
         console.error("Failed to dynamically update Spline texture:", err);
       }
     }
-  };
+  }, [logoImg, logoTarget]);
 
   if (!shouldLoad) {
     return (
@@ -151,7 +204,7 @@ export function SplineScene({ scene, className, logoImg, logoTarget }: SplineSce
         </div>
       }
     >
-      <Spline
+      <SplineRuntimeCanvas
         scene={scene}
         className={className}
         onLoad={handleLoad}

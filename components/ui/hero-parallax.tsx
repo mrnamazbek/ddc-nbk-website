@@ -72,7 +72,7 @@ export const HeroParallax = ({
   return (
     <div
       ref={ref}
-      className="h-[120vh] md:h-[180vh] py-10 md:py-20 overflow-hidden antialiased relative z-20 flex flex-col self-auto [perspective:1000px] hero-parallax-wrapper"
+      className="h-[135vh] min-h-[780px] md:min-h-0 md:h-[180vh] py-10 md:py-20 overflow-hidden antialiased relative z-20 flex flex-col self-auto [perspective:1000px] hero-parallax-wrapper"
     >
       <Header title={title} subtitle={subtitle} />
       <motion.div
@@ -159,7 +159,7 @@ export const ProductCard = ({
         y: -20,
       }}
       key={product.title}
-      className="group/product h-48 w-[16rem] md:h-96 md:w-[30rem] relative z-20 shrink-0 rounded-[24px] overflow-hidden border border-glass-border shadow-[0_8px_30px_rgba(0,0,0,0.25)] bg-[#0c0e0d] transition-shadow duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.45)]"
+      className="group/product h-40 w-[14rem] md:h-96 md:w-[30rem] relative z-20 shrink-0 rounded-[24px] overflow-hidden border border-glass-border shadow-[0_8px_30px_rgba(0,0,0,0.25)] bg-[#0c0e0d] transition-shadow duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.45)]"
     >
       <Link
         href={product.link}
