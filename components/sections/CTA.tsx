@@ -43,18 +43,7 @@ export default function CTA() {
     { scope: containerRef }
   );
 
-  const keywords = [
-    "DDC",
-    "ЦДО",
-    "NATIONAL BANK OF KAZAKHSTAN",
-    "КОНТАКТ-ЦЕНТР 1477",
-    "ISO 9001",
-    "IT-УСЛУГИ",
-    "ПОРТАЛ ЗАКУПОК",
-    "ИНФОРМАЦИОННАЯ БЕЗОПАСНОСТЬ",
-    "ТЕХНОЛОГИЧЕСКИЙ ОПЕРАТОР ДАННЫХ",
-    "С 1996 ГОДА",
-  ];
+  const keywords = t.raw("keywords") as string[];
 
   return (
     <section
