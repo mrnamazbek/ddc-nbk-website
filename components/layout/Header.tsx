@@ -299,15 +299,32 @@ export default function Header() {
     router.replace(pathname, { locale: lng });
   };
 
-  const targetLeft = hoveredLink
-    ? Math.max(
-      20,
-      Math.min(
-        hoveredLink.left - 200 + hoveredLink.width / 2,
-        typeof window !== "undefined" ? window.innerWidth - 420 : hoveredLink.left
-      )
-    )
-    : 0;
+  const [navMenuCoords, setNavMenuCoords] = useState<{ left: number; width: number } | null>(null);
+
+  const updateMenuCoords = () => {
+    if (navListRef.current) {
+      const rect = navListRef.current.getBoundingClientRect();
+      setNavMenuCoords({
+        left: rect.left,
+        width: rect.width,
+      });
+    }
+  };
+
+  useEffect(() => {
+    updateMenuCoords();
+    // Add small delay to ensure rendering finished
+    const timer = setTimeout(updateMenuCoords, 100);
+    window.addEventListener("resize", updateMenuCoords);
+    window.addEventListener("scroll", updateMenuCoords);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", updateMenuCoords);
+      window.removeEventListener("scroll", updateMenuCoords);
+    };
+  }, [isScrolled]);
+
+  const targetLeft = hoveredLink && navMenuCoords ? navMenuCoords.left : 0;
 
   return (
     <>
@@ -455,7 +472,7 @@ export default function Header() {
             }}
             className="hidden xl:block fixed top-[5.25rem] z-[60] pointer-events-auto"
           >
-            <NavPreviewCard link={hoveredLink} locale={locale} />
+            <NavPreviewCard link={hoveredLink} locale={locale} width={navMenuCoords?.width} />
           </motion.div>
         )}
       </AnimatePresence>

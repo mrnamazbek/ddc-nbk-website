@@ -126,9 +126,11 @@ import { useRouter } from "@/i18n/navigation";
 export default function NavPreviewCard({
   link,
   locale,
+  width,
 }: {
   link: { name: string; href: string };
   locale: string;
+  width?: number;
 }) {
   const data = NAV_PREVIEWS[link.href];
   const router = useRouter();
@@ -138,7 +140,8 @@ export default function NavPreviewCard({
   return (
     <div
       onClick={() => router.push(link.href)}
-      className="nav-preview-card relative w-[400px] overflow-hidden rounded-2xl border border-gold/20 bg-[#060a08]/98 backdrop-blur-3xl p-5 text-left shadow-2xl cursor-pointer hover:border-gold/40 hover:bg-white/[0.03] active:scale-[0.99] transition-all duration-300 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70"
+      style={{ width: width ? `${width}px` : "400px" }}
+      className="nav-preview-card relative overflow-hidden rounded-2xl border border-gold/20 bg-[#060a08]/98 backdrop-blur-3xl p-5 text-left shadow-2xl cursor-pointer hover:border-gold/40 hover:bg-white/[0.03] active:scale-[0.99] transition-all duration-300 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70"
       role="link"
       tabIndex={0}
       onKeyDown={(e) => {

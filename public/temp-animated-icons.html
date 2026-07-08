@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DDC Animated Icons Preview</title>
+  <!-- Load Lordicon Script for Animated Icons -->
+  <script src="https://cdn.lordicon.com/lordicon.js"></script>
+  <style>
+    :root {
+      --bg-color: #060a08;
+      --card-bg: rgba(26, 61, 43, 0.15);
+      --card-border: rgba(201, 168, 76, 0.2);
+      --text-white: #ffffff;
+      --text-gold: #c9a84c;
+      --text-muted: #a1a1a6;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-white);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      color: var(--text-gold);
+      font-size: 14px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      max-width: 1000px;
+      width: 100%;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+    }
+
+    .card:hover {
+      border-color: rgba(201, 168, 76, 0.5);
+      background: rgba(26, 61, 43, 0.25);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .icon-wrapper {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(201, 168, 76, 0.08);
+      border: 1px solid rgba(201, 168, 76, 0.15);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0 0 8px 0;
+    }
+
+    .card-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .instruction {
+      margin-top: 50px;
+      font-size: 13px;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 10px 20px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>DDC Navigation Preview</h1>
+  <div class="subtitle">Animated Icons Interactive Demonstration</div>
+
+  <div class="grid">
+    <!-- Home / Overview -->
+    <div class="card">
+      <div class="icon-wrapper">
+        <lord-icon
+          src="https://cdn.lordicon.com/cnpvhosp.json"
+          trigger="hover"
+          colors="primary:#c9a84c,secondary:#ffffff"
+          style="width:50px;height:50px">
+        </lord-icon>
+      </div>
+      <h3 class="card-title">Home / Overview</h3>
+      <p class="card-desc">Animated home icon for general overview.</p>
+    </div>
+
+    <!-- About -->
+    <div class="card">
+      <div class="icon-wrapper">
+        <lord-icon
+          src="https://cdn.lordicon.com/bhfjfgjd.json"
+          trigger="hover"
+          colors="primary:#c9a84c,secondary:#ffffff"
+          style="width:50px;height:50px">
+        </lord-icon>
+      </div>
+      <h3 class="card-title">About Us</h3>
+      <p class="card-desc">Animated users group representing leadership and team.</p>
+    </div>
+
+    <!-- Services -->
+    <div class="card">
+      <div class="icon-wrapper">
+        <lord-icon
+          src="https://cdn.lordicon.com/sbnjyzil.json"
+          trigger="hover"
+          colors="primary:#c9a84c,secondary:#ffffff"
+          style="width:50px;height:50px">
+        </lord-icon>
+      </div>
+      <h3 class="card-title">Services</h3>
+      <p class="card-desc">Animated spinning gears for systems development & IT services.</p>
+    </div>
+
+    <!-- Mission -->
+    <div class="card">
+      <div class="icon-wrapper">
+        <lord-icon
+          src="https://cdn.lordicon.com/zuybgnct.json"
+          trigger="hover"
+          colors="primary:#c9a84c,secondary:#ffffff"
+          style="width:50px;height:50px">
+        </lord-icon>
+      </div>
+      <h3 class="card-title">Mission</h3>
+      <p class="card-desc">Animated compass illustrating direction, values, and why we exist.</p>
+    </div>
+
+    <!-- News -->
+    <div class="card">
+      <div class="icon-wrapper">
+        <lord-icon
+          src="https://cdn.lordicon.com/vjyrntoz.json"
+          trigger="hover"
+          colors="primary:#c9a84c,secondary:#ffffff"
+          style="width:50px;height:50px">
+        </lord-icon>
+      </div>
+      <h3 class="card-title">Newsroom</h3>
+      <p class="card-desc">Animated newsletter/document icon representing publications.</p>
+    </div>
+
+    <!-- Careers -->
+    <div class="card">
+      <div class="icon-wrapper">
+        <lord-icon
+          src="https://cdn.lordicon.com/nocovwne.json"
+          trigger="hover"
+          colors="primary:#c9a84c,secondary:#ffffff"
+          style="width:50px;height:50px">
+        </lord-icon>
+      </div>
+      <h3 class="card-title">Careers</h3>
+      <p class="card-desc">Animated briefcase representing vacancies and opportunities.</p>
+    </div>
+
+    <!-- Contacts -->
+    <div class="card">
+      <div class="icon-wrapper">
+        <lord-icon
+          src="https://cdn.lordicon.com/tfttptvl.json"
+          trigger="hover"
+          colors="primary:#c9a84c,secondary:#ffffff"
+          style="width:50px;height:50px">
+        </lord-icon>
+      </div>
+      <h3 class="card-title">Contacts</h3>
+      <p class="card-desc">Animated ringing phone for the contact center and feedback.</p>
+    </div>
+  </div>
+
+  <div class="instruction">Hover cursor over cards to trigger animations</div>
+
+</body>
+</html>
