@@ -4,7 +4,6 @@ import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "@/i18n/navigation";
 import { ThreeDMarquee } from "@/components/ui/3d-marquee";
-import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 import { TextRollHover } from "@/components/ui/text-roll-hover";
 import Icon, { IconName } from "../ui/Icon";
 import DDCLogo from "../ui/DDCLogo";
@@ -274,13 +273,13 @@ export default function Footer() {
         </div>
 
         <motion.div
-          className="site-footer-watermark pointer-events-auto -mb-16 mt-8 select-none text-center font-heading text-[clamp(5rem,18vw,19rem)] font-black leading-none tracking-[-0.08em] text-white/[0.035] w-full"
+          className="site-footer-watermark pointer-events-none -mb-16 mt-8 select-none text-center font-heading text-[clamp(5rem,18vw,19rem)] font-black leading-none tracking-[-0.08em] text-white/[0.035]"
           initial={reduce ? false : { opacity: 0, y: 50 }}
           whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
         >
-          <TextHoverEffect text="DDC" />
+          DDC
         </motion.div>
       </div>
     </motion.footer>
