@@ -319,16 +319,32 @@ export default function Header() {
           }`}
       >
         <div className="w-full flex items-center justify-between">
-          {/* Logo (mark only — clean & compact) */}
+          {/* Logo (emblem + text logo — clean & compact) */}
           <TransitionLink
             href="/"
             aria-label={tA11y("logoLabel")}
-            className="flex items-center group select-none shrink-0 text-foreground"
+            className="flex items-center gap-2.5 group select-none shrink-0 text-foreground"
           >
             <DDCLogo
               title="DDC — Центр цифрового развития НБК"
-              className="h-[42px] w-[38px] transition-transform duration-500 ease-out group-hover:scale-105 group-active:scale-95"
+              className="h-[42px] w-[38px] transition-transform duration-500 ease-out group-hover:scale-105 group-active:scale-95 shrink-0"
             />
+            <div className="hidden min-[370px]:flex flex-col justify-center min-w-0 font-sans tracking-wide">
+              <div className="flex flex-col leading-[1.05] uppercase">
+                <span className="font-heading font-black text-[9px] sm:text-[9.5px] tracking-[0.05em] text-white">
+                  Digital
+                </span>
+                <span className="font-heading font-black text-[9px] sm:text-[9.5px] tracking-[0.05em] text-white">
+                  Development
+                </span>
+                <span className="font-heading font-black text-[9px] sm:text-[9.5px] tracking-[0.05em] text-white">
+                  Center
+                </span>
+              </div>
+              <span className="font-sans font-medium text-[5.5px] sm:text-[6px] tracking-[0.04em] text-gold uppercase mt-0.5 whitespace-nowrap block">
+                National Bank of Kazakhstan
+              </span>
+            </div>
           </TransitionLink>
 
           {/* Desktop menu — liquid-glass pill with a sliding cursor highlight */}
