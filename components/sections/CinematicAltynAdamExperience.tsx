@@ -459,7 +459,20 @@ export default function CinematicAltynAdamExperience({
   const lastStateRef = useRef(0);
   const [progress, setProgress] = useState(0);
   const [visible, setVisible] = useState(true);
+  const [lowPowerMode, setLowPowerMode] = useState<boolean | null>(null);
   const { active: assetsLoading, progress: assetProgress } = useProgress();
+
+  useEffect(() => {
+    const updateQuality = () => {
+      const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+      const noHover = window.matchMedia("(hover: none)").matches;
+      setLowPowerMode(coarsePointer || noHover || window.innerWidth < 1024);
+    };
+
+    updateQuality();
+    window.addEventListener("resize", updateQuality);
+    return () => window.removeEventListener("resize", updateQuality);
+  }, []);
 
   useEffect(() => {
     if (reduced) return;
@@ -535,7 +548,7 @@ export default function CinematicAltynAdamExperience({
     window.scrollTo({ top: start + target * max, behavior: "smooth" });
   };
 
-  if (reduced) {
+  if (reduced || lowPowerMode !== false) {
     return (
       <StaticExperience
         overline={overline}

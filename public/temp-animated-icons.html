@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DDC Animated Icons Preview</title>
-  <!-- Load Lordicon Script for Animated Icons -->
-  <script src="https://cdn.lordicon.com/lordicon.js"></script>
   <style>
     :root {
       --bg-color: #060a08;
@@ -86,6 +84,14 @@
       border-radius: 50%;
       background: rgba(201, 168, 76, 0.08);
       border: 1px solid rgba(201, 168, 76, 0.15);
+      color: var(--text-gold);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover .icon-wrapper {
+      background: rgba(201, 168, 76, 0.15);
+      border-color: rgba(201, 168, 76, 0.4);
+      color: #ffffff;
     }
 
     .card-title {
@@ -110,6 +116,80 @@
       border-radius: 30px;
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
+
+    /* --- ANIMATION KEYFRAMES --- */
+    
+    /* Home bounce */
+    @keyframes soft-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .card:hover .icon-home {
+      animation: soft-bounce 0.8s ease-in-out infinite;
+    }
+
+    /* Users pulse */
+    @keyframes users-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+    .card:hover .icon-users {
+      animation: users-pulse 1s ease-in-out infinite;
+    }
+
+    /* Settings spin */
+    @keyframes spin-slow {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .card:hover .icon-settings {
+      animation: spin-slow 3s linear infinite;
+    }
+
+    /* Compass rotate */
+    @keyframes compass-wobble {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-20deg); }
+      75% { transform: rotate(20deg); }
+    }
+    .card:hover .icon-compass {
+      animation: compass-wobble 1.2s ease-in-out infinite;
+    }
+
+    /* Bell swing */
+    @keyframes swing-bell {
+      0%, 100% { transform: rotate(0deg); }
+      20% { transform: rotate(15deg); }
+      40% { transform: rotate(-15deg); }
+      60% { transform: rotate(10deg); }
+      80% { transform: rotate(-10deg); }
+    }
+    .card:hover .icon-bell {
+      animation: swing-bell 1s ease-in-out infinite;
+      transform-origin: top center;
+    }
+
+    /* Briefcase tilt */
+    @keyframes briefcase-tilt {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(8deg) scale(1.05); }
+    }
+    .card:hover .icon-briefcase {
+      animation: briefcase-tilt 0.8s ease-in-out infinite;
+    }
+
+    /* Phone vibrate */
+    @keyframes vibrate-phone {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      10% { transform: translate(-1px, -1px) rotate(-1deg); }
+      20% { transform: translate(1px, 1px) rotate(1deg); }
+      30% { transform: translate(-1px, 1px) rotate(-1deg); }
+      40% { transform: translate(1px, -1px) rotate(1deg); }
+      50% { transform: translate(-1px, -1px) rotate(-1deg); }
+    }
+    .card:hover .icon-phone {
+      animation: vibrate-phone 0.5s linear infinite;
+    }
   </style>
 </head>
 <body>
@@ -121,99 +201,86 @@
     <!-- Home / Overview -->
     <div class="card">
       <div class="icon-wrapper">
-        <lord-icon
-          src="/icons/home.json"
-          trigger="hover"
-          colors="primary:#c9a84c,secondary:#ffffff"
-          style="width:50px;height:50px">
-        </lord-icon>
+        <svg class="icon-home" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
       </div>
       <h3 class="card-title">Home / Overview</h3>
-      <p class="card-desc">Animated home/rocket icon for general overview.</p>
+      <p class="card-desc">Interactive home icon representing portal entry.</p>
     </div>
 
     <!-- About -->
     <div class="card">
       <div class="icon-wrapper">
-        <lord-icon
-          src="/icons/about.json"
-          trigger="hover"
-          colors="primary:#c9a84c,secondary:#ffffff"
-          style="width:50px;height:50px">
-        </lord-icon>
+        <svg class="icon-users" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
       </div>
       <h3 class="card-title">About Us</h3>
-      <p class="card-desc">Animated celebration confetti representing team milestone.</p>
+      <p class="card-desc">Group of specialists representing team leadership.</p>
     </div>
 
     <!-- Services -->
     <div class="card">
       <div class="icon-wrapper">
-        <lord-icon
-          src="/icons/services.json"
-          trigger="hover"
-          colors="primary:#c9a84c,secondary:#ffffff"
-          style="width:50px;height:50px">
-        </lord-icon>
+        <svg class="icon-settings" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
       </div>
       <h3 class="card-title">Services</h3>
-      <p class="card-desc">Animated spinning lock for secure systems development.</p>
+      <p class="card-desc">Spinning gear representing active systems development.</p>
     </div>
 
     <!-- Mission -->
     <div class="card">
       <div class="icon-wrapper">
-        <lord-icon
-          src="/icons/mission.json"
-          trigger="hover"
-          colors="primary:#c9a84c,secondary:#ffffff"
-          style="width:50px;height:50px">
-        </lord-icon>
+        <svg class="icon-compass" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+        </svg>
       </div>
       <h3 class="card-title">Mission</h3>
-      <p class="card-desc">Animated launching rocket illustrating direction and values.</p>
+      <p class="card-desc">Active compass direction showing target goals.</p>
     </div>
 
     <!-- News -->
     <div class="card">
       <div class="icon-wrapper">
-        <lord-icon
-          src="/icons/news.json"
-          trigger="hover"
-          colors="primary:#c9a84c,secondary:#ffffff"
-          style="width:50px;height:50px">
-        </lord-icon>
+        <svg class="icon-bell" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+          <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+        </svg>
       </div>
       <h3 class="card-title">Newsroom</h3>
-      <p class="card-desc">Animated ringing bell representing notifications & press releases.</p>
+      <p class="card-desc">Swinging alert bell representing press updates.</p>
     </div>
 
     <!-- Careers -->
     <div class="card">
       <div class="icon-wrapper">
-        <lord-icon
-          src="/icons/careers.json"
-          trigger="hover"
-          colors="primary:#c9a84c,secondary:#ffffff"
-          style="width:50px;height:50px">
-        </lord-icon>
+        <svg class="icon-briefcase" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        </svg>
       </div>
       <h3 class="card-title">Careers</h3>
-      <p class="card-desc">Animated briefcase representing vacancies and opportunities.</p>
+      <p class="card-desc">Tilted briefcase showing job vacancies.</p>
     </div>
 
     <!-- Contacts -->
     <div class="card">
       <div class="icon-wrapper">
-        <lord-icon
-          src="/icons/contacts.json"
-          trigger="hover"
-          colors="primary:#c9a84c,secondary:#ffffff"
-          style="width:50px;height:50px">
-        </lord-icon>
+        <svg class="icon-phone" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
       </div>
       <h3 class="card-title">Contacts</h3>
-      <p class="card-desc">Animated warning/attention indicator for contact center.</p>
+      <p class="card-desc">Vibrating phone representing helpline 1477.</p>
     </div>
   </div>
 
