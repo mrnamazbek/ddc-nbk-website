@@ -249,6 +249,7 @@ export default function Hero() {
                 className="w-full h-full [&_canvas]:!h-full [&_canvas]:!w-full"
                 logoImg="/spline/ddc_logo_rm_bckgrnd.png"
                 logoTarget="Body"
+                trackCursor
               />
             )}
           </div>

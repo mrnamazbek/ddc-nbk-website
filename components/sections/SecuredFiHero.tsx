@@ -67,6 +67,7 @@ export default function SecuredFiHero() {
                 className="w-full h-full [&_canvas]:!h-full [&_canvas]:!w-full"
                 logoImg="/spline/ddc_logo_rm_bckgrnd.png"
                 logoTarget="Body"
+                trackCursor
               />
             </div>
             {/* Scrim to guarantee high contrast but let the robot show through */}
