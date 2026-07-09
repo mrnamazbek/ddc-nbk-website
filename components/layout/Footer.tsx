@@ -281,6 +281,7 @@ export default function Footer() {
               </span>
             ))}
           </div>
+        </div>
       </div>
     </motion.footer>
   );
