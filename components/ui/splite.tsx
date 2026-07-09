@@ -2,11 +2,17 @@
 
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 
+type Vec3 = { x: number; y: number; z: number }
 type SplineLayer = { type: string; updateTexture: (url: string) => Promise<void> }
-type SplineObj = { material?: { layers?: SplineLayer[] }; children?: SplineObj[] }
+type SplineObj = {
+  material?: { layers?: SplineLayer[] };
+  children?: SplineObj[];
+  rotation?: Vec3;
+}
 type SplineApp = {
   findObjectByName: (name: string) => SplineObj | undefined;
   load: (scene: string) => Promise<void>;
+  requestRender?: () => void;
   dispose?: () => void;
 }
 
@@ -15,6 +21,18 @@ interface SplineSceneProps {
   className?: string
   logoImg?: string
   logoTarget?: string
+  /**
+   * When true, the scene's robot smoothly rotates to "look at" the pointer.
+   * The rotation is driven mathematically via the Spline runtime API (the
+   * exported scene has no built-in look-at behaviour), damped toward the
+   * cursor each frame. Disabled automatically under prefers-reduced-motion.
+   */
+  trackCursor?: boolean
+  /**
+   * Ordered candidate object names to rotate for the look-at effect. The first
+   * one found in the scene wins. Defaults to head → neck → body.
+   */
+  trackTargets?: string[]
 }
 
 /**
@@ -100,8 +118,10 @@ function SplineRuntimeCanvas({
   );
 }
 
-export function SplineScene({ scene, className, logoImg, logoTarget }: SplineSceneProps) {
+export function SplineScene({ scene, className, logoImg, logoTarget, trackCursor, trackTargets }: SplineSceneProps) {
   const [shouldLoad, setShouldLoad] = useState(false);
+  const appRef = useRef<SplineApp | null>(null);
+  const [appReady, setAppReady] = useState(false);
 
   // Silence the benign per-frame "Missing property" error from the Spline
   // runtime for as long as this scene is mounted.
@@ -160,6 +180,9 @@ export function SplineScene({ scene, className, logoImg, logoTarget }: SplineSce
 
   const handleLoad = useCallback(async (splineApp: SplineApp) => {
     const app = splineApp as SplineApp;
+    // Expose the loaded app to the cursor-tracking effect below.
+    appRef.current = app;
+    setAppReady(true);
     if (logoImg && logoTarget) {
       try {
         const obj = app.findObjectByName(logoTarget);
@@ -187,6 +210,112 @@ export function SplineScene({ scene, className, logoImg, logoTarget }: SplineSce
       }
     }
   }, [logoImg, logoTarget]);
+
+  // Cursor look-at: drive the robot's rotation mathematically toward the
+  // pointer. The exported Spline scene has no built-in look-at, so we rotate a
+  // target object (head → neck → body) around Y (yaw) and X (pitch) and damp
+  // it smoothly each frame. Fully opt-in and reduced-motion aware.
+  useEffect(() => {
+    if (!trackCursor || !appReady) return;
+    const app = appRef.current;
+    if (!app) return;
+
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+
+    // Pick the first target object that actually exists in the scene.
+    const names = trackTargets ?? ["Head", "Neck", "Body"];
+    let target: SplineObj | undefined;
+    for (const name of names) {
+      const obj = app.findObjectByName(name);
+      if (obj?.rotation) {
+        target = obj;
+        break;
+      }
+    }
+    if (!target?.rotation) return;
+
+    // Neutral pose captured on mount; all motion is an offset from this.
+    const base: Vec3 = {
+      x: target.rotation.x,
+      y: target.rotation.y,
+      z: target.rotation.z,
+    };
+
+    // Tunables (radians). Quiet, premium range — easy to adjust if needed.
+    const MAX_YAW = 0.5; // left/right, ~28°
+    const MAX_PITCH = 0.32; // up/down, ~18°
+    const EASE = 0.09; // damping toward the target each frame
+    const EPS = 0.0002; // skip micro-writes so Spline can idle when settled
+
+    let targetX = 0; // normalized pointer offset [-1, 1]
+    let targetY = 0;
+    let curX = 0; // damped current values
+    let curY = 0;
+    let lastRotX = base.x;
+    let lastRotY = base.y;
+    let rafId = 0;
+    let active = true;
+
+    const clamp = (v: number) => (v < -1 ? -1 : v > 1 ? 1 : v);
+    const onMove = (e: PointerEvent) => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      if (w <= 0 || h <= 0) return; // avoid NaN/Infinity feeding the model
+      // Offset from viewport center, normalized to [-1, 1].
+      targetX = clamp((e.clientX / w) * 2 - 1);
+      targetY = clamp((e.clientY / h) * 2 - 1);
+    };
+
+    const loop = () => {
+      if (!active) return;
+      curX += (targetX - curX) * EASE;
+      curY += (targetY - curY) * EASE;
+
+      const rotY = base.y + curX * MAX_YAW;
+      const rotX = base.x - curY * MAX_PITCH; // cursor below center → look down
+
+      if (Math.abs(rotY - lastRotY) > EPS || Math.abs(rotX - lastRotX) > EPS) {
+        try {
+          if (target?.rotation) {
+            target.rotation.y = rotY;
+            target.rotation.x = rotX;
+            app.requestRender?.();
+          }
+        } catch {
+          // App may be disposing during unmount; stop touching it.
+          active = false;
+          return;
+        }
+        lastRotY = rotY;
+        lastRotX = rotX;
+      }
+      rafId = requestAnimationFrame(loop);
+    };
+
+    window.addEventListener("pointermove", onMove, { passive: true });
+    rafId = requestAnimationFrame(loop);
+
+    return () => {
+      active = false;
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("pointermove", onMove);
+      // Restore neutral pose if the app is still alive.
+      try {
+        if (target?.rotation) {
+          target.rotation.x = base.x;
+          target.rotation.y = base.y;
+          app.requestRender?.();
+        }
+      } catch {
+        /* app already disposed — nothing to restore */
+      }
+    };
+  }, [trackCursor, appReady, trackTargets]);
 
   if (!shouldLoad) {
     return (
