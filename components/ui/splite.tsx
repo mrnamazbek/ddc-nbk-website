@@ -2,16 +2,15 @@
 
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 
-type Vec3 = { x: number; y: number; z: number }
 type SplineLayer = { type: string; updateTexture: (url: string) => Promise<void> }
 type SplineObj = {
   material?: { layers?: SplineLayer[] };
   children?: SplineObj[];
-  rotation?: Vec3;
 }
 type SplineApp = {
   findObjectByName: (name: string) => SplineObj | undefined;
   load: (scene: string) => Promise<void>;
+  canvas?: HTMLCanvasElement;
   requestRender?: () => void;
   dispose?: () => void;
 }
@@ -22,17 +21,18 @@ interface SplineSceneProps {
   logoImg?: string
   logoTarget?: string
   /**
-   * When true, the scene's robot smoothly rotates to "look at" the pointer.
-   * The rotation is driven mathematically via the Spline runtime API (the
-   * exported scene has no built-in look-at behaviour), damped toward the
-   * cursor each frame. Disabled automatically under prefers-reduced-motion.
+   * When true, the robot's built-in look-at follows the pointer across the
+   * WHOLE window instead of only while the cursor is over the 3D canvas.
+   *
+   * The exported scene ships with `mouseEventTarget: "canvas"`, so Spline only
+   * tracks the mouse while it is physically over the canvas. Rather than fight
+   * that (manual rotation writes get overwritten by Spline every frame), we
+   * forward global pointer positions into the canvas so Spline's own — nicely
+   * tuned — look-at reacts to the cursor anywhere on screen. Spline normalizes
+   * the coordinates against the canvas rect, giving a natural "watching you"
+   * feel. Disabled automatically under prefers-reduced-motion.
    */
   trackCursor?: boolean
-  /**
-   * Ordered candidate object names to rotate for the look-at effect. The first
-   * one found in the scene wins. Defaults to head → neck → body.
-   */
-  trackTargets?: string[]
 }
 
 /**
@@ -118,7 +118,7 @@ function SplineRuntimeCanvas({
   );
 }
 
-export function SplineScene({ scene, className, logoImg, logoTarget, trackCursor, trackTargets }: SplineSceneProps) {
+export function SplineScene({ scene, className, logoImg, logoTarget, trackCursor }: SplineSceneProps) {
   const [shouldLoad, setShouldLoad] = useState(false);
   const appRef = useRef<SplineApp | null>(null);
   const [appReady, setAppReady] = useState(false);
@@ -211,14 +211,14 @@ export function SplineScene({ scene, className, logoImg, logoTarget, trackCursor
     }
   }, [logoImg, logoTarget]);
 
-  // Cursor look-at: drive the robot's rotation mathematically toward the
-  // pointer. The exported Spline scene has no built-in look-at, so we rotate a
-  // target object (head → neck → body) around Y (yaw) and X (pitch) and damp
-  // it smoothly each frame. Fully opt-in and reduced-motion aware.
+  // Global cursor look-at: forward window pointer moves into the Spline canvas
+  // so the scene's own look-at follows the cursor across the whole screen, not
+  // just while it hovers the canvas. See the `trackCursor` prop doc for why.
   useEffect(() => {
     if (!trackCursor || !appReady) return;
     const app = appRef.current;
-    if (!app) return;
+    const canvas = app?.canvas;
+    if (!canvas) return;
 
     if (
       typeof window !== "undefined" &&
@@ -227,95 +227,33 @@ export function SplineScene({ scene, className, logoImg, logoTarget, trackCursor
       return;
     }
 
-    // Pick the first target object that actually exists in the scene.
-    const names = trackTargets ?? ["Head", "Neck", "Body"];
-    let target: SplineObj | undefined;
-    for (const name of names) {
-      const obj = app.findObjectByName(name);
-      if (obj?.rotation) {
-        target = obj;
-        break;
-      }
-    }
-    if (!target?.rotation) return;
-
-    // Neutral pose captured on mount; all motion is an offset from this.
-    const base: Vec3 = {
-      x: target.rotation.x,
-      y: target.rotation.y,
-      z: target.rotation.z,
-    };
-
-    // Tunables (radians). Quiet, premium range — easy to adjust if needed.
-    const MAX_YAW = 0.5; // left/right, ~28°
-    const MAX_PITCH = 0.32; // up/down, ~18°
-    const EASE = 0.09; // damping toward the target each frame
-    const EPS = 0.0002; // skip micro-writes so Spline can idle when settled
-
-    let targetX = 0; // normalized pointer offset [-1, 1]
-    let targetY = 0;
-    let curX = 0; // damped current values
-    let curY = 0;
-    let lastRotX = base.x;
-    let lastRotY = base.y;
-    let rafId = 0;
-    let active = true;
-
-    const clamp = (v: number) => (v < -1 ? -1 : v > 1 ? 1 : v);
-    const onMove = (e: PointerEvent) => {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      if (w <= 0 || h <= 0) return; // avoid NaN/Infinity feeding the model
-      // Offset from viewport center, normalized to [-1, 1].
-      targetX = clamp((e.clientX / w) * 2 - 1);
-      targetY = clamp((e.clientY / h) * 2 - 1);
-    };
-
-    const loop = () => {
-      if (!active) return;
-      curX += (targetX - curX) * EASE;
-      curY += (targetY - curY) * EASE;
-
-      const rotY = base.y + curX * MAX_YAW;
-      const rotX = base.x - curY * MAX_PITCH; // cursor below center → look down
-
-      if (Math.abs(rotY - lastRotY) > EPS || Math.abs(rotX - lastRotX) > EPS) {
-        try {
-          if (target?.rotation) {
-            target.rotation.y = rotY;
-            target.rotation.x = rotX;
-            app.requestRender?.();
-          }
-        } catch {
-          // App may be disposing during unmount; stop touching it.
-          active = false;
-          return;
-        }
-        lastRotY = rotY;
-        lastRotX = rotX;
-      }
-      rafId = requestAnimationFrame(loop);
-    };
-
-    window.addEventListener("pointermove", onMove, { passive: true });
-    rafId = requestAnimationFrame(loop);
-
-    return () => {
-      active = false;
-      cancelAnimationFrame(rafId);
-      window.removeEventListener("pointermove", onMove);
-      // Restore neutral pose if the app is still alive.
+    const forward = (e: PointerEvent) => {
+      // When the cursor is already over the canvas, Spline receives the native
+      // event itself — don't double-dispatch. Otherwise, replay the pointer's
+      // global position onto the canvas so Spline's look-at reacts to it.
+      if (e.target === canvas) return;
+      let synthetic: PointerEvent;
       try {
-        if (target?.rotation) {
-          target.rotation.x = base.x;
-          target.rotation.y = base.y;
-          app.requestRender?.();
-        }
+        synthetic = new PointerEvent("pointermove", {
+          clientX: e.clientX,
+          clientY: e.clientY,
+          screenX: e.screenX,
+          screenY: e.screenY,
+          pointerId: e.pointerId || 1,
+          pointerType: e.pointerType || "mouse",
+          isPrimary: true,
+          bubbles: false,
+          cancelable: true,
+        });
       } catch {
-        /* app already disposed — nothing to restore */
+        return; // very old browsers without the PointerEvent constructor
       }
+      canvas.dispatchEvent(synthetic);
     };
-  }, [trackCursor, appReady, trackTargets]);
+
+    window.addEventListener("pointermove", forward, { passive: true });
+    return () => window.removeEventListener("pointermove", forward);
+  }, [trackCursor, appReady]);
 
   if (!shouldLoad) {
     return (
