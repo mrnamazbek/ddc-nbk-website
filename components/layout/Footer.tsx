@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ThreeDMarquee } from "@/components/ui/3d-marquee";
 import { TextRollHover } from "@/components/ui/text-roll-hover";
@@ -151,10 +152,11 @@ function FooterAnchor({ link }: { link: FooterLink }) {
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   const reduce = useReducedMotion();
+  const t = useTranslations("Footer");
 
   return (
     <motion.footer
-      className="site-footer relative overflow-hidden border-t border-transparent bg-[#030504] px-[clamp(18px,5vw,84px)] py-20 text-white"
+      className="site-footer relative overflow-hidden border-t border-transparent bg-[#030504] px-[clamp(18px,5vw,84px)] py-14 sm:py-20 text-white"
       initial={false}
       whileInView={reduce ? undefined : { opacity: 1 }}
       viewport={{ once: true, margin: "-120px" }}
@@ -166,7 +168,7 @@ export default function Footer() {
 
       <div className="relative z-10 mx-auto max-w-[1500px]">
         <motion.div
-          className="grid gap-12 border-b border-white/[0.035] pb-16 lg:grid-cols-[1.35fr_2fr]"
+          className="grid gap-10 sm:gap-12 border-b border-white/[0.035] pb-10 sm:pb-16 lg:grid-cols-[1.35fr_2fr]"
           initial={reduce ? false : { opacity: 0, y: 28, filter: "blur(10px)" }}
           whileInView={reduce ? undefined : { opacity: 1, y: 0, filter: "blur(0px)" }}
           viewport={{ once: true, margin: "-120px" }}
@@ -256,16 +258,16 @@ export default function Footer() {
           </div>
         </motion.div>
 
-        <div className="relative flex flex-col gap-8 pt-10 md:flex-row md:items-end md:justify-between">
+        <div className="relative flex flex-col gap-8 pt-8 sm:pt-10 md:flex-row md:items-end md:justify-between">
           <div className="text-sm text-zinc-500">
-            <p>© {currentYear} АО «Центр цифрового развития Национального Банка РК».</p>
+            <p>{t("copyright", { year: currentYear })}</p>
             <p className="mt-2 text-xs text-zinc-600">
-              Официальный технологический центр Национального Банка Республики Казахстан.
+              {t("legalLine")}
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
-            {["Data", "Platforms", "Security", "Public Services"].map((item) => (
-              <span key={item} className="site-footer-token rounded-full border border-white/[0.08] bg-white/[0.035] px-4 py-2 text-xs text-zinc-400">
+            {[t("tagData"), t("tagPlatforms"), t("tagSecurity"), t("tagPublicServices")].map((item) => (
+              <span key={item} className="site-footer-token whitespace-nowrap rounded-full border border-white/[0.08] bg-white/[0.035] px-4 py-2 text-xs text-zinc-400">
                 {item}
               </span>
             ))}

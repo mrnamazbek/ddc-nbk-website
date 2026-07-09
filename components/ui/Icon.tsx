@@ -105,7 +105,10 @@ export type IconName =
   | "nats"
   | "nestjs"
   | "typescript"
-  | "ethereum";
+  | "ethereum"
+  | "grafana"
+  | "jenkins"
+  | "githubactions";
 
 interface IconProps {
   name: IconName;
@@ -337,6 +340,9 @@ export default function Icon({ name, className, size = 20, animate = true }: Ico
       nestjs: "logos:nestjs",
       typescript: "logos:typescript-icon",
       ethereum: "logos:ethereum",
+      grafana: "logos:grafana",
+      jenkins: "logos:jenkins",
+      githubactions: "logos:github-actions",
     };
 
     const LocalComponent = localTechIcons[name];

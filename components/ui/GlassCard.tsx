@@ -71,6 +71,31 @@ export default function GlassCard({
     ? "liquid-glass" 
     : "glass-card";
 
+  const classes = className.split(" ");
+  const innerLayoutClasses = classes.filter(c => 
+    c === "flex" || 
+    c.startsWith("flex-") || 
+    c.startsWith("grid-") || 
+    c.startsWith("justify-") || 
+    c.startsWith("items-") || 
+    c.startsWith("gap-") || 
+    c === "h-full" || 
+    c === "w-full" ||
+    c.startsWith("md:flex") ||
+    c.startsWith("md:items-") ||
+    c.startsWith("md:justify-") ||
+    c.startsWith("md:gap-") ||
+    c.startsWith("sm:flex") ||
+    c.startsWith("sm:items-") ||
+    c.startsWith("sm:justify-") ||
+    c.startsWith("lg:flex") ||
+    c.startsWith("lg:items-") ||
+    c.startsWith("lg:justify-")
+  ).join(" ");
+  
+  const isFlex = classes.some(c => c === "flex" || c.startsWith("flex-"));
+  const innerWrapperClass = `relative z-10 ${isFlex ? "flex-grow h-full w-full" : ""} ${innerLayoutClasses}`;
+
   return (
     <motion.div
       ref={cardRef}
@@ -88,7 +113,7 @@ export default function GlassCard({
       {/* Мягкий блик, перемещающийся по карте при наведении (из исходного дизайна) */}
       <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/3 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-      <div style={{ transform: "translateZ(20px)" }} className="relative z-10">
+      <div style={{ transform: "translateZ(20px)" }} className={innerWrapperClass}>
         {children}
       </div>
     </motion.div>

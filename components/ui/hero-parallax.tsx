@@ -10,6 +10,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useA11y } from "@/components/theme/AccessibilityProvider";
+import { cn } from "@/lib/utils";
 
 export interface HeroParallaxProduct {
   title: string;
@@ -266,7 +267,30 @@ export const ProductCard = ({
             aria-hidden="true"
             fill
             unoptimized={isAnimated}
-            className="object-contain [filter:brightness(0)_invert(1)] opacity-90 group-hover/product:opacity-100 transition-opacity duration-500"
+            // The browser's native lazy-loading intersection check never
+            // resolves for these icons — they sit several `transform` layers
+            // deep (outer 3D perspective/rotateX, the row's translateX, this
+            // wrapper's own scroll-driven rotate), which throws off viewport
+            // intersection math enough that `loading="lazy"` (Next's default)
+            // never fires the actual fetch, leaving every tile permanently
+            // unloaded. Icons are tiny (≤200px) so eager-loading all of them
+            // costs nothing worth trading for a blank card grid.
+            loading="eager"
+            className={cn(
+              "object-contain opacity-90 group-hover/product:opacity-100 transition-opacity duration-500",
+              // Icons8's animated-icon GIF export has no transparent color
+              // index — every frame is a solid opaque white canvas behind a
+              // black glyph (confirmed by sampling frame pixels), unlike the
+              // static PNGs' real alpha transparency. `brightness(0)
+              // invert(1)` (used below for PNGs) turns BOTH the white canvas
+              // and the black glyph to solid white, rendering as a blank
+              // square. `invert(1)` alone maps white→black, black→white —
+              // giving a white glyph on an opaque BLACK canvas — and `screen`
+              // blend mode then drops that black canvas out against the
+              // card's own dark background (screen-blending black is a
+              // no-op) while the white glyph stays fully opaque on top.
+              isAnimated ? "[filter:invert(1)] mix-blend-screen" : "[filter:brightness(0)_invert(1)]"
+            )}
           />
         </motion.div>
         <h2 className="text-foreground font-sans text-xs md:text-sm tracking-wider uppercase font-medium text-center">

@@ -869,5 +869,27 @@
     "bigDataDesc": "We collect data from various sources, process, store and perform subsequent data analysis with BI analytics reporting",
     "aiTitle": "Computer Vision & AI",
     "aiDesc": "We apply computer vision and neural networks in our projects when working with streaming and graphical data"
+  },
+  "Showcase": {
+    "aiAnalytics": "AI & Analytics",
+    "cloudInfra": "Cloud Infrastructure",
+    "cybersecurity": "Cybersecurity",
+    "blockchain": "Blockchain",
+    "financialAnalytics": "Financial Analytics",
+    "dataCenter": "Data Center",
+    "apiIntegrations": "API Integrations",
+    "automation": "Automation",
+    "mobilePayments": "Mobile Payments",
+    "digitalCurrency": "Digital Currency",
+    "digitalInfra": "Digital Infrastructure",
+    "softwareDev": "Software Development"
+  },
+  "Footer": {
+    "tagData": "Data",
+    "tagPlatforms": "Platforms",
+    "tagSecurity": "Security",
+    "tagPublicServices": "Public Services",
+    "copyright": "© {year} Digital Development Center of the National Bank of Kazakhstan JSC.",
+    "legalLine": "Official technology center of the National Bank of the Republic of Kazakhstan."
   }
 }

@@ -33,6 +33,9 @@ export default function Technologies() {
     { name: "nginx", label: "Nginx" },
     { name: "prometheus", label: "Prometheus" },
     { name: "helm", label: "Helm" },
+    { name: "grafana", label: "Grafana" },
+    { name: "jenkins", label: "Jenkins" },
+    { name: "githubactions", label: "GitHub Actions" },
   ];
 
   const devTools: TechItem[] = [
@@ -53,6 +56,9 @@ export default function Technologies() {
     { name: "typescript", label: "TypeScript" },
     { name: "spring", label: "Spring Boot" },
     { name: "oracle", label: "Oracle" },
+    { name: "golang", label: "Go" },
+    { name: "graphql", label: "GraphQL" },
+    { name: "express", label: "Express" },
   ].map(item => item as TechItem); // Type safety check
 
   const bottomHighlights = [
@@ -110,11 +116,11 @@ export default function Technologies() {
               </p>
             </div>
 
-            <AnimatedGroup preset="blur-slide" className="flex flex-wrap gap-4 items-center">
+            <AnimatedGroup preset="blur-slide" className="flex flex-wrap gap-2 sm:gap-4 items-center">
               {pmTools.map((tech) => (
                 <div
                   key={tech.name}
-                  className="group relative flex items-center justify-center w-12 h-12 rounded-xl bg-charcoal/40 border border-white/5 hover:border-gold-light/25 hover:bg-gold/5 transition-all duration-300 cursor-help"
+                  className="group relative flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-charcoal/40 border border-white/5 hover:border-gold-light/25 hover:bg-gold/5 transition-all duration-300 cursor-help"
                   title={tech.label}
                 >
                   <Icon name={tech.name} size={28} />
@@ -141,11 +147,11 @@ export default function Technologies() {
               </p>
             </div>
 
-            <AnimatedGroup preset="blur-slide" className="flex flex-wrap gap-4 items-center">
+            <AnimatedGroup preset="blur-slide" className="flex flex-wrap gap-2 sm:gap-4 items-center">
               {devopsTools.map((tech) => (
                 <div
                   key={tech.name}
-                  className="group relative flex items-center justify-center w-12 h-12 rounded-xl bg-charcoal/40 border border-white/5 hover:border-forest-light/25 hover:bg-forest/5 transition-all duration-300 cursor-help"
+                  className="group relative flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-charcoal/40 border border-white/5 hover:border-forest-light/25 hover:bg-forest/5 transition-all duration-300 cursor-help"
                   title={tech.label}
                 >
                   <Icon name={tech.name} size={28} />
@@ -178,37 +184,32 @@ export default function Technologies() {
             className={cn(
               a11yEnabled
                 ? "flex flex-wrap gap-4 items-stretch justify-start"
-                : "grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-4"
+                : "grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2 sm:gap-4"
             )}
           >
             {devTools.map((tech) => (
               <div
                 key={tech.name}
                 className={cn(
-                  "group relative flex flex-col items-center justify-center p-4 rounded-xl",
+                  "group relative flex flex-col items-center justify-center p-1.5 sm:p-4 rounded-xl",
                   a11yEnabled
                     ? "flex-grow flex-shrink-0 min-w-[110px] max-w-[150px] bg-white border-2 border-black"
                     : "bg-charcoal/40 border border-white/5 hover:border-forest-light/20 hover:bg-forest/5 hover:scale-105 hover:-translate-y-1 transition-all duration-300 cursor-help"
                 )}
               >
-                <div className="w-8 h-8 flex items-center justify-center mb-2">
-                  <Icon name={tech.name} size={32} />
+                <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center mb-1 sm:mb-2">
+                  <Icon name={tech.name} size={24} />
                 </div>
                 <span
                   className={cn(
                     "text-center font-medium",
                     a11yEnabled
                       ? "text-xs text-black leading-tight break-words whitespace-normal w-full mt-1"
-                      : "text-[10px] text-zinc-400 group-hover:text-zinc-200 transition-colors duration-200 overflow-hidden text-ellipsis w-full whitespace-nowrap"
+                      : "text-[9px] sm:text-[10px] leading-tight text-zinc-400 group-hover:text-zinc-200 transition-colors duration-200 break-words w-full"
                   )}
                 >
                   {tech.label}
                 </span>
-                {!a11yEnabled && (
-                  <span className="absolute -top-8 scale-0 group-hover:scale-100 transition-all duration-200 bg-black/80 text-[10px] text-zinc-200 px-2 py-0.5 rounded border border-white/10 z-20 whitespace-nowrap">
-                    {tech.label}
-                  </span>
-                )}
               </div>
             ))}
           </AnimatedGroup>
