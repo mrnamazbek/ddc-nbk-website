@@ -425,8 +425,8 @@ function sampleSceneMaskTarget(
   }
 
   return sampleImageMask(img, want, {
-    target: sceneObjectSize * 1.18,
-    offsetX: -sceneObjectX * 0.9,
+    target: sceneObjectSize,
+    offsetX: -Math.min(viewHeight * 0.64, 2.9),
     offsetY: -Math.min(viewHeight * 0.015, 0.06),
     depth: 0.2,
     jitterAmount: 0.012,
@@ -489,9 +489,9 @@ function sampleDigitalCoreTarget(want: number, viewHeight: number): Float32Array
 
 function sampleServiceConstellationTarget(want: number, viewHeight: number): Float32Array {
   const out = new Float32Array(want * 3);
-  const cx = -Math.min(viewHeight * 0.34, 1.55);
+  const cx = -Math.min(viewHeight * 0.64, 2.9);
   const cy = -Math.min(viewHeight * 0.015, 0.06);
-  const size = Math.min(viewHeight * 0.42, 1.95);
+  const size = Math.min(viewHeight * 0.4, 1.85);
   const ring = 0.62 * size;
 
   for (let i = 0; i < want; i++) {
