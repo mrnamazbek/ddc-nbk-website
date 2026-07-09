@@ -105,7 +105,7 @@ export default function Technologies() {
           <GlassCard
             hoverAccent="gold"
             variant="liquid"
-            className="lg:col-span-5 p-8 border-glass-border flex flex-col justify-between text-left min-h-[280px]"
+            className="lg:col-span-5 p-8 border-glass-border flex flex-col text-left min-h-[280px]"
           >
             <div>
               <h3 className="text-xl font-bold text-white mb-4 tracking-wide">
@@ -136,7 +136,7 @@ export default function Technologies() {
           <GlassCard
             hoverAccent="forest"
             variant="liquid"
-            className="lg:col-span-7 p-8 border-glass-border flex flex-col justify-between text-left min-h-[280px]"
+            className="lg:col-span-7 p-8 border-glass-border flex flex-col text-left min-h-[280px]"
           >
             <div>
               <h3 className="text-xl font-bold text-white mb-4 tracking-wide">

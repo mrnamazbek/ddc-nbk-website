@@ -170,9 +170,9 @@ const VERT = /* glsl */ `
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mv;
     float laterObject = max(vCore, vService);
-    float sizeTaper = mix(1.06, 0.9, vMix) * mix(1.0, 0.92, laterObject);
+    float sizeTaper = mix(1.06, 0.9, vMix) * mix(1.0, 0.96, vCore) * mix(1.0, 1.34, vService);
     gl_PointSize = uSize * sizeTaper * aScale * uPixelRatio * (150.0 / -mv.z);
-    float maxPoint = mix(mix(3.35, 2.18, vMix), 2.0, laterObject) * uPixelRatio;
+    float maxPoint = mix(mix(3.35, 2.18, vMix), 2.18, laterObject) * mix(1.0, 1.42, vService) * uPixelRatio;
     gl_PointSize = clamp(gl_PointSize, 0.65, maxPoint);
   }
 `;
@@ -209,12 +209,13 @@ const FRAG = /* glsl */ `
     vec3 col = mix(brandCol, ribbonCol, vRibbon);
     col = mix(col, uColorB, vMix * 0.72);
     col = mix(col, mix(uColorB, uColorA, 0.14), vCore * 0.24);
-    col = mix(col, mix(uColorB, uColorA, 0.1), vService * 0.2);
+    col = mix(col, mix(uColorB, uColorA, 0.1), vService * 0.12);
+    col = mix(col, uHotColor, vService * 0.64);
 
     // Cursor proximity glow: nearby particles brighten toward a hot highlight
     // and read very slightly more opaque, like embers catching the pointer.
     col = mix(col, uHotColor, vProximity * 0.62);
-    float objectSoftness = mix(1.0, 0.96, max(vCore, vService));
+    float objectSoftness = mix(1.0, 0.98, vCore) * mix(1.0, 1.5, vService);
     float glowAlpha = alpha * uOpacity * objectSoftness * mix(1.0, 1.14, vProximity);
     gl_FragColor = vec4(col, glowAlpha);
   }
@@ -424,11 +425,11 @@ function sampleSceneMaskTarget(
   }
 
   return sampleImageMask(img, want, {
-    target: sceneObjectSize,
-    offsetX: -sceneObjectX,
+    target: sceneObjectSize * 1.18,
+    offsetX: -sceneObjectX * 0.9,
     offsetY: -Math.min(viewHeight * 0.015, 0.06),
-    depth: 0.18,
-    jitterAmount: 0.014,
+    depth: 0.2,
+    jitterAmount: 0.012,
     fallback: () => sampleServiceConstellationTarget(want, viewHeight),
   });
 }
@@ -488,9 +489,9 @@ function sampleDigitalCoreTarget(want: number, viewHeight: number): Float32Array
 
 function sampleServiceConstellationTarget(want: number, viewHeight: number): Float32Array {
   const out = new Float32Array(want * 3);
-  const cx = -Math.min(viewHeight * 0.38, 1.72);
+  const cx = -Math.min(viewHeight * 0.34, 1.55);
   const cy = -Math.min(viewHeight * 0.015, 0.06);
-  const size = Math.min(viewHeight * 0.34, 1.58);
+  const size = Math.min(viewHeight * 0.42, 1.95);
   const ring = 0.62 * size;
 
   for (let i = 0; i < want; i++) {
@@ -651,8 +652,8 @@ function ParticleCanvas() {
     // there to keep the emblem bold and forest-led.
     const palette = (light: boolean) =>
       light
-        ? { a: "#173826", b: "#B9891D", mul: 1.08, size: 1.26 }
-        : { a: "#3AA76D", b: "#F4C84E", mul: 1.28, size: 1.08 };
+        ? { a: "#173826", b: "#C9981F", mul: 1.14, size: 1.3 }
+        : { a: "#43B978", b: "#FFD45A", mul: 1.62, size: 1.16 };
     let theme = palette(document.documentElement.classList.contains("light"));
     const baseSize = isMobile ? 2.2 : 2.62;
 
@@ -665,9 +666,9 @@ function ParticleCanvas() {
       uLogoMode: { value: 1 },
       uColorA: { value: new THREE.Color(theme.a) },
       uColorB: { value: new THREE.Color(theme.b) },
-      uRibbonA: { value: new THREE.Color("#FFD66E") },
-      uRibbonB: { value: new THREE.Color("#3AA76D") },
-      uHotColor: { value: new THREE.Color("#FFE68A") },
+      uRibbonA: { value: new THREE.Color("#FFE17A") },
+      uRibbonB: { value: new THREE.Color("#43B978") },
+      uHotColor: { value: new THREE.Color("#FFF0A3") },
       uMouse: { value: new THREE.Vector2(0, 0) },
       uMouseActive: { value: 0 },
       uProximityRadius: { value: 1.1 },
@@ -861,12 +862,18 @@ function StoryPanel({
   title,
   desc,
   align = "left",
+  highlightContactCenter = false,
 }: {
   overline: string;
   title: string;
   desc: string;
   align?: "left" | "right";
+  highlightContactCenter?: boolean;
 }) {
+  const parts = highlightContactCenter
+    ? desc.split(/(Контакт-центр 1477|контакт-центр 1477|Contact Center 1477|Contact center 1477|1477 байланыс орталығы|1477)/gi)
+    : [desc];
+
   return (
     <div className={align === "right" ? "text-left md:text-right" : "text-left"}>
       <div className="mb-4 inline-flex items-center gap-3 rounded-full border border-gold/20 bg-background/55 px-4 py-2 font-mono text-[0.68rem] uppercase tracking-[0.24em] text-gold-light shadow-[0_0_24px_rgba(201,168,76,0.1)] backdrop-blur-md">
@@ -876,8 +883,16 @@ function StoryPanel({
       <h3 className="font-display text-3xl font-normal tracking-tight text-foreground sm:text-4xl lg:text-5xl">
         {title}
       </h3>
-      <p className={align === "right" ? "mt-5 max-w-lg text-sm leading-relaxed text-foreground/72 sm:text-base md:ml-auto" : "mt-5 max-w-lg text-sm leading-relaxed text-foreground/72 sm:text-base"}>
-        {desc}
+      <p className={align === "right" ? "mt-5 max-w-lg text-sm leading-relaxed text-foreground/78 sm:text-base md:ml-auto" : "mt-5 max-w-lg text-sm leading-relaxed text-foreground/78 sm:text-base"}>
+        {parts.map((part, index) =>
+          /^(Контакт-центр 1477|контакт-центр 1477|Contact Center 1477|Contact center 1477|1477 байланыс орталығы|1477)$/i.test(part) ? (
+            <span key={`${part}-${index}`} className="font-semibold text-gold-light drop-shadow-[0_0_18px_rgba(255,212,90,0.34)]">
+              {part}
+            </span>
+          ) : (
+            part
+          ),
+        )}
       </p>
     </div>
   );
@@ -928,7 +943,7 @@ export default function LogoParticleReveal() {
           </div>
           <div className="mt-12 grid gap-8 md:grid-cols-2">
             <StoryPanel overline={t("scene2.overline")} title={t("scene2.title")} desc={t("scene2.desc")} />
-            <StoryPanel overline={t("scene3.overline")} title={t("scene3.title")} desc={t("scene3.desc")} align="right" />
+            <StoryPanel overline={t("scene3.overline")} title={t("scene3.title")} desc={t("scene3.desc")} align="right" highlightContactCenter />
           </div>
         </div>
       </section>
@@ -988,7 +1003,7 @@ export default function LogoParticleReveal() {
           style={{ opacity: scene3Opacity, x: scene3X, y: scene3Y }}
           className="pointer-events-none absolute inset-x-6 bottom-[12vh] z-30 md:inset-x-auto md:right-[9vw] md:top-1/2 md:bottom-auto md:w-[min(34rem,38vw)] md:-translate-y-1/2"
         >
-          <StoryPanel overline={t("scene3.overline")} title={t("scene3.title")} desc={t("scene3.desc")} align="right" />
+          <StoryPanel overline={t("scene3.overline")} title={t("scene3.title")} desc={t("scene3.desc")} align="right" highlightContactCenter />
         </motion.div>
       </div>
     </section>
