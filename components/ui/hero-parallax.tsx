@@ -92,7 +92,7 @@ function HeroParallaxScrollView({
   React.useEffect(() => setMounted(true), []);
 
   if (!mounted) {
-    return <div className="min-h-[960px] md:min-h-0 md:h-[180vh]" aria-hidden="true" />;
+    return <div className="min-h-[960px] md:min-h-[2020px]" aria-hidden="true" />;
   }
 
   return <HeroParallaxScrollViewInner products={products} title={title} subtitle={subtitle} />;
@@ -188,13 +188,15 @@ function HeroParallaxScrollViewInner({
       // boundary — visible as a stray card corner/rectangle poking out past
       // the section's right edge. `contain: paint` forces a hard paint
       // boundary that isn't subject to that 3D-transform escape.
-      // Mobile height is intentionally auto (content-sized, with a min-h
-      // floor) rather than a fixed value: the row cards are a fixed px size
-      // and their total height varies with locale/width (text wrapping), so
-      // any hard height either clipped the third row or left dead space.
-      // With translateY drift removed on mobile (above), auto height wraps
-      // the content exactly. Desktop keeps its tall 180vh scroll canvas.
-      className="min-h-[780px] md:min-h-0 md:h-[180vh] py-10 md:py-20 overflow-hidden [contain:paint] antialiased relative z-20 flex flex-col self-auto [perspective:1000px] hero-parallax-wrapper"
+      // The box is content-sized (auto height + a min-h floor) on BOTH
+      // breakpoints rather than a fixed vh value. The header wraps differently
+      // per locale/width and the card rows are a fixed pixel height, so any
+      // hard height mismatched the content: on mobile it left dead space, and
+      // on desktop `180vh` (1440px at a 800px viewport) was ~500px shorter than
+      // the 1938px stack — so the third card row sat permanently below the
+      // `contain:paint` clip and could never be scrolled into view, since
+      // translateY only drifts ~270px. Auto height wraps the rows exactly.
+      className="min-h-[780px] py-10 md:py-20 overflow-hidden [contain:paint] antialiased relative z-20 flex flex-col self-auto [perspective:1000px] hero-parallax-wrapper"
     >
       <Header title={title} subtitle={subtitle} />
       <motion.div
@@ -270,13 +272,10 @@ export const ProductCard = ({
 }) => {
   // Ties the icon's own tilt to the SAME horizontal scroll-driven value
   // (`translate`) that already moves the whole card row — so the icon visibly
-  // reacts as the user scrolls the page, independent of whether the asset
-  // itself is a static PNG or one of the few genuinely-animated GIFs Icons8
-  // has a good thematic match for.
+  // reacts as the user scrolls the page.
   const iconRotate = useTransform(translate, [-1000, 1000], [-10, 10]);
 
   if (product.icon) {
-    const isAnimated = product.icon.endsWith(".gif");
     return (
       <motion.div
         style={{ x: translate }}
@@ -295,7 +294,6 @@ export const ProductCard = ({
             alt=""
             aria-hidden="true"
             fill
-            unoptimized={isAnimated}
             // The browser's native lazy-loading intersection check never
             // resolves for these icons — they sit several `transform` layers
             // deep (outer 3D perspective/rotateX, the row's translateX, this
@@ -305,20 +303,14 @@ export const ProductCard = ({
             // unloaded. Icons are tiny (≤200px) so eager-loading all of them
             // costs nothing worth trading for a blank card grid.
             loading="eager"
+            // Every icon is now a static PNG with real alpha (a black glyph on
+            // transparency), so one treatment paints them all white. The three
+            // animated GIFs this replaced had no transparent colour index —
+            // each frame was an opaque white canvas — which forced a
+            // `mix-blend-screen` hack that showed a black box on some surfaces.
             className={cn(
               "object-contain opacity-90 group-hover/product:opacity-100 transition-opacity duration-500",
-              // Icons8's animated-icon GIF export has no transparent color
-              // index — every frame is a solid opaque white canvas behind a
-              // black glyph (confirmed by sampling frame pixels), unlike the
-              // static PNGs' real alpha transparency. `brightness(0)
-              // invert(1)` (used below for PNGs) turns BOTH the white canvas
-              // and the black glyph to solid white, rendering as a blank
-              // square. `invert(1)` alone maps white→black, black→white —
-              // giving a white glyph on an opaque BLACK canvas — and `screen`
-              // blend mode then drops that black canvas out against the
-              // card's own dark background (screen-blending black is a
-              // no-op) while the white glyph stays fully opaque on top.
-              isAnimated ? "[filter:invert(1)] mix-blend-screen" : "[filter:brightness(0)_invert(1)]"
+              "[filter:brightness(0)_invert(1)]"
             )}
           />
         </motion.div>

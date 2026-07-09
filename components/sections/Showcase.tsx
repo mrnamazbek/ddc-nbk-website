@@ -13,11 +13,11 @@ import { BubbleText } from "@/components/ui/BubbleText";
 
 const productDefs = [
   // Ряд 1
-  { key: "aiAnalytics", link: "/analytics", icon: "/images/showcase/icons/ai-neural-network-animated.gif" },
+  { key: "aiAnalytics", link: "/analytics", icon: "/images/showcase/icons/ai-neural-network.png" },
   { key: "cloudInfra", link: "/digital", icon: "/images/showcase/icons/cloud-computing.png" },
   { key: "cybersecurity", link: "/security", icon: "/images/showcase/icons/cybersecurity-shield.png" },
   { key: "blockchain", link: "/digital", icon: "/images/showcase/icons/blockchain.png" },
-  { key: "financialAnalytics", link: "/analytics", icon: "/images/showcase/icons/bar-chart-animated.gif" },
+  { key: "financialAnalytics", link: "/analytics", icon: "/images/showcase/icons/bar-chart.png" },
   // Ряд 2
   { key: "dataCenter", link: "/analytics", icon: "/images/showcase/icons/server.png" },
   { key: "apiIntegrations", link: "/services", icon: "/images/showcase/icons/api-integration.png" },
@@ -25,7 +25,7 @@ const productDefs = [
   { key: "mobilePayments", link: "/digital", icon: "/images/showcase/icons/mobile-payment.png" },
   { key: "digitalCurrency", link: "/digital", icon: "/images/showcase/icons/digital-currency.png" },
   // Ряд 3
-  { key: "digitalInfra", link: "/about", icon: "/images/showcase/icons/globe-animated.gif" },
+  { key: "digitalInfra", link: "/about", icon: "/images/showcase/icons/globe.png" },
   { key: "softwareDev", link: "/services", icon: "/images/showcase/icons/development.png" },
 ] as const;
 

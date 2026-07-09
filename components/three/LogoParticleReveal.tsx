@@ -170,9 +170,12 @@ const VERT = /* glsl */ `
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mv;
     float laterObject = max(vCore, vService);
-    float sizeTaper = mix(1.06, 0.9, vMix) * mix(1.0, 0.96, vCore) * mix(1.0, 1.34, vService);
+    // Both object scenes share one point-size treatment. The service scene used
+    // to get extra size (1.34x taper, 1.42x cap) and a paler tint, which made it
+    // read as a different material from the core scene.
+    float sizeTaper = mix(1.06, 0.9, vMix) * mix(1.0, 0.96, laterObject);
     gl_PointSize = uSize * sizeTaper * aScale * uPixelRatio * (150.0 / -mv.z);
-    float maxPoint = mix(mix(3.35, 2.18, vMix), 2.18, laterObject) * mix(1.0, 1.42, vService) * uPixelRatio;
+    float maxPoint = mix(mix(3.35, 2.18, vMix), 2.18, laterObject) * uPixelRatio;
     gl_PointSize = clamp(gl_PointSize, 0.65, maxPoint);
   }
 `;
@@ -200,6 +203,9 @@ const FRAG = /* glsl */ `
     float alpha = smoothstep(0.5, 0.08, d);
     if (alpha < 0.01) discard;
 
+    // The two object scenes (core, service) are styled identically.
+    float laterObject = max(vCore, vService);
+
     // Gold/green throughout. As the logo forms, bias particles toward warm
     // yellow-gold so the emblem reads brighter and more premium.
     float t = clamp(0.44 + vMix * 0.62 + vRand * 0.2, 0.0, 1.0);
@@ -208,14 +214,15 @@ const FRAG = /* glsl */ `
     ribbonCol = mix(ribbonCol, uColorB, 0.64);
     vec3 col = mix(brandCol, ribbonCol, vRibbon);
     col = mix(col, uColorB, vMix * 0.72);
-    col = mix(col, mix(uColorB, uColorA, 0.14), vCore * 0.24);
-    col = mix(col, mix(uColorB, uColorA, 0.1), vService * 0.12);
-    col = mix(col, uHotColor, vService * 0.64);
+    // Core and service objects get the SAME gold treatment. The service scene
+    // previously blended 64% toward the pale uHotColor, which washed it out to
+    // a different colour than the core object one scene earlier.
+    col = mix(col, mix(uColorB, uColorA, 0.14), laterObject * 0.24);
 
     // Cursor proximity glow: nearby particles brighten toward a hot highlight
     // and read very slightly more opaque, like embers catching the pointer.
     col = mix(col, uHotColor, vProximity * 0.62);
-    float objectSoftness = mix(1.0, 0.98, vCore) * mix(1.0, 1.5, vService);
+    float objectSoftness = mix(1.0, 0.98, laterObject);
     float glowAlpha = alpha * uOpacity * objectSoftness * mix(1.0, 1.14, vProximity);
     gl_FragColor = vec4(col, glowAlpha);
   }
@@ -298,7 +305,19 @@ function inShape(x: number, y: number) {
   return false;
 }
 
-function sampleProceduralLogo(want: number): Float32Array {
+/**
+ * World-unit size of the DDC emblem, clamped to the viewport on BOTH axes.
+ *
+ * This used to be a flat 2.55 (mask) / 2.45 (procedural). The camera's visible
+ * width shrinks with the viewport aspect — on a 390px phone it is only ~2.37
+ * world units — so the emblem was drawn WIDER than the screen and its left and
+ * right edges were cropped away, leaving an unreadable blob instead of the mark.
+ */
+function logoTargetSize(viewWidth: number, viewHeight: number): number {
+  return Math.min(2.55, viewWidth * 0.74, viewHeight * 0.62);
+}
+
+function sampleProceduralLogo(want: number, target = 2.45, offsetY = 0): Float32Array {
   const candidates: Array<[number, number]> = [];
   const step = 1.1;
   for (let y = 34; y <= 166; y += step) {
@@ -311,11 +330,11 @@ function sampleProceduralLogo(want: number): Float32Array {
   }
 
   const out = new Float32Array(want * 3);
-  const TARGET = 2.45;
+  const TARGET = target;
   for (let k = 0; k < want; k++) {
     const [x, y] = candidates[Math.min(candidates.length - 1, Math.floor(seeded(k * 89 + 21) * candidates.length))];
     out[k * 3] = ((x - 100) / 150) * TARGET + (seeded(k * 97 + 2) - 0.5) * 0.014;
-    out[k * 3 + 1] = -((y - 100) / 150) * TARGET + (seeded(k * 101 + 5) - 0.5) * 0.014;
+    out[k * 3 + 1] = offsetY - ((y - 100) / 150) * TARGET + (seeded(k * 101 + 5) - 0.5) * 0.014;
     out[k * 3 + 2] = (seeded(k * 103 + 8) - 0.5) * 0.09;
   }
   return out;
@@ -394,43 +413,90 @@ function sampleImageMask(img: HTMLImageElement, want: number, options: MaskTarge
   return out;
 }
 
-function sampleLogoMask(img: HTMLImageElement, want: number): Float32Array {
+function sampleLogoMask(
+  img: HTMLImageElement,
+  want: number,
+  target: number,
+  offsetY = 0,
+): Float32Array {
   return sampleImageMask(img, want, {
-    target: 2.55,
+    target,
+    offsetY,
     depth: 0.08,
     jitterAmount: 0.012,
-    fallback: () => sampleProceduralLogo(want),
+    // the procedural mark historically drew at ~96% of the mask footprint
+    fallback: () => sampleProceduralLogo(want, target * 0.961, offsetY),
   });
+}
+
+export type SceneLayout = { offsetX: number; offsetY: number; size: number };
+
+/**
+ * Half-width, in world units, of the site header's content box
+ * (`w-[95%] max-w-[1300px]` with `px-5 sm:px-7`). Scene objects and their copy
+ * are both anchored to this, so their outer edges line up with the navbar.
+ */
+function navbarContentHalfWorld(viewWidth: number): number {
+  const vw = typeof window === "undefined" ? 1440 : window.innerWidth;
+  const containerPx = Math.min(vw * 0.95, 1300);
+  const paddingPx = vw >= 640 ? 28 : 20; // px-5 / sm:px-7
+  const halfPx = Math.max(0, containerPx / 2 - paddingPx);
+  return (halfPx / vw) * viewWidth;
+}
+
+/**
+ * Single source of truth for where each object scene sits, shared by the
+ * image-mask targets and their procedural fallbacks so the two always agree.
+ *
+ * The offsets used to be constants derived from `viewHeight` alone (+1.72 for
+ * the core, -2.9 for the service constellation). Because the camera's visible
+ * WIDTH shrinks with the viewport aspect, on a phone the visible half-width is
+ * only ~1.2 world units — so the core object hung off the right edge and the
+ * service object was pushed entirely off-screen, i.e. "scene 3 disappeared".
+ */
+function sceneLayout(
+  scene: "core" | "service",
+  viewWidth: number,
+  viewHeight: number,
+  isMobile: boolean,
+): SceneLayout {
+  // Clamp against viewport width too, so the object can never be wider than
+  // the screen it has to fit inside.
+  const size = Math.min(viewHeight * 0.42, viewWidth * 0.78, 1.94);
+
+  if (isMobile) {
+    // Phones stack: the copy sits at the bottom of the screen, so centre the
+    // object horizontally and lift it clear of the text instead of pushing it
+    // out to one side.
+    return { offsetX: 0, offsetY: viewHeight * 0.1, size };
+  }
+
+  // Desktop: park the object's outer edge on the navbar's content edge.
+  const edge = navbarContentHalfWorld(viewWidth) - size / 2;
+  return {
+    offsetX: scene === "core" ? edge : -edge,
+    offsetY: -Math.min(viewHeight * 0.015, 0.06),
+    size,
+  };
 }
 
 function sampleSceneMaskTarget(
   img: HTMLImageElement,
   want: number,
-  viewHeight: number,
+  layout: SceneLayout,
   scene: "core" | "service",
 ) {
-  const sceneObjectX = Math.min(viewHeight * 0.38, 1.72);
-  const sceneObjectSize = Math.min(viewHeight * 0.42, 1.94);
-
-  if (scene === "core") {
-    return sampleImageMask(img, want, {
-      target: sceneObjectSize,
-      offsetX: sceneObjectX,
-      offsetY: -Math.min(viewHeight * 0.01, 0.04),
-      depth: 0.22,
-      jitterAmount: 0.016,
-      squashY: 0.94,
-      fallback: () => sampleDigitalCoreTarget(want, viewHeight),
-    });
-  }
-
   return sampleImageMask(img, want, {
-    target: sceneObjectSize,
-    offsetX: -Math.min(viewHeight * 0.64, 2.9),
-    offsetY: -Math.min(viewHeight * 0.015, 0.06),
-    depth: 0.2,
-    jitterAmount: 0.012,
-    fallback: () => sampleServiceConstellationTarget(want, viewHeight),
+    target: layout.size,
+    offsetX: layout.offsetX,
+    offsetY: layout.offsetY,
+    depth: scene === "core" ? 0.22 : 0.2,
+    jitterAmount: scene === "core" ? 0.016 : 0.012,
+    squashY: scene === "core" ? 0.94 : 1,
+    fallback: () =>
+      scene === "core"
+        ? sampleDigitalCoreTarget(want, layout)
+        : sampleServiceConstellationTarget(want, layout),
   });
 }
 
@@ -442,11 +508,12 @@ function jitter(seedBase: number, amount: number) {
   return (seeded(seedBase) - 0.5) * amount;
 }
 
-function sampleDigitalCoreTarget(want: number, viewHeight: number): Float32Array {
+function sampleDigitalCoreTarget(want: number, layout: SceneLayout): Float32Array {
   const out = new Float32Array(want * 3);
-  const cx = Math.min(viewHeight * 0.38, 1.72);
-  const cy = -Math.min(viewHeight * 0.01, 0.04);
-  const size = Math.min(viewHeight * 0.28, 1.32);
+  const cx = layout.offsetX;
+  const cy = layout.offsetY;
+  // The procedural core historically drew at ~2/3 of the image-mask footprint.
+  const size = layout.size * 0.667;
   const ringRadii = [0.24, 0.45, 0.66] as const;
 
   for (let i = 0; i < want; i++) {
@@ -487,11 +554,12 @@ function sampleDigitalCoreTarget(want: number, viewHeight: number): Float32Array
   return out;
 }
 
-function sampleServiceConstellationTarget(want: number, viewHeight: number): Float32Array {
+function sampleServiceConstellationTarget(want: number, layout: SceneLayout): Float32Array {
   const out = new Float32Array(want * 3);
-  const cx = -Math.min(viewHeight * 0.64, 2.9);
-  const cy = -Math.min(viewHeight * 0.015, 0.06);
-  const size = Math.min(viewHeight * 0.4, 1.85);
+  const cx = layout.offsetX;
+  const cy = layout.offsetY;
+  // The procedural constellation historically filled ~95% of the mask footprint.
+  const size = layout.size * 0.95;
   const ring = 0.62 * size;
 
   for (let i = 0; i < want; i++) {
@@ -560,15 +628,24 @@ function ParticleCanvas() {
 
     // Self-contained scroll progress (0..1) across the section — robust to the
     // page's Lenis smooth-scroll, since it reads layout position each frame.
+    //
+    // This MUST stay on the same timeline as the DOM copy overlays, which are
+    // driven by Framer's raw `scrollYProgress`. Mobile used to scale this by
+    // 1.12x, so the shader reached p=1.0 at only 0.893 of the real scroll — and
+    // since `uOpacity` fades out over p 0.98..1.0, the whole particle field was
+    // already invisible for the entire final scene, whose copy (0.93..1.0) still
+    // faded in on the unscaled timeline. That is why scene 3 rendered its text
+    // over an empty canvas on phones.
     const readProgress = () => {
       if (!section) return 0;
       const rect = section.getBoundingClientRect();
       const total = rect.height - window.innerHeight;
-      const linearProgress = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
-      return isMobile ? Math.min(1, linearProgress * 1.12) : linearProgress;
+      return total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
     };
 
-    const COUNT = isMobile ? 3800 : 13000;
+    // Phones need enough points to actually resolve the emblem's circuit strokes
+    // once it is scaled down to fit the narrow viewport.
+    const COUNT = isMobile ? 6200 : 13000;
     const pixelRatio = Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 1.75);
 
     const scene = new THREE.Scene();
@@ -631,9 +708,15 @@ function ParticleCanvas() {
     }
 
     const geo = new THREE.BufferGeometry();
-    const logoFallback = sampleProceduralLogo(COUNT);
-    const coreTarget = sampleDigitalCoreTarget(COUNT, viewHeight);
-    const serviceTarget = sampleServiceConstellationTarget(COUNT, viewHeight);
+    const coreLayout = sceneLayout("core", viewWidth, viewHeight, isMobile);
+    const serviceLayout = sceneLayout("service", viewWidth, viewHeight, isMobile);
+    const logoTarget = logoTargetSize(viewWidth, viewHeight);
+    // Scene 1's copy sits at the TOP of the screen (unlike scenes 2/3, whose copy
+    // is at the bottom), so on phones the emblem drops slightly to clear it.
+    const logoOffsetY = isMobile ? -viewHeight * 0.06 : 0;
+    const logoFallback = sampleProceduralLogo(COUNT, logoTarget * 0.961, logoOffsetY);
+    const coreTarget = sampleDigitalCoreTarget(COUNT, coreLayout);
+    const serviceTarget = sampleServiceConstellationTarget(COUNT, serviceLayout);
 
     geo.setAttribute("position", new THREE.BufferAttribute(wheel.slice(), 3));
     geo.setAttribute("aWheel", new THREE.BufferAttribute(wheel, 3));
@@ -709,7 +792,7 @@ function ParticleCanvas() {
 
     loadImage("/textures/ddc-logo-particle-mask.png")
       .then((img) => {
-        updateTargetAttribute("aLogo", sampleLogoMask(img, COUNT));
+        updateTargetAttribute("aLogo", sampleLogoMask(img, COUNT, logoTarget, logoOffsetY));
       })
       .catch(() => {
         /* keep procedural SVG fallback */
@@ -717,7 +800,7 @@ function ParticleCanvas() {
 
     loadImage("/images/particle-targets/icons8-database.svg")
       .then((img) => {
-        updateTargetAttribute("aCore", sampleSceneMaskTarget(img, COUNT, viewHeight, "core"));
+        updateTargetAttribute("aCore", sampleSceneMaskTarget(img, COUNT, coreLayout, "core"));
       })
       .catch(() => {
         /* keep procedural core fallback */
@@ -725,7 +808,7 @@ function ParticleCanvas() {
 
     loadImage(svgDataUrl(MICROSERVICES_SVG))
       .then((img) => {
-        updateTargetAttribute("aService", sampleSceneMaskTarget(img, COUNT, viewHeight, "service"));
+        updateTargetAttribute("aService", sampleSceneMaskTarget(img, COUNT, serviceLayout, "service"));
       })
       .catch(() => {
         /* keep procedural service fallback */
@@ -990,20 +1073,34 @@ export default function LogoParticleReveal() {
           <Stat align="right" value={t("s4.value")} label={t("s4.label")} desc={t("s4.desc")} />
         </motion.div>
 
-        {/* Scene 2: logo becomes the National Bank digital core */}
+        {/* Scene 2: logo becomes the National Bank digital core.
+            The copy sits in the same container box as the site header
+            (`w-[95%] max-w-[1300px]` + `px-5 sm:px-7`) so its outer edge lines
+            up with the navbar — as does the particle object opposite it, via
+            `sceneLayout()`. Vertical centring is done with flex rather than
+            `-translate-y-1/2`, because Framer writes an inline `transform` for
+            `x`/`y` that silently overrides the Tailwind translate utility. */}
         <motion.div
           style={{ opacity: scene2Opacity, x: scene2X, y: scene2Y }}
-          className="pointer-events-none absolute inset-x-6 bottom-[12vh] z-30 md:inset-x-auto md:left-[9vw] md:top-1/2 md:bottom-auto md:w-[min(34rem,38vw)] md:-translate-y-1/2"
+          className="pointer-events-none absolute inset-x-0 bottom-[12vh] z-30 md:top-0 md:bottom-0 md:flex md:items-center"
         >
-          <StoryPanel overline={t("scene2.overline")} title={t("scene2.title")} desc={t("scene2.desc")} />
+          <div className="mx-auto w-[95%] max-w-[1300px] px-5 sm:px-7">
+            <div className="md:max-w-[min(34rem,38vw)]">
+              <StoryPanel overline={t("scene2.overline")} title={t("scene2.title")} desc={t("scene2.desc")} />
+            </div>
+          </div>
         </motion.div>
 
         {/* Scene 3: the core opens into operational service modules */}
         <motion.div
           style={{ opacity: scene3Opacity, x: scene3X, y: scene3Y }}
-          className="pointer-events-none absolute inset-x-6 bottom-[12vh] z-30 md:inset-x-auto md:right-[9vw] md:top-1/2 md:bottom-auto md:w-[min(34rem,38vw)] md:-translate-y-1/2"
+          className="pointer-events-none absolute inset-x-0 bottom-[12vh] z-30 md:top-0 md:bottom-0 md:flex md:items-center"
         >
-          <StoryPanel overline={t("scene3.overline")} title={t("scene3.title")} desc={t("scene3.desc")} align="right" highlightContactCenter />
+          <div className="mx-auto flex w-[95%] max-w-[1300px] justify-end px-5 sm:px-7">
+            <div className="md:max-w-[min(34rem,38vw)]">
+              <StoryPanel overline={t("scene3.overline")} title={t("scene3.title")} desc={t("scene3.desc")} align="right" highlightContactCenter />
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>
