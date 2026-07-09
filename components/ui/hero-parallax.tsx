@@ -92,7 +92,7 @@ function HeroParallaxScrollView({
   React.useEffect(() => setMounted(true), []);
 
   if (!mounted) {
-    return <div className="h-[135vh] min-h-[780px] md:min-h-0 md:h-[180vh]" aria-hidden="true" />;
+    return <div className="h-[880px] md:h-[180vh]" aria-hidden="true" />;
   }
 
   return <HeroParallaxScrollViewInner products={products} title={title} subtitle={subtitle} />;
@@ -172,7 +172,7 @@ function HeroParallaxScrollViewInner({
       // boundary — visible as a stray card corner/rectangle poking out past
       // the section's right edge. `contain: paint` forces a hard paint
       // boundary that isn't subject to that 3D-transform escape.
-      className="h-[135vh] min-h-[780px] md:min-h-0 md:h-[180vh] py-10 md:py-20 overflow-hidden [contain:paint] antialiased relative z-20 flex flex-col self-auto [perspective:1000px] hero-parallax-wrapper"
+      className="h-[880px] md:h-[180vh] py-10 md:py-20 overflow-hidden [contain:paint] antialiased relative z-20 flex flex-col self-auto [perspective:1000px] hero-parallax-wrapper"
     >
       <Header title={title} subtitle={subtitle} />
       <motion.div

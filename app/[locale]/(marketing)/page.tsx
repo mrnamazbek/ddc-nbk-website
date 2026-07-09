@@ -18,7 +18,7 @@ function DeferredSections() {
       <LazyOnVisible id="services" minHeight="1050px">
         <Services id={null} />
       </LazyOnVisible>
-      <LazyOnVisible minHeight="135vh">
+      <LazyOnVisible minHeight="880px">
         <Showcase />
       </LazyOnVisible>
       <LazyOnVisible minHeight="1050px">
