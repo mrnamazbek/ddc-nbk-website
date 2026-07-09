@@ -92,7 +92,7 @@ function HeroParallaxScrollView({
   React.useEffect(() => setMounted(true), []);
 
   if (!mounted) {
-    return <div className="h-[880px] md:h-[180vh]" aria-hidden="true" />;
+    return <div className="min-h-[960px] md:min-h-0 md:h-[180vh]" aria-hidden="true" />;
   }
 
   return <HeroParallaxScrollViewInner products={products} title={title} subtitle={subtitle} />;
@@ -112,7 +112,17 @@ function HeroParallaxScrollViewInner({
   const thirdRow = products.slice(10, 15);
   const ref = React.useRef<HTMLDivElement | null>(null);
 
-  const [isMobile, setIsMobile] = React.useState(false);
+  // Initialise synchronously from the real viewport width. This component is
+  // ssr:false + mount-gated, so `window` exists on the very first render —
+  // seeding the correct value here means the scroll transforms below are
+  // created with the right (mobile vs desktop) ranges from the start.
+  // Initialising to a constant `false` instead let the transforms bake in
+  // desktop translate/rotate values that a later setState no longer updated,
+  // so phones got the desktop parallax (heavy tilt, -220px vertical drift)
+  // and its rows overflowed the section.
+  const [isMobile, setIsMobile] = React.useState(
+    () => typeof window !== "undefined" && window.innerWidth < 768,
+  );
 
   React.useEffect(() => {
     const checkMobile = () => {
@@ -157,8 +167,14 @@ function HeroParallaxScrollViewInner({
   // underneath the site's fixed liquid-glass header, which isn't opaque
   // enough to fully hide them, so card text visibly bled through the nav.
   // Halving the offset keeps the drift-down feel without the collision.
+  //
+  // On mobile the vertical drift is removed entirely (0 → 0): the section
+  // there is sized to exactly wrap its content, so any downward drift would
+  // push the third card row past the clip box and cut it off, while any
+  // upward drift would open a gap. The horizontal slide alone carries the
+  // parallax on small screens.
   const translateY = useSpring(
-    useTransform(scrollYProgress, [0, 0.6], [isMobile ? -40 : -220, isMobile ? 20 : 50]),
+    useTransform(scrollYProgress, [0, 0.6], [isMobile ? 0 : -220, isMobile ? 0 : 50]),
     springConfig
   );
 
@@ -172,7 +188,13 @@ function HeroParallaxScrollViewInner({
       // boundary — visible as a stray card corner/rectangle poking out past
       // the section's right edge. `contain: paint` forces a hard paint
       // boundary that isn't subject to that 3D-transform escape.
-      className="h-[880px] md:h-[180vh] py-10 md:py-20 overflow-hidden [contain:paint] antialiased relative z-20 flex flex-col self-auto [perspective:1000px] hero-parallax-wrapper"
+      // Mobile height is intentionally auto (content-sized, with a min-h
+      // floor) rather than a fixed value: the row cards are a fixed px size
+      // and their total height varies with locale/width (text wrapping), so
+      // any hard height either clipped the third row or left dead space.
+      // With translateY drift removed on mobile (above), auto height wraps
+      // the content exactly. Desktop keeps its tall 180vh scroll canvas.
+      className="min-h-[780px] md:min-h-0 md:h-[180vh] py-10 md:py-20 overflow-hidden [contain:paint] antialiased relative z-20 flex flex-col self-auto [perspective:1000px] hero-parallax-wrapper"
     >
       <Header title={title} subtitle={subtitle} />
       <motion.div
