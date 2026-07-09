@@ -53,7 +53,7 @@ function Model({ url, isLight }: { url: string; isLight: boolean }) {
     const minSide = Math.min(size.width, size.height);
     const isMobile = minSide < 420;
     const isTablet = minSide >= 420 && minSide < 680;
-    const scaleVal = isMobile ? 1.25 : isTablet ? 1.52 : 1.72;
+    const scaleVal = isMobile ? 1.85 : isTablet ? 1.78 : 1.96;
 
     return { center: centerVec, scaleVal };
   }, [scene, size.height, size.width]);

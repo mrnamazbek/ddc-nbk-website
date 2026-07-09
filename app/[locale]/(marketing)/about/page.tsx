@@ -90,7 +90,7 @@ export default function AboutPage() {
               {t("missionDesc2")}
             </p>
           </div>
-          <div className="relative isolate flex h-[clamp(420px,48vw,620px)] min-h-[420px] items-center justify-center overflow-visible rounded-[var(--radius-card)] sm:min-h-[480px] lg:col-span-6">
+          <div className="relative isolate flex h-[280px] sm:h-[clamp(420px,48vw,620px)] min-h-[280px] sm:min-h-[420px] items-center justify-center overflow-visible rounded-[var(--radius-card)] lg:col-span-6">
             <BaseModelViewer />
           </div>
         </div>
