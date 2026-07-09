@@ -14,7 +14,7 @@ export type ScrollWordHeroProps = {
   tagline: string;
   /** Where the highlight band sits, in vh (default 50) */
   startVh?: number;
-  /** Space below the sticky block before the reveal panel, in vh (default 12) */
+  /** Space below the sticky block before the reveal panel, in vh (default 50) */
   spaceVh?: number;
   className?: string;
 };
@@ -41,7 +41,10 @@ export default function ScrollWordHero({
   srSummary,
   tagline,
   startVh = 50,
-  spaceVh = 12,
+  // Matches the reference: the word column needs a full viewport of run-out
+  // before the panel arrives, otherwise the panel starts covering the words
+  // while they are still cycling through the highlight band.
+  spaceVh = 50,
   className,
 }: ScrollWordHeroProps) {
   const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();

@@ -10,6 +10,20 @@
 .scroll-word-hero {
   position: relative;
   width: 100%;
+
+  /* The reveal panel INVERTS against the page — that contrast flip is the whole
+     payoff of the effect. The reference does this with
+     `background: light-dark(#000, #fff)` on the panel and `color: canvas` on the
+     copy; here the same idea is expressed with the brand's ink/cream neutrals.
+     Previously the panel was hardcoded to a near-black #040c08, which on this
+     already-dark site read as a stray black block rather than a reveal. */
+  --swh-panel-bg: #f6f2e8; /* cream */
+  --swh-panel-fg: #08140d; /* deep forest ink */
+}
+
+html.light .scroll-word-hero {
+  --swh-panel-bg: #0f241a; /* deep forest */
+  --swh-panel-fg: #f6f2e8;
 }
 
 .scroll-word-hero__pin {
@@ -94,7 +108,7 @@ html.light .scroll-word-hero__words li {
   position: absolute;
   inset: 0;
   border-radius: 1.5rem 1.5rem 0 0;
-  background: #040c08;
+  background: var(--swh-panel-bg);
 }
 
 .scroll-word-hero__tagline {
@@ -110,16 +124,23 @@ html.light .scroll-word-hero__words li {
   font-family: var(--font-current-sans), sans-serif;
   font-weight: 500;
   font-size: clamp(1.15rem, 3vw, 1.85rem);
-  color: #f4f1e6;
+  color: var(--swh-panel-fg);
 }
 
 .scroll-word-hero__tagline > span {
   max-width: 46rem;
 }
 
-/* Progressive enhancement: grow the panel + fade the tagline in as the
-   section enters view, and back out again as it exits — both phases are
-   required so nothing is left stuck at full opacity once scrolled past. */
+/* Progressive enhancement: the panel grows up from behind the words and its
+   corners square off, while the closing line fades in — both driven by the
+   panel's own view-timeline, exactly as in the reference.
+   Ranges are stated explicitly (start + end) rather than relying on the
+   one-value shorthand, whose omitted end defaults to `normal` (the end of the
+   whole timeline) and stretched the grow across the entire scroll.
+   The tagline settles at opacity 1 and simply scrolls away with the panel: it
+   is absolutely positioned inside `__reveal`, which is 100vh and clips its
+   overflow, so unlike the reference's `position: fixed` copy it can never end
+   up stranded over the sections that follow on this page. */
 @supports (animation-timeline: view()) {
   .scroll-word-hero__reveal {
     view-timeline: --scroll-word-hero-panel;
@@ -129,12 +150,12 @@ html.light .scroll-word-hero__words li {
     scale: 0.92;
     animation: scroll-word-hero-grow both ease-in-out;
     animation-timeline: --scroll-word-hero-panel;
-    animation-range: entry 55%;
+    animation-range: entry 20% entry 100%;
   }
   .scroll-word-hero__tagline {
     animation: scroll-word-hero-reveal both ease-in-out;
     animation-timeline: --scroll-word-hero-panel;
-    animation-range: entry 55% cover 45%;
+    animation-range: entry 40% entry 100%;
   }
   @keyframes scroll-word-hero-grow {
     to {
@@ -143,15 +164,11 @@ html.light .scroll-word-hero__words li {
     }
   }
   @keyframes scroll-word-hero-reveal {
-    0% {
+    from {
       opacity: 0;
     }
-    35%,
-    65% {
+    to {
       opacity: 1;
-    }
-    100% {
-      opacity: 0;
     }
   }
 }
