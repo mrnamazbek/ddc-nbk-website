@@ -600,8 +600,8 @@
   },
   "NewsPage": {
     "overline": "DDC PRESS CENTER",
-    "titleLine1": "Events, releases",
-    "titleAccent": "and publications",
+    "titleLine1": "Events, releases and",
+    "titleAccent": "publications",
     "subtitle": "Stay informed about the latest updates, Digital Tenge architecture news, and scientific and technical reports of our laboratory.",
     "readTimeSuffix": "read",
     "readMore": "Read more",
@@ -740,8 +740,8 @@
   },
   "ContactPage": {
     "overline": "CONTACT US",
-    "titleLine1": "DDC Contacts",
-    "titleAccent": "and Feedback",
+    "titleLine1": "DDC Contacts and",
+    "titleAccent": "Feedback",
     "subtitle": "We are always ready to cooperate with partners, press, and future colleagues. Leave a request, and our specialists will contact you shortly.",
     "officesOverline": "WHERE WE OPERATE",
     "officesTitle": "Our offices",

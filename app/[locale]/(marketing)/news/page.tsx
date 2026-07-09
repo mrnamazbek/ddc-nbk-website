@@ -1,9 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import { ImagesScrollingAnimation } from "@/components/ui/images-scrolling-animation";
 import { BubbleText } from "@/components/ui/BubbleText";
+import { useA11y } from "@/components/theme/AccessibilityProvider";
 
 interface NewsArticle {
   category: string;
@@ -18,6 +19,8 @@ interface NewsArticle {
 
 export default function NewsPage() {
   const t = useTranslations("NewsPage");
+  const { enabled: a11yEnabled } = useA11y();
+  const reduce = useReducedMotion() || a11yEnabled;
   const locale = useLocale();
 
   const allNews: NewsArticle[] = [
@@ -99,7 +102,7 @@ export default function NewsPage() {
 
         {/* Заголовок */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={reduce ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-3xl mb-20"

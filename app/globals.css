@@ -5,6 +5,24 @@
 @import "../styles/svgator-animations.css";
 @import "../styles/scroll-word-hero.css";
 
+/* --- Lenis smooth scrolling styles -------------------------------------- */
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+
 /* Custom font-face for premium statistic digits, pointing to Golos Text weights 400-900 */
 @font-face {
   font-family: 'ABNumbers';
@@ -1147,6 +1165,18 @@ html.light .liquid-glass-button[data-variant="gold"]:hover {
     rgba(255, 255, 255, 0.18) 40%,
     rgba(255, 255, 255, 0.02) 60%,
     rgba(255, 255, 255, 0.25) 100%);
+}
+
+/* Light theme: "glass" and "outline" default to near-white text (built for the
+   dark theme's near-black backdrop), which vanishes against light theme's
+   near-white glass surface — and any icon inheriting currentColor disappears
+   with it. Swap in the theme foreground token, same fix already applied to
+   the gold variant above. */
+html.light .liquid-glass-button[data-variant="glass"],
+html.light .liquid-glass-button[data-variant="glass"]:hover,
+html.light .liquid-glass-button[data-variant="outline"],
+html.light .liquid-glass-button[data-variant="outline"]:hover {
+  color: var(--foreground);
 }
 
 /* CLOCK LIQUID (ЖИДКОСТНЫЕ ЧАСЫ) */

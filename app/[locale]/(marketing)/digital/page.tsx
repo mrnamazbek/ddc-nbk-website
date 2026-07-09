@@ -1,14 +1,17 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Icon from "@/components/ui/Icon";
 import { BubbleText } from "@/components/ui/BubbleText";
 import GlassCard from "@/components/ui/GlassCard";
 import { useTranslations } from "next-intl";
 import DigitalTengeSimulator from "@/components/sections/DigitalTengeSimulator";
+import { useA11y } from "@/components/theme/AccessibilityProvider";
 
 export default function DigitalPage() {
   const t = useTranslations("DigitalPage");
+  const { enabled: a11yEnabled } = useA11y();
+  const reduce = useReducedMotion() || a11yEnabled;
 
   const comparisonData = [
     {
@@ -49,7 +52,7 @@ export default function DigitalPage() {
 
         {/* Заголовок */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={reduce ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-3xl mb-16"

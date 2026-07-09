@@ -100,9 +100,10 @@ function CardItem({ card, i, total, progress, readMoreText }: CardItemProps) {
           top: `calc(${STICKY_TOP_BASE_VH}vh + ${i * STICKY_TOP_STEP_PX}px)`,
           originY: 0,
         }}
-        className="relative mx-auto h-[70vh] sm:h-[76vh] w-full max-w-5xl overflow-hidden rounded-2xl shadow-2xl"
+        className="relative mx-auto h-[70vh] sm:h-[76vh] w-full max-w-5xl overflow-hidden rounded-2xl border border-white/10 shadow-2xl"
         role="group"
         aria-label={`Card ${card.index} of ${total}: ${plainTitle}`}
+        data-a11y-preserve
       >
         <motion.div aria-hidden="true" className="absolute inset-0 h-full w-full" style={{ scale: imageScale }}>
           <img src={card.imageUrl} alt="" className="h-full w-full object-cover" />
@@ -111,6 +112,7 @@ function CardItem({ card, i, total, progress, readMoreText }: CardItemProps) {
         <div
           aria-hidden="true"
           className="absolute inset-0"
+          data-a11y-scrim
           style={{
             background: "linear-gradient(160deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.82) 100%)",
           }}
@@ -130,6 +132,7 @@ function CardItem({ card, i, total, progress, readMoreText }: CardItemProps) {
 
         <div
           aria-hidden="true"
+          data-a11y-numeral
           className="pointer-events-none absolute right-5 top-5 select-none text-[4.5rem] font-black leading-none sm:right-8 sm:text-[6rem]"
           style={{
             color: "transparent",
@@ -169,8 +172,8 @@ function CardItem({ card, i, total, progress, readMoreText }: CardItemProps) {
             href={card.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-11 items-center gap-2 rounded py-2 text-[12px] font-semibold uppercase tracking-[0.15em] transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
-            style={{ color: card.accentColor, fontFamily: "var(--font-mono, monospace)" }}
+            className="inline-flex min-h-11 items-center gap-2 rounded-full border px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.15em] transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+            style={{ color: card.accentColor, borderColor: card.accentColor, fontFamily: "var(--font-mono, monospace)" }}
             aria-label={`${readMoreText}: ${plainTitle}`}
           >
             {readMoreText}

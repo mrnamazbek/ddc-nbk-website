@@ -7,6 +7,7 @@ import ThemeProvider from "@/components/theme/ThemeProvider";
 import { IconSystemProvider } from "@/components/theme/IconSystemProvider";
 import { BgSystemProvider } from "@/components/theme/BgSystemProvider";
 import AccessibilityProvider from "@/components/theme/AccessibilityProvider";
+import MotionA11yConfig from "@/components/motion/MotionA11yConfig";
 import AccessibilityPanel from "@/components/ui/AccessibilityPanel";
 import InteractiveDotGrid from "@/components/ui/InteractiveDotGrid";
 
@@ -47,11 +48,13 @@ export default async function LocaleLayout({
             <IconSystemProvider>
               <NextIntlClientProvider messages={messages}>
                 <AccessibilityProvider>
-                  {/* Faint grain overlay (opacity 0.03) for organic texture */}
-                  <div data-decorative className="ddc-noise-overlay fixed inset-0 pointer-events-none z-[9999] opacity-[0.03]" />
-                  <PageTransitionProvider>{children}</PageTransitionProvider>
-                  <AccessibilityPanel />
-                  <InteractiveDotGrid />
+                  <MotionA11yConfig>
+                    {/* Faint grain overlay (opacity 0.03) for organic texture */}
+                    <div data-decorative className="ddc-noise-overlay fixed inset-0 pointer-events-none z-[9999] opacity-[0.03]" />
+                    <PageTransitionProvider>{children}</PageTransitionProvider>
+                    <AccessibilityPanel />
+                    <InteractiveDotGrid />
+                  </MotionA11yConfig>
                 </AccessibilityProvider>
               </NextIntlClientProvider>
             </IconSystemProvider>

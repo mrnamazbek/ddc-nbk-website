@@ -1,13 +1,16 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Icon, { IconName } from "@/components/ui/Icon";
 import { BubbleText } from "@/components/ui/BubbleText";
 import GlassCard from "@/components/ui/GlassCard";
 import { useTranslations } from "next-intl";
+import { useA11y } from "@/components/theme/AccessibilityProvider";
 
 export default function SecurityPage() {
   const t = useTranslations("SecurityPage");
+  const { enabled: a11yEnabled } = useA11y();
+  const reduce = useReducedMotion() || a11yEnabled;
 
   const containerVariants = {
     hidden: {},
@@ -62,7 +65,7 @@ export default function SecurityPage() {
 
         {/* Заголовок */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={reduce ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-3xl mb-20"
@@ -82,7 +85,7 @@ export default function SecurityPage() {
         {/* Столпы кибербезопасности */}
         <motion.div
           variants={containerVariants}
-          initial="hidden"
+          initial={reduce ? false : "hidden"}
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"

@@ -552,7 +552,14 @@ export default function CinematicAltynAdamExperience({
     // previous hand-tuned mapping drifted enough that the last chapter
     // landed on its exit edge, already half blurred.
     const target = CHAPTER_ZONE_START + ((index + 0.5) / chapters.length) * CHAPTER_ZONE_WIDTH;
-    window.scrollTo({ top: start + target * max, behavior: "smooth" });
+    const targetY = start + target * max;
+
+    const lenis = (window as any).__lenis;
+    if (lenis) {
+      lenis.scrollTo(targetY, { duration: 1.2 });
+    } else {
+      window.scrollTo({ top: targetY, behavior: "smooth" });
+    }
   };
 
   if (reduced || lowPowerMode !== false || sessionDisabled3d) {

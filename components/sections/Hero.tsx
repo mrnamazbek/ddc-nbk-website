@@ -24,6 +24,7 @@ const ROBOT_SCENE = "/spline/scene.splinecode";
 export default function Hero() {
   const t = useTranslations("Hero");
   const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
+  const reduced = a11yEnabled || prefersReducedMotion;
   const { resolvedTheme } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
@@ -157,7 +158,7 @@ export default function Hero() {
       >
         <motion.div
           variants={containerVariants}
-          initial="hidden"
+          initial={reduced ? false : "hidden"}
           animate="visible"
           className="text-left relative z-10"
         >
@@ -236,7 +237,7 @@ export default function Hero() {
         {/* Фоновый 3D-робот с логотипом DDC поверх dot-shader.
             На мобильных / при prefers-reduced-motion — статичный постер. */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.92 }}
+          initial={reduced ? false : { opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, delay: 0.4, ease: ENTRANCE_EASE }}
           className="absolute top-1/2 right-0 -translate-y-1/2 w-full md:w-[52%] lg:w-[46%] xl:w-[42%] 2xl:w-[38%] max-w-[560px] h-[80%] md:h-[92%] pointer-events-auto z-0 overflow-visible opacity-30 md:opacity-65 mix-blend-screen"
@@ -255,24 +256,26 @@ export default function Hero() {
       </div>
 
       {/* Анимированный скролл-индикатор */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.2, duration: 0.8, ease: ENTRANCE_EASE }}
-        className="absolute bottom-6 left-6 sm:left-12 lg:left-16 z-10 hidden items-center gap-3 text-zinc-500 cursor-pointer hover:text-forest-light transition-colors duration-300 pointer-events-auto hover-target [@media(min-height:700px)]:flex"
-        onClick={() => {
-          const target = document.getElementById("stats");
-          target?.scrollIntoView({ behavior: "smooth" });
-        }}
-      >
-        <span className="text-[10px] uppercase tracking-[0.2em] font-mono font-medium">{t("scroll")}</span>
+      {!a11yEnabled && (
         <motion.div
-          animate={{ y: [0, 4, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+          initial={reduced ? false : { opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 0.8, ease: ENTRANCE_EASE }}
+          className="absolute bottom-6 left-6 sm:left-12 lg:left-16 z-10 hidden items-center gap-3 text-zinc-500 cursor-pointer hover:text-forest-light transition-colors duration-300 pointer-events-auto hover-target [@media(min-height:700px)]:flex"
+          onClick={() => {
+            const target = document.getElementById("stats");
+            target?.scrollIntoView({ behavior: "smooth" });
+          }}
         >
-          <Icon name="arrow-right" size={16} className="rotate-90 text-zinc-500" />
+          <span className="text-[10px] uppercase tracking-[0.2em] font-mono font-medium">{t("scroll")}</span>
+          <motion.div
+            animate={reduced ? { y: 0 } : { y: [0, 4, 0] }}
+            transition={reduced ? { duration: 0 } : { repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+          >
+            <Icon name="arrow-right" size={16} className="rotate-90 text-zinc-500" />
+          </motion.div>
         </motion.div>
-      </motion.div>
+      )}
     </section>
   );
 }

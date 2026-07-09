@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { motion, useReducedMotion } from "framer-motion";
+import { useA11y } from "@/components/theme/AccessibilityProvider";
 
 export interface TypewriterWord {
   text: string;
@@ -53,7 +54,8 @@ export const TypewriterEffect = ({
   lineClassName?: string;
   cursorClassName?: string;
 }) => {
-  const reduce = useReducedMotion();
+  const { enabled: a11yEnabled } = useA11y();
+  const reduce = useReducedMotion() || a11yEnabled;
   const [activeLine, setActiveLine] = useState(0);
   const fullText = lines.map((line) => line.map((w) => w.text).join(" ")).join(" ");
 
@@ -73,7 +75,7 @@ export const TypewriterEffect = ({
                 className="overflow-hidden"
                 initial={{ width: reduce ? "fit-content" : "0%" }}
                 animate={{ width: started ? "fit-content" : "0%" }}
-                transition={{ duration: lineDuration(line), ease: "linear" }}
+                transition={{ duration: reduce ? 0 : lineDuration(line), ease: "linear" }}
                 onAnimationComplete={() => {
                   if (isActive) setActiveLine((i) => i + 1);
                 }}
@@ -87,7 +89,7 @@ export const TypewriterEffect = ({
                   ))}
                 </span>
               </motion.div>
-              {(isActive || (isFinished && isLastLine)) && (
+              {!reduce && (isActive || (isFinished && isLastLine)) && (
                 <motion.span
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}

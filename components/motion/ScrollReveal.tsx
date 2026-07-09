@@ -1,7 +1,8 @@
 "use client";
 
 import { ReactNode } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import { useA11y } from "@/components/theme/AccessibilityProvider";
 
 /**
  * Site-wide entrance-motion standard. Every scroll reveal (text, buttons,
@@ -51,6 +52,8 @@ export default function ScrollReveal({
   scale = 1,
   className = "",
 }: ScrollRevealProps) {
+  const { enabled: a11yEnabled } = useA11y();
+  const reduce = useReducedMotion() || a11yEnabled;
   const directions = {
     up: { y: distance },
     down: { y: -distance },
@@ -81,7 +84,7 @@ export default function ScrollReveal({
 
   return (
     <motion.div
-      initial={initial}
+      initial={reduce ? false : initial}
       whileInView={animate}
       viewport={VIEWPORT_ONCE}
       className={className}

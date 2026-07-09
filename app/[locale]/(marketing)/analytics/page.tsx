@@ -1,15 +1,18 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import FinancialInform from "@/components/ui/FinancialInform";
 import { BubbleText } from "@/components/ui/BubbleText";
 import GlassCard from "@/components/ui/GlassCard";
 import Icon from "@/components/ui/Icon";
 import { useTranslations } from "next-intl";
 import MonetaryPolicySimulator from "@/components/sections/MonetaryPolicySimulator";
+import { useA11y } from "@/components/theme/AccessibilityProvider";
 
 export default function AnalyticsPage() {
   const t = useTranslations("AnalyticsPage");
+  const { enabled: a11yEnabled } = useA11y();
+  const reduce = useReducedMotion() || a11yEnabled;
 
   const containerVariants = {
     hidden: {},
@@ -46,7 +49,7 @@ export default function AnalyticsPage() {
 
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={reduce ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
           className="max-w-3xl mb-16"
@@ -133,7 +136,7 @@ export default function AnalyticsPage() {
         <div className="mb-24">
           <motion.div
             variants={containerVariants}
-            initial="hidden"
+            initial={reduce ? false : "hidden"}
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             className="grid grid-cols-1 lg:grid-cols-3 gap-8"

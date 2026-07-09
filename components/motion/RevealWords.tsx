@@ -3,6 +3,7 @@
 import { useReducedMotion, motion, type Variants } from "framer-motion";
 import { BubbleText } from "@/components/ui/BubbleText";
 import { ENTRANCE_EASE, ENTRANCE_DURATION, VIEWPORT_ONCE } from "./ScrollReveal";
+import { useA11y } from "@/components/theme/AccessibilityProvider";
 
 interface RevealWordsProps {
   text: string;
@@ -46,7 +47,8 @@ export function RevealWords({
   useBubbleText: withBubbleText = false,
   bubbleActiveClassName,
 }: RevealWordsProps) {
-  const reduceMotion = useReducedMotion();
+  const { enabled: a11yEnabled } = useA11y();
+  const reduceMotion = useReducedMotion() || a11yEnabled;
 
   if (reduceMotion) {
     return <span className={className}>{text}</span>;

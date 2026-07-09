@@ -49,6 +49,62 @@ html.a11y :is(main, header, footer) *:not(svg):not(path):not(canvas):not(button)
   text-shadow: none !important;
 }
 
+/* The news "stacking card" gallery (images-scrolling-animation.tsx) paints its
+   own dark photo-scrim + white/accent text directly over an arbitrary
+   background image — that pairing is already high-contrast (near-black scrim
+   under white text) and was hand-tuned per-color for ≥4.5:1. The blanket reset
+   above doesn't know that: it strips the scrim's background-image entirely
+   (leaving the raw, busy photo exposed) and forces the title/label text to
+   plain black, which then sits unreadable directly on top of the photo.
+   [data-a11y-preserve] opts a card's whole subtree out of the reset instead of
+   trying to patch every descendant; the double attribute selector is a
+   specificity bump (0,2,*) that beats the blanket rule's (0,1,9) regardless of
+   its `:not()` chain's element-tier count — see the button-text-color fix
+   below for the same technique. */
+html.a11y :is(main, header, footer) [data-a11y-preserve][data-a11y-preserve] {
+  background-color: transparent !important;
+}
+html.a11y :is(main, header, footer) [data-a11y-preserve][data-a11y-preserve] [data-a11y-scrim][data-a11y-scrim] {
+  background-color: transparent !important;
+  background-image: linear-gradient(160deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.2) 40%, rgba(0, 0, 0, 0.82) 100%) !important;
+}
+html.a11y :is(main, header, footer) [data-a11y-preserve][data-a11y-preserve] :is(h1, h2, h3, p, span) {
+  color: #ffffff !important;
+}
+/* The oversized index numeral ("01", "02", ...) behind each card's label is a
+   purely decorative (aria-hidden) hollow outline — transparent fill, colored
+   stroke, 22% opacity. The blanket reset's forced solid `color` fills it in
+   as a bold black digit, making it visually louder and more prone to
+   fighting the category label next to it, exactly the "reduced visual
+   noise" the low-vision mode is supposed to deliver. */
+html.a11y :is(main, header, footer) [data-a11y-numeral][data-a11y-numeral] {
+  color: transparent !important;
+}
+
+/* Form fields are excluded from the blanket reset above (so their own focus/
+   validation states keep working), but that means they never picked up the
+   scheme colors either — they were rendering with the site's normal dark
+   `bg-background` token regardless of scheme (e.g. a black textarea on the
+   white "bw" scheme). Give them their own explicit scheme-aware styling.
+   `[class]` qualifiers lift specificity above `html.light input` (globals.css)
+   — same selector weight otherwise, and that rule is declared later in the
+   cascade (a11y.css is @imported before the rest of globals.css), so without
+   this the light theme's cream input color wins whenever a11y + light are
+   both active. */
+html.a11y input[class],
+html.a11y textarea[class],
+html.a11y select[class] {
+  background-color: var(--a11y-bg) !important;
+  color: var(--a11y-fg) !important;
+  border: 2px solid var(--a11y-border) !important;
+  box-shadow: none !important;
+}
+html.a11y input::placeholder,
+html.a11y textarea::placeholder {
+  color: var(--a11y-fg) !important;
+  opacity: 0.55 !important;
+}
+
 /* Solid panels for anything that was glassmorphism / blurred */
 html.a11y .liquid-glass,
 html.a11y .liquid-glass-strong,
@@ -64,8 +120,13 @@ html.a11y .nav-preview-card {
   border: 2px solid var(--a11y-border) !important;
 }
 
-/* Force legible high-contrast colors on text inside premium hover/preview cards in a11y mode */
-html.a11y :is(.nav-preview-card, .glass-card, .liquid-glass, .liquid-glass-strong, .glass-panel) *:not(svg):not(path):not(canvas) {
+/* Force legible high-contrast colors on text inside premium hover/preview cards in a11y mode.
+   Excludes buttons/links/[role=button] — this rule's many :not() pseudo-classes
+   give it higher specificity than the dedicated button-reset rule further down,
+   so without this exclusion it was winning that fight and forcing any button
+   nested inside a card back to a transparent background (e.g. the homepage's
+   "Contact us" CTA sitting inside a glass card lost its solid a11y fill). */
+html.a11y :is(.nav-preview-card, .glass-card, .liquid-glass, .liquid-glass-strong, .glass-panel) *:not(svg):not(path):not(canvas):not(button):not(a):not([role="button"]) {
   background-color: transparent !important;
   color: var(--a11y-fg) !important;
 }
@@ -88,6 +149,12 @@ html.a11y button,
 html.a11y label,
 html.a11y input,
 html.a11y textarea { font-size: 1rem !important; line-height: 1.6 !important; }
+
+/* Ensure spans and links inside headings inherit parent's heading font-size (fixes BubbleText text shrinkage) */
+html.a11y :is(h1, h2, h3, h4, h5, h6) :is(span, a) {
+  font-size: inherit !important;
+}
+
 
 /* Large display headings (e.g. the homepage's TypewriterEffect word-spans)
    author their letter-spacing as an em-value resolved against their ORIGINAL
@@ -276,6 +343,23 @@ html.a11y .site-footer-logo-tile svg[data-ddc-logo] {
   color: var(--a11y-bg) !important;
 }
 
+/* Technology-stack brand logos (Jira, JS, Python, etc.) are multi-color
+   iconify "logos" icons with their real brand hex baked into `fill`, and
+   their only label is a `title` tooltip attribute — no visible text, so a
+   low-vision user has no fallback if the icon itself is hard to see. Several
+   of these brand colors (e.g. JavaScript's yellow) sit under 2:1 contrast on
+   a white a11y card. Force every path to the scheme foreground so the shape
+   stays visible regardless of the source logo's own palette.
+   Scoped to `.iconify--logos` specifically (Iconify's brand-logo icon set) —
+   NOT the generic `.svgator-icon` wrapper, which is the shared render target
+   for every icon on the site (including button icons that already correctly
+   inherit their color from the button's own text color via `currentColor`;
+   overriding fill there broke e.g. the "Open Vacancies" button's arrow). */
+html.a11y svg.iconify--logos,
+html.a11y svg.iconify--logos * {
+  fill: var(--a11y-fg) !important;
+}
+
 /* Sections: auto height + visible overflow so scaled text never overlaps. */
 html.a11y section,
 html.a11y main,
@@ -315,19 +399,55 @@ html.a11y footer .grid.grid-cols-2 {
 html.a11y .site-footer-media { display: none !important; }
 
 /* Buttons: solid high-contrast, keep our rounded pill shape & weight.
-   `[class]` qualifiers lift specificity above the :not()-inflated reset rule. */
+   `[class]` qualifiers lift specificity above the :not()-inflated reset rule.
+   `background-image: none` matters here — MetalButton and similar CTAs paint
+   their color via a `bg-gradient-to-b` utility (a `background-image`, a
+   separate layer painted OVER `background-color`), so resetting only the
+   color left the decorative gold/teal gradient visible through the "solid"
+   high-contrast button, e.g. the homepage hero's primary CTAs.
+   `[role="button"]` is excluded when it carries `data-a11y-marker` — the
+   Kazakhstan map's office-pin hit areas use `role="button"` purely for
+   keyboard/AT semantics around a plain pointer wrapper; the actual visible
+   pin is a separate icon inside it, so painting this wrapper as a solid
+   bordered pill turned each marker into an opaque black square. */
 html.a11y :is(main, header, footer) button[class],
 html.a11y :is(main, header, footer) a[class*="rounded-full"],
-html.a11y :is(main, header, footer) [role="button"][class] {
+html.a11y :is(main, header, footer) [role="button"][class]:not([data-a11y-marker]) {
   background-color: var(--a11y-fg) !important;
+  background-image: none !important;
   color: var(--a11y-bg) !important;
   border: 2px solid var(--a11y-fg) !important;
   text-decoration: none !important;
   font-weight: 700 !important;
   padding: 0.5rem 1rem !important;
+  text-shadow: none !important;
 }
-html.a11y :is(main, header, footer) button[class] *,
-html.a11y :is(main, header, footer) a[class*="rounded-full"] * { color: var(--a11y-bg) !important; }
+/* `[class][class][class]` (repeated attribute selector, not a typo) is a
+   specificity bump — the glass-card text-color reset rule above resolves to
+   (0,3,6) once its `:is(.glass-card,...)` (a class, b+1) and five `:not(TYPE)`
+   exclusions (c+5) are counted, so a single extra `[class]` (making this
+   rule (0,3,3)) still lost on the tiebreak. Three repeats put this rule at
+   (0,4,2), clear of any plausible competing card-scoped reset. Without this,
+   headings/text nested in a button-inside-a-card (e.g. the FAQ accordion's
+   `<h2>` question) came out foreground-on-foreground instead of
+   background-on-foreground — black text on a black button. */
+html.a11y :is(main, header, footer) button[class][class][class] *,
+html.a11y :is(main, header, footer) a[class*="rounded-full"][class][class] * { color: inherit !important; }
+
+
+
+/* ShimmerButton (and similar CTAs) paint their visible fill via absolutely
+   positioned decorative child divs — a conic-gradient "shimmer" sweep and a
+   translucent `bg-background/40` overlay — layered on TOP of the button's
+   own background rather than as the button's own background-color. Resetting
+   only the button leaves these covering it, and since they use the site's
+   normal (non-a11y) `--background` token, the button looks pale/translucent
+   with a white icon on top of it — invisible. Strip both layers so the
+   button's own forced solid background actually shows through. */
+html.a11y :is(main, header, footer) button[class] [class*="z-[-1]"] {
+  background: none !important;
+  opacity: 0 !important;
+}
 html.a11y :is(main, header, footer) button[class]:hover,
 html.a11y :is(main, header, footer) a[class*="rounded-full"]:hover {
   background-color: var(--a11y-bg) !important;

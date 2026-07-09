@@ -914,7 +914,7 @@ export default function LogoParticleReveal() {
   // Reduced-motion: a static, readable stats panel over the still emblem.
   if (reduce) {
     return (
-      <section className="relative w-full bg-transparent py-24 px-6">
+      <section ref={sectionRef} className="relative w-full bg-transparent py-24 px-6">
         <div className="mx-auto max-w-5xl text-center">
           <span className="block text-xs uppercase tracking-[0.25em] text-gold font-mono">{t("overline")}</span>
           <h2 className="mt-4 font-display text-3xl sm:text-4xl text-foreground">

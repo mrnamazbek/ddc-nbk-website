@@ -1,8 +1,9 @@
 "use client";
 
 import { ReactNode } from "react";
-import { motion, type Variants } from "framer-motion";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { ENTRANCE_EASE, STAGGER, VIEWPORT_ONCE } from "./ScrollReveal";
+import { useA11y } from "@/components/theme/AccessibilityProvider";
 
 interface StaggerGroupProps {
   children: ReactNode;
@@ -25,9 +26,12 @@ const containerVariants = (stagger: number, delayChildren: number): Variants => 
  * be its own animated element reading the shared "visible" variant.
  */
 export function StaggerGroup({ children, stagger = STAGGER.base, delayChildren = 0, className }: StaggerGroupProps) {
+  const { enabled: a11yEnabled } = useA11y();
+  const reduce = useReducedMotion() || a11yEnabled;
+
   return (
     <motion.div
-      initial="hidden"
+      initial={reduce ? false : "hidden"}
       whileInView="visible"
       viewport={VIEWPORT_ONCE}
       variants={containerVariants(stagger, delayChildren)}

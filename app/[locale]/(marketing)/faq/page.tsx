@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import Icon from "@/components/ui/Icon";
 import GlassCard from "@/components/ui/GlassCard";
 import { BubbleText } from "@/components/ui/BubbleText";
+import { useA11y } from "@/components/theme/AccessibilityProvider";
 
 interface FAQItem {
   question: string;
@@ -13,6 +14,8 @@ interface FAQItem {
 
 export default function FAQPage() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
+  const { enabled: a11yEnabled } = useA11y();
+  const reduce = useReducedMotion() || a11yEnabled;
 
   const faqs: FAQItem[] = [
     {
@@ -47,7 +50,7 @@ export default function FAQPage() {
 
         {/* Заголовок */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={reduce ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-20"
@@ -92,10 +95,10 @@ export default function FAQPage() {
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.div
-                      initial={{ height: 0, opacity: 0 }}
+                      initial={reduce ? false : { height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      exit={reduce ? undefined : { height: 0, opacity: 0 }}
+                      transition={{ duration: reduce ? 0 : 0.3, ease: "easeInOut" }}
                     >
                       <div className="px-6 pb-6 sm:px-8 sm:pb-8 border-t border-white/5 pt-4">
                         <p className="text-sm sm:text-base text-zinc-400 font-sans font-light leading-relaxed">

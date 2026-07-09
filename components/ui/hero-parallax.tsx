@@ -11,24 +11,105 @@ import Image from "next/image";
 import Link from "next/link";
 import { useA11y } from "@/components/theme/AccessibilityProvider";
 
+export interface HeroParallaxProduct {
+  title: string;
+  link: string;
+  /** Full-bleed photo tile (legacy). Mutually exclusive with `icon`. */
+  thumbnail?: string;
+  /** Monochrome icon rendered on a branded gradient tile instead of a photo. */
+  icon?: string;
+}
+
 export const HeroParallax = ({
   products,
   title,
   subtitle,
 }: {
-  products: {
-    title: string;
-    link: string;
-    thumbnail: string;
-  }[];
+  products: HeroParallaxProduct[];
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
 }) => {
   const { enabled: a11yEnabled } = useA11y();
+
+  if (a11yEnabled) {
+    return (
+      <div className="w-full py-16 px-6 max-w-7xl mx-auto flex flex-col items-start bg-white text-black font-sans">
+        <div className="max-w-3xl mb-12 text-left">
+          {title && (
+            <h2 className="font-display text-3xl sm:text-5xl text-black font-bold mb-4">
+              {title}
+            </h2>
+          )}
+          {subtitle && <p className="text-zinc-700 text-base sm:text-lg">{subtitle}</p>}
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full">
+          {products.map((product) => (
+            <div key={product.title} className="group relative rounded-[16px] overflow-hidden border-2 border-black p-4 bg-white">
+              <Link href={product.link} className="block w-full">
+                <div className="relative aspect-[16/10] w-full rounded-lg overflow-hidden mb-4 bg-zinc-100 flex items-center justify-center">
+                  {product.icon ? (
+                    <Image src={product.icon} alt="" aria-hidden="true" width={56} height={56} className="object-contain" />
+                  ) : (
+                    <Image src={product.thumbnail!} alt={product.title} fill className="object-cover" />
+                  )}
+                </div>
+                <h3 className="text-lg font-bold text-black underline decoration-2">{product.title}</h3>
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return <HeroParallaxScrollView products={products} title={title} subtitle={subtitle} />;
+};
+
+/**
+ * Split out from `HeroParallax` so `useScroll`'s ref-target only ever exists
+ * for a component instance that mounts fresh — this section is lazy-loaded
+ * behind `LazyOnVisible` + `dynamic(..., { ssr: false })`, and on that first
+ * paint Motion's internal scroll-tracker subscribes to the ref via an effect
+ * keyed on the ref's IDENTITY (not its `.current` value), so it only ever
+ * checks once, on mount; a later re-render of the SAME instance doesn't make
+ * it re-check, which is why a callback-ref-triggered re-render alone didn't
+ * fix the "Target ref is defined but not hydrated" crash this replaced.
+ * Gating this whole subtree behind a `mounted` flag one level up guarantees
+ * this component's FIRST render is also the render where its ref-carrying
+ * div commits, so Motion's subscription sees a populated ref from the start.
+ */
+function HeroParallaxScrollView({
+  products,
+  title,
+  subtitle,
+}: {
+  products: HeroParallaxProduct[];
+  title?: React.ReactNode;
+  subtitle?: React.ReactNode;
+}) {
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
+
+  if (!mounted) {
+    return <div className="h-[135vh] min-h-[780px] md:min-h-0 md:h-[180vh]" aria-hidden="true" />;
+  }
+
+  return <HeroParallaxScrollViewInner products={products} title={title} subtitle={subtitle} />;
+}
+
+function HeroParallaxScrollViewInner({
+  products,
+  title,
+  subtitle,
+}: {
+  products: HeroParallaxProduct[];
+  title?: React.ReactNode;
+  subtitle?: React.ReactNode;
+}) {
   const firstRow = products.slice(0, 5);
   const secondRow = products.slice(5, 10);
   const thirdRow = products.slice(10, 15);
-  const ref = React.useRef(null);
+  const ref = React.useRef<HTMLDivElement | null>(null);
 
   const [isMobile, setIsMobile] = React.useState(false);
 
@@ -68,42 +149,17 @@ export const HeroParallax = ({
     useTransform(scrollYProgress, [0, 0.2], [isMobile ? 0 : 20, 0]),
     springConfig
   );
+  // The entrance "fly up into place" offset used to start at -450px (desktop)
+  // /-80px (mobile). Combined with `opacity`/`rotateX` finishing their own
+  // ease by scrollYProgress 0.2, cards were fully visible and nearly
+  // untilted while still ~300px displaced upward — landing their top edge
+  // underneath the site's fixed liquid-glass header, which isn't opaque
+  // enough to fully hide them, so card text visibly bled through the nav.
+  // Halving the offset keeps the drift-down feel without the collision.
   const translateY = useSpring(
-    useTransform(scrollYProgress, [0, 0.6], [isMobile ? -80 : -450, isMobile ? 20 : 50]),
+    useTransform(scrollYProgress, [0, 0.6], [isMobile ? -40 : -220, isMobile ? 20 : 50]),
     springConfig
   );
-
-  if (a11yEnabled) {
-    return (
-      <div className="w-full py-16 px-6 max-w-7xl mx-auto flex flex-col items-start bg-white text-black font-sans">
-        <div className="max-w-3xl mb-12 text-left">
-          {title && (
-            <h2 className="font-display text-3xl sm:text-5xl text-black font-bold mb-4">
-              {title}
-            </h2>
-          )}
-          {subtitle && <p className="text-zinc-700 text-base sm:text-lg">{subtitle}</p>}
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full">
-          {products.map((product) => (
-            <div key={product.title} className="group relative rounded-[16px] overflow-hidden border-2 border-black p-4 bg-white">
-              <Link href={product.link} className="block w-full">
-                <div className="relative aspect-[16/10] w-full rounded-lg overflow-hidden mb-4 bg-zinc-100">
-                  <Image
-                    src={product.thumbnail}
-                    alt={product.title}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <h3 className="text-lg font-bold text-black underline decoration-2">{product.title}</h3>
-              </Link>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div
@@ -150,7 +206,7 @@ export const HeroParallax = ({
       </motion.div>
     </div>
   );
-};
+}
 
 export const Header = ({
   title,
@@ -179,13 +235,47 @@ export const ProductCard = ({
   product,
   translate,
 }: {
-  product: {
-    title: string;
-    link: string;
-    thumbnail: string;
-  };
+  product: HeroParallaxProduct;
   translate: MotionValue<number>;
 }) => {
+  // Ties the icon's own tilt to the SAME horizontal scroll-driven value
+  // (`translate`) that already moves the whole card row — so the icon visibly
+  // reacts as the user scrolls the page, independent of whether the asset
+  // itself is a static PNG or one of the few genuinely-animated GIFs Icons8
+  // has a good thematic match for.
+  const iconRotate = useTransform(translate, [-1000, 1000], [-10, 10]);
+
+  if (product.icon) {
+    const isAnimated = product.icon.endsWith(".gif");
+    return (
+      <motion.div
+        style={{ x: translate }}
+        whileHover={{ y: -20 }}
+        key={product.title}
+        className="group/product h-40 w-[14rem] md:h-96 md:w-[30rem] relative z-20 shrink-0 rounded-[24px] overflow-hidden border border-gold/15 shadow-[0_8px_30px_rgba(0,0,0,0.25)] bg-gradient-to-br from-forest-dark via-[#0c0e0d] to-[#0c0e0d] transition-shadow duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.45)] flex flex-col items-center justify-center gap-4 md:gap-6 p-6"
+      >
+        <Link
+          href={product.link}
+          aria-label={product.title}
+          className="absolute inset-0 z-10"
+        />
+        <motion.div style={{ rotate: iconRotate }} className="relative h-12 w-12 md:h-24 md:w-24 shrink-0">
+          <Image
+            src={product.icon}
+            alt=""
+            aria-hidden="true"
+            fill
+            unoptimized={isAnimated}
+            className="object-contain [filter:brightness(0)_invert(1)] opacity-90 group-hover/product:opacity-100 transition-opacity duration-500"
+          />
+        </motion.div>
+        <h2 className="text-foreground font-sans text-xs md:text-sm tracking-wider uppercase font-medium text-center">
+          {product.title}
+        </h2>
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       style={{
@@ -203,7 +293,7 @@ export const ProductCard = ({
         className="block h-full w-full relative"
       >
         <Image
-          src={product.thumbnail}
+          src={product.thumbnail!}
           fill
           sizes="(max-width: 768px) 256px, 480px"
           className="object-cover object-left-top absolute h-full w-full inset-0 rounded-[24px]"
