@@ -157,7 +157,6 @@ export default function Footer() {
   return (
     <motion.footer
       className="site-footer relative overflow-hidden border-t border-transparent bg-[#030504] px-[clamp(18px,5vw,84px)] py-14 sm:py-20 text-white"
-      style={{ clipPath: "inset(0)" }}
       initial={false}
       whileInView={reduce ? undefined : { opacity: 1 }}
       viewport={{ once: true, margin: "-120px" }}
@@ -274,17 +273,20 @@ export default function Footer() {
             ))}
           </div>
         </div>
-      </div>
 
-      <motion.div
-        className="site-footer-watermark pointer-events-none absolute bottom-0 left-0 right-0 z-[1] select-none text-center font-heading text-[clamp(5rem,18vw,19rem)] font-black leading-none tracking-[-0.08em] text-white/[0.035] translate-y-[25%]"
-        initial={reduce ? false : { opacity: 0, y: 50 }}
-        whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-      >
-        DDC
-      </motion.div>
+        {/* Watermark wrapper with controlled height to prevent empty space under footer */}
+        <div className="site-footer-watermark-wrap relative w-full h-[clamp(3.5rem,8vw,7rem)] overflow-hidden mt-6 pointer-events-none select-none">
+          <motion.div
+            className="site-footer-watermark pointer-events-none absolute inset-x-0 top-0 text-center font-heading text-[clamp(5rem,18vw,19rem)] font-black leading-none tracking-[-0.08em] text-white/[0.035]"
+            initial={reduce ? false : { opacity: 0, y: 30 }}
+            whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          >
+            DDC
+          </motion.div>
+        </div>
+      </div>
     </motion.footer>
   );
 }
