@@ -882,7 +882,10 @@
     "mobilePayments": "Mobile Payments",
     "digitalCurrency": "Digital Currency",
     "digitalInfra": "Digital Infrastructure",
-    "softwareDev": "Software Development"
+    "softwareDev": "Software Development",
+    "contactCenter": "Contact Center 1477",
+    "procurement": "Procurement Portal",
+    "dataManagement": "Data Management"
   },
   "Footer": {
     "tagData": "Data",

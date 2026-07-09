@@ -882,7 +882,10 @@
     "mobilePayments": "Мобильные платежи",
     "digitalCurrency": "Цифровая валюта",
     "digitalInfra": "Цифровая инфраструктура",
-    "softwareDev": "Разработка ПО"
+    "softwareDev": "Разработка ПО",
+    "contactCenter": "Контакт-центр 1477",
+    "procurement": "Портал закупок",
+    "dataManagement": "Управление данными"
   },
   "Footer": {
     "tagData": "Данные",

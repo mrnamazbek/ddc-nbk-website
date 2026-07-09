@@ -11,6 +11,10 @@ import { BubbleText } from "@/components/ui/BubbleText";
  * подписи плиток — из неймспейса "Showcase".
  */
 
+/**
+ * HeroParallax slices these into rows of five (0-5, 5-10, 10-15), so the list
+ * is kept at a multiple of five — otherwise the trailing row renders half-empty.
+ */
 const productDefs = [
   // Ряд 1
   { key: "aiAnalytics", link: "/analytics", icon: "/images/showcase/icons/ai-neural-network.png" },
@@ -24,9 +28,12 @@ const productDefs = [
   { key: "automation", link: "/services", icon: "/images/showcase/icons/automation.png" },
   { key: "mobilePayments", link: "/digital", icon: "/images/showcase/icons/mobile-payment.png" },
   { key: "digitalCurrency", link: "/digital", icon: "/images/showcase/icons/digital-currency.png" },
-  // Ряд 3
+  // Ряд 3 — операторские роли ЦЦР: контакт-центр, госзакупки, работа с данными
   { key: "digitalInfra", link: "/about", icon: "/images/showcase/icons/globe.png" },
   { key: "softwareDev", link: "/services", icon: "/images/showcase/icons/development.png" },
+  { key: "contactCenter", link: "/contact", icon: "/images/showcase/icons/contact-center.png" },
+  { key: "procurement", link: "/services", icon: "/images/showcase/icons/procurement.png" },
+  { key: "dataManagement", link: "/analytics", icon: "/images/showcase/icons/data-management.png" },
 ] as const;
 
 export default function Showcase() {

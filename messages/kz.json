@@ -882,7 +882,10 @@
     "mobilePayments": "Мобильді төлемдер",
     "digitalCurrency": "Цифрлық валюта",
     "digitalInfra": "Цифрлық инфрақұрылым",
-    "softwareDev": "Бағдарламалық жасақтама әзірлеу"
+    "softwareDev": "Бағдарламалық жасақтама әзірлеу",
+    "contactCenter": "Байланыс орталығы 1477",
+    "procurement": "Сатып алу порталы",
+    "dataManagement": "Деректерді басқару"
   },
   "Footer": {
     "tagData": "Деректер",
