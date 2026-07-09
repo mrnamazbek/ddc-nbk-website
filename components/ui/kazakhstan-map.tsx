@@ -36,7 +36,7 @@ const OFFICES: MapOffice[] = [
     descKey: "officeAstanaDesc",
     phone: "+7 (7172) 76-74-00",
     googleMaps: "https://maps.app.goo.gl/34rQ98a9hEaTf7rU9",
-    twoGis: "https://2gis.kz/astana/geo/9570147374971439",
+    twoGis: "https://2gis.kz/astana/geo/70000001041918789",
     cityLogo: "/images/cities/astana-emblem.svg",
   },
   {
@@ -49,7 +49,7 @@ const OFFICES: MapOffice[] = [
     descKey: "officeAlmatyDesc",
     phone: "+7 (727) 330-24-00",
     googleMaps: "https://maps.app.goo.gl/uXpLqJAGc1Yg5i3Q6",
-    twoGis: "https://2gis.kz/almaty/geo/9430047374971439",
+    twoGis: "https://2gis.kz/almaty/firm/9429940000881512?m=76.959991%2C43.235846%2F16",
     cityLogo: "/images/cities/almaty-coat-of-arms.svg",
   }
 ];

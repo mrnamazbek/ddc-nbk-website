@@ -39,7 +39,7 @@ const footerSections: { title: string; links: FooterLink[] }[] = [
       },
       {
         name: "Instagram",
-        href: "https://www.instagram.com/ddc.kz",
+        href: "https://www.instagram.com/ddc_nbk/",
         external: true,
         icon: "instagram",
       },
