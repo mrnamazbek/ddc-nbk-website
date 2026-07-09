@@ -240,9 +240,12 @@ export default function Hero() {
           initial={reduced ? false : { opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, delay: 0.4, ease: ENTRANCE_EASE }}
-          className="absolute top-1/2 right-0 -translate-y-1/2 -mt-8 md:-mt-14 w-full md:w-[52%] lg:w-[46%] xl:w-[42%] 2xl:w-[38%] max-w-[560px] h-[80%] md:h-[92%] pointer-events-auto z-0 overflow-visible opacity-30 md:opacity-65 mix-blend-screen"
+          className="absolute top-1/2 right-0 -translate-y-1/2 w-full md:w-[52%] lg:w-[46%] xl:w-[42%] 2xl:w-[38%] max-w-[560px] h-[80%] md:h-[92%] pointer-events-auto z-0 overflow-visible opacity-30 md:opacity-65 mix-blend-screen"
         >
-          <div className="absolute inset-0 w-full h-full scale-[1.05] md:scale-[1.12] origin-center">
+          {/* Vertical placement lives on THIS (non-framer) div so the transform
+              is reliable: translate-y drops the robot by a % of its own height
+              (head → badge/heading line), scale sets the size. Tune these two. */}
+          <div className="absolute inset-0 w-full h-full scale-[1.05] md:scale-[1.12] translate-y-[8%] md:translate-y-[12%] origin-center">
             {!isMobileDevice && (
               <SplineScene
                 scene={ROBOT_SCENE}
