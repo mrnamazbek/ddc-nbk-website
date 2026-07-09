@@ -186,33 +186,44 @@ export default function DDCEventGallery() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent z-10 transition-opacity duration-300" />
 
                 {/* Контент */}
-                <div className="absolute inset-0 z-20 flex flex-col justify-end p-6">
-                  <motion.div
-                    animate={{ y: isHovered || shouldReduceMotion ? 0 : 40 }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                    className="space-y-2 text-left"
+                <div className="absolute inset-0 z-20 flex flex-col justify-end">
+                  {/* Вертикальный заголовок для неактивного состояния */}
+                  <AnimatePresence>
+                    {!isHovered && !shouldReduceMotion && (
+                      <motion.div
+                        key="vertical-title"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                      >
+                        <span className="whitespace-nowrap uppercase tracking-[0.25em] font-heading font-black text-[11px] text-white/50 rotate-90 origin-center">
+                          {itemTitle}
+                        </span>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Горизонтальный контент для активного состояния */}
+                  <div
+                    className={cn(
+                      "p-6 text-left transition-all duration-500 ease-out transform-gpu",
+                      isHovered || shouldReduceMotion
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-6 pointer-events-none"
+                    )}
                   >
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-gold shrink-0" />
-                      <h3 className="text-sm font-bold text-white uppercase tracking-wider line-clamp-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-gold shrink-0 shadow-[0_0_12px_rgba(235,192,105,0.4)]" />
+                      <h3 className="text-sm font-black text-white uppercase tracking-wider font-heading line-clamp-1">
                         {itemTitle}
                       </h3>
                     </div>
-
-                    <AnimatePresence initial={false}>
-                      {(isHovered || shouldReduceMotion) && (
-                        <motion.p
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="text-xs text-zinc-300 font-light leading-relaxed line-clamp-3"
-                        >
-                          {itemDesc}
-                        </motion.p>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
+                    <p className="text-xs text-zinc-300 font-light leading-relaxed line-clamp-3">
+                      {itemDesc}
+                    </p>
+                  </div>
                 </div>
               </motion.div>
             );

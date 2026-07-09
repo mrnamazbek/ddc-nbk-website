@@ -496,62 +496,70 @@ export default function Header() {
         )}
       </AnimatePresence>
 
-      {/* Mobile menu overlay — full-screen liquid glass */}
+      {/* Mobile menu overlay — full-screen glass panel.
+          NOTE: we deliberately do NOT use the `.liquid-glass-strong` class here.
+          That class is authored as unlayered CSS, so its `position: relative`,
+          `overflow: hidden` and `border-radius` win the cascade over Tailwind's
+          *layered* `.fixed`/`.overflow-y-auto`/`.rounded-none` utilities — which
+          left this panel `position: relative`, sitting in document flow at the
+          page top. It looked fine at scrollY 0 but appeared "not to open" once
+          the user had scrolled down. The glass look is applied inline instead so
+          nothing overrides `position: fixed`. */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             data-hover="gold"
-            style={{ background: "rgba(8,8,10,0.9)" }}
-            className="fixed inset-0 z-40 liquid-glass-strong rounded-none flex flex-col justify-start gap-8 pt-32 pb-12 px-8 xl:hidden overflow-y-auto max-h-screen"
+            style={{
+              position: "fixed",
+              background: "rgba(8,8,10,0.94)",
+              backdropFilter: "blur(28px) saturate(180%)",
+              WebkitBackdropFilter: "blur(28px) saturate(180%)",
+            }}
+            className="inset-0 z-40 flex flex-col justify-start pt-28 pb-10 px-8 xl:hidden overflow-y-auto"
           >
-            {/* Menu links */}
-            <nav className="flex flex-col gap-6">
+            {/* Menu links — right-aligned, separated by thin hairlines so each
+                row is a comfortable full-width tap target. */}
+            <nav className="flex flex-col">
               {navLinks.map((link, idx) => {
                 const isActive = pathname === link.href;
                 return (
                   <motion.div
                     key={link.name}
-                    initial={{ opacity: 0, y: 15 }}
+                    initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
+                    exit={{ opacity: 0, y: -8 }}
                     transition={{
                       type: "spring",
                       stiffness: 300,
                       damping: 24,
-                      delay: idx * 0.04
+                      delay: idx * 0.035
                     }}
                   >
                     <TransitionLink
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className={`font-heading text-2xl tracking-wide block ${isActive ? "text-gold font-semibold" : "text-foreground"
+                      className={`block w-full py-3.5 text-right font-heading text-xl tracking-wide transition-colors duration-300 ${idx !== 0 ? "border-t border-white/[0.07]" : ""
+                        } ${isActive ? "text-gold font-semibold" : "text-foreground active:text-gold"
                         }`}
                     >
-                      <TextStaggerHover>
-                        <TextStaggerHoverActive animation="top">
-                          {link.name}
-                        </TextStaggerHoverActive>
-                        <TextStaggerHoverHidden animation="bottom">
-                          {link.name}
-                        </TextStaggerHoverHidden>
-                      </TextStaggerHover>
+                      {link.name}
                     </TransitionLink>
                   </motion.div>
                 );
               })}
             </nav>
 
-            {/* Mobile menu bottom action panel */}
-            <div className="flex flex-col gap-6 mt-auto pt-6 border-t border-glass-border">
-              <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+            {/* Bottom action panel — right-aligned to match the menu items */}
+            <div className="flex flex-col gap-5 mt-auto pt-6 border-t border-white/[0.07]">
+              <div className="flex items-center justify-end gap-4">
                 <span className="text-sm text-muted">{t("theme")}</span>
                 <CinematicThemeSwitcher />
               </div>
-              <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center justify-end gap-4">
                 <span className="text-sm text-muted">{t("language")}</span>
                 <LanguageSwitcher locale={locale} onSwitch={switchLocale} size="lg" />
               </div>
