@@ -182,8 +182,15 @@ export default function DDCEventGallery() {
                   />
                 </motion.div>
 
-                {/* Градиентный оверлей */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent z-10 transition-opacity duration-300" />
+                {/* Градиентный оверлей с эффектом дыма/затемнения для неактивного состояния */}
+                <div
+                  className={cn(
+                    "absolute inset-0 z-10 transition-all duration-500 ease-in-out",
+                    isHovered || shouldReduceMotion
+                      ? "bg-gradient-to-t from-black/98 via-black/40 to-transparent backdrop-blur-none"
+                      : "bg-black/65 backdrop-blur-[1.5px]"
+                  )}
+                />
 
                 {/* Контент */}
                 <div className="absolute inset-0 z-20 flex flex-col justify-end">
@@ -198,7 +205,7 @@ export default function DDCEventGallery() {
                         transition={{ duration: 0.3 }}
                         className="absolute inset-0 flex items-center justify-center pointer-events-none"
                       >
-                        <span className="whitespace-nowrap uppercase tracking-[0.25em] font-heading font-black text-[11px] text-white/50 rotate-90 origin-center">
+                        <span className="whitespace-nowrap uppercase tracking-[0.3em] font-heading font-black text-[11px] text-zinc-100/90 rotate-90 origin-center drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
                           {itemTitle}
                         </span>
                       </motion.div>

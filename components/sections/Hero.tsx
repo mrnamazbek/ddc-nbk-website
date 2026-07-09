@@ -245,7 +245,7 @@ export default function Hero() {
           {/* Vertical placement lives on THIS (non-framer) div so the transform
               is reliable: translate-y drops the robot by a % of its own height
               (head → badge/heading line), scale sets the size. Tune these two. */}
-          <div className="absolute inset-0 w-full h-full scale-[1.05] md:scale-[1.12] translate-y-[16%] md:translate-y-[24%] origin-center">
+          <div className="absolute inset-0 w-full h-full scale-[1.05] md:scale-[1.12] translate-y-[12%] md:translate-y-[0%] origin-center">
             {!isMobileDevice && (
               <SplineScene
                 scene={ROBOT_SCENE}
