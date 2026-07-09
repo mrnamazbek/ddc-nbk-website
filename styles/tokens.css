@@ -62,6 +62,23 @@
   --glass-blur: blur(16px) saturate(180%);
   --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 
+  /* Full-screen navigation needs its own semantic surface: it must follow the
+     active theme rather than carrying a hard-coded dark backdrop. */
+  --mobile-menu-surface: rgba(8, 20, 14, 0.94);
+  --mobile-menu-active: var(--accent-gold);
+
+  /* Fixed navigation must separate from moving content beneath it. It keeps
+     the glass depth while avoiding card borders/text bleeding through. */
+  --header-surface: rgba(6, 16, 11, 0.96);
+
+  /* Branded technology tiles intentionally remain dark in both themes. Their
+     foreground is a separate token, so light-mode text never inherits the
+     dark page foreground and disappears on the tile. */
+  --showcase-tile-background: linear-gradient(145deg, var(--color-forest-dark), #0c0e0d 58%, #0c0e0d);
+  --showcase-tile-foreground: var(--foreground);
+  --showcase-tile-border: rgba(201, 168, 76, 0.15);
+  --showcase-tile-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+
   /* ==========================================
      3. Геометрия и отступы (Layout & Radius Tokens)
      ========================================== */
@@ -159,34 +176,50 @@
    7. Семантические цвета Светлой темы (Light Theme)
    ========================================== */
 html.light {
-  --background: #F6F2E8;
-  --foreground: #102217;
-  --surface: #FFFDF6;
+  /* Light mode is forest-led: #005F44 is the action and identity anchor.
+     Gold remains a compact secondary accent, never a body-text substitute. */
+  --color-forest: #005F44;
+  --color-forest-mid: #0B7A59;
+  --color-forest-light: #2B9B77;
+  --color-forest-dark: #003D2C;
 
-  --text-primary: #102217;
-  --text-secondary: #314537;
-  --text-tertiary: #64766A;
+  --background: #F7FAF8;
+  --foreground: #003D2C;
+  --surface: #FFFFFF;
+
+  --text-primary: #003D2C;
+  --text-secondary: #245746;
+  --text-tertiary: #4D796B;
 
   --accent-gold: #7D631F; /* accessible antique gold for labels/icons, not body copy */
   --accent-gold-hover: #5D4918;
 
   /* Hero readability scrim — warm cream in light theme (never darkens the hero) */
-  --hero-scrim-strong: rgba(246, 242, 232, 0.94);
-  --hero-scrim-soft: rgba(246, 242, 232, 0.5);
+  --hero-scrim-strong: rgba(247, 250, 248, 0.94);
+  --hero-scrim-soft: rgba(247, 250, 248, 0.5);
 
-  --border-primary: rgba(16, 34, 23, 0.14);
-  --border-secondary: rgba(16, 34, 23, 0.24);
+  --border-primary: rgba(0, 95, 68, 0.16);
+  --border-secondary: rgba(0, 95, 68, 0.28);
 
-  --color-gray-dark: #314537;
-  --color-gray-mid: #64766A;
-  --color-gray-light: #879589;
-  --color-offwhite: #F6F2E8;
+  --color-gray-dark: #245746;
+  --color-gray-mid: #4D796B;
+  --color-gray-light: #78988D;
+  --color-offwhite: #F7FAF8;
 
-  --glass-bg: rgba(255, 253, 246, 0.88);
-  --glass-border: rgba(16, 34, 23, 0.14);
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(0, 95, 68, 0.16);
   --glass-border-gold: rgba(125, 99, 31, 0.26);
-  --glass-border-forest: rgba(16, 34, 23, 0.18);
-  --glass-shadow: 0 10px 34px rgba(16, 34, 23, 0.09);
+  --glass-border-forest: rgba(0, 95, 68, 0.2);
+  --glass-shadow: 0 10px 34px rgba(0, 61, 44, 0.09);
+
+  --mobile-menu-surface: rgba(255, 255, 255, 0.97);
+  --mobile-menu-active: var(--color-forest);
+  --header-surface: rgba(255, 255, 255, 0.97);
+
+  --showcase-tile-background: linear-gradient(145deg, var(--color-forest-dark), var(--color-forest) 62%, var(--color-forest-mid));
+  --showcase-tile-foreground: var(--color-offwhite);
+  --showcase-tile-border: rgba(0, 95, 68, 0.34);
+  --showcase-tile-shadow: 0 14px 32px rgba(0, 61, 44, 0.18);
 
   --shadow-button: 0 5px 14px rgba(11, 31, 21, 0.12);
   --shadow-card: 0 18px 52px rgba(11, 31, 21, 0.1);
@@ -194,5 +227,5 @@ html.light {
   /* Токены выделения и каретки (Светлая тема) */
   --selection-bg: rgba(26, 61, 43, 0.15);
   --selection-text: #0E2419;
-  --caret-color: #1A3D2B;
+  --caret-color: #005F44;
 }

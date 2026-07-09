@@ -232,7 +232,9 @@ function ShaderPlane({ isLight }: { isLight: boolean }) {
       uResolution: { value: new THREE.Vector2(1, 1) },
       uMouse: { value: new THREE.Vector2(0.5, 0.5) },
       uLight: { value: isLight ? 1 : 0 },
-      uForest: { value: hexToRgb("#1A3D2B") },
+      // WebGL cannot consume CSS tokens at runtime. Keep dark mode subdued,
+      // while light mode receives the canonical #005F44 primary.
+      uForest: { value: hexToRgb(isLight ? "#005F44" : "#1A3D2B") },
       uForestLight: { value: hexToRgb("#52B788") },
       uGold: { value: hexToRgb("#C9A84C") },
       uGoldLight: { value: hexToRgb("#E8C87A") },
@@ -249,6 +251,10 @@ function ShaderPlane({ isLight }: { isLight: boolean }) {
       : new THREE.Vector3(4 / 255, 12 / 255, 16 / 255);
     uniforms.uBgColor.value.copy(color);
   }, [bgSystem, uniforms]);
+
+  useEffect(() => {
+    uniforms.uForest.value.copy(hexToRgb(isLight ? "#005F44" : "#1A3D2B"));
+  }, [isLight, uniforms]);
 
   useEffect(() => {
     const onMove = (e: PointerEvent) => {

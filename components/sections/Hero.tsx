@@ -166,7 +166,7 @@ export default function Hero() {
           <motion.div variants={labelVariants} className="inline-flex items-center gap-3 mb-4 bg-white/[0.03] border border-white/[0.08] backdrop-blur-md px-4 py-2 rounded-full">
             <DDCLogo
               title="DDC"
-              className="h-4 w-[15px] shrink-0 text-foreground"
+              className="h-4 w-4 shrink-0 text-foreground"
             />
             <span className="w-1.5 h-1.5 rounded-full bg-forest-light animate-pulse" />
             <span className="text-[10px] uppercase tracking-[0.25em] text-gold-light font-mono font-medium">

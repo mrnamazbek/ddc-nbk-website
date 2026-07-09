@@ -11,19 +11,16 @@
   position: relative;
   width: 100%;
 
-  /* The reveal panel INVERTS against the page — that contrast flip is the whole
-     payoff of the effect. The reference does this with
-     `background: light-dark(#000, #fff)` on the panel and `color: canvas` on the
-     copy; here the same idea is expressed with the brand's ink/cream neutrals.
-     Previously the panel was hardcoded to a near-black #040c08, which on this
-     already-dark site read as a stray black block rather than a reveal. */
-  --swh-panel-bg: #f6f2e8; /* cream */
-  --swh-panel-fg: #08140d; /* deep forest ink */
-}
-
-html.light .scroll-word-hero {
-  --swh-panel-bg: #0f241a; /* deep forest */
-  --swh-panel-fg: #f6f2e8;
+  /* The reference flips the panel to the page's opposite (`light-dark(#000,
+     #fff)`), but a full-screen white slab in the middle of this dark site is
+     wrong for the brand — so the panel is always the brand's deep forest with
+     cream copy. In the dark theme it reads as a richer green surface lifting
+     off the page background (#08140d); in the light theme it is the dramatic
+     dark slab. Either way it is never white, and never the old near-black
+     #040c08 that simply vanished into the page. */
+  --swh-panel-bg: #0f241a; /* forest-dark */
+  --swh-panel-fg: #f6f2e8; /* cream */
+  --swh-panel-accent: #f0d98b; /* gold-light, readable on forest */
 }
 
 .scroll-word-hero__pin {
@@ -74,7 +71,7 @@ html.light .scroll-word-hero {
 }
 
 .scroll-word-hero__words li {
-  --swh-dimmed: color-mix(in oklch, var(--foreground), transparent 82%);
+  --swh-dimmed: color-mix(in oklch, var(--foreground), transparent 38%);
   background: linear-gradient(
     180deg,
     var(--swh-dimmed) 0 calc(var(--swh-start, 50vh) - 0.575em),
@@ -91,7 +88,7 @@ html.light .scroll-word-hero__words li {
   background-image: linear-gradient(
     180deg,
     var(--swh-dimmed) 0 calc(var(--swh-start, 50vh) - 0.575em),
-    var(--light-gold-readable, #6f561d) calc(var(--swh-start, 50vh) - 0.6325em) calc(var(--swh-start, 50vh) + 0.6325em),
+    var(--color-forest) calc(var(--swh-start, 50vh) - 0.6325em) calc(var(--swh-start, 50vh) + 0.6325em),
     var(--swh-dimmed) calc(var(--swh-start, 50vh) + 0.575em)
   );
 }
@@ -111,24 +108,57 @@ html.light .scroll-word-hero__words li {
   background: var(--swh-panel-bg);
 }
 
-.scroll-word-hero__tagline {
+/* The panel's revealed content: the section intro, supplied by the page from
+   the i18n catalogue. Centred in the full-bleed panel and coloured against it. */
+.scroll-word-hero__copy {
   position: absolute;
   inset: 0;
   z-index: 1;
   margin: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1.4rem;
   padding: 0 1.5rem;
   text-align: center;
-  font-family: var(--font-current-sans), sans-serif;
-  font-weight: 500;
-  font-size: clamp(1.15rem, 3vw, 1.85rem);
   color: var(--swh-panel-fg);
 }
 
-.scroll-word-hero__tagline > span {
-  max-width: 46rem;
+.scroll-word-hero__copy > * {
+  max-width: 48rem;
+  margin: 0;
+}
+
+.scroll-word-hero__overline {
+  font-family: var(--font-current-sans), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--swh-panel-accent);
+}
+
+.scroll-word-hero__title {
+  font-family: var(--font-current-display), serif;
+  font-weight: 500;
+  font-size: clamp(1.9rem, 4.6vw, 3.5rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.scroll-word-hero__title .scroll-word-hero__accent {
+  color: var(--swh-panel-accent);
+}
+
+.scroll-word-hero__subtitle {
+  font-family: var(--font-current-sans), sans-serif;
+  font-weight: 300;
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  line-height: 1.7;
+  max-width: 42rem;
+  opacity: 0.86;
 }
 
 /* Progressive enhancement: the panel grows up from behind the words and its
@@ -137,8 +167,8 @@ html.light .scroll-word-hero__words li {
    Ranges are stated explicitly (start + end) rather than relying on the
    one-value shorthand, whose omitted end defaults to `normal` (the end of the
    whole timeline) and stretched the grow across the entire scroll.
-   The tagline settles at opacity 1 and simply scrolls away with the panel: it
-   is absolutely positioned inside `__reveal`, which is 100vh and clips its
+   The copy settles at opacity 1 and simply scrolls away with the panel: it is
+   absolutely positioned inside `__reveal`, which is 100vh and clips its
    overflow, so unlike the reference's `position: fixed` copy it can never end
    up stranded over the sections that follow on this page. */
 @supports (animation-timeline: view()) {
@@ -152,7 +182,7 @@ html.light .scroll-word-hero__words li {
     animation-timeline: --scroll-word-hero-panel;
     animation-range: entry 20% entry 100%;
   }
-  .scroll-word-hero__tagline {
+  .scroll-word-hero__copy {
     animation: scroll-word-hero-reveal both ease-in-out;
     animation-timeline: --scroll-word-hero-panel;
     animation-range: entry 40% entry 100%;
@@ -173,25 +203,23 @@ html.light .scroll-word-hero__words li {
   }
 }
 
-/* Static, non-sticky fallback for reduced-motion / accessibility mode. */
+/* Static, non-sticky fallback for reduced-motion / accessibility mode: no
+   panel, no inversion — the intro simply renders on the page background. */
 .scroll-word-hero--static {
   padding: clamp(3rem, 10vh, 6rem) 1.5rem;
-  text-align: center;
 }
 
-.scroll-word-hero__static h2 {
-  margin: 0 auto 1rem;
-  max-width: 46rem;
-  font-family: var(--font-current-display), serif;
-  font-weight: 500;
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
+.scroll-word-hero__copy--static {
+  position: static;
+  padding: 0;
   color: var(--foreground);
 }
 
-.scroll-word-hero__static .scroll-word-hero__tagline--static {
-  position: static;
-  display: block;
-  padding: 0;
+.scroll-word-hero__copy--static .scroll-word-hero__overline,
+.scroll-word-hero__copy--static .scroll-word-hero__title .scroll-word-hero__accent {
+  color: var(--accent-gold);
+}
+
+.scroll-word-hero__copy--static .scroll-word-hero__subtitle {
   color: var(--text-secondary);
-  opacity: 0.85;
 }

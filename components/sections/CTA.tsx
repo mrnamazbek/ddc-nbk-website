@@ -81,7 +81,7 @@ export default function CTA() {
             <div className="flex justify-center mb-6 relative z-10">
               <DDCLogo
                 title="DDC"
-                className="h-12 w-11 text-foreground transition-transform duration-[2s] hover:rotate-[360deg]"
+                className="h-12 w-12 text-foreground transition-transform duration-[2s] hover:rotate-[360deg]"
               />
             </div>
 

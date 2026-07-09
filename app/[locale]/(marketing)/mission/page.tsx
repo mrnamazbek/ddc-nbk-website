@@ -4,12 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { BubbleText } from "@/components/ui/BubbleText";
 import TerminalGridBackground from "@/components/ui/TerminalGridBackground";
 import ScrollWordHero from "@/components/ui/scroll-hero-section";
 import LottieAnimation from "@/components/ui/LottieAnimation";
 import ScrollReveal, { ENTRANCE_DURATION } from "@/components/motion/ScrollReveal";
-import { RevealWords } from "@/components/motion/RevealWords";
 
 interface MissionStep {
   key: string;
@@ -70,29 +68,8 @@ function MissionSpine() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
-      {/* Section intro */}
-      <div className="max-w-3xl mx-auto text-center mb-20 sm:mb-28">
-        <ScrollReveal blur={10} duration={ENTRANCE_DURATION.label}>
-          <span className="text-xs uppercase tracking-[0.25em] text-gold font-medium mb-4 block">
-            {t("overline")}
-          </span>
-        </ScrollReveal>
-        <h1 className="font-display text-4xl sm:text-6xl font-normal tracking-tight text-foreground mb-6 leading-tight">
-          <RevealWords text={t("titleLine1")} delay={0.08} useBubbleText />{" "}
-          <RevealWords
-            text={t("titleAccent")}
-            delay={0.25}
-            useBubbleText
-            bubbleActiveClassName="text-gold font-black"
-          />{" "}
-          <RevealWords text={t("titleLine2")} delay={0.45} useBubbleText />
-        </h1>
-        <ScrollReveal blur={10} duration={ENTRANCE_DURATION.subtitle} delay={0.2}>
-          <p className="text-base sm:text-lg text-text-secondary font-light leading-relaxed max-w-2xl mx-auto">
-            <BubbleText text={t("subtitle")} />
-          </p>
-        </ScrollReveal>
-      </div>
+      {/* The intro (overline, heading, subtitle) is not repeated here: it is now
+          the copy revealed inside the word-hero's full-bleed panel above. */}
 
       {/* Central spine — each pillar sits on alternating sides of it */}
       <div ref={scrollTargetRef} className="relative">
@@ -174,6 +151,7 @@ function Mission2D() {
 }
 
 export default function MissionPage() {
+  const t = useTranslations("Mission");
   const wordHero = useTranslations("Mission.wordHero");
 
   return (
@@ -182,8 +160,15 @@ export default function MissionPage() {
         leadIn={wordHero("leadIn")}
         items={wordHero.raw("words")}
         srSummary={wordHero("srSummary")}
-        tagline={wordHero("tagline")}
-      />
+      >
+        <span className="scroll-word-hero__overline">{t("overline")}</span>
+        <h1 className="scroll-word-hero__title">
+          {t("titleLine1")}{" "}
+          <span className="scroll-word-hero__accent">{t("titleAccent")}</span>{" "}
+          {t("titleLine2")}
+        </h1>
+        <p className="scroll-word-hero__subtitle">{t("subtitle")}</p>
+      </ScrollWordHero>
       <Mission2D />
     </>
   );

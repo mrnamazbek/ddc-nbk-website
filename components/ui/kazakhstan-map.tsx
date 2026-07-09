@@ -373,7 +373,7 @@ export function KazakhstanMap() {
                             ...(isTopHalf ? { top: "100%" } : { bottom: "100%" }),
                           }}
                           className={cn(
-                            "absolute z-50 w-[320px] pointer-events-auto",
+                            "absolute z-50 hidden w-[320px] pointer-events-auto md:block",
                             isTopHalf ? "mt-10" : "mb-10"
                           )}
                         >

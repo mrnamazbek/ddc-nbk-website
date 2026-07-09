@@ -727,16 +727,29 @@ function ParticleCanvas() {
     geo.setAttribute("aRand", new THREE.BufferAttribute(rand, 1));
     geo.setAttribute("aScale", new THREE.BufferAttribute(scaleArr, 1));
 
-    // Theme-aware palette (color theory: brand-led, readable on BOTH surfaces).
-    //  Dark  → bright emerald + gold glow on the deep-forest background.
-    //  Light → deep forest + antique gold particles on warm cream (dark-on-light,
-    //          forest-led, WCAG-readable) — CSS can't reach WebGL, so we do it here.
-    // Light mode draws dark-on-cream, which reads thinner — so bump size + opacity
-    // there to keep the emblem bold and forest-led.
+    // Theme-aware palette. Light mode reserves gold for small UI accents and
+    // keeps large particle/SVG silhouettes strictly within the forest family.
+    // CSS cannot reach WebGL, so this palette is applied inside the renderer.
     const palette = (light: boolean) =>
       light
-        ? { a: "#173826", b: "#C9981F", mul: 1.14, size: 1.3 }
-        : { a: "#43B978", b: "#FFD45A", mul: 1.62, size: 1.16 };
+        ? {
+            a: "#003D2C",
+            b: "#0B7A59",
+            ribbonA: "#005F44",
+            ribbonB: "#2B9B77",
+            hot: "#2B9B77",
+            mul: 1.14,
+            size: 1.3,
+          }
+        : {
+            a: "#43B978",
+            b: "#FFD45A",
+            ribbonA: "#FFE17A",
+            ribbonB: "#43B978",
+            hot: "#FFF0A3",
+            mul: 1.62,
+            size: 1.16,
+          };
     let theme = palette(document.documentElement.classList.contains("light"));
     const baseSize = isMobile ? 2.2 : 2.62;
 
@@ -749,9 +762,9 @@ function ParticleCanvas() {
       uLogoMode: { value: 1 },
       uColorA: { value: new THREE.Color(theme.a) },
       uColorB: { value: new THREE.Color(theme.b) },
-      uRibbonA: { value: new THREE.Color("#FFE17A") },
-      uRibbonB: { value: new THREE.Color("#43B978") },
-      uHotColor: { value: new THREE.Color("#FFF0A3") },
+      uRibbonA: { value: new THREE.Color(theme.ribbonA) },
+      uRibbonB: { value: new THREE.Color(theme.ribbonB) },
+      uHotColor: { value: new THREE.Color(theme.hot) },
       uMouse: { value: new THREE.Vector2(0, 0) },
       uMouseActive: { value: 0 },
       uProximityRadius: { value: 1.1 },
@@ -764,6 +777,9 @@ function ParticleCanvas() {
       theme = palette(document.documentElement.classList.contains("light"));
       uniforms.uColorA.value.set(theme.a);
       uniforms.uColorB.value.set(theme.b);
+      uniforms.uRibbonA.value.set(theme.ribbonA);
+      uniforms.uRibbonB.value.set(theme.ribbonB);
+      uniforms.uHotColor.value.set(theme.hot);
       uniforms.uSize.value = baseSize * theme.size;
     });
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });

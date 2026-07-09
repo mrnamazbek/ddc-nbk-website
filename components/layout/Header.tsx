@@ -348,8 +348,15 @@ export default function Header() {
   return (
     <>
       <header
-        style={{ backfaceVisibility: "hidden", overflow: "visible" }}
-        className={`!fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1300px] transition-all duration-500 rounded-full py-2.5 px-5 sm:px-7 !overflow-visible transform-gpu ${isScrolled
+        style={{
+          backfaceVisibility: "hidden",
+          overflow: "visible",
+          background: "var(--header-surface)",
+          backgroundBlendMode: "normal",
+          backdropFilter: "blur(30px) saturate(170%)",
+          WebkitBackdropFilter: "blur(30px) saturate(170%)",
+        }}
+        className={`site-header !fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1300px] transition-all duration-500 rounded-full py-2.5 px-5 sm:px-7 !overflow-visible transform-gpu ${isScrolled
             ? "liquid-glass-strong shadow-card"
             : "liquid-glass shadow-lg"
           }`}
@@ -363,21 +370,21 @@ export default function Header() {
           >
             <DDCLogo
               title="DDC — Центр цифрового развития НБК"
-              className="h-[42px] w-[38px] transition-transform duration-500 ease-out group-hover:scale-105 group-active:scale-95 shrink-0"
+              className="h-10 w-10 transition-transform duration-500 ease-out group-hover:scale-105 group-active:scale-95 shrink-0"
             />
             <div className="hidden min-[370px]:flex flex-col justify-center min-w-0 font-sans tracking-wide">
               <div className="flex flex-col leading-[1.05] uppercase">
-                <span className="font-heading font-black text-[9px] sm:text-[9.5px] tracking-[0.05em] text-white">
+                <span className="font-heading font-black text-[10px] sm:text-[10.5px] tracking-[0.04em] text-white">
                   Digital
                 </span>
-                <span className="font-heading font-black text-[9px] sm:text-[9.5px] tracking-[0.05em] text-white">
+                <span className="font-heading font-black text-[10px] sm:text-[10.5px] tracking-[0.04em] text-white">
                   Development
                 </span>
-                <span className="font-heading font-black text-[9px] sm:text-[9.5px] tracking-[0.05em] text-white">
+                <span className="font-heading font-black text-[10px] sm:text-[10.5px] tracking-[0.04em] text-white">
                   Center
                 </span>
               </div>
-              <span className="font-sans font-semibold text-[7px] sm:text-[7.5px] tracking-[0.04em] text-gold uppercase mt-0.5 whitespace-nowrap block">
+              <span className="font-sans font-semibold text-[7.5px] sm:text-[8px] tracking-[0.03em] text-gold uppercase mt-0.5 whitespace-nowrap block">
                 National Bank of Kazakhstan
               </span>
             </div>
@@ -496,15 +503,9 @@ export default function Header() {
         )}
       </AnimatePresence>
 
-      {/* Mobile menu overlay — full-screen glass panel.
-          NOTE: we deliberately do NOT use the `.liquid-glass-strong` class here.
-          That class is authored as unlayered CSS, so its `position: relative`,
-          `overflow: hidden` and `border-radius` win the cascade over Tailwind's
-          *layered* `.fixed`/`.overflow-y-auto`/`.rounded-none` utilities — which
-          left this panel `position: relative`, sitting in document flow at the
-          page top. It looked fine at scrollY 0 but appeared "not to open" once
-          the user had scrolled down. The glass look is applied inline instead so
-          nothing overrides `position: fixed`. */}
+      {/* Mobile menu overlay — a full-screen semantic surface. It intentionally
+          avoids liquid-glass because that class owns positioning/overflow; the
+          dedicated surface preserves fixed positioning and follows light/dark tokens. */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -512,10 +513,9 @@ export default function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            data-hover="gold"
             style={{
               position: "fixed",
-              background: "rgba(8,8,10,0.94)",
+              background: "var(--mobile-menu-surface)",
               backdropFilter: "blur(28px) saturate(180%)",
               WebkitBackdropFilter: "blur(28px) saturate(180%)",
             }}
@@ -542,8 +542,9 @@ export default function Header() {
                     <TransitionLink
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className={`block w-full py-3.5 text-right font-heading text-xl tracking-wide transition-colors duration-300 ${idx !== 0 ? "border-t border-white/[0.07]" : ""
-                        } ${isActive ? "text-gold font-semibold" : "text-foreground active:text-gold"
+                      style={isActive ? { color: "var(--mobile-menu-active)" } : undefined}
+                      className={`block w-full py-3.5 text-right font-heading text-xl tracking-wide transition-colors duration-300 ${idx !== 0 ? "border-t border-border" : ""
+                        } ${isActive ? "font-semibold" : "text-foreground active:text-forest-light"
                         }`}
                     >
                       {link.name}
@@ -554,7 +555,7 @@ export default function Header() {
             </nav>
 
             {/* Bottom action panel — right-aligned to match the menu items */}
-            <div className="flex flex-col gap-5 mt-auto pt-6 border-t border-white/[0.07]">
+            <div className="flex flex-col gap-5 mt-auto pt-6 border-t border-border">
               <div className="flex items-center justify-end gap-4">
                 <span className="text-sm text-muted">{t("theme")}</span>
                 <CinematicThemeSwitcher />

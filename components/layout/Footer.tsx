@@ -185,8 +185,8 @@ export default function Footer() {
         >
           <div className="max-w-xl">
             <Link href="/" className="mb-8 inline-flex items-center gap-4 select-none">
-              <span className="site-footer-logo-tile grid h-12 w-12 place-items-center rounded-2xl border border-white/10 bg-white text-[#07100c] shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
-                <DDCLogo className="h-7 w-[26px]" />
+              <span className="site-footer-logo-tile grid h-12 w-12 place-items-center rounded-2xl border border-white/10 bg-white text-forest shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
+                <DDCLogo className="h-7 w-7" />
               </span>
               <span>
                 <span className="block text-xl font-bold tracking-tight text-white">DDC</span>

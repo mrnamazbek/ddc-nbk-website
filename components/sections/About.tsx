@@ -53,7 +53,7 @@ export default function About({ id = "about" }: { id?: string | null }) {
               <div className="flex items-center gap-3 mb-4">
                 <DDCLogo
                   title="DDC"
-                  className="h-6 w-[22px] shrink-0 text-foreground"
+                  className="h-6 w-6 shrink-0 text-foreground"
                 />
                 <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-mono font-medium block">
                   {t("overline")}

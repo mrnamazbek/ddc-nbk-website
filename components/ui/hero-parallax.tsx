@@ -278,10 +278,15 @@ export const ProductCard = ({
   if (product.icon) {
     return (
       <motion.div
-        style={{ x: translate }}
         whileHover={{ y: -20 }}
         key={product.title}
-        className="group/product h-40 w-[14rem] md:h-96 md:w-[30rem] relative z-20 shrink-0 rounded-[24px] overflow-hidden border border-gold/15 shadow-[0_8px_30px_rgba(0,0,0,0.25)] bg-gradient-to-br from-forest-dark via-[#0c0e0d] to-[#0c0e0d] transition-shadow duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.45)] flex flex-col items-center justify-center gap-4 md:gap-6 p-6"
+        style={{
+          x: translate,
+          background: "var(--showcase-tile-background)",
+          borderColor: "var(--showcase-tile-border)",
+          boxShadow: "var(--showcase-tile-shadow)",
+        }}
+        className="group/product h-40 w-[14rem] md:h-96 md:w-[30rem] relative z-20 shrink-0 rounded-[24px] overflow-hidden border transition-shadow duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.45)] flex flex-col items-center justify-center gap-4 md:gap-6 p-6"
       >
         <Link
           href={product.link}
@@ -314,7 +319,7 @@ export const ProductCard = ({
             )}
           />
         </motion.div>
-        <h2 className="text-foreground font-sans text-xs md:text-sm tracking-wider uppercase font-medium text-center">
+        <h2 style={{ color: "var(--showcase-tile-foreground)" }} className="font-sans text-xs md:text-sm tracking-wider uppercase font-medium text-center">
           {product.title}
         </h2>
       </motion.div>

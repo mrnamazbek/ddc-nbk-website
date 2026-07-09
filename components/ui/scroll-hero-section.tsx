@@ -10,8 +10,12 @@ export type ScrollWordHeroProps = {
   items: string[];
   /** Full sentence for screen readers (always announced, any breakpoint) */
   srSummary: string;
-  /** Closing line shown in the full-bleed reveal panel */
-  tagline: string;
+  /**
+   * Content revealed inside the full-bleed panel. The page supplies it from the
+   * i18n catalogue — on the Mission page that is the section intro (overline,
+   * heading, subtitle), which is why the pillars section no longer repeats it.
+   */
+  children: React.ReactNode;
   /** Where the highlight band sits, in vh (default 50) */
   startVh?: number;
   /** Space below the sticky block before the reveal panel, in vh (default 50) */
@@ -39,7 +43,7 @@ export default function ScrollWordHero({
   leadIn,
   items,
   srSummary,
-  tagline,
+  children,
   startVh = 50,
   // Matches the reference: the word column needs a full viewport of run-out
   // before the panel arrives, otherwise the panel starts covering the words
@@ -63,8 +67,8 @@ export default function ScrollWordHero({
     return (
       <section className={`scroll-word-hero scroll-word-hero--static ${className ?? ""}`}>
         <div className="scroll-word-hero__static">
-          <h2>{srSummary}</h2>
-          <p className="scroll-word-hero__tagline scroll-word-hero__tagline--static">{tagline}</p>
+          <h2 className="sr-only">{srSummary}</h2>
+          <div className="scroll-word-hero__copy scroll-word-hero__copy--static">{children}</div>
         </div>
       </section>
     );
@@ -90,9 +94,7 @@ export default function ScrollWordHero({
 
       <div className="scroll-word-hero__reveal">
         <div className="scroll-word-hero__panel" aria-hidden="true" />
-        <p className="scroll-word-hero__tagline">
-          <span>{tagline}</span>
-        </p>
+        <div className="scroll-word-hero__copy">{children}</div>
       </div>
     </section>
   );

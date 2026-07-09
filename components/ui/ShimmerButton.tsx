@@ -84,14 +84,15 @@ export default function ShimmerButton({
           WebkitBackdropFilter: "blur(8px) saturate(160%)",
         } as CSSProperties
       }
-      className={`group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden border border-glass-border px-6 py-3 text-foreground transition-[border-color,background-color] duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 focus-visible:ring-offset-2 ${className}`}
+      className={`shimmer-button group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden border border-glass-border px-6 py-3 text-foreground transition-[border-color,background-color] duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 focus-visible:ring-offset-2 ${className}`}
+      data-variant={variant}
       whileHover={hoverAnimation}
       whileTap={tapAnimation}
       transition={springTransition}
       {...(props as React.ComponentProps<typeof motion.button>)}
     >
       {/* Эффект мерцающего свечения (Шиммер) */}
-      <div className="absolute inset-0 z-[-1] overflow-hidden [border-radius:var(--border-radius)] [mask-image:radial-gradient(ellipse_at_center,black,transparent)]">
+      <div className="shimmer-button__sweep absolute inset-0 z-[-1] overflow-hidden [border-radius:var(--border-radius)] [mask-image:radial-gradient(ellipse_at_center,black,transparent)]">
         <div
           className="absolute -inset-[100%] animate-spin-slow opacity-30 group-hover:opacity-100 transition-opacity duration-300"
           style={{
@@ -103,7 +104,7 @@ export default function ShimmerButton({
 
       {/* Внутренняя заливка */}
       <div
-        className="absolute inset-[1px] z-[-1] transition-colors duration-300 group-hover:bg-background/60 bg-background/40"
+        className="shimmer-button__fill absolute inset-[1px] z-[-1] transition-colors duration-300 group-hover:bg-background/60 bg-background/40"
         style={{ borderRadius: `calc(${borderRadius} - 1px)` }}
       />
 

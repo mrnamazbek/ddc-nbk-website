@@ -22,6 +22,10 @@ export interface CinematicChapter {
   meta?: string;
 }
 
+type LenisScroller = {
+  scrollTo: (target: number, options?: { duration?: number }) => void;
+};
+
 interface CinematicAltynAdamExperienceProps {
   overline: string;
   title: string;
@@ -342,7 +346,7 @@ function ChapterCard({ chapter, index, total, progress }: { chapter: CinematicCh
     >
       <article
         className={cn(
-          "w-[min(40rem,80vw)] rounded-[28px] border p-7 shadow-[0_28px_90px_rgba(0,0,0,0.5)] transition-colors duration-500",
+          "theme-on-forest w-[min(40rem,80vw)] rounded-[28px] border p-7 shadow-[0_28px_90px_rgba(0,0,0,0.5)] transition-colors duration-500",
           held
             ? "pointer-events-auto border-gold/25 bg-[linear-gradient(145deg,rgba(8,30,22,0.94),rgba(2,8,5,0.9))] backdrop-blur-2xl"
             : "border-white/12 bg-[linear-gradient(145deg,rgba(8,30,22,0.7),rgba(2,8,5,0.65))]",
@@ -400,7 +404,7 @@ function StaticExperience({
   "overline" | "title" | "accent" | "trailingTitle" | "subtitle" | "chapters"
 >) {
   return (
-    <section className="relative w-full bg-[#040c08] px-6 py-24 text-white">
+    <section className="cinematic-experience relative w-full bg-[#040c08] px-6 py-24 text-white">
       <div className="mx-auto max-w-5xl text-center">
         <span className="mb-5 inline-block rounded-full border border-gold/20 bg-white/[0.035] px-5 py-2 text-[10px] font-semibold uppercase tracking-[0.38em] text-gold-light">
           {overline}
@@ -413,7 +417,7 @@ function StaticExperience({
       </div>
       <div className="mx-auto mt-14 grid max-w-5xl gap-6 md:grid-cols-2">
         {chapters.map((chapter) => (
-          <article key={chapter.id} className="rounded-[28px] border border-gold/20 bg-[#071b13]/70 p-7">
+          <article key={chapter.id} className="theme-on-forest rounded-[28px] border border-gold/20 bg-[#071b13]/70 p-7">
             <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold-light/80">{chapter.eyebrow}</p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white"><BubbleText text={chapter.title} /></h2>
             <p className="mt-3 text-sm leading-relaxed text-white/76"><BubbleText text={chapter.description} /></p>
@@ -554,8 +558,8 @@ export default function CinematicAltynAdamExperience({
     const target = CHAPTER_ZONE_START + ((index + 0.5) / chapters.length) * CHAPTER_ZONE_WIDTH;
     const targetY = start + target * max;
 
-    const lenis = (window as any).__lenis;
-    if (lenis) {
+    const lenis = (window as Window & { __lenis?: LenisScroller }).__lenis;
+    if (lenis?.scrollTo) {
       lenis.scrollTo(targetY, { duration: 1.2 });
     } else {
       window.scrollTo({ top: targetY, behavior: "smooth" });
@@ -576,7 +580,7 @@ export default function CinematicAltynAdamExperience({
   }
 
   return (
-    <section ref={containerRef} className={cn("relative w-full bg-[#040c08] text-white", scrollLengthClass)}>
+    <section ref={containerRef} className={cn("cinematic-experience relative w-full bg-[#040c08] text-white", scrollLengthClass)}>
       <div className="sticky top-0 h-screen overflow-hidden bg-[#040c08]">
         <div className="absolute inset-0 bg-[linear-gradient(120deg,#031009,#071b13_48%,#020806)]" />
         <div className="absolute inset-0 opacity-[0.28] bg-[radial-gradient(rgba(232,200,122,0.18)_1px,transparent_1px)] bg-[size:22px_22px]" />

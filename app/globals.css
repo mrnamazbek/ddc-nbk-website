@@ -289,19 +289,19 @@ html.light body {
 }
 
 html.light {
-  --light-fg: #102217;
-  --light-fg-soft: #314537;
-  --light-fg-muted: #64766A;
-  --light-fg-faint: #768579;
-  --light-surface: #FFFDF6;
+  --light-fg: #003D2C;
+  --light-fg-soft: #245746;
+  --light-fg-muted: #4D796B;
+  --light-fg-faint: #64877B;
+  --light-surface: #FFFFFF;
   --light-surface-strong: #FFFFFF;
-  --light-border: rgba(16, 34, 23, 0.14);
-  --light-border-soft: rgba(16, 34, 23, 0.09);
-  --light-forest-glass: rgba(16, 34, 23, 0.06);
+  --light-border: rgba(0, 95, 68, 0.16);
+  --light-border-soft: rgba(0, 95, 68, 0.1);
+  --light-forest-glass: rgba(0, 95, 68, 0.06);
   --light-gold-readable: #6B551B;
   --light-gold-soft: #7D631F;
-  --light-forest-readable: #1A3D2B;
-  --light-forest-soft: #2D6A4F;
+  --light-forest-readable: #005F44;
+  --light-forest-soft: #0B7A59;
 }
 
 html.light .bg-black,
@@ -529,18 +529,18 @@ html.light .bg-white\/\[0\.08\] {
 }
 
 html.light .bg-forest\/30 {
-  background-color: rgba(26, 61, 43, 0.1) !important;
+  background-color: rgba(0, 95, 68, 0.1) !important;
 }
 html.light .bg-forest\/20,
 html.light .bg-forest-light\/20,
 html.light .bg-forest\/10 {
-  background-color: rgba(26, 61, 43, 0.07) !important;
+  background-color: rgba(0, 95, 68, 0.07) !important;
 }
 html.light .border-forest-light,
 html.light .border-forest-light\/30,
 html.light .border-forest-light\/20,
 html.light .border-forest-light\/10 {
-  border-color: rgba(26, 61, 43, 0.24) !important;
+  border-color: rgba(0, 95, 68, 0.24) !important;
 }
 html.light .border-gold\/50,
 html.light .border-gold\/40,
@@ -729,7 +729,7 @@ html.light .event-lightbox-backdrop > button {
 }
 
 html.light .text-gradient-gold {
-  background: linear-gradient(135deg, #0B1F15 0%, #1A3D2B 58%, #6F561D 100%) !important;
+  background: linear-gradient(135deg, #003D2C 0%, #005F44 58%, #0B7A59 100%) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
 }
@@ -742,7 +742,7 @@ html.light .text-gradient-gold {
 }
 
 html.light .text-gradient-forest {
-  background: linear-gradient(135deg, #0B1F15 0%, #1A3D2B 55%, #2D6A4F 100%) !important;
+  background: linear-gradient(135deg, #003D2C 0%, #005F44 55%, #0B7A59 100%) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
 }
@@ -878,6 +878,17 @@ body {
     rgba(255, 255, 255, 0) 60%,
     rgba(255, 255, 255, 0.2) 80%,
     rgba(255, 255, 255, 0.5) 100%);
+}
+
+/* Navigation is fixed above moving card grids. Its surface needs to be more
+   opaque than ordinary glass; otherwise background rules visibly bisect the
+   logo and navigation as the page scrolls underneath. */
+.site-header {
+  isolation: isolate;
+  background: var(--header-surface) !important;
+  background-blend-mode: normal !important;
+  backdrop-filter: blur(30px) saturate(170%);
+  -webkit-backdrop-filter: blur(30px) saturate(170%);
 }
 
 /* Единый псевдоэлемент для отрисовки физической рамки с эффектом преломления */
@@ -1095,10 +1106,91 @@ body {
    accessible antique-gold text tokens (already defined for this exact
    light-on-light problem) instead of the dark-theme highlight color. */
 html.light .liquid-glass-button[data-variant="gold"] {
-  color: var(--accent-gold);
+  background: var(--color-forest);
+  color: #FFFFFF;
+  --glass-button-border-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.18) 45%, rgba(255, 255, 255, 0.05) 100%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.22), 0 8px 22px rgba(0, 95, 68, 0.18);
 }
 html.light .liquid-glass-button[data-variant="gold"]:hover {
-  color: var(--accent-gold-hover);
+  background: var(--color-forest-dark);
+  color: #FFFFFF;
+}
+
+/* CTA shimmer buttons previously supplied a hard-coded grey fill from the
+   component itself. In light mode that flattened primary and secondary actions
+   into the same low-contrast control. A forest solid is now the single primary
+   action; the second action remains an outlined forest control. */
+html.light .shimmer-button[data-variant="gold"] {
+  background: var(--color-forest) !important;
+  color: #FFFFFF !important;
+  border-color: var(--color-forest) !important;
+  box-shadow: 0 8px 22px rgba(0, 95, 68, 0.2) !important;
+}
+
+html.light .shimmer-button[data-variant="gold"] .shimmer-button__fill {
+  background: transparent !important;
+}
+
+html.light .shimmer-button[data-variant="gold"] .shimmer-button__sweep {
+  opacity: 0.45;
+}
+
+html.light .shimmer-button[data-variant="forest"] {
+  background: #FFFFFF !important;
+  color: var(--color-forest) !important;
+  border-color: rgba(0, 95, 68, 0.34) !important;
+  box-shadow: 0 6px 18px rgba(0, 61, 44, 0.1) !important;
+}
+
+html.light .shimmer-button[data-variant="forest"] .shimmer-button__fill {
+  background: transparent !important;
+}
+
+/* The supplied light-theme emblem remains exact #005F44 on every light
+   surface. Dark mode continues to inherit the surrounding foreground color. */
+html.light [data-ddc-logo] {
+  background-color: #005F44 !important;
+}
+
+/* Explicit inverse surfaces keep their text legible despite the light theme's
+   otherwise useful global white-to-ink compatibility mapping. */
+html.light .theme-on-forest .text-white,
+html.light .theme-on-forest .text-white\/90,
+html.light .theme-on-forest .text-white\/76,
+html.light .theme-on-forest .text-white\/70,
+html.light .theme-on-forest .text-white\/64,
+html.light .theme-on-forest .text-zinc-300 {
+  color: #F7FAF8 !important;
+}
+
+html.light .theme-on-forest .text-zinc-400,
+html.light .theme-on-forest .text-white\/45,
+html.light .theme-on-forest .text-white\/40 {
+  color: #D7E8E1 !important;
+}
+
+/* The cinematic scene deliberately retains a light canvas in light mode. Its
+   introductory copy is therefore ink rather than the dark-theme white alpha.
+   Dark chapter cards opt into .theme-on-forest above and remain inverse. */
+html.light .cinematic-experience .text-white\/64 {
+  color: var(--text-secondary) !important;
+}
+
+html.light .cinematic-experience .theme-on-forest .text-white\/64 {
+  color: #F7FAF8 !important;
+}
+
+/* Attribute selectors avoid ambiguity with Tailwind's arbitrary slash opacity
+   utilities and keep the intended contrast stable after class generation. */
+html.light .cinematic-experience [class~="text-white/64"] {
+  color: var(--text-secondary) !important;
+}
+
+html.light .theme-on-forest [class~="text-white/90"],
+html.light .theme-on-forest [class~="text-white/76"],
+html.light .theme-on-forest [class~="text-white/70"],
+html.light .theme-on-forest [class~="text-white/64"] {
+  color: #F7FAF8 !important;
 }
 
 /* Зеленый вариант кнопки (Forest Liquid Glass) */
