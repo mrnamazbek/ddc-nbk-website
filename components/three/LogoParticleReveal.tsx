@@ -425,8 +425,8 @@ function sampleSceneMaskTarget(
   }
 
   return sampleImageMask(img, want, {
-    target: sceneObjectSize * 0.86,
-    offsetX: -Math.min(viewHeight * 3.3, 15.0),
+    target: sceneObjectSize,
+    offsetX: -Math.min(viewHeight * 0.64, 2.9),
     offsetY: -Math.min(viewHeight * 0.015, 0.06),
     depth: 0.2,
     jitterAmount: 0.012,
@@ -489,9 +489,9 @@ function sampleDigitalCoreTarget(want: number, viewHeight: number): Float32Array
 
 function sampleServiceConstellationTarget(want: number, viewHeight: number): Float32Array {
   const out = new Float32Array(want * 3);
-  const cx = -Math.min(viewHeight * 3.3, 15.0);
+  const cx = -Math.min(viewHeight * 0.64, 2.9);
   const cy = -Math.min(viewHeight * 0.015, 0.06);
-  const size = Math.min(viewHeight * 0.36, 1.66);
+  const size = Math.min(viewHeight * 0.4, 1.85);
   const ring = 0.62 * size;
 
   for (let i = 0; i < want; i++) {
@@ -1001,7 +1001,7 @@ export default function LogoParticleReveal() {
         {/* Scene 3: the core opens into operational service modules */}
         <motion.div
           style={{ opacity: scene3Opacity, x: scene3X, y: scene3Y }}
-          className="scene-copy-veil pointer-events-none absolute inset-x-6 bottom-[12vh] z-30 md:inset-x-auto md:right-[9vw] md:top-1/2 md:bottom-auto md:w-[min(34rem,38vw)] md:-translate-y-1/2"
+          className="pointer-events-none absolute inset-x-6 bottom-[12vh] z-30 md:inset-x-auto md:right-[9vw] md:top-1/2 md:bottom-auto md:w-[min(34rem,38vw)] md:-translate-y-1/2"
         >
           <StoryPanel overline={t("scene3.overline")} title={t("scene3.title")} desc={t("scene3.desc")} align="right" highlightContactCenter />
         </motion.div>

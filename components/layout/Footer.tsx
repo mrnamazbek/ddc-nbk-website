@@ -265,9 +265,9 @@ export default function Footer() {
               {t("legalLine")}
             </p>
           </div>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-row flex-nowrap items-center gap-2 overflow-x-auto pb-1 scrollbar-none sm:flex-wrap sm:gap-3 sm:overflow-visible sm:pb-0">
             {[t("tagData"), t("tagPlatforms"), t("tagSecurity"), t("tagPublicServices")].map((item) => (
-              <span key={item} className="site-footer-token whitespace-nowrap rounded-full border border-white/[0.08] bg-white/[0.035] px-4 py-2 text-xs text-zinc-400">
+              <span key={item} className="site-footer-token whitespace-nowrap rounded-full border border-white/[0.08] bg-white/[0.035] px-3 py-1.5 text-[10px] text-zinc-400 sm:px-4 sm:py-2 sm:text-xs">
                 {item}
               </span>
             ))}
