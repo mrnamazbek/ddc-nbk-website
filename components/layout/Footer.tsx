@@ -165,6 +165,15 @@ export default function Footer() {
         <ThreeDMarquee images={marqueeImages} />
       </div>
       <div className="site-footer-wash pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(3,5,4,0.78),#030504_66%)]" />
+      <motion.div
+        className="site-footer-watermark pointer-events-none absolute bottom-0 left-0 right-0 z-0 select-none text-center font-heading text-[clamp(5rem,18vw,19rem)] font-black leading-none tracking-[-0.08em] text-white/[0.035]"
+        initial={reduce ? false : { opacity: 0, y: 10 }}
+        whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+      >
+        DDC
+      </motion.div>
 
       <div className="relative z-10 mx-auto max-w-[1500px]">
         <motion.div
@@ -272,18 +281,7 @@ export default function Footer() {
               </span>
             ))}
           </div>
-        </div>
       </div>
-
-      <motion.div
-        className="site-footer-watermark pointer-events-none absolute bottom-0 left-0 right-0 z-0 select-none text-center font-heading text-[clamp(5rem,18vw,19rem)] font-black leading-none tracking-[-0.08em] text-white/[0.035]"
-        initial={reduce ? false : { opacity: 0, y: 10 }}
-        whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-      >
-        DDC
-      </motion.div>
     </motion.footer>
   );
 }
