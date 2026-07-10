@@ -2,7 +2,6 @@ import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import Icon, { IconName } from "@/components/ui/Icon";
-import DDCEventGallery from "@/components/sections/DDCEventGallery";
 import CareerCenterSection from "@/components/sections/CareerCenterSection";
 import { getTranslations } from "next-intl/server";
 import JobApplicationForm from "@/components/sections/JobApplicationForm";
@@ -376,9 +375,7 @@ export default async function CareersPage({ params }: CareersPageProps) {
           </GlassCard>
         </ScrollReveal>
 
-        <ScrollReveal blur={10} duration={ENTRANCE_DURATION.card}>
-          <DDCEventGallery />
-        </ScrollReveal>
+        {/* The DDC event gallery lives on the About page; it was duplicated here. */}
 
         {/* Список вакансий */}
         <div id="jobs-list" className="scroll-mt-24">
