@@ -208,7 +208,14 @@ function HeroParallaxScrollViewInner({
         }}
         className=""
       >
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-8 md:space-x-20 mb-8 md:mb-20">
+        {/* Rows use `gap`, not Tailwind's margin-based `space-x-*`. The
+            `space-x-{n}` rule re-declares `--tw-space-x-reverse: 0` and wins
+            over `space-x-reverse` in source order, so on the two
+            `flex-row-reverse` rows the margin landed on the wrong side and the
+            leftmost pair of cards ended up flush against each other (0px)
+            while every other pair got the full gap. `gap` has no reverse
+            variable and behaves identically in both flex directions. */}
+        <motion.div className="flex flex-row-reverse gap-8 md:gap-20 mb-8 md:mb-20">
           {firstRow.map((product) => (
             <ProductCard
               product={product}
@@ -217,7 +224,7 @@ function HeroParallaxScrollViewInner({
             />
           ))}
         </motion.div>
-        <motion.div className="flex flex-row mb-8 md:mb-20 space-x-8 md:space-x-20">
+        <motion.div className="flex flex-row gap-8 md:gap-20 mb-8 md:mb-20">
           {secondRow.map((product) => (
             <ProductCard
               product={product}
@@ -226,7 +233,7 @@ function HeroParallaxScrollViewInner({
             />
           ))}
         </motion.div>
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-8 md:space-x-20">
+        <motion.div className="flex flex-row-reverse gap-8 md:gap-20">
           {thirdRow.map((product) => (
             <ProductCard
               product={product}
