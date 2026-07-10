@@ -41,6 +41,12 @@ interface CinematicAltynAdamExperienceProps {
   finalAccent: string;
   finalDescription: string;
   scrollLengthClass?: string;
+  /**
+   * Render the plain card layout instead of the 3D scene: no WebGL canvas,
+   * no Altyn Adam model, no sticky scroll hijack. Same escape hatch the
+   * reduced-motion path already uses, opted into per page.
+   */
+  disable3D?: boolean;
 }
 
 const vertexShader = /* glsl */ `
@@ -430,8 +436,15 @@ function StaticExperience({
       <div className="mx-auto mt-14 grid max-w-5xl gap-6 md:grid-cols-2">
         {chapters.map((chapter) => (
           <article key={chapter.id} className="theme-on-forest rounded-[28px] border border-gold/20 bg-[#071b13]/70 p-7">
-            <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold-light/80">{chapter.eyebrow}</p>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white"><BubbleText text={chapter.title} /></h2>
+            <div className="mb-5 flex items-center gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-gold/25 bg-gold/10 text-gold-light">
+                {chapter.icon ? <Icon name={chapter.icon} size={20} /> : <span className="h-2 w-2 rounded-full bg-gold" />}
+              </div>
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold-light/80">{chapter.eyebrow}</p>
+                <h2 className="mt-1 text-2xl font-semibold tracking-tight text-white"><BubbleText text={chapter.title} /></h2>
+              </div>
+            </div>
             <p className="mt-3 text-sm leading-relaxed text-white/76"><BubbleText text={chapter.description} /></p>
             {chapter.features?.length ? (
               <ul className="mt-4 grid gap-2">
@@ -475,6 +488,7 @@ export default function CinematicAltynAdamExperience({
   finalAccent,
   finalDescription,
   scrollLengthClass = "min-h-[430vh]",
+  disable3D = false,
 }: CinematicAltynAdamExperienceProps) {
   const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
   const reduced = a11yEnabled || prefersReducedMotion;
@@ -588,7 +602,7 @@ export default function CinematicAltynAdamExperience({
     }
   };
 
-  if (reduced || lowPowerMode !== false || sessionDisabled3d) {
+  if (disable3D || reduced || lowPowerMode !== false || sessionDisabled3d) {
     return (
       <StaticExperience
         overline={overline}

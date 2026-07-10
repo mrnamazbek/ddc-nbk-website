@@ -40,7 +40,7 @@ export default function Services3D() {
       finalTitle={t("titleLine1")}
       finalAccent={t("titleAccent")}
       finalDescription={t("subtitle")}
-      scrollLengthClass="min-h-[430vh]"
+      disable3D
     />
   );
 }
