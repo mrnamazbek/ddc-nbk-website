@@ -13,6 +13,7 @@ import { useRouter } from "@/i18n/navigation";
 import BaseModelViewer from "@/components/three/scene/BaseModelViewer";
 import ScrollReveal, { ENTRANCE_DURATION } from "@/components/motion/ScrollReveal";
 import { RevealWords } from "@/components/motion/RevealWords";
+import { AutoRevealingHeading } from "@/components/motion/AutoRevealingHeading";
 
 
 export default function AboutPage() {
@@ -80,14 +81,28 @@ export default function AboutPage() {
         </div>
 
         {/* Секция миссии */}
-        <div id="mission" className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16 pb-12">
+        <div id="mission" className="scroll-mt-28 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16 pb-12">
           <div className="lg:col-span-6">
-            <h2 className="text-2xl font-bold text-white mb-6 tracking-wide">{t("missionTitle")}</h2>
+            <ScrollReveal blur={10} duration={ENTRANCE_DURATION.title}>
+              <h2 className="text-2xl font-bold text-white mb-6 tracking-wide">{t("missionTitle")}</h2>
+            </ScrollReveal>
             <p className="text-zinc-300 font-light leading-relaxed mb-6">
-              {t("missionDesc1")}
+              <AutoRevealingHeading
+                text={t("missionDesc1")}
+                splitBy="word"
+                delay={0.018}
+                blur={false}
+                className="block"
+              />
             </p>
             <p className="text-zinc-300 font-light leading-relaxed">
-              {t("missionDesc2")}
+              <AutoRevealingHeading
+                text={t("missionDesc2")}
+                splitBy="word"
+                delay={0.018}
+                blur={false}
+                className="block"
+              />
             </p>
           </div>
           <div className="relative isolate flex h-[280px] sm:h-[clamp(420px,48vw,620px)] min-h-[280px] sm:min-h-[420px] items-center justify-center overflow-visible rounded-[var(--radius-card)] lg:col-span-6">
