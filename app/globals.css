@@ -1146,10 +1146,15 @@ html.light .shimmer-button[data-variant="forest"] .shimmer-button__fill {
   background: transparent !important;
 }
 
-/* The supplied light-theme emblem remains exact #005F44 on every light
-   surface. Dark mode continues to inherit the surrounding foreground color. */
-html.light [data-ddc-logo] {
-  background-color: #005F44 !important;
+/* Preserve the established white emblem in dark mode. The supplied SVG is
+   intentionally exclusive to light theme, where it is the exact #005F44
+   forest-green mark. */
+html.light [data-ddc-logo] .ddc-logo__dark {
+  display: none;
+}
+
+html.light [data-ddc-logo] .ddc-logo__light {
+  display: block;
 }
 
 /* Explicit inverse surfaces keep their text legible despite the light theme's

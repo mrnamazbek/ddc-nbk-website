@@ -334,13 +334,15 @@ html.a11y header li[aria-hidden] { display: none !important; }
 html.a11y header img { filter: brightness(0) !important; opacity: 1 !important; }
 html.a11y.a11y-scheme-wb header img { filter: brightness(0) invert(1) !important; }
 
-html.a11y svg[data-ddc-logo] {
-  color: var(--a11y-fg) !important;
+html.a11y [data-ddc-logo] .ddc-logo__dark,
+html.a11y [data-ddc-logo] .ddc-logo__light {
+  background-color: var(--a11y-fg) !important;
   opacity: 1 !important;
 }
 
-html.a11y .site-footer-logo-tile svg[data-ddc-logo] {
-  color: var(--a11y-bg) !important;
+html.a11y .site-footer-logo-tile [data-ddc-logo] .ddc-logo__dark,
+html.a11y .site-footer-logo-tile [data-ddc-logo] .ddc-logo__light {
+  background-color: var(--a11y-bg) !important;
 }
 
 /* Technology-stack brand logos (Jira, JS, Python, etc.) are multi-color
