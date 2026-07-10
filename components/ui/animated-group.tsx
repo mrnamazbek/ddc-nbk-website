@@ -157,10 +157,15 @@ export function AnimatedGroup({
       variants={containerVariants}
       className={cn(className)}
     >
+      {/* No `h-full` on the item wrapper. In a grid or a non-wrapping flex row
+          the item already stretches, so it was redundant; but in a *wrapping*
+          flex row (`flex-wrap` + `items-center`) `height: 100%` resolves against
+          the whole multi-line container, making every item as tall as all the
+          lines combined. The second line was then pushed below the container and
+          clipped by the card's `overflow: hidden` — an icon fell out of the
+          DevOps card. */}
       {React.Children.map(children, (child) => (
-        <motion.div variants={itemVariants} className="h-full">
-          {child}
-        </motion.div>
+        <motion.div variants={itemVariants}>{child}</motion.div>
       ))}
     </motion.div>
   );

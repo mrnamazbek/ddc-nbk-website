@@ -13,6 +13,61 @@ interface TechItem {
   label: string;
 }
 
+/**
+ * Every tech icon is now a monochrome Simple Icons glyph that inherits
+ * `currentColor`, so the grid reads as one system. Hovering a tile reveals the
+ * tool's real brand colour.
+ *
+ * Marks whose official colour is black or near-black (GitHub, Express) or too
+ * dark to read on our tiles (Confluence, Helm, .NET, C#) use their lighter
+ * official variant instead — the point of the hover is recognition, not a
+ * second contrast failure.
+ */
+const BRAND_COLOR: Record<string, string> = {
+  jira: "#2684FF",
+  confluence: "#2684FF",
+  git: "#F05032",
+  github: "#FFFFFF",
+  gitlab: "#FC6D26",
+  kubernetes: "#326CE5",
+  docker: "#2496ED",
+  terraform: "#844FBA",
+  ansible: "#EE0000",
+  nginx: "#009639",
+  prometheus: "#E6522C",
+  helm: "#5C6BC0",
+  grafana: "#F46800",
+  jenkins: "#D24939",
+  githubactions: "#2088FF",
+  dotnet: "#8A63D2",
+  html5: "#E34F26",
+  css3: "#1572B6",
+  redis: "#DC382D",
+  grpc: "#2D9EDF",
+  angular: "#DD0031",
+  nodejs: "#5FA04E",
+  csharp: "#A179DC",
+  postgresql: "#4169E1",
+  javascript: "#F7DF1E",
+  java: "#ED8B00",
+  python: "#3776AB",
+  nats: "#27AAE1",
+  nestjs: "#E0234E",
+  typescript: "#3178C6",
+  spring: "#6DB33F",
+  oracle: "#F80000",
+  golang: "#00ADD8",
+  graphql: "#E10098",
+  express: "#FFFFFF",
+};
+
+/** Cream at rest (`text-foreground` follows the theme), brand colour on hover. */
+const brandStyle = (name: string) =>
+  ({ "--brand": BRAND_COLOR[name] ?? "currentColor" }) as React.CSSProperties;
+
+const ICON_TREATMENT =
+  "text-foreground transition-colors duration-300 hover:[color:var(--brand)]";
+
 export default function Technologies() {
   const t = useTranslations("Technologies");
   const { enabled: a11yEnabled } = useA11y();
@@ -120,7 +175,11 @@ export default function Technologies() {
               {pmTools.map((tech) => (
                 <div
                   key={tech.name}
-                  className="group relative flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-charcoal/40 border border-white/5 hover:border-gold-light/25 hover:bg-gold/5 transition-all duration-300 cursor-help"
+                  style={brandStyle(tech.name)}
+                  className={cn(
+                    "group relative flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-charcoal/40 border border-white/5 hover:border-gold-light/25 hover:bg-gold/5 transition-all duration-300 cursor-help",
+                    ICON_TREATMENT
+                  )}
                   title={tech.label}
                 >
                   <Icon name={tech.name} size={28} />
@@ -151,7 +210,11 @@ export default function Technologies() {
               {devopsTools.map((tech) => (
                 <div
                   key={tech.name}
-                  className="group relative flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-charcoal/40 border border-white/5 hover:border-forest-light/25 hover:bg-forest/5 transition-all duration-300 cursor-help"
+                  style={brandStyle(tech.name)}
+                  className={cn(
+                    "group relative flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-charcoal/40 border border-white/5 hover:border-forest-light/25 hover:bg-forest/5 transition-all duration-300 cursor-help",
+                    ICON_TREATMENT
+                  )}
                   title={tech.label}
                 >
                   <Icon name={tech.name} size={28} />
@@ -190,8 +253,10 @@ export default function Technologies() {
             {devTools.map((tech) => (
               <div
                 key={tech.name}
+                style={brandStyle(tech.name)}
                 className={cn(
                   "group relative flex flex-col items-center justify-center p-1.5 sm:p-4 rounded-xl",
+                  !a11yEnabled && ICON_TREATMENT,
                   a11yEnabled
                     ? "flex-grow flex-shrink-0 min-w-[110px] max-w-[150px] bg-white border-2 border-black"
                     : "bg-charcoal/40 border border-white/5 hover:border-forest-light/20 hover:bg-forest/5 hover:scale-105 hover:-translate-y-1 transition-all duration-300 cursor-help"
