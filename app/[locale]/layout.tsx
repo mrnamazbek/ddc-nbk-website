@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 import PageTransitionProvider from "@/components/motion/PageTransition";
 import ThemeProvider from "@/components/theme/ThemeProvider";
 import { IconSystemProvider } from "@/components/theme/IconSystemProvider";
@@ -11,18 +11,32 @@ import MotionA11yConfig from "@/components/motion/MotionA11yConfig";
 import AccessibilityPanel from "@/components/ui/AccessibilityPanel";
 import InteractiveDotGrid from "@/components/ui/InteractiveDotGrid";
 
-export const metadata: Metadata = {
-  title: "DDC — Центр цифрового развития Национального Банка Казахстана",
-  description: "Официальный веб-сайт Центра цифрового развития Национального Банка РК. Разработка передовых финансовых платформ, интеграция Цифрового Тенге и обеспечение государственной кибербезопасности.",
-  keywords: "Национальный Банк Казахстана, DDC, Цифровой Тенге, финтех Казахстан, Центральный Банк, базы данных, Data Engineering",
-  icons: {
-    icon: [{ url: "/images/logo/ddc-emblem.svg", type: "image/svg+xml" }],
-  },
-};
-
 interface LocaleLayoutProps {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
+}
+
+/**
+ * Per-locale metadata. This was a module-level `metadata` object hardcoded in
+ * Russian, so the English and Kazakh pages all shipped a Russian <title>,
+ * description and keywords — visible in the browser tab and to search engines.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+
+  return {
+    title: t("title"),
+    description: t("description"),
+    keywords: t("keywords"),
+    icons: {
+      icon: [{ url: "/images/logo/ddc-emblem.svg", type: "image/svg+xml" }],
+    },
+  };
 }
 
 export default async function LocaleLayout({

@@ -201,7 +201,7 @@ export default function Security() {
                 <div className="space-y-3.5 border-t border-glass-border pt-4">
                   <div className="flex items-center justify-between text-[11px] font-mono">
                     <span className="text-zinc-400">SECURITY STANDARDS</span>
-                    <span className="text-forest-light font-bold">ISO 9001 · СТ РК</span>
+                    <span className="text-forest-light font-bold">ISO 9001 · СТ РК</span>{/* i18n-exempt: standard designations */}
                   </div>
                   <div className="w-full h-1 bg-glass rounded-full overflow-hidden">
                     <div className="h-full w-full bg-forest-light rounded-full" />

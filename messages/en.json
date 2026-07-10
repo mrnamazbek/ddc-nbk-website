@@ -735,6 +735,30 @@
         "q3_a": "Use Eager Loading (JOIN/Select-Related)",
         "q3_b": "Run SELECT queries in a loop"
       }
+    },
+    "locAstana": "Astana",
+    "locAlmaty": "Almaty",
+    "typeFullTime": "Full-time",
+    "deptDefault": "Digital Development Center",
+    "departments": {
+      "infosec": "Information Security",
+      "itApplications": "Applied IT Solutions",
+      "planningEconomics": "Planning & Economics",
+      "hr": "Human Resources (HR)",
+      "helpdesk": "User Support Service",
+      "devops": "Infrastructure & DevOps",
+      "dataManagement": "Data Management"
+    },
+    "jobs": {
+      "socAnalyst": "SOC Analyst L1/L2",
+      "directorItApplications": "Director of IT Applications",
+      "chiefSpecialistPlanning": "Chief Specialist, Planning & Economics",
+      "chiefSpecialistCnb": "Chief Specialist, Compensation & Benefits (C&B)",
+      "helpdeskSpecialist": "IT Help Desk Specialist",
+      "middleDevops": "Middle DevOps Engineer",
+      "seniorDataEngineer": "Senior Data Engineer",
+      "middleDataEngineer": "Middle Data Engineer",
+      "juniorDataEngineer": "Junior Data Engineer"
     }
   },
   "ContactPage": {
@@ -812,10 +836,11 @@
     "off": "Off",
     "errorPrefix": "Error",
     "skipLink": "Skip to content",
-    "abSwitcher": "Настройки A/B теста иконок",
+    "abSwitcher": "Icon A/B test settings",
     "themeToggle": "Toggle theme",
     "logoLabel": "DDC — Home",
-    "toggleMobileMenu": "Toggle mobile menu"
+    "toggleMobileMenu": "Toggle mobile menu",
+    "logoTitle": "DDC — Digital Development Center of the NBK"
   },
   "EventGallery": {
     "overline": "DDC CORPORATE LIFE",
@@ -892,6 +917,87 @@
     "tagSecurity": "Security",
     "tagPublicServices": "Public Services",
     "copyright": "© {year} Digital Development Center of the National Bank of Kazakhstan JSC.",
-    "legalLine": "Official technology center of the National Bank of the Republic of Kazakhstan."
+    "legalLine": "Official technology center of the National Bank of the Republic of Kazakhstan.",
+    "headline": "The digital core of Kazakhstan's financial system.",
+    "blurb": "We design, build and maintain the technological platforms behind the National Bank's digital infrastructure, from data systems to public-facing services.",
+    "secPages": "Pages",
+    "secSocials": "Socials",
+    "secLegal": "Legal",
+    "secContacts": "Contacts",
+    "linkHome": "Home",
+    "linkAbout": "About",
+    "linkServices": "Services",
+    "linkMission": "Mission",
+    "linkNews": "News",
+    "linkContacts": "Contacts",
+    "linkGithub": "GitHub",
+    "linkNationalBank": "National Bank",
+    "linkProcurement": "Procurement portal",
+    "linkPrivacy": "Privacy policy",
+    "linkTerms": "Terms of use",
+    "linkInfoSec": "Information security",
+    "linkCareers": "Careers",
+    "linkContactCenter": "1477 Contact Center",
+    "linkAstanaOffice": "Astana office",
+    "linkAlmatyHub": "Almaty hub",
+    "linkWriteToDdc": "Write to DDC",
+    "builtBy": "Built by Namazbek",
+    "seeTheWork": "See the work",
+    "linkLinkedIn": "LinkedIn",
+    "linkInstagram": "Instagram"
+  },
+  "Metadata": {
+    "title": "DDC — Digital Development Center of the National Bank of Kazakhstan",
+    "description": "Official website of the Digital Development Center of the National Bank of Kazakhstan. Building advanced financial platforms, integrating the Digital Tenge and safeguarding national cybersecurity.",
+    "keywords": "National Bank of Kazakhstan, DDC, Digital Tenge, Kazakhstan fintech, central bank, databases, data engineering"
+  },
+  "FAQPage": {
+    "overline": "QUESTIONS AND ANSWERS",
+    "titleLine1": "Frequently asked",
+    "titleAccent": "questions",
+    "subtitle": "Answers to the key questions about DDC system architecture, the Digital Tenge, open banking and cybersecurity standards.",
+    "q1": "What is the Digital Development Center (DDC)?",
+    "a1": "The Digital Development Center is a specialised subsidiary of the National Bank of Kazakhstan. We design, develop, test and integrate innovative technology solutions and critical platforms for the country’s entire state financial infrastructure.",
+    "q2": "What is the Digital Tenge and how does it differ from ordinary money?",
+    "a2": "The Digital Tenge is a third form of the national currency of the Republic of Kazakhstan, complementing existing cash and non-cash tenge. It is a unique digital token issued directly by the National Bank, supporting programmability (smart contracts) and two-tier offline circulation.",
+    "q3": "What are the benefits of the Digital Tenge for business?",
+    "a3": "For business it unlocks automated settlement through smart contracts (for example instant tax distribution, escrow accounts without bank fees, automatic control of targeted budget spending), lower transaction costs and instant real-time settlement.",
+    "q4": "How is transaction security ensured in DDC systems?",
+    "a4": "We follow a Security-by-Design approach and a Zero Trust architecture. All transactions are encrypted using certified national cryptographic standards (ST RK) on top of certified hardware security modules (HSM). Our infrastructure holds the highest protection class in the Republic of Kazakhstan.",
+    "q5": "Can the Digital Tenge work without the internet?",
+    "a5": "Yes. One of DDC’s key innovations is a two-tier offline architecture. Using dedicated Secure Element chips in smart cards or mobile phones, users can transact directly with each other without an internet or mobile connection.",
+    "q6": "Are you open to working with developers?",
+    "a6": "Yes. As part of the Open Banking initiative we are actively developing unified Open API standards and a sandbox for integrating commercial banks, insurers and fintech companies. Details are available in our solutions section or by contacting us through the form."
+  },
+  "JobForm": {
+    "fillContacts": "Please fill in your contact details.",
+    "sendDirect": "Send your CV straight to the HR department of Digital Development Center JSC, National Bank of Kazakhstan",
+    "resumePlaceholder": "https://drive.google.com/... or https://hh.ru/resume/...",
+    "registering": "Registering candidate in the database...",
+    "candidate": "CANDIDATE:",
+    "vacancy": "VACANCY:",
+    "itScore": "IT TEST SCORE:",
+    "passed": "(Passed)",
+    "sendAnother": "Send another application"
+  },
+  "MonetarySim": {
+    "stimulating": "5.0% (Stimulating)",
+    "tight": "20.0% (Tight)",
+    "calculating": "Calculating macro effects...",
+    "cycleComplete": "ANNUAL SIMULATION CYCLE COMPLETE",
+    "growth": "GROWTH",
+    "decline": "DECLINE",
+    "report": "SYSTEM ANALYTICAL REPORT"
+  },
+  "TengeSim": {
+    "merchant1": "Altyn Dan LLP (School catering)",
+    "merchant2": "KazAgroMash JSC (Agricultural machinery)",
+    "merchant3": "KazPromStroy LLP (Infrastructure)",
+    "errUnaccredited": "Recipient BIN is not accredited for this state programme",
+    "errWrongCategory": "Ineligible spending category (violates token earmarking rules)",
+    "pasteBin": "Paste accredited BIN",
+    "recommendedRecipient": "Recommended recipient:",
+    "processing": "Processing transaction...",
+    "awaiting": "Awaiting broadcast..."
   }
 }

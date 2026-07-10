@@ -17,6 +17,7 @@ interface JobApplicationFormProps {
 
 export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
   const t = useTranslations("CareersPage.form");
+  const tf = useTranslations("JobForm");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -34,7 +35,7 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
   const handleStartQuiz = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.phone) {
-      alert("Пожалуйста, заполните контактные данные.");
+      alert(tf("fillContacts"));
       return;
     }
     setShowQuiz(true);
@@ -74,7 +75,7 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
           {t("title")}
         </h3>
         <p className="text-sm text-zinc-400 font-light">
-          Отправьте резюме напрямую в HR-отдел АО «Центр цифрового развития» Нацбанка РК
+          {tf("sendDirect")}
         </p>
       </div>
 
@@ -166,7 +167,7 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
                 id="resume"
                 type="url"
                 aria-label={t("resumeLabel")}
-                placeholder="https://drive.google.com/... или https://hh.ru/resume/..."
+                placeholder={tf("resumePlaceholder")}
                 value={formData.resume}
                 onChange={(e) => setFormData((prev) => ({ ...prev, resume: e.target.value }))}
                 className="w-full bg-charcoal/50 border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:border-gold/30 focus:outline-none transition-colors"
@@ -301,7 +302,7 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
               {isSubmitting ? (
                 <span className="flex items-center gap-2">
                   <Icon name="refresh" className="animate-spin text-black" size={14} />
-                  Регистрация кандидата в БД...
+                  {tf("registering")}
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
@@ -333,17 +334,17 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
 
             <div className="bg-black/40 border border-white/5 rounded-xl p-4 max-w-sm mx-auto text-left font-mono text-xs space-y-2">
               <div className="flex justify-between">
-                <span className="text-zinc-500">КАНДИДАТ:</span>
+                <span className="text-zinc-500">{tf("candidate")}</span>
                 <span className="text-white">{formData.name}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-500">ВАКАНСИЯ:</span>
+                <span className="text-zinc-500">{tf("vacancy")}</span>
                 <span className="text-white truncate max-w-[200px]">{formData.vacancy}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-500">ОЦЕНКА ИТ-ТЕСТА:</span>
+                <span className="text-zinc-500">{tf("itScore")}</span>
                 <span className={score === 3 ? "text-forest-light" : "text-gold"}>
-                  {score} / 3 {score === 3 ? "(Пройден)" : ""}
+                  {score} / 3 {score === 3 ? tf("passed") : ""}
                 </span>
               </div>
             </div>
@@ -363,7 +364,7 @@ export default function JobApplicationForm({ jobs }: JobApplicationFormProps) {
               }}
               className="text-xs text-gold hover:text-gold-light underline font-mono cursor-pointer mt-4"
             >
-              Отправить еще один отклик
+              {tf("sendAnother")}
             </button>
           </motion.div>
         )}

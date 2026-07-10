@@ -15,7 +15,8 @@ interface Scenario {
   key: ScenarioKey;
   bin: string;
   allowedCategory: CategoryKey;
-  merchantName: string;
+  /** i18n key in the TengeSim namespace; the label is resolved at render. */
+  merchantKey: string;
 }
 
 const SCENARIOS: Record<ScenarioKey, Scenario> = {
@@ -23,24 +24,25 @@ const SCENARIOS: Record<ScenarioKey, Scenario> = {
     key: "food",
     bin: "123456789012",
     allowedCategory: "food",
-    merchantName: "ТОО Алтын Дан (Школьное питание)",
+    merchantKey: "merchant1",
   },
   agro: {
     key: "agro",
     bin: "987654321098",
     allowedCategory: "machinery",
-    merchantName: "АО КазАгроМаш (Сельхоз-техника)",
+    merchantKey: "merchant2",
   },
   invest: {
     key: "invest",
     bin: "555666777888",
     allowedCategory: "construction",
-    merchantName: "ТОО КазПромСтрой (Инфраструктура)",
+    merchantKey: "merchant3",
   },
 };
 
 export default function DigitalTengeSimulator() {
   const t = useTranslations("DigitalPage.simulator");
+  const tg = useTranslations("TengeSim");
   const [selectedScenario, setSelectedScenario] = useState<ScenarioKey>("food");
   const [amount, setAmount] = useState<string>("50000");
   const [bin, setBin] = useState<string>("123456789012");
@@ -105,8 +107,8 @@ export default function DigitalTengeSimulator() {
           setSimulationResult({
             success: false,
             reason: !isBinValid
-              ? "Неаккредитованный БИН получателя для данной госпрограммы"
-              : "Нецелевая категория расходов (нарушение условий маркировки токенов)",
+              ? tg("errUnaccredited")
+              : tg("errWrongCategory"),
           });
         }
       }, 4000)
@@ -213,7 +215,7 @@ export default function DigitalTengeSimulator() {
                 className="inline-flex min-h-11 items-center text-[10px] font-mono text-gold underline hover:text-gold-light cursor-pointer"
                 disabled={isSimulating}
               >
-                Вставить аккредитованный БИН
+                {tg("pasteBin")}
               </button>
             </div>
             <input
@@ -228,7 +230,7 @@ export default function DigitalTengeSimulator() {
               required
             />
             <span className="text-[10px] text-zinc-500 font-mono mt-1.5 block">
-              Рекомендуемый получатель: {SCENARIOS[selectedScenario].merchantName}
+              {tg("recommendedRecipient")} {tg(SCENARIOS[selectedScenario].merchantKey)}
             </span>
           </div>
 
@@ -242,7 +244,7 @@ export default function DigitalTengeSimulator() {
             {isSimulating ? (
               <span className="flex items-center gap-2">
                 <Icon name="refresh" className="animate-spin text-black" size={14} />
-                Обработка транзакции...
+                {tg("processing")}
               </span>
             ) : (
               <span className="flex items-center gap-2">
@@ -371,7 +373,7 @@ export default function DigitalTengeSimulator() {
                 >
                   <Icon name="cpu" size={48} className="text-zinc-600 stroke-[1]" />
                   <span className="text-xs font-mono uppercase tracking-wider">
-                    Ожидание трансляции...
+                    {tg("awaiting")}
                   </span>
                 </motion.div>
               )}

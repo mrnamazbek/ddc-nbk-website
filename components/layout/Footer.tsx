@@ -16,54 +16,64 @@ type FooterLink = {
   icon?: IconName;
 };
 
-const footerSections: { title: string; links: FooterLink[] }[] = [
+type FooterSectionDef = {
+  titleKey: string;
+  links: (Omit<FooterLink, "name"> & { nameKey: string })[];
+};
+
+/**
+ * Structure only — every label is a message key. These used to be hardcoded
+ * English strings ("Pages", "Home", "Privacy policy", …), so Russian and Kazakh
+ * visitors got an English footer on every page of the site.
+ */
+const FOOTER_SECTIONS: FooterSectionDef[] = [
   {
-    title: "Pages",
+    titleKey: "secPages",
     links: [
-      { name: "Home", href: "/" },
-      { name: "About", href: "/about" },
-      { name: "Services", href: "/services" },
-      { name: "Mission", href: "/mission" },
-      { name: "News", href: "/news" },
-      { name: "Contacts", href: "/contact" },
+      { nameKey: "linkHome", href: "/" },
+      { nameKey: "linkAbout", href: "/about" },
+      { nameKey: "linkServices", href: "/services" },
+      { nameKey: "linkMission", href: "/mission" },
+      { nameKey: "linkNews", href: "/news" },
+      { nameKey: "linkContacts", href: "/contact" },
     ],
   },
   {
-    title: "Socials",
+    titleKey: "secSocials",
     links: [
       {
-        name: "LinkedIn",
+        nameKey: "linkLinkedIn",
         href: "https://www.linkedin.com/company/bank-service-bureau/posts/?feedView=all",
         external: true,
         icon: "linkedin",
       },
       {
-        name: "Instagram",
+        nameKey: "linkInstagram",
         href: "https://www.instagram.com/ddc_nbk/",
         external: true,
         icon: "instagram",
       },
-      { name: "GitHub", href: "https://github.com/mrnamazbek", external: true },
-      { name: "National Bank", href: "https://nationalbank.kz", external: true },
-      { name: "Procurement portal", href: "/services#procurement" },
+      { nameKey: "linkGithub", href: "https://github.com/mrnamazbek", external: true },
+      { nameKey: "linkNationalBank", href: "https://nationalbank.kz", external: true },
+      { nameKey: "linkProcurement", href: "/services#procurement" },
     ],
   },
   {
-    title: "Legal",
+    titleKey: "secLegal",
     links: [
-      { name: "Privacy policy", href: "/security" },
-      { name: "Terms of use", href: "/security" },
-      { name: "Information security", href: "/security" },
-      { name: "Careers", href: "/careers" },
+      { nameKey: "linkPrivacy", href: "/security" },
+      { nameKey: "linkTerms", href: "/security" },
+      { nameKey: "linkInfoSec", href: "/security" },
+      { nameKey: "linkCareers", href: "/careers" },
     ],
   },
   {
-    title: "Contacts",
+    titleKey: "secContacts",
     links: [
-      { name: "1477 Contact Center", href: "tel:1477", external: true },
-      { name: "Astana office", href: "/contact#astana" },
-      { name: "Almaty hub", href: "/contact#almaty" },
-      { name: "Write to DDC", href: "mailto:info@ddc-nbk.kz", external: true },
+      { nameKey: "linkContactCenter", href: "tel:1477", external: true },
+      { nameKey: "linkAstanaOffice", href: "/contact#astana" },
+      { nameKey: "linkAlmatyHub", href: "/contact#almaty" },
+      { nameKey: "linkWriteToDdc", href: "mailto:info@ddc-nbk.kz", external: true },
     ],
   },
 ];
@@ -197,28 +207,27 @@ export default function Footer() {
             </Link>
 
             <h2 className="text-balance font-heading text-[clamp(2.3rem,5vw,5.8rem)] font-semibold leading-[0.88] tracking-[-0.045em]">
-              The digital core of Kazakhstan&apos;s financial system.
+              {t("headline")}
             </h2>
             <p className="mt-7 max-w-lg text-lg leading-relaxed text-zinc-400">
-              We design, build and maintain the technological platforms behind the National Bank&apos;s digital
-              infrastructure, from data systems to public-facing services.
+              {t("blurb")}
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-4">
-            {footerSections.map((section, index) => (
+            {FOOTER_SECTIONS.map((section, index) => (
               <motion.nav
-                key={section.title}
+                key={section.titleKey}
                 initial={reduce ? false : { opacity: 0, y: 22 }}
                 whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.65, delay: 0.08 * index, ease: [0.22, 1, 0.36, 1] }}
               >
-                <h3 className="mb-5 text-sm font-semibold text-zinc-100">{section.title}</h3>
+                <h3 className="mb-5 text-sm font-semibold text-zinc-100">{t(section.titleKey)}</h3>
                 <ul className="space-y-4">
-                  {section.links.map((link) => (
-                    <li key={link.name}>
-                      <FooterAnchor link={link} />
+                  {section.links.map(({ nameKey, ...rest }) => (
+                    <li key={nameKey}>
+                      <FooterAnchor link={{ ...rest, name: t(nameKey) }} />
                     </li>
                   ))}
                 </ul>
@@ -234,7 +243,7 @@ export default function Footer() {
           viewport={{ once: true, margin: "-120px" }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-          <p className="font-mono text-xs uppercase tracking-[0.34em] text-gold">Built by Namazbek</p>
+          <p className="font-mono text-xs uppercase tracking-[0.34em] text-gold">{t("builtBy")}</p>
           <div className="flex items-center gap-5">
             <a
               href="https://github.com/mrnamazbek"
@@ -257,7 +266,7 @@ export default function Footer() {
               className="group/credit inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-zinc-400 transition-colors duration-300 hover:text-white"
             >
               <Icon name="linkedin" size={16} className="text-gold/90" animate={false} />
-              See the work
+              {t("seeTheWork")}
               <Icon
                 name="arrow-up-right"
                 size={12}

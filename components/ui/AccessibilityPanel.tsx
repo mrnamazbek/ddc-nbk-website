@@ -219,7 +219,7 @@ export default function AccessibilityPanel() {
                 <Group label={t("fontSize")}>
                   {SCALES.map((s) => (
                     <Chip key={s} active={a11y.enabled && a11y.scale === s} onClick={() => a11y.setScale(s)}>
-                      <span style={{ fontSize: `${0.8 + (s - 100) / 250}rem` }}>А</span>
+                      <span style={{ fontSize: `${0.8 + (s - 100) / 250}rem` }}>А</span>{/* i18n-exempt: glyph size sample */}
                       <span className="ml-1 text-xs opacity-70">{s}%</span>
                     </Chip>
                   ))}
@@ -239,7 +239,7 @@ export default function AccessibilityPanel() {
                         className="flex h-6 w-6 items-center justify-center rounded border border-black text-xs font-bold"
                         style={{ background: sc.swatchBg, color: sc.swatchFg }}
                       >
-                        Аа
+                        Аа{/* i18n-exempt: typeface sample glyphs */}
                       </span>
                     </Chip>
                   ))}

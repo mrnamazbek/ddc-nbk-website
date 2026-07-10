@@ -67,7 +67,7 @@ export default function CinematicLoader() {
       </div>
       <div className="mt-8 flex flex-col items-center gap-2">
         <span className="font-mono text-gold-light text-base tracking-[0.3em] tabular-nums">{progress}%</span>
-        <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-gold/50">Шаңырақ • Formation</p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-gold/50">Шаңырақ • Formation</p>{/* i18n-exempt: Kazakh brand term */}
       </div>
     </div>
   );

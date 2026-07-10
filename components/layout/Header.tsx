@@ -369,7 +369,7 @@ export default function Header() {
             className="flex min-h-11 min-w-11 items-center gap-4.5 group select-none shrink-0 text-foreground"
           >
             <DDCLogo
-              title="DDC — Центр цифрового развития НБК"
+              title={tA11y("logoTitle")}
               className="h-10 w-10 transition-transform duration-500 ease-out group-hover:scale-105 group-active:scale-95 shrink-0"
             />
             <div className="hidden min-[370px]:flex flex-col justify-center min-w-0 font-sans tracking-wide">

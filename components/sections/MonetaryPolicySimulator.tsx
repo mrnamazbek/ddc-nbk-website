@@ -36,6 +36,7 @@ const INITIAL_STATE: SimulationState = {
 
 export default function MonetaryPolicySimulator() {
   const t = useTranslations("AnalyticsPage.simulator");
+  const tm = useTranslations("MonetarySim");
   const [state, setState] = useState<SimulationState>(INITIAL_STATE);
   const [selectedRate, setSelectedRate] = useState<number>(14.75);
   const [isSimulating, setIsSimulating] = useState(false);
@@ -196,8 +197,8 @@ export default function MonetaryPolicySimulator() {
             />
 
             <div className="flex justify-between text-[10px] font-mono text-zinc-500">
-              <span>5.0% (Стимулирующая)</span>
-              <span>20.0% (Жесткая)</span>
+              <span>{tm("stimulating")}</span>
+              <span>{tm("tight")}</span>
             </div>
           </div>
 
@@ -212,7 +213,7 @@ export default function MonetaryPolicySimulator() {
                 {isSimulating ? (
                   <span className="flex items-center gap-2">
                     <Icon name="refresh" className="animate-spin text-black" size={14} />
-                    Расчет макро-эффектов...
+                    {tm("calculating")}
                   </span>
                 ) : (
                   <span className="flex items-center gap-2">
@@ -224,7 +225,7 @@ export default function MonetaryPolicySimulator() {
             ) : (
               <div className="p-4 bg-white/5 border border-white/10 rounded-xl text-center space-y-3">
                 <span className="text-xs font-mono text-zinc-400 block">
-                  ГОДОВОЙ ЦИКЛ СИМУЛЯЦИИ ЗАВЕРШЕН
+                  {tm("cycleComplete")}
                 </span>
                 <Button
                   onClick={handleRestart}
@@ -285,7 +286,7 @@ export default function MonetaryPolicySimulator() {
                   {state.activity.toFixed(1)}
                 </span>
                 <span className="text-[10px] font-mono text-zinc-500">
-                  {state.activity > 50 ? "РОСТ" : "СПАД"}
+                  {state.activity > 50 ? tm("growth") : tm("decline")}
                 </span>
               </div>
               <div className="flex items-center justify-between border-t border-white/5 pt-2 mt-1">
@@ -317,7 +318,7 @@ export default function MonetaryPolicySimulator() {
               </div>
               <div className="space-y-1">
                 <span className="text-[9px] font-mono text-zinc-500 uppercase block">
-                  АНАЛИТИЧЕСКИЙ ОТЧЕТ СИСТЕМЫ
+                  {tm("report")}
                 </span>
                 <p className="text-xs font-sans font-light leading-relaxed">
                   {feedbackMessage}

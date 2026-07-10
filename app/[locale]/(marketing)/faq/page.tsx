@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import Icon from "@/components/ui/Icon";
 import GlassCard from "@/components/ui/GlassCard";
 import { BubbleText } from "@/components/ui/BubbleText";
@@ -12,37 +13,21 @@ interface FAQItem {
   answer: string;
 }
 
+/** Number of q{n}/a{n} pairs present in the FAQPage namespace. */
+const FAQ_COUNT = 6;
+
 export default function FAQPage() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const { enabled: a11yEnabled } = useA11y();
   const reduce = useReducedMotion() || a11yEnabled;
+  const t = useTranslations("FAQPage");
 
-  const faqs: FAQItem[] = [
-    {
-      question: "Что такое Digital Development Center (DDC)?",
-      answer: "Digital Development Center — это специализированная дочерняя организация Национального Банка Казахстана. Мы занимаемся разработкой, развитием, тестированием и интеграцией инновационных технологических решений и критических платформ для всей государственной финансовой инфраструктуры страны.",
-    },
-    {
-      question: "Что такое Цифровой Тенге и чем он отличается от обычных денег?",
-      answer: "Цифровой Тенге — это третья форма национальной валюты Республики Казахстан, которая будет дополнять существующие наличные и безналичные тенге. Он является уникальным цифровым токеном, выпускаемым непосредственно Национальным Банком, поддерживающим функции программирования (смарт-контракты) и двухуровневого оффлайн-обращения.",
-    },
-    {
-      question: "Каковы преимущества использования Цифрового Тенге для бизнеса?",
-      answer: "Для бизнеса это открывает возможности автоматизации расчетов за счет смарт-контрактов (например, мгновенное распределение налогов, эскроу-счета без комиссии банков, автоматический контроль целевого расхода бюджетов), снижение транзакционных издержек и мгновенные расчеты в режиме реального времени.",
-    },
-    {
-      question: "Как обеспечивается безопасность транзакций в системах DDC?",
-      answer: "Мы используем подход «Security-by-Design» и архитектуру нулевого доверия (Zero Trust). Все транзакции шифруются с использованием сертифицированных государственных криптографических стандартов (СТ РК) на базе сертифицированных аппаратных модулей безопасности (HSM). Наша инфраструктура имеет высший класс защиты в Республике Казахстан.",
-    },
-    {
-      question: "Может ли Цифровой Тенге работать без интернета?",
-      answer: "Да. Одной из ключевых инноваций DDC является разработка двухуровневой оффлайн-архитектуры. Используя специальные чипы безопасности (Secure Element) в смарт-картах или мобильных телефонах, пользователи могут совершать транзакции напрямую друг с другом без подключения к интернету или мобильной связи.",
-    },
-    {
-      question: "Открыты ли вы к сотрудничеству с разработчиками?",
-      answer: "Да. В рамках инициативы Open Banking мы активно разрабатываем единые стандарты Open API и песочницу (Sandbox) для интеграции коммерческих банков, страховых и финтех-компаний. Подробности можно найти в нашем разделе решений или связавшись с нами через форму.",
-    },
-  ];
+  // Previously this array held the questions and answers as hardcoded Russian
+  // string literals, so English and Kazakh visitors read a Russian FAQ.
+  const faqs: FAQItem[] = Array.from({ length: FAQ_COUNT }, (_, i) => ({
+    question: t(`q${i + 1}`),
+    answer: t(`a${i + 1}`),
+  }));
 
   return (
     <div className="relative w-full bg-transparent overflow-hidden min-h-screen pt-32 pb-24 font-sans">
@@ -56,14 +41,14 @@ export default function FAQPage() {
           className="text-center mb-20"
         >
           <span className="text-xs uppercase tracking-[0.25em] text-gold-light font-medium mb-4 block">
-            ВОПРОСЫ И ОТВЕТЫ
+            {t("overline")}
           </span>
           <h1 className="font-display text-4xl sm:text-5xl font-normal tracking-tight text-white mb-6">
-            <BubbleText text="Часто задаваемые" /> <br />
-            <BubbleText text="вопросы" activeClassName="text-gold font-black" />
+            <BubbleText text={t("titleLine1")} /> <br />
+            <BubbleText text={t("titleAccent")} activeClassName="text-gold font-black" />
           </h1>
           <p className="text-zinc-300 font-light leading-relaxed">
-            <BubbleText text="Ответы на ключевые вопросы об архитектуре систем DDC, Цифровом Тенге, открытом банкинге и стандартах кибербезопасности." />
+            <BubbleText text={t("subtitle")} />
           </p>
         </motion.div>
 

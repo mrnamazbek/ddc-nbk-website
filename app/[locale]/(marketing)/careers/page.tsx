@@ -39,107 +39,51 @@ interface Job {
   url: string;
 }
 
-const FALLBACK_JOBS: Job[] = [
-  {
-    title: "SOC Analyst L1/L2",
-    department: "Информационная безопасность",
-    location: "Астана",
-    type: "Полная занятость",
-    badgeVariant: "green",
-    salary: "Не указана",
-    experience: "1–3 года",
-    published: "5 июня",
-    url: "https://almaty.hh.kz/employer/28161"
-  },
-  {
-    title: "Director of IT Applications",
-    department: "Прикладные ИТ-решения",
-    location: "Астана",
-    type: "Полная занятость",
-    badgeVariant: "gold",
-    salary: "Не указана",
-    experience: "Более 6 лет",
-    published: "3 июня",
-    url: "https://almaty.hh.kz/employer/28161"
-  },
-  {
-    title: "Главный специалист планово-экономического отдела",
-    department: "Планово-экономический отдел",
-    location: "Астана",
-    type: "Полная занятость",
-    badgeVariant: "gray",
-    salary: "Не указана",
-    experience: "3–6 лет",
-    published: "3 июня",
-    url: "https://almaty.hh.kz/employer/28161"
-  },
-  {
-    title: "Главный специалист по компенсациям и льготам (C&B)",
-    department: "Управление персоналом (HR)",
-    location: "Астана",
-    type: "Полная занятость",
-    badgeVariant: "gray",
-    salary: "Не указана",
-    experience: "3–6 лет",
-    published: "26 мая",
-    url: "https://almaty.hh.kz/employer/28161"
-  },
-  {
-    title: "Специалист службы поддержки пользователей (IT Help Desk)",
-    department: "Служба поддержки пользователей",
-    location: "Астана",
-    type: "Полная занятость",
-    badgeVariant: "green",
-    salary: "Не указана",
-    experience: "1–3 года",
-    published: "20 мая",
-    url: "https://almaty.hh.kz/employer/28161"
-  },
-  {
-    title: "Middle DevOps Engineer",
-    department: "Инфраструктура и DevOps",
-    location: "Астана",
-    type: "Полная занятость",
-    badgeVariant: "green",
-    salary: "от 800 000 ₸",
-    experience: "1–3 года",
-    published: "14 мая",
-    url: "https://almaty.hh.kz/employer/28161"
-  },
-  {
-    title: "Senior Data Engineer",
-    department: "Управление данными",
-    location: "Астана",
-    type: "Полная занятость",
-    badgeVariant: "gold",
-    salary: "от 1 000 000 ₸",
-    experience: "3–6 лет",
-    published: "14 мая",
-    url: "https://almaty.hh.kz/employer/28161"
-  },
-  {
-    title: "Middle Data Engineer",
-    department: "Управление данными",
-    location: "Астана",
-    type: "Полная занятость",
-    badgeVariant: "green",
-    salary: "от 600 000 ₸",
-    experience: "1–3 года",
-    published: "14 мая",
-    url: "https://almaty.hh.kz/employer/28161"
-  },
-  {
-    title: "Junior Data Engineer",
-    department: "Управление данными",
-    location: "Астана",
-    type: "Полная занятость",
-    badgeVariant: "gray",
-    salary: "от 400 000 ₸",
-    experience: "Без опыта",
-    published: "14 мая",
-    url: "https://almaty.hh.kz/employer/28161"
-  }
+const HH_EMPLOYER_URL = "https://almaty.hh.kz/employer/28161";
+
+/**
+ * Locale-neutral fallback data, used when the HH API is unreachable.
+ *
+ * Everything here is a key or a raw value — never display text. The previous
+ * version stored rendered Russian strings ("Не указана", "3 июня", the job
+ * titles and departments) and only ran location/type/experience through the
+ * translator, so English and Kazakh visitors saw a half-Russian vacancy list
+ * whenever the API call failed — which is exactly what it does today.
+ */
+interface FallbackJob {
+  titleKey: string;
+  deptKey: string;
+  expKey: string;
+  badgeVariant: Job["badgeVariant"];
+  salary: HHSalary | null;
+  /** ISO date; rendered via `formatDate` in the active locale. */
+  publishedAt: string;
+}
+
+const kzt = (from: number): HHSalary => ({ from, to: null, currency: "KZT", gross: false });
+
+const FALLBACK_JOBS: FallbackJob[] = [
+  { titleKey: "socAnalyst",              deptKey: "infosec",           expKey: "exp1To3",        badgeVariant: "green", salary: null,          publishedAt: "2026-06-05" },
+  { titleKey: "directorItApplications",  deptKey: "itApplications",    expKey: "expMoreThan6",   badgeVariant: "gold",  salary: null,          publishedAt: "2026-06-03" },
+  { titleKey: "chiefSpecialistPlanning", deptKey: "planningEconomics", expKey: "exp3To6",        badgeVariant: "gray",  salary: null,          publishedAt: "2026-06-03" },
+  { titleKey: "chiefSpecialistCnb",      deptKey: "hr",                expKey: "exp3To6",        badgeVariant: "gray",  salary: null,          publishedAt: "2026-05-26" },
+  { titleKey: "helpdeskSpecialist",      deptKey: "helpdesk",          expKey: "exp1To3",        badgeVariant: "green", salary: null,          publishedAt: "2026-05-20" },
+  { titleKey: "middleDevops",            deptKey: "devops",            expKey: "exp1To3",        badgeVariant: "green", salary: kzt(800_000),  publishedAt: "2026-05-14" },
+  { titleKey: "seniorDataEngineer",      deptKey: "dataManagement",    expKey: "exp3To6",        badgeVariant: "gold",  salary: kzt(1_000_000), publishedAt: "2026-05-14" },
+  { titleKey: "middleDataEngineer",      deptKey: "dataManagement",    expKey: "exp1To3",        badgeVariant: "green", salary: kzt(600_000),  publishedAt: "2026-05-14" },
+  { titleKey: "juniorDataEngineer",      deptKey: "dataManagement",    expKey: "expNoExperience", badgeVariant: "gray", salary: kzt(400_000),  publishedAt: "2026-05-14" },
 ];
+
+/** Maps the Russian department names the HH API returns onto our i18n keys. */
+const HH_DEPARTMENT_KEYS: Record<string, string> = {
+  "информационная безопасность": "infosec",
+  "прикладные ит-решения": "itApplications",
+  "планово-экономический отдел": "planningEconomics",
+  "управление персоналом (hr)": "hr",
+  "служба поддержки пользователей": "helpdesk",
+  "инфраструктура и devops": "devops",
+  "управление данными": "dataManagement",
+};
 
 function translateExperience(expName: string | undefined, t: Translator) {
   if (!expName) return "";
@@ -151,25 +95,30 @@ function translateExperience(expName: string | undefined, t: Translator) {
   return expName;
 }
 
-function translateType(typeName: string | undefined, locale: string) {
+/* The helpers below used to inline the Russian/Kazakh/English wording in
+   `locale === ...` ternaries. They now read from the catalogue, so adding a
+   locale needs no code change — only new message keys. */
+
+function translateType(typeName: string | undefined, t: Translator) {
   if (!typeName) return "";
   const name = typeName.toLowerCase();
-  if (name.includes("полная") || name.includes("full")) {
-    return locale === "kz" ? "Толық жұмыс күні" : locale === "en" ? "Full-time" : "Полная занятость";
-  }
+  if (name.includes("полная") || name.includes("full")) return t("typeFullTime");
   return typeName;
 }
 
-function translateLocation(locName: string | undefined, locale: string) {
+function translateLocation(locName: string | undefined, t: Translator) {
   if (!locName) return "";
   const name = locName.toLowerCase();
-  if (name.includes("астана") || name.includes("astana")) {
-    return locale === "kz" ? "Астана" : locale === "en" ? "Astana" : "Астана";
-  }
-  if (name.includes("алматы") || name.includes("almaty")) {
-    return locale === "kz" ? "Алматы" : locale === "en" ? "Almaty" : "Алматы";
-  }
+  if (name.includes("астана") || name.includes("astana")) return t("locAstana");
+  if (name.includes("алматы") || name.includes("almaty")) return t("locAlmaty");
   return locName;
+}
+
+function translateDepartment(deptName: string | undefined, t: Translator) {
+  if (!deptName) return t("deptDefault");
+  const key = HH_DEPARTMENT_KEYS[deptName.trim().toLowerCase()];
+  // Unknown departments keep HH's own wording rather than a wrong guess.
+  return key ? t(`departments.${key}`) : deptName;
 }
 
 function formatSalary(salary: HHSalary | null | undefined, t: Translator) {
@@ -207,17 +156,19 @@ async function getVacancies(locale: string, t: Translator): Promise<Job[]> {
     const data = await res.json();
     if (data && Array.isArray(data.items) && data.items.length > 0) {
       return data.items.map((item: HHVacancy) => ({
+        // HH only ever returns the vacancy name in Russian, so this one field
+        // stays in its source language; everything around it is localised.
         title: item.name,
-        department: item.department?.name || (locale === "kz" ? "Цифрлық даму орталығы" : locale === "en" ? "Digital Development Center" : "Центр цифрового развития"),
-        location: translateLocation(item.area?.name, locale),
-        type: translateType(item.employment?.name, locale),
+        department: translateDepartment(item.department?.name, t),
+        location: translateLocation(item.area?.name, t),
+        type: translateType(item.employment?.name, t),
         badgeVariant: (item.name.toLowerCase().includes("senior") || item.name.toLowerCase().includes("director"))
           ? ("gold" as const)
           : (item.name.toLowerCase().includes("junior") ? ("gray" as const) : ("green" as const)),
         salary: formatSalary(item.salary, t),
         experience: translateExperience(item.experience?.name, t),
         published: formatDate(item.published_at, locale),
-        url: item.alternate_url || "https://almaty.hh.kz/employer/28161",
+        url: item.alternate_url || HH_EMPLOYER_URL,
       }));
     }
     return getFallbackJobs(locale, t);
@@ -228,11 +179,16 @@ async function getVacancies(locale: string, t: Translator): Promise<Job[]> {
 }
 
 function getFallbackJobs(locale: string, t: Translator): Job[] {
-  return FALLBACK_JOBS.map(job => ({
-    ...job,
-    location: translateLocation(job.location, locale),
-    type: translateType(job.type, locale),
-    experience: translateExperience(job.experience, t),
+  return FALLBACK_JOBS.map((job) => ({
+    title: t(`jobs.${job.titleKey}`),
+    department: t(`departments.${job.deptKey}`),
+    location: t("locAstana"),
+    type: t("typeFullTime"),
+    badgeVariant: job.badgeVariant,
+    salary: formatSalary(job.salary, t),
+    experience: t(job.expKey),
+    published: formatDate(job.publishedAt, locale),
+    url: HH_EMPLOYER_URL,
   }));
 }
 
