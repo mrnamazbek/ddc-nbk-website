@@ -447,59 +447,39 @@
     "ctaBtn": "Open Vacancies"
   },
   "ServicesPage": {
-    "overline": "SOLUTIONS AND TECHNOLOGIES",
-    "titleLine1": "State-level",
-    "titleAccent": "platforms and services",
-    "subtitle": "DDC designs, builds, and maintains the technological core of the financial sector of the Republic of Kazakhstan. Our portfolio includes solutions from digital currency to high-load clearing systems.",
-    "techStackLabel": "Technology stack:",
-    "keyFeaturesLabel": "Key features:",
+    "overline": "DDC SERVICES",
+    "titleLine1": "Operational",
+    "titleAccent": "DDC services",
+    "subtitle": "Technology support areas for the National Bank and its organizations.",
     "s1": {
-      "title": "Digital Tenge Platform (CBDC)",
-      "subtitle": "National digital currency",
-      "description": "Creation of a hybrid architecture based on DLT and legacy banking systems. The platform acts as a tool for programmable public spending: 100+ government programs (procurement, subsidies, National Fund) are connected with over 330 billion KZT issued under real-time targeted use control.",
-      "f1": "Programmability via smart contracts to control targeted spending",
-      "f2": "Two-tier offline transactions without mobile network access",
-      "f3": "Integration with existing cashless infrastructure of commercial banks"
+      "title": "Contact Center 1477",
+      "description": "User support for service questions and enquiries.",
+      "f1": "Request intake",
+      "f2": "Advisory support"
     },
     "s2": {
-      "title": "Instant Payments System (IPS)",
-      "subtitle": "Clearing and transactions 24/7/365",
-      "description": "Ensuring instant interbank payments for individuals and legal entities by phone number or QR code.",
-      "f1": "Payment processing speed under 2 seconds",
-      "f2": "Connection of all commercial banks of Kazakhstan through a single gateway",
-      "f3": "Compliance with international message standard ISO 20022"
+      "title": "Procurement Portal",
+      "description": "Operation and technical support for the procurement portal of the National Bank and its organizations.",
+      "f1": "Participant access",
+      "f2": "Service maintenance"
     },
     "s3": {
-      "title": "Interbank Clearing and Settlements",
-      "subtitle": "Stability of the financial core",
-      "description": "Support and modernization of interbank clearing systems ensuring guaranteed execution of large financial settlements.",
-      "f1": "Multilateral netting and scheduled clearing",
-      "f2": "High infrastructure fault tolerance at 99.999% SLA level",
-      "f3": "Integration with Real-Time Gross Settlement (RTGS) systems"
+      "title": "Data Processing",
+      "description": "Automated data-processing services for the National Bank and its organizations.",
+      "f1": "Technology support",
+      "f2": "Information-resource support"
     },
     "s4": {
-      "title": "Infrastructure Cybersecurity",
-      "subtitle": "State protection class",
-      "description": "Designing and maintaining comprehensive protection of the National Bank's financial network from external cyberattacks and leaks.",
-      "f1": "Implementation of state cryptographic standards (ST RK)",
-      "f2": "Protection of communication channels using hardware encryption",
-      "f3": "Audit and penetration testing of systems (Red Teaming)"
+      "title": "Unified IT Services",
+      "description": "System and technical maintenance of hardware-software systems and IT infrastructure.",
+      "f1": "Equipment and systems",
+      "f2": "Corporate network"
     },
     "s5": {
-      "title": "Open API / Open Banking Infrastructure",
-      "subtitle": "Fintech ecosystem",
-      "description": "Standardization and development of a single open API gateway. Includes the Unified External Interaction Platform serving as a digital window for over 76,000 active users to securely exchange data and reports.",
-      "f1": "Unified API specifications portal for developers",
-      "f2": "Secure authentication via OAuth 2.0 / OpenID Connect",
-      "f3": "Reducing barriers for new fintech products entering the market"
-    },
-    "s6": {
-      "title": "Financial Analytics and Big Data",
-      "subtitle": "Market intelligence",
-      "description": "Processing and analysis of massive transaction volumes based on the Financial Data Factory. Deployed data pipelines achieved 6.6x faster loading and processing times, while optimizing analytical report generation speed by 80%.",
-      "f1": "Monitoring of transactional activity on a country scale",
-      "f2": "Building predictive models for inflation and liquidity",
-      "f3": "Automatic detection of anomalies and suspicious transactions"
+      "title": "Information Security",
+      "description": "Information and cybersecurity services for the National Bank and its organizations.",
+      "f1": "Information protection",
+      "f2": "Security technical support"
     }
   },
   "DigitalPage": {

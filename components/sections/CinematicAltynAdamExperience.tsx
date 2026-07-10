@@ -8,6 +8,7 @@ import * as THREE from "three";
 import AltynAdam from "@/components/three/AltynAdam";
 import Icon, { IconName } from "@/components/ui/Icon";
 import { BubbleText } from "@/components/ui/BubbleText";
+import LottieAnimation from "@/components/ui/LottieAnimation";
 import ThreeModelLoadingOverlay from "@/components/ui/ThreeModelLoadingOverlay";
 import { useA11y } from "@/components/theme/AccessibilityProvider";
 import { cn } from "@/lib/utils";
@@ -20,6 +21,8 @@ export interface CinematicChapter {
   description: string;
   features?: string[];
   meta?: string;
+  visualSrc?: string;
+  visualLabel?: string;
 }
 
 type LenisScroller = {
@@ -376,7 +379,16 @@ function ChapterCard({ chapter, index, total, progress }: { chapter: CinematicCh
             ))}
           </ul>
         ) : null}
-        {chapter.meta ? (
+        {chapter.visualSrc ? (
+          <LottieAnimation
+            src={chapter.visualSrc}
+            label={chapter.visualLabel ?? chapter.title}
+            shell
+            className="mt-4 h-20"
+            frameClassName="min-h-20 h-20"
+            animationClassName="max-h-20"
+          />
+        ) : chapter.meta ? (
           <div className="mt-5 border-t border-white/10 pt-4">
             <code className="rounded-full border border-gold/20 bg-gold/[0.06] px-3 py-1.5 font-mono text-[10px] text-gold-light">{chapter.meta}</code>
           </div>
@@ -433,6 +445,16 @@ function StaticExperience({
             ) : null}
             {chapter.meta ? (
               <p className="mt-4 font-mono text-[10px] tracking-[0.08em] text-gold-light/80">{chapter.meta}</p>
+            ) : null}
+            {chapter.visualSrc ? (
+              <LottieAnimation
+                src={chapter.visualSrc}
+                label={chapter.visualLabel ?? chapter.title}
+                shell
+                className="mt-4 h-20"
+                frameClassName="min-h-20 h-20"
+                animationClassName="max-h-20"
+              />
             ) : null}
           </article>
         ))}
