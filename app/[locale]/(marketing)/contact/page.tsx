@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -35,6 +36,7 @@ const LabelInputContainer = ({
 export default function ContactPage() {
   const t = useTranslations("ContactPage");
   const tA11y = useTranslations("A11y");
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "fallback" | "error">("idle");
 
   // Validation schema for quality inbound messages (created dynamically for localization)
   const contactSchema = z.object({
@@ -49,12 +51,13 @@ export default function ContactPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitting },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
   });
 
-  const onSubmit = (data: ContactFormValues) => {
+  const openMailFallback = (data: ContactFormValues) => {
     const href = createMailtoDraft({
       to: "info@ddc.nationalbank.kz",
       subject: t("emailSubject"),
@@ -68,6 +71,35 @@ export default function ContactPage() {
     });
 
     window.location.assign(href);
+  };
+
+  const onSubmit = async (data: ContactFormValues) => {
+    setSubmitStatus("idle");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const result = (await response.json().catch(() => null)) as { fallback?: boolean; ok?: boolean } | null;
+
+      if (response.ok && result?.ok) {
+        reset();
+        setSubmitStatus("success");
+        return;
+      }
+
+      if (result?.fallback) {
+        openMailFallback(data);
+        setSubmitStatus("fallback");
+        return;
+      }
+    } catch {
+      // The status below gives the visitor a usable, non-technical message.
+    }
+
+    setSubmitStatus("error");
   };
 
   return (
@@ -92,7 +124,7 @@ export default function ContactPage() {
             />
           </h1>
           <ScrollReveal blur={10} duration={ENTRANCE_DURATION.subtitle} delay={0.2}>
-            <p className="text-lg text-zinc-300 font-light leading-relaxed">
+            <p className="text-lg text-muted font-light leading-relaxed">
               <BubbleText text={t("subtitle")} />
             </p>
           </ScrollReveal>
@@ -114,7 +146,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h5 className="text-xs text-gold-light uppercase tracking-wider font-semibold mb-1">{t("labelAddress")}</h5>
-                    <p className="text-sm text-zinc-300 font-light leading-relaxed">
+                    <p className="text-sm text-muted font-light leading-relaxed">
                       <BubbleText text={t("addressVal")} />
                     </p>
                   </div>
@@ -126,7 +158,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h5 className="text-xs text-gold-light uppercase tracking-wider font-semibold mb-1">{t("labelPhone")}</h5>
-                    <p className="text-sm text-zinc-300 font-light font-mono leading-relaxed">
+                    <p className="text-sm text-muted font-light font-mono leading-relaxed">
                       <BubbleText text="+7 (727) 330-24-00" />
                     </p>
                   </div>
@@ -138,7 +170,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h5 className="text-xs text-gold-light uppercase tracking-wider font-semibold mb-1">{t("labelEmail")}</h5>
-                    <p className="text-sm text-zinc-300 font-light font-mono leading-relaxed">
+                    <p className="text-sm text-muted font-light font-mono leading-relaxed">
                       <BubbleText text="info@ddc.nationalbank.kz" />
                     </p>
                   </div>
@@ -150,7 +182,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h5 className="text-xs text-gold-light uppercase tracking-wider font-semibold mb-1">{t("labelClock")}</h5>
-                    <p className="text-sm text-zinc-300 font-light leading-relaxed">
+                    <p className="text-sm text-muted font-light leading-relaxed">
                       <BubbleText text={t("clockVal")} />
                     </p>
                   </div>
@@ -159,16 +191,16 @@ export default function ContactPage() {
             </div>
 
             {/* Status Plate */}
-            <ScrollReveal duration={ENTRANCE_DURATION.card} delay={0.3} className="p-6 rounded-2xl bg-charcoal/30 border border-white/5">
+            <ScrollReveal duration={ENTRANCE_DURATION.card} delay={0.3} className="rounded-[var(--radius-card)] border border-[var(--glass-border)] bg-[var(--glass-bg)] p-6">
               <span className="text-[10px] uppercase text-gold-light font-semibold tracking-wider block mb-2">{t("statusTitle")}</span>
-              <p className="text-xs text-zinc-300 font-light leading-relaxed">
+              <p className="text-xs text-muted font-light leading-relaxed">
                 {t("statusDesc")}
               </p>
             </ScrollReveal>
           </div>
 
           {/* Right: Contact Form */}
-          <div className="lg:col-span-7 bg-charcoal/20 border border-white/5 rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+          <div className="relative overflow-hidden rounded-[var(--radius-card)] border border-[var(--glass-border)] bg-[var(--glass-bg)] p-8 lg:col-span-7 sm:p-12">
             <StaggerGroup stagger={STAGGER.base}>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pointer-events-auto">
                 <StaggerItem duration={ENTRANCE_DURATION.subtitle} className="flex flex-col space-y-6 sm:space-y-0 sm:flex-row sm:space-x-6">
@@ -186,7 +218,7 @@ export default function ContactPage() {
                     />
                     {errors.name && (
                       <p id="name-error" className="text-xs text-red-500 mt-1 font-semibold flex items-center gap-1" role="alert">
-                        <span className="sr-only">{tA11y("errorPrefix")}: </span>⚠️ {errors.name.message}
+                        <span className="sr-only">{tA11y("errorPrefix")}: </span><Icon name="alert" size={14} animate={false} /> {errors.name.message}
                       </p>
                     )}
                   </LabelInputContainer>
@@ -205,7 +237,7 @@ export default function ContactPage() {
                     />
                     {errors.email && (
                       <p id="email-error" className="text-xs text-red-500 mt-1 font-semibold flex items-center gap-1" role="alert">
-                        <span className="sr-only">{tA11y("errorPrefix")}: </span>⚠️ {errors.email.message}
+                        <span className="sr-only">{tA11y("errorPrefix")}: </span><Icon name="alert" size={14} animate={false} /> {errors.email.message}
                       </p>
                     )}
                   </LabelInputContainer>
@@ -226,7 +258,7 @@ export default function ContactPage() {
                     />
                     {errors.organization && (
                       <p id="organization-error" className="text-xs text-red-500 mt-1 font-semibold flex items-center gap-1" role="alert">
-                        <span className="sr-only">{tA11y("errorPrefix")}: </span>⚠️ {errors.organization.message}
+                        <span className="sr-only">{tA11y("errorPrefix")}: </span><Icon name="alert" size={14} animate={false} /> {errors.organization.message}
                       </p>
                     )}
                   </LabelInputContainer>
@@ -247,7 +279,7 @@ export default function ContactPage() {
                     />
                     {errors.message && (
                       <p id="message-error" className="text-xs text-red-500 mt-1 font-semibold flex items-center gap-1" role="alert">
-                        <span className="sr-only">{tA11y("errorPrefix")}: </span>⚠️ {errors.message.message}
+                        <span className="sr-only">{tA11y("errorPrefix")}: </span><Icon name="alert" size={14} animate={false} /> {errors.message.message}
                       </p>
                     )}
                   </LabelInputContainer>
@@ -259,11 +291,33 @@ export default function ContactPage() {
                     variant="gold"
                     size="lg"
                     className="w-full"
+                    disabled={isSubmitting}
                   >
-                    {t("btnSubmit")}
+                    {isSubmitting ? t("btnSubmitting") : t("btnSubmit")}
                     <Icon name="send" size={16} animate={false} />
                   </Button>
                 </StaggerItem>
+
+                <div aria-live="polite" role="status">
+                  {submitStatus === "success" && (
+                    <p className="flex items-center gap-2 text-sm text-forest-light">
+                      <Icon name="check-circle" size={16} animate={false} />
+                      {t("submitSuccess")}
+                    </p>
+                  )}
+                  {submitStatus === "fallback" && (
+                    <p className="flex items-center gap-2 text-sm text-gold-light">
+                      <Icon name="mail" size={16} animate={false} />
+                      {t("submitFallback")}
+                    </p>
+                  )}
+                  {submitStatus === "error" && (
+                    <p className="flex items-center gap-2 text-sm text-red-500" role="alert">
+                      <Icon name="alert" size={16} animate={false} />
+                      {t("submitError")}
+                    </p>
+                  )}
+                </div>
               </form>
             </StaggerGroup>
           </div>
