@@ -11,6 +11,7 @@
 | `npm run check:deps` | Fails on high/critical production dependency advisories |
 | `npm run build` | Production compilation and route generation |
 | `npm run test:e2e` | Production build plus Playwright browser smoke and header tests |
+| `npm run perf:check` | Cold-cache LCP, CLS, scroll-FPS, and page-error budget check for core public routes |
 
 `e2e/smoke.spec.ts` validates the public localized route matrix at reduced
 motion. `e2e/security.spec.ts` verifies the header contract and the honest
@@ -28,6 +29,9 @@ changes:
 - Network/console review for third-party asset failures
 - Header, language switcher, theme switcher, contact mail-client handoff, and
   careers external application links
+
+See [Performance validation](PERFORMANCE.md) for local production-server
+profiles, browser budgets, reports, and limitations.
 
 Historical visual-audit specs are intentionally not part of the CI contract
 because they write to machine-specific absolute paths or query a live external
