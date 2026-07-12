@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useA11y } from "../theme/AccessibilityProvider";
+import { readScenePalette } from "../theme/useScenePalette";
 
 /**
  * Production centerpiece — a scroll-driven GPU particle field that starts as
@@ -727,30 +728,32 @@ function ParticleCanvas() {
     geo.setAttribute("aRand", new THREE.BufferAttribute(rand, 1));
     geo.setAttribute("aScale", new THREE.BufferAttribute(scaleArr, 1));
 
-    // Theme-aware palette. Light mode reserves gold for small UI accents and
-    // keeps large particle/SVG silhouettes strictly within the forest family.
-    // CSS cannot reach WebGL, so this palette is applied inside the renderer.
-    const palette = (light: boolean) =>
-      light
+    // CSS semantic tokens are the single source of truth. This renderer needs
+    // explicit Three colors, so read the resolved palette and refresh it on
+    // both theme and Variant A/B attribute changes.
+    const palette = () => {
+      const scenePalette = readScenePalette();
+      return scenePalette.isLight
         ? {
-            a: "#003D2C",
-            b: "#0B7A59",
-            ribbonA: "#005F44",
-            ribbonB: "#2B9B77",
-            hot: "#2B9B77",
+            a: scenePalette.modelLightBase,
+            b: scenePalette.particleAccent,
+            ribbonA: scenePalette.modelLightBase,
+            ribbonB: scenePalette.particlePrimary,
+            hot: scenePalette.particleHighlight,
+            size: scenePalette.particleSize,
             mul: 1.14,
-            size: 1.3,
           }
         : {
-            a: "#43B978",
-            b: "#FFD45A",
-            ribbonA: "#FFE17A",
-            ribbonB: "#43B978",
-            hot: "#FFF0A3",
+            a: scenePalette.particlePrimary,
+            b: scenePalette.particleAccent,
+            ribbonA: scenePalette.particleHighlight,
+            ribbonB: scenePalette.particlePrimary,
+            hot: scenePalette.particleHighlight,
+            size: scenePalette.particleSize,
             mul: 1.62,
-            size: 1.16,
           };
-    let theme = palette(document.documentElement.classList.contains("light"));
+    };
+    let theme = palette();
     const baseSize = isMobile ? 2.2 : 2.62;
 
     const uniforms = {
@@ -772,9 +775,9 @@ function ParticleCanvas() {
       uOpacity: { value: 0 },
     };
 
-    // React to live theme toggles (next-themes flips html.light without a reload).
+    // React to live theme and palette toggles without recreating the GPU scene.
     const themeObserver = new MutationObserver(() => {
-      theme = palette(document.documentElement.classList.contains("light"));
+      theme = palette();
       uniforms.uColorA.value.set(theme.a);
       uniforms.uColorB.value.set(theme.b);
       uniforms.uRibbonA.value.set(theme.ribbonA);
@@ -782,7 +785,7 @@ function ParticleCanvas() {
       uniforms.uHotColor.value.set(theme.hot);
       uniforms.uSize.value = baseSize * theme.size;
     });
-    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class", "data-color-variant"] });
 
     const material = new THREE.ShaderMaterial({
       vertexShader: VERT,

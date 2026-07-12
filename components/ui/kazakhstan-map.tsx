@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Icon from "@/components/ui/Icon";
 import GlassCard from "@/components/ui/GlassCard";
@@ -106,8 +106,6 @@ function PreviewBeam({ isTopHalf, reduce }: { isTopHalf: boolean; reduce: boolea
 
 export function KazakhstanMap() {
   const t = useTranslations("ContactPage");
-  const reduce = useReducedMotion();
-  const [mounted, setMounted] = useState(false);
   const [hoveredOffice, setHoveredOffice] = useState<MapOffice | null>(null);
   const [isMapHovered, setIsMapHovered] = useState(false);
   
@@ -116,14 +114,12 @@ export function KazakhstanMap() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [isLight, setIsLight] = useState(false);
-  const { enabled: a11yEnabled } = useA11y();
+  // The provider starts with the same value during SSR and hydration, then
+  // updates from matchMedia. Reading Framer's hook here changed the initial
+  // markup only for reduced-motion users and caused a hydration recovery.
+  const { enabled: a11yEnabled, prefersReducedMotion: reduce } = useA11y();
 
   useEffect(() => {
-    // Plain effect, no requestAnimationFrame — rAF is paused for backgrounded/
-    // hidden tabs (e.g. a link opened in a background tab), which left this
-    // stuck on its loading placeholder indefinitely instead of just mounting
-    // as soon as React commits, like every other "mounted" check in this codebase.
-    setMounted(true);
     setIsLight(document.documentElement.classList.contains("light"));
 
     const observer = new MutationObserver(() => {
@@ -162,10 +158,6 @@ export function KazakhstanMap() {
     setHoveredOffice(null);
     handleMapPointerLeave();
   };
-
-  if (!mounted) {
-    return <div className="w-full aspect-[1000/549] bg-charcoal/5 rounded-3xl animate-pulse" />;
-  }
 
   // Coordinates of pins in SVG projection
   const pins = OFFICES.map(o => ({

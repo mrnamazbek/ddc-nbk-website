@@ -142,7 +142,7 @@ function MissionSpine() {
 function Mission2D() {
   return (
     <div className="relative w-full bg-transparent overflow-hidden py-24 sm:py-32 font-sans">
-      <div className="absolute inset-0 bg-[radial-gradient(#52B78803_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
+      <div className="brand-dot-grid absolute inset-0 pointer-events-none" />
       <TerminalGridBackground className="opacity-75" />
 
       <MissionSpine />

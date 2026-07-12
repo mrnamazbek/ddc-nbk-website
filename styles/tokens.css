@@ -70,6 +70,28 @@
   --hero-scrim-strong: #0E2419;
   --hero-scrim-soft: rgba(14, 36, 25, 0.6);
 
+  /* Scene palette bridges semantic CSS tokens into WebGL, Canvas, and static
+     background effects. These tokens deliberately describe roles rather than
+     individual models, so every scene responds to the palette switch without
+     carrying its own duplicate colour map. */
+  --scene-background-forest: #081815;
+  --scene-background-teal: #021214;
+  --scene-background: var(--scene-background-forest);
+  --scene-background-light: #F7FAF8;
+  --scene-model-dark-base: #0A301E;
+  --scene-model-dark-accent: #EBC069;
+  --scene-model-light-base: #1A3D2B;
+  --scene-model-light-accent: #F5F5F2;
+  --scene-key-light: #FFE9C0;
+  --scene-fill-light: #9FE0C0;
+  --scene-particle-primary: #43B978;
+  --scene-particle-accent: #FFD45A;
+  --scene-particle-highlight: #FFF0A3;
+  --scene-particle-size: 1.16;
+  --site-backdrop-image:
+    radial-gradient(color-mix(in srgb, var(--color-gold-light) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(120deg, #031009, #071B13 48%, #020806);
+
   --border-primary: rgba(244, 247, 241, 0.1);
   --border-secondary: rgba(244, 247, 241, 0.18);
 
@@ -216,6 +238,17 @@ html.light {
   --hero-scrim-strong: rgba(247, 250, 248, 0.94);
   --hero-scrim-soft: rgba(247, 250, 248, 0.5);
 
+  --scene-background: #F7FAF8;
+  --scene-background-light: #F7FAF8;
+  --scene-model-light-base: #005F44;
+  --scene-model-light-accent: #FFFFFF;
+  --scene-key-light: #FFFFFF;
+  --scene-fill-light: #2B9B77;
+  --scene-particle-primary: #005F44;
+  --scene-particle-accent: #0B7A59;
+  --scene-particle-highlight: #2B9B77;
+  --scene-particle-size: 1.3;
+
   --border-primary: rgba(0, 95, 68, 0.16);
   --border-secondary: rgba(0, 95, 68, 0.28);
 
@@ -288,6 +321,27 @@ html[data-color-variant="brand"] {
   --hero-scrim-strong: #022622;
   --hero-scrim-soft: rgba(2, 38, 34, 0.64);
 
+  --scene-background-forest: var(--brandbook-deep);
+  --scene-background-teal: #01201C;
+  --scene-background: var(--scene-background-forest);
+  --scene-background-light: #F8FAF9;
+  /* Keep the model visibly separate from the #022622 scene floor. The
+     official forest green carries the solid object, while deep green remains
+     reserved for depth and background. */
+  --scene-model-dark-base: var(--brandbook-forest);
+  --scene-model-dark-accent: var(--brandbook-gold);
+  --scene-model-light-base: var(--brandbook-forest);
+  --scene-model-light-accent: var(--brandbook-white);
+  --scene-key-light: var(--brandbook-white);
+  --scene-fill-light: var(--brandbook-teal);
+  --scene-particle-primary: var(--brandbook-teal);
+  --scene-particle-accent: var(--brandbook-gold);
+  --scene-particle-highlight: var(--brandbook-amber);
+  --scene-particle-size: 1.16;
+  --site-backdrop-image:
+    radial-gradient(color-mix(in srgb, var(--brandbook-amber) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(120deg, #011A17, var(--brandbook-deep) 48%, #011410);
+
   --border-primary: rgba(230, 230, 230, 0.16);
   --border-secondary: rgba(236, 195, 113, 0.34);
 
@@ -341,6 +395,20 @@ html[data-color-variant="brand"].light {
 
   --hero-scrim-strong: rgba(248, 250, 249, 0.95);
   --hero-scrim-soft: rgba(248, 250, 249, 0.56);
+
+  --scene-background: #F8FAF9;
+  --scene-background-light: #F8FAF9;
+  --scene-model-light-base: var(--brandbook-forest);
+  --scene-model-light-accent: var(--brandbook-white);
+  --scene-key-light: var(--brandbook-white);
+  --scene-fill-light: var(--brandbook-teal);
+  --scene-particle-primary: var(--brandbook-forest);
+  --scene-particle-accent: #805B08;
+  --scene-particle-highlight: var(--brandbook-teal);
+  --scene-particle-size: 1.3;
+  --site-backdrop-image:
+    radial-gradient(color-mix(in srgb, var(--brandbook-forest) 9%, transparent) 1px, transparent 1px),
+    linear-gradient(120deg, #FFFFFF, #F8FAF9 50%, #EEF5F2);
 
   --border-primary: rgba(15, 83, 76, 0.18);
   --border-secondary: rgba(128, 91, 8, 0.34);

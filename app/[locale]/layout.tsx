@@ -4,7 +4,6 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import PageTransitionProvider from "@/components/motion/PageTransition";
 import ThemeProvider from "@/components/theme/ThemeProvider";
-import ColorVariantProvider from "@/components/theme/ColorVariantProvider";
 import { IconSystemProvider } from "@/components/theme/IconSystemProvider";
 import { BgSystemProvider } from "@/components/theme/BgSystemProvider";
 import AccessibilityProvider from "@/components/theme/AccessibilityProvider";
@@ -49,24 +48,22 @@ export default async function LocaleLayout({
 
   return (
     <ThemeProvider>
-      <ColorVariantProvider>
-        <BgSystemProvider>
-          <IconSystemProvider>
-            <NextIntlClientProvider messages={messages}>
-              <AccessibilityProvider>
-                <MotionA11yConfig>
-                  <div lang={locale === "kz" ? "kk" : locale} className="contents">
-                    <div data-decorative className="ddc-noise-overlay fixed inset-0 pointer-events-none z-[9999] opacity-[0.03]" />
-                    <PageTransitionProvider>{children}</PageTransitionProvider>
-                    <AccessibilityPanel />
-                    <InteractiveDotGrid />
-                  </div>
-                </MotionA11yConfig>
-              </AccessibilityProvider>
-            </NextIntlClientProvider>
-          </IconSystemProvider>
-        </BgSystemProvider>
-      </ColorVariantProvider>
+      <BgSystemProvider>
+        <IconSystemProvider>
+          <NextIntlClientProvider messages={messages}>
+            <AccessibilityProvider>
+              <MotionA11yConfig>
+                <div lang={locale === "kz" ? "kk" : locale} className="contents">
+                  <div data-decorative className="ddc-noise-overlay fixed inset-0 pointer-events-none z-[9999] opacity-[0.03]" />
+                  <PageTransitionProvider>{children}</PageTransitionProvider>
+                  <AccessibilityPanel />
+                  <InteractiveDotGrid />
+                </div>
+              </MotionA11yConfig>
+            </AccessibilityProvider>
+          </NextIntlClientProvider>
+        </IconSystemProvider>
+      </BgSystemProvider>
     </ThemeProvider>
   );
 }

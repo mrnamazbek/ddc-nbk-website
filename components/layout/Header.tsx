@@ -8,7 +8,6 @@ import { useLocale, useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import TransitionLink from "../motion/TransitionLink";
 import CinematicThemeSwitcher from "../ui/cinematic-theme-switcher";
-import ColorVariantSwitcher from "../ui/ColorVariantSwitcher";
 import Icon from "../ui/Icon";
 import { AccessibilityTrigger } from "../ui/AccessibilityPanel";
 import { useA11y } from "../theme/AccessibilityProvider";
@@ -452,9 +451,6 @@ export default function Header() {
             {/* Theme Switcher */}
             <CinematicThemeSwitcher />
 
-            {/* Palette comparison: current DDC colors or official brandbook colors. */}
-            <ColorVariantSwitcher />
-
             {/* Language Switcher */}
             <LanguageSwitcher locale={locale} onSwitch={switchLocale} />
           </div>
@@ -563,9 +559,6 @@ export default function Header() {
               <div className="flex items-center justify-end gap-4">
                 <span className="text-sm text-muted">{t("theme")}</span>
                 <CinematicThemeSwitcher />
-              </div>
-              <div className="flex items-center justify-end gap-4">
-                <ColorVariantSwitcher showLabel />
               </div>
               <div className="flex items-center justify-end gap-4">
                 <span className="text-sm text-muted">{t("language")}</span>

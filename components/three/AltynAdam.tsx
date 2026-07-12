@@ -4,6 +4,8 @@ import { Suspense, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Environment, Lightformer, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
+import { useScenePalette } from "@/components/theme/useScenePalette";
+import type { ScenePalette } from "@/components/theme/useScenePalette";
 
 const MODEL_SRC = "/models/altyn_adam.glb";
 
@@ -12,9 +14,11 @@ useGLTF.setDecoderPath("/draco/");
 function AltynAdamInner({
   scale = 1,
   targetHeight = 3.2,
+  palette,
 }: {
   scale?: number;
   targetHeight?: number;
+  palette: ScenePalette;
 }) {
   const group = useRef<THREE.Group>(null);
   const { scene } = useGLTF(MODEL_SRC, true);
@@ -22,7 +26,7 @@ function AltynAdamInner({
   const material = useMemo(
     () =>
       new THREE.MeshPhysicalMaterial({
-        color: "#D8A93E",
+        color: palette.modelDarkAccent,
         metalness: 1,
         roughness: 0.28,
         clearcoat: 0.72,
@@ -31,10 +35,10 @@ function AltynAdamInner({
         iridescence: 0.45,
         iridescenceIOR: 1.25,
         iridescenceThicknessRange: [180, 520],
-        emissive: "#133824",
+        emissive: palette.modelDarkBase,
         emissiveIntensity: 0.025,
       }),
-    [],
+    [palette.modelDarkAccent, palette.modelDarkBase],
   );
 
   const { model, normalizedScale, center } = useMemo(() => {
@@ -90,18 +94,20 @@ export default function AltynAdam({
   targetHeight?: number;
   withEnvironment?: boolean;
 }) {
+  const palette = useScenePalette();
+
   return (
     <Suspense fallback={null}>
       {withEnvironment && (
         <Environment frames={1} resolution={256}>
-          <Lightformer form="rect" intensity={2.5} color="#FFF1C9" position={[0, 3, 5]} scale={[12, 12, 1]} />
-          <Lightformer form="rect" intensity={1.35} color="#D8A93E" position={[0, -3, 4]} scale={[10, 8, 1]} />
-          <Lightformer form="rect" intensity={1.05} color="#8ED0A8" position={[-5, 0, 3]} scale={[6, 11, 1]} />
-          <Lightformer form="rect" intensity={1.15} color="#ffffff" position={[5, 1, 3]} scale={[6, 11, 1]} />
-          <Lightformer form="ring" intensity={1.5} color="#FFE8A6" position={[0, 0, -4]} scale={[10, 10, 1]} />
+          <Lightformer form="rect" intensity={2.5} color={palette.keyLight} position={[0, 3, 5]} scale={[12, 12, 1]} />
+          <Lightformer form="rect" intensity={1.35} color={palette.modelDarkAccent} position={[0, -3, 4]} scale={[10, 8, 1]} />
+          <Lightformer form="rect" intensity={1.05} color={palette.fillLight} position={[-5, 0, 3]} scale={[6, 11, 1]} />
+          <Lightformer form="rect" intensity={1.15} color={palette.modelLightAccent} position={[5, 1, 3]} scale={[6, 11, 1]} />
+          <Lightformer form="ring" intensity={1.5} color={palette.particleHighlight} position={[0, 0, -4]} scale={[10, 10, 1]} />
         </Environment>
       )}
-      <AltynAdamInner scale={scale} targetHeight={targetHeight} />
+      <AltynAdamInner scale={scale} targetHeight={targetHeight} palette={palette} />
     </Suspense>
   );
 }

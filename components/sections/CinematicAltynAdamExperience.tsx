@@ -11,6 +11,8 @@ import { BubbleText } from "@/components/ui/BubbleText";
 import LottieAnimation from "@/components/ui/LottieAnimation";
 import ThreeModelLoadingOverlay from "@/components/ui/ThreeModelLoadingOverlay";
 import { useA11y } from "@/components/theme/AccessibilityProvider";
+import { useScenePalette } from "@/components/theme/useScenePalette";
+import type { ScenePalette } from "@/components/theme/useScenePalette";
 import { cn } from "@/lib/utils";
 
 export interface CinematicChapter {
@@ -52,6 +54,9 @@ interface CinematicAltynAdamExperienceProps {
 const vertexShader = /* glsl */ `
   uniform float uTime;
   uniform float uProgress;
+  uniform vec3 uForest;
+  uniform vec3 uPrimary;
+  uniform vec3 uGold;
 
   varying float vAlpha;
   varying vec3 vColor;
@@ -90,11 +95,8 @@ const vertexShader = /* glsl */ `
     float edge = 1.0 - smoothstep(0.88, 1.0, uProgress) * 0.55;
     vAlpha = fadeZ * intro * edge * 0.52;
 
-    vec3 forest = vec3(0.07, 0.38, 0.23);
-    vec3 emerald = vec3(0.23, 0.68, 0.48);
-    vec3 gold = vec3(0.89, 0.70, 0.27);
     float m = hash(position.xz);
-    vColor = mix(mix(forest, emerald, smoothstep(0.18, 0.82, m)), gold, smoothstep(0.66, 1.0, m));
+    vColor = mix(mix(uForest, uPrimary, smoothstep(0.18, 0.82, m)), uGold, smoothstep(0.66, 1.0, m));
   }
 `;
 
@@ -127,16 +129,25 @@ function generateDiagonalField(count: number) {
   return positions;
 }
 
-function ParticleRibbon({ scrollRef }: { scrollRef: RefObject<number> }) {
+function ParticleRibbon({ scrollRef, palette }: { scrollRef: RefObject<number>; palette: ScenePalette }) {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const positions = useMemo(() => generateDiagonalField(5200), []);
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
       uProgress: { value: 0 },
+      uForest: { value: new THREE.Color(palette.modelDarkBase) },
+      uPrimary: { value: new THREE.Color(palette.particlePrimary) },
+      uGold: { value: new THREE.Color(palette.particleAccent) },
     }),
-    [],
+    [palette.modelDarkBase, palette.particleAccent, palette.particlePrimary],
   );
+
+  useEffect(() => {
+    uniforms.uForest.value.set(palette.modelDarkBase);
+    uniforms.uPrimary.value.set(palette.particlePrimary);
+    uniforms.uGold.value.set(palette.particleAccent);
+  }, [palette, uniforms]);
 
   useFrame((state, delta) => {
     if (!materialRef.current) return;
@@ -211,7 +222,7 @@ function generateBurstField(count: number) {
   return arr;
 }
 
-function ConnectionBurst({ scrollRef, totalChapters }: { scrollRef: RefObject<number>; totalChapters: number }) {
+function ConnectionBurst({ scrollRef, totalChapters, palette }: { scrollRef: RefObject<number>; totalChapters: number; palette: ScenePalette }) {
   const materialRef = useRef<THREE.PointsMaterial>(null);
   const pointsRef = useRef<THREE.Points>(null);
   const positions = useMemo(() => generateBurstField(900), []);
@@ -258,7 +269,7 @@ function ConnectionBurst({ scrollRef, totalChapters }: { scrollRef: RefObject<nu
       </bufferGeometry>
       <pointsMaterial
         ref={materialRef}
-        color="#E8C87A"
+        color={palette.particleAccent}
         size={0.045}
         map={spriteMap}
         alphaMap={spriteMap}
@@ -272,19 +283,21 @@ function ConnectionBurst({ scrollRef, totalChapters }: { scrollRef: RefObject<nu
 }
 
 function Scene({ scrollRef, totalChapters }: { scrollRef: RefObject<number>; totalChapters: number }) {
+  const palette = useScenePalette();
+
   return (
     <>
       <ambientLight intensity={0.42} />
-      <directionalLight position={[3, 6, 4]} intensity={1.55} color="#d6ffdf" />
-      <spotLight position={[0, 2.2, 6]} intensity={4.2} angle={Math.PI / 8} penumbra={0.7} color="#E8C87A" />
+      <directionalLight position={[3, 6, 4]} intensity={1.55} color={palette.fillLight} />
+      <spotLight position={[0, 2.2, 6]} intensity={4.2} angle={Math.PI / 8} penumbra={0.7} color={palette.modelDarkAccent} />
       <Environment frames={1} resolution={256}>
-        <Lightformer form="rect" intensity={2.2} color="#FFF1C9" position={[0, 3, 5]} scale={[12, 10, 1]} />
-        <Lightformer form="rect" intensity={1.5} color="#52B788" position={[-5, 0, 3]} scale={[6, 10, 1]} />
-        <Lightformer form="ring" intensity={1.2} color="#C9A84C" position={[0, 0, -4]} scale={[8, 8, 1]} />
+        <Lightformer form="rect" intensity={2.2} color={palette.keyLight} position={[0, 3, 5]} scale={[12, 10, 1]} />
+        <Lightformer form="rect" intensity={1.5} color={palette.fillLight} position={[-5, 0, 3]} scale={[6, 10, 1]} />
+        <Lightformer form="ring" intensity={1.2} color={palette.modelDarkAccent} position={[0, 0, -4]} scale={[8, 8, 1]} />
       </Environment>
-      <ParticleRibbon scrollRef={scrollRef} />
+      <ParticleRibbon scrollRef={scrollRef} palette={palette} />
       <AltynAdamAnchor scrollRef={scrollRef} />
-      <ConnectionBurst scrollRef={scrollRef} totalChapters={totalChapters} />
+      <ConnectionBurst scrollRef={scrollRef} totalChapters={totalChapters} palette={palette} />
     </>
   );
 }

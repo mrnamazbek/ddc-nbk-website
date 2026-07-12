@@ -170,7 +170,7 @@ export default function AnalyticsPage() {
 
         {/* Career Advice Block */}
         <div className="theme-on-forest bg-gradient-to-r from-forest-dark to-charcoal border border-border rounded-3xl p-8 sm:p-12 relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(#52B78803_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
+          <div className="brand-dot-grid absolute inset-0 pointer-events-none" />
 
           <div className="flex gap-4 items-start mb-6">
             <Icon name="server" size={32} className="text-gold-light shrink-0 mt-1" />

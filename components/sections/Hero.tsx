@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useGSAP } from "@gsap/react";
@@ -12,14 +13,22 @@ import { BubbleText } from "@/components/ui/BubbleText";
 import { MetalButton } from "@/components/ui/liquid-glass-button";
 import Icon from "@/components/ui/Icon";
 import DDCLogo from "@/components/ui/DDCLogo";
-import FlowingHeroShaderBackground from "@/components/ui/ShaderBackground";
 import { ENTRANCE_EASE, ENTRANCE_DURATION, STAGGER } from "@/components/motion/ScrollReveal";
-
-import { SplineScene } from "@/components/ui/splite";
 
 import { useA11y } from "@/components/theme/AccessibilityProvider";
 
 const ROBOT_SCENE = "/spline/scene.splinecode";
+
+// These scenes are desktop enhancements. Keeping their imports out of the
+// initial hero chunk prevents mobile browsers from parsing Three/Spline code
+// that the existing capability check will never render.
+const FlowingHeroShaderBackground = dynamic(() => import("@/components/ui/ShaderBackground"), {
+  ssr: false,
+});
+const SplineScene = dynamic(
+  () => import("@/components/ui/splite").then((module) => module.SplineScene),
+  { ssr: false },
+);
 
 export default function Hero() {
   const t = useTranslations("Hero");
@@ -93,9 +102,11 @@ export default function Hero() {
     },
   };
 
-  // Subtitle: same shape, slightly longer settle.
+  // The hero subtitle is the mobile LCP candidate. It must be paintable on the
+  // first frame instead of waiting behind the decorative entrance sequence.
+  // The badge, title reveal, buttons, and desktop scene keep their choreography.
   const subtitleVariants = {
-    hidden: { opacity: 0, y: 30, filter: "blur(10px)" },
+    hidden: { opacity: 1, y: 0, filter: "blur(0px)" },
     visible: {
       opacity: 1,
       y: 0,
@@ -143,7 +154,7 @@ export default function Hero() {
       {/* Flowing shader effect — scoped to the hero only. It's positioned
           absolute within this section (not fixed to the viewport), so it
           scrolls away with the hero instead of trailing into later sections. */}
-      <FlowingHeroShaderBackground isLight={resolvedTheme === "light"} />
+      {!isMobileDevice && <FlowingHeroShaderBackground isLight={resolvedTheme === "light"} />}
 
       {/* Левый градиент-скрим для читаемости текста поверх живой 3D-сцены.
           Theme-aware: deep-forest scrim in dark, warm-cream scrim in light — so

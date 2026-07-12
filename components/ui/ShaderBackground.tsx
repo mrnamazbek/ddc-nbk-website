@@ -5,6 +5,8 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useBgSystem } from "../theme/BgSystemProvider";
 import { useA11y } from "../theme/AccessibilityProvider";
+import { useScenePalette } from "../theme/useScenePalette";
+import type { ScenePalette } from "../theme/useScenePalette";
 import { getScroll } from "@/lib/scrollStore";
 
 /* --------------------------------------------------------------------------
@@ -31,6 +33,7 @@ const fragmentShaderBg = /* glsl */ `
   uniform vec3  uGold;
   uniform vec3  uGoldLight;
   uniform vec3  uBgColor;
+  uniform vec3  uLightBgColor;
   uniform float uScroll;
 
   float hash(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
@@ -68,7 +71,7 @@ const fragmentShaderBg = /* glsl */ `
     float aurora = flow * 0.14 + mouseGlow * 0.18;
 
     // Base background color (adapts to light theme)
-    vec3 bg = mix(uBgColor, vec3(0.965, 0.965, 0.945), uLight);
+    vec3 bg = mix(uBgColor, uLightBgColor, uLight);
     vec3 finalCol = bg + auroraCol * aurora;
     gl_FragColor = vec4(finalCol, 1.0);
   }
@@ -214,7 +217,7 @@ function generateBackgroundParticles(count: number) {
   return [grid, sphere, rands] as const;
 }
 
-function ShaderPlane({ isLight }: { isLight: boolean }) {
+function ShaderPlane({ isLight, palette }: { isLight: boolean; palette: ScenePalette }) {
   const matRef = useRef<THREE.ShaderMaterial>(null);
   const { size, viewport } = useThree();
   const pointer = useRef({ x: 0.5, y: 0.5 });
@@ -232,29 +235,25 @@ function ShaderPlane({ isLight }: { isLight: boolean }) {
       uResolution: { value: new THREE.Vector2(1, 1) },
       uMouse: { value: new THREE.Vector2(0.5, 0.5) },
       uLight: { value: isLight ? 1 : 0 },
-      // WebGL cannot consume CSS tokens at runtime. Keep dark mode subdued,
-      // while light mode receives the canonical #005F44 primary.
-      uForest: { value: hexToRgb(isLight ? "#005F44" : "#1A3D2B") },
-      uForestLight: { value: hexToRgb("#52B788") },
-      uGold: { value: hexToRgb("#C9A84C") },
-      uGoldLight: { value: hexToRgb("#E8C87A") },
-      uBgColor: { value: new THREE.Vector3(10 / 255, 10 / 255, 10 / 255) },
+      uForest: { value: hexToRgb(isLight ? palette.modelLightBase : palette.modelDarkBase) },
+      uForestLight: { value: hexToRgb(palette.particlePrimary) },
+      uGold: { value: hexToRgb(palette.particleAccent) },
+      uGoldLight: { value: hexToRgb(palette.particleHighlight) },
+      uBgColor: { value: hexToRgb(palette.backgroundForest) },
+      uLightBgColor: { value: hexToRgb(palette.backgroundLight) },
       uScroll: { value: 0 },
     }),
     [] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   useEffect(() => {
-    // Set background color theme variables
-    const color = bgSystem === "bg-forest"
-      ? new THREE.Vector3(8 / 255, 16 / 255, 12 / 255)
-      : new THREE.Vector3(4 / 255, 12 / 255, 16 / 255);
-    uniforms.uBgColor.value.copy(color);
-  }, [bgSystem, uniforms]);
-
-  useEffect(() => {
-    uniforms.uForest.value.copy(hexToRgb(isLight ? "#005F44" : "#1A3D2B"));
-  }, [isLight, uniforms]);
+    uniforms.uForest.value.copy(hexToRgb(isLight ? palette.modelLightBase : palette.modelDarkBase));
+    uniforms.uForestLight.value.copy(hexToRgb(palette.particlePrimary));
+    uniforms.uGold.value.copy(hexToRgb(palette.particleAccent));
+    uniforms.uGoldLight.value.copy(hexToRgb(palette.particleHighlight));
+    uniforms.uBgColor.value.copy(hexToRgb(bgSystem === "bg-forest" ? palette.backgroundForest : palette.backgroundTeal));
+    uniforms.uLightBgColor.value.copy(hexToRgb(palette.backgroundLight));
+  }, [bgSystem, isLight, palette, uniforms]);
 
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
@@ -295,10 +294,12 @@ function ShaderPlane({ isLight }: { isLight: boolean }) {
 
 function MorphingParticles({
   isLight,
+  palette,
   particleCount,
   dotSize,
 }: {
   isLight: boolean;
+  palette: ScenePalette;
   particleCount: number;
   dotSize: number;
 }) {
@@ -326,14 +327,20 @@ function MorphingParticles({
       uDotSize: { value: dotSize },
       uMouse3d: { value: new THREE.Vector3(0, 0, -1000) },
       uMouseStrength: { value: 0.9 },
-      uForestLight: { value: hexToRgb("#52B788") },
-      uGold: { value: hexToRgb("#C9A84C") },
-      uGoldLight: { value: hexToRgb("#E8C87A") },
+      uForestLight: { value: hexToRgb(palette.particlePrimary) },
+      uGold: { value: hexToRgb(palette.particleAccent) },
+      uGoldLight: { value: hexToRgb(palette.particleHighlight) },
       uLight: { value: isLight ? 1 : 0 },
       uDistortionRadius: { value: 3.2 },
     }),
-    [dotSize, isLight]
+    [dotSize, isLight, palette.particleAccent, palette.particleHighlight, palette.particlePrimary]
   );
+
+  useEffect(() => {
+    uniforms.uForestLight.value.copy(hexToRgb(palette.particlePrimary));
+    uniforms.uGold.value.copy(hexToRgb(palette.particleAccent));
+    uniforms.uGoldLight.value.copy(hexToRgb(palette.particleHighlight));
+  }, [palette, uniforms]);
 
   useFrame((state, dt) => {
     const m = matRef.current;
@@ -394,6 +401,7 @@ function MorphingParticles({
 
 export default function ShaderBackground({ isLight }: { isLight: boolean }) {
   const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
+  const palette = useScenePalette();
   const containerRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(true);
   const [lowPowerMode, setLowPowerMode] = useState(true);
@@ -446,9 +454,10 @@ export default function ShaderBackground({ isLight }: { isLight: boolean }) {
           frameloop={visible ? "always" : "never"}
         >
           <ambientLight intensity={0.5} />
-          <ShaderPlane isLight={isLight} />
+          <ShaderPlane isLight={isLight} palette={palette} />
           <MorphingParticles
             isLight={isLight}
+            palette={palette}
             particleCount={lowPowerMode ? 5600 : 15000}
             dotSize={lowPowerMode ? 11.5 : 14.5}
           />

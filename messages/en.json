@@ -21,11 +21,6 @@
     "language": "Language:",
     "theme": "Theme:"
   },
-  "ColorVariant": {
-    "label": "Color palette",
-    "current": "Current palette",
-    "brand": "Brandbook palette"
-  },
   "Hero": {
     "badge": "Digital Development Center • National Bank of Kazakhstan",
     "titleLine1": "Digital solutions for the",
@@ -725,7 +720,7 @@
     "overline": "CONTACT US",
     "titleLine1": "DDC Contacts and",
     "titleAccent": "Feedback",
-    "subtitle": "Prepare a message for DDC using your own email client. The website does not transmit or store the form data.",
+    "subtitle": "Send a request to DDC through a protected form. If automated delivery is temporarily unavailable, an editable email draft opens as a fallback.",
     "officesOverline": "WHERE WE OPERATE",
     "officesTitle": "Our offices",
     "officesSubtitle": "We operate in two key cities of Kazakhstan — the nation's capital and its financial center.",
@@ -754,7 +749,7 @@
     "labelClock": "Working hours",
     "clockVal": "Monday — Friday: 09:00 - 18:30 | Lunch: 13:00 - 14:30",
     "statusTitle": "How this form works",
-    "statusDesc": "DDC does not collect or store this form data on the website. The button opens a draft in your email client; you decide whether to send it.",
+    "statusDesc": "The form validates your request before delivery to DDC. If the delivery service is unavailable, an editable email draft opens instead of showing a false success message.",
     "fieldName": "First & Last Name",
     "fieldEmail": "Email",
     "fieldOrg": "Organization",
@@ -764,7 +759,11 @@
     "placeholderOrg": "Bank of Kazakhstan JSC",
     "placeholderMsg": "Describe the purpose of your request or cooperation proposal...",
     "emailSubject": "Website enquiry to DDC",
-    "btnSubmit": "Open email draft",
+    "btnSubmit": "Send request",
+    "btnSubmitting": "Sending request...",
+    "submitSuccess": "Your request has been sent. The DDC team will contact you shortly.",
+    "submitFallback": "Email delivery is being configured. An editable email draft has been opened.",
+    "submitError": "We could not send your request. Please try again in a moment.",
     "errors": {
       "name": "Please enter your name (minimum 2 characters)",
       "email": "Invalid email address",

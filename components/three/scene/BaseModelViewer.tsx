@@ -1,16 +1,18 @@
 "use client";
 
-import React, { Suspense, useRef, useMemo, useEffect, useState } from "react";
+import React, { Suspense, useRef, useMemo, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, Lightformer, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { useReducedMotion } from "framer-motion";
 import { useTheme } from "next-themes";
+import { useScenePalette } from "@/components/theme/useScenePalette";
+import type { ScenePalette } from "@/components/theme/useScenePalette";
 
 // Set localized Draco decoder path to avoid fetching from external Google CDN
 useGLTF.setDecoderPath("/draco/");
 
-function Model({ url, isLight }: { url: string; isLight: boolean }) {
+function Model({ url, isLight, palette }: { url: string; isLight: boolean; palette: ScenePalette }) {
   const { scene } = useGLTF(url, true);
   const groupRef = useRef<THREE.Group>(null);
   const { size } = useThree();
@@ -18,7 +20,11 @@ function Model({ url, isLight }: { url: string; isLight: boolean }) {
 
   // Reference to uniforms to dynamically toggle light/dark shader styles without recompiling
   const uniformsRef = useRef({
-    uIsLight: { value: isLight ? 1.0 : 0.0 }
+    uIsLight: { value: isLight ? 1.0 : 0.0 },
+    uDarkBase: { value: new THREE.Color(palette.modelDarkBase) },
+    uDarkAccent: { value: new THREE.Color(palette.modelDarkAccent) },
+    uLightBase: { value: new THREE.Color(palette.modelLightBase) },
+    uLightAccent: { value: new THREE.Color(palette.modelLightAccent) },
   });
 
   const rotationY = useRef(0.3);
@@ -61,17 +67,21 @@ function Model({ url, isLight }: { url: string; isLight: boolean }) {
   // Create physical material once to prevent WebGL recompiling shaders on every component render/resize
   const material = useMemo(() => {
     const mat = new THREE.MeshPhysicalMaterial({
-      color: "#E8C87A",
+      color: "#FFFFFF",
       metalness: 0.9,
       roughness: 0.15,
       clearcoat: 1.0,
       clearcoatRoughness: 0.1,
-      envMapIntensity: isLight ? 1.2 : 2.8,
+      envMapIntensity: 2.2,
     });
 
     mat.onBeforeCompile = (shader) => {
       // Pass the uIsLight uniform object to the shader
       shader.uniforms.uIsLight = uniformsRef.current.uIsLight;
+      shader.uniforms.uDarkBase = uniformsRef.current.uDarkBase;
+      shader.uniforms.uDarkAccent = uniformsRef.current.uDarkAccent;
+      shader.uniforms.uLightBase = uniformsRef.current.uLightBase;
+      shader.uniforms.uLightAccent = uniformsRef.current.uLightAccent;
 
       // Внедряем vLocalZ во vertex shader
       shader.vertexShader = `
@@ -88,6 +98,10 @@ function Model({ url, isLight }: { url: string; isLight: boolean }) {
       // Внедряем vLocalZ и uIsLight во fragment shader
       shader.fragmentShader = `
         uniform float uIsLight;
+        uniform vec3 uDarkBase;
+        uniform vec3 uDarkAccent;
+        uniform vec3 uLightBase;
+        uniform vec3 uLightAccent;
         varying float vLocalZ;
         ${shader.fragmentShader}
       `;
@@ -99,16 +113,8 @@ function Model({ url, isLight }: { url: string; isLight: boolean }) {
         #include <color_fragment>
         float absZ = abs(vLocalZ);
 
-        // Цвета для Темной темы:
-        vec3 darkGreen = vec3(10.0 / 255.0, 48.0 / 255.0, 30.0 / 255.0);
-        vec3 darkGold = vec3(235.0 / 255.0, 195.0 / 255.0, 105.0 / 255.0);
-
-        // Цвета для Светлой темы (на основе ddc_logo_light_theme.png):
-        vec3 lightGreen = vec3(26.0 / 255.0, 61.0 / 255.0, 43.0 / 255.0); // Глубокий лесной зеленый
-        vec3 lightWhite = vec3(245.0 / 255.0, 245.0 / 255.0, 242.0 / 255.0); // Благородный матово-белый оффвайт
-
-        vec3 greenPaint = mix(darkGreen, lightGreen, uIsLight);
-        vec3 ornamentPaint = mix(darkGold, lightWhite, uIsLight);
+        vec3 greenPaint = mix(uDarkBase, uLightBase, uIsLight);
+        vec3 ornamentPaint = mix(uDarkAccent, uLightAccent, uIsLight);
 
         // Порог 0.088 - 0.096 для идеального разделения основания и рельефа
         float mixFactor = smoothstep(0.088, 0.096, absZ);
@@ -138,7 +144,7 @@ function Model({ url, isLight }: { url: string; isLight: boolean }) {
     };
 
     return mat;
-  }, [isLight]);
+  }, []);
 
   // Traverse the scene and assign materials only once when the scene or material changes
   useMemo(() => {
@@ -152,12 +158,14 @@ function Model({ url, isLight }: { url: string; isLight: boolean }) {
     });
   }, [scene, material]);
 
-  // Dynamically update uniforms and material properties when theme changes
+  // Keep one material alive while its uniforms follow the active semantic palette.
   useEffect(() => {
     uniformsRef.current.uIsLight.value = isLight ? 1.0 : 0.0;
-    material.envMapIntensity = isLight ? 1.2 : 2.8;
-    material.needsUpdate = true;
-  }, [isLight, material]);
+    uniformsRef.current.uDarkBase.value.set(palette.modelDarkBase);
+    uniformsRef.current.uDarkAccent.value.set(palette.modelDarkAccent);
+    uniformsRef.current.uLightBase.value.set(palette.modelLightBase);
+    uniformsRef.current.uLightAccent.value.set(palette.modelLightAccent);
+  }, [isLight, palette]);
 
   // Clean up materials from GPU memory on unmount
   useEffect(() => {
@@ -176,55 +184,46 @@ function Model({ url, isLight }: { url: string; isLight: boolean }) {
 export default function BaseModelViewer() {
   const { resolvedTheme } = useTheme();
   const isLight = resolvedTheme === "light";
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
+  const palette = useScenePalette();
   return (
     <div className="relative h-full min-h-[inherit] w-full cursor-grab select-none overflow-visible rounded-[var(--radius-card)] active:cursor-grabbing [&_canvas]:!block [&_canvas]:!h-full [&_canvas]:!w-full">
-      {mounted ? (
-        <Canvas
-          className="h-full w-full"
-          camera={{ position: [0, 0, 8.0], fov: 35 }}
-          dpr={[1, 2]} // Limit DPR to 2 for performance optimization on Retina screens
-          resize={{ scroll: false, debounce: { scroll: 50, resize: 0 } }}
-          gl={{
-            antialias: true,
-            powerPreference: "high-performance",
-            stencil: false, // Save memory and bandwidth by disabling stencil buffer
-            depth: true
-          }}
-          style={{ display: "block", height: "100%", width: "100%" }}
-          onCreated={({ gl }) => {
-            gl.toneMapping = THREE.ACESFilmicToneMapping;
-            gl.toneMappingExposure = 1.1;
-          }}
-        >
-          <ambientLight intensity={isLight ? 0.6 : 0.4} />
-          <directionalLight position={[5, 8, 5]} intensity={isLight ? 1.0 : 1.8} color={isLight ? "#FFFFFF" : "#FFE9C0"} />
-          <directionalLight position={[-5, -4, 2]} intensity={isLight ? 0.4 : 0.8} color={isLight ? "#E0F5EB" : "#9FE0C0"} />
+      <Canvas
+        className="h-full w-full"
+        camera={{ position: [0, 0, 8.0], fov: 35 }}
+        dpr={[1, 2]} // Limit DPR to 2 for performance optimization on Retina screens
+        resize={{ scroll: false, debounce: { scroll: 50, resize: 0 } }}
+        gl={{
+          antialias: true,
+          powerPreference: "high-performance",
+          stencil: false, // Save memory and bandwidth by disabling stencil buffer
+          depth: true,
+        }}
+        style={{ display: "block", height: "100%", width: "100%" }}
+        onCreated={({ gl }) => {
+          gl.toneMapping = THREE.ACESFilmicToneMapping;
+          gl.toneMappingExposure = 1.1;
+        }}
+      >
+        <ambientLight intensity={isLight ? 0.6 : 0.4} />
+        <directionalLight position={[5, 8, 5]} intensity={isLight ? 1.0 : 1.8} color={isLight ? palette.keyLight : palette.modelDarkAccent} />
+        <directionalLight position={[-5, -4, 2]} intensity={isLight ? 0.4 : 0.8} color={isLight ? palette.fillLight : palette.particlePrimary} />
 
-          <Suspense fallback={null}>
-            <Model url="/base.glb" isLight={isLight} />
-            <OrbitControls
-              enableZoom={false}
-              enablePan={false}
-              enableDamping={true} // Premium smooth drag interactions
-              dampingFactor={0.05}
-              minPolarAngle={Math.PI / 3}
-              maxPolarAngle={Math.PI / 1.8}
-            />
-            <Environment frames={1} resolution={128}>
-              <Lightformer intensity={2.5} color="#E8C87A" position={[0, 4, -6]} scale={[10, 6, 1]} />
-              <Lightformer intensity={1.2} color="#52B788" position={[-6, 0, 2]} scale={[6, 6, 1]} />
-            </Environment>
-          </Suspense>
-        </Canvas>
-      ) : (
-        <div className="h-full w-full" aria-hidden="true" />
-      )}
+        <Suspense fallback={null}>
+          <Model url="/base.glb" isLight={isLight} palette={palette} />
+          <OrbitControls
+            enableZoom={false}
+            enablePan={false}
+            enableDamping={true} // Premium smooth drag interactions
+            dampingFactor={0.05}
+            minPolarAngle={Math.PI / 3}
+            maxPolarAngle={Math.PI / 1.8}
+          />
+          <Environment frames={1} resolution={128}>
+            <Lightformer intensity={2.5} color={isLight ? palette.keyLight : palette.modelDarkAccent} position={[0, 4, -6]} scale={[10, 6, 1]} />
+            <Lightformer intensity={1.2} color={isLight ? palette.fillLight : palette.particlePrimary} position={[-6, 0, 2]} scale={[6, 6, 1]} />
+          </Environment>
+        </Suspense>
+      </Canvas>
     </div>
   );
 }

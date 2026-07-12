@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..900&display=swap');
 @import "tailwindcss";
 @import "../styles/tokens.css";
 @import "../styles/a11y.css";
@@ -23,63 +22,12 @@ html.lenis, html.lenis body {
 }
 
 
-/* Custom font-face for premium statistic digits, pointing to Golos Text weights 400-900 */
+/* Numeric display face remains local, so ordinary copy does not create an
+   external font waterfall during the first paint. */
 @font-face {
   font-family: 'ABNumbers';
-  src: local('Golos Text Regular'), local('GolosText-Regular'),
-       url('https://fonts.gstatic.com/s/golostext/v7/q5uXsoe9Lv5t7Meb31EcOR9UdVTNs822plVRRQ5c.ttf') format('truetype');
-  unicode-range: U+0030-0039;
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'ABNumbers';
-  src: local('Golos Text Medium'), local('GolosText-Medium'),
-       url('https://fonts.gstatic.com/s/golostext/v7/q5uXsoe9Lv5t7Meb31EcOR9UdVTNs822plVjRQ5c.ttf') format('truetype');
-  unicode-range: U+0030-0039;
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'ABNumbers';
-  src: local('Golos Text SemiBold'), local('GolosText-SemiBold'),
-       url('https://fonts.gstatic.com/s/golostext/v7/q5uXsoe9Lv5t7Meb31EcOR9UdVTNs822plWPQg5c.ttf') format('truetype');
-  unicode-range: U+0030-0039;
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'ABNumbers';
-  src: local('Golos Text Bold'), local('GolosText-Bold'),
-       url('https://fonts.gstatic.com/s/golostext/v7/q5uXsoe9Lv5t7Meb31EcOR9UdVTNs822plW2Qg5c.ttf') format('truetype');
-  unicode-range: U+0030-0039;
+  src: url('/fonts/quantify/Quantify-Bold.ttf') format('truetype');
   font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'ABNumbers';
-  src: local('Golos Text ExtraBold'), local('GolosText-ExtraBold'),
-       url('https://fonts.gstatic.com/s/golostext/v7/q5uXsoe9Lv5t7Meb31EcOR9UdVTNs822plXRQg5c.ttf') format('truetype');
-  unicode-range: U+0030-0039;
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'ABNumbers';
-  src: local('Golos Text Black'), local('GolosText-Black'),
-       url('https://fonts.gstatic.com/s/golostext/v7/q5uXsoe9Lv5t7Meb31EcOR9UdVTNs822plX4Qg5c.ttf') format('truetype');
-  unicode-range: U+0030-0039;
-  font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
@@ -150,22 +98,25 @@ html.lenis, html.lenis body {
 }
 
 :root {
-  /* Single production typography: Nohemi. Digits keep the previous mono feel. */
-  --font-current-sans: 'ABNumbers', 'Nohemi', system-ui, sans-serif;
-  --font-mono: 'Golos Text', monospace;
-  --font-current-mono: 'Golos Text', monospace;
-  --font-current-display: 'ABNumbers', 'Nohemi', system-ui, sans-serif;
-  --font-current-soft: 'ABNumbers', 'Nohemi', system-ui, sans-serif;
+  /* Primary copy stays on the local brand face. Numeric display is opt-in
+     through .font-numbers and technical labels use the platform mono face. */
+  --font-current-sans: 'Nohemi', system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-current-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-current-display: 'Nohemi', system-ui, sans-serif;
+  --font-current-soft: 'Nohemi', system-ui, sans-serif;
 }
 
 /* Классы фоновых тем (только для темной темы) */
 html.bg-theme-forest:not(.light) {
-  --background: rgba(8, 24, 21, 1); /* deep premium green-black */
+  --scene-background: var(--scene-background-forest);
+  --background: var(--scene-background);
   --accent-gold: var(--color-gold-light);
 }
 
 html.bg-theme-teal:not(.light) {
-  --background: rgba(2, 18, 20, 1); /* deep premium teal-black */
+  --scene-background: var(--scene-background-teal);
+  --background: var(--scene-background);
 }
 
 @theme {
@@ -231,15 +182,60 @@ body {
 /* Shared page backdrop: calm forest surface + dot grain. Avoid radial glows
    here; page-to-page smoke spots make the visual system feel accidental. */
 .site-backdrop {
-  background-image:
-    radial-gradient(color-mix(in srgb, var(--color-gold-light) 5%, transparent) 1px, transparent 1px),
-    linear-gradient(120deg, #031009, #071b13 48%, #020806);
+  background-color: var(--scene-background);
+  background-image: var(--site-backdrop-image);
   background-size: 22px 22px, auto;
 }
 
 html.light .site-backdrop {
   background-image: none;
   background-color: var(--background);
+}
+
+/* Decorative grids use semantic tokens too. This keeps low-contrast texture
+   calm while allowing the A/B palette to recolour every page-level surface. */
+.brand-dot-grid {
+  background-image: radial-gradient(color-mix(in srgb, var(--color-forest-light) 3%, transparent) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.brand-dot-grid--strong {
+  background-image: radial-gradient(color-mix(in srgb, var(--color-forest-light) 5%, transparent) 1px, transparent 1px);
+}
+
+.brand-line-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--color-forest) 3%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-forest) 3%, transparent) 1px, transparent 1px);
+  background-size: 4rem 4rem;
+}
+
+/* Large service cards share the same brandbook surface everywhere: forest
+   depth, a restrained gold edge, and enough contrast for long descriptions.
+   The opaque base also prevents cards underneath a sticky stack from bleeding
+   into the active card. */
+.ddc-service-card {
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid var(--glass-border-gold);
+  border-radius: var(--radius-card);
+  background:
+    linear-gradient(118deg, color-mix(in srgb, var(--surface) 88%, var(--color-forest) 12%), color-mix(in srgb, var(--scene-background) 72%, var(--color-forest) 28%));
+  box-shadow: var(--shadow-card);
+}
+
+.ddc-service-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, color-mix(in srgb, var(--color-gold) 8%, transparent), transparent 32%);
+  opacity: 0.55;
+}
+
+.ddc-service-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* Применение шрифтов по ролям */

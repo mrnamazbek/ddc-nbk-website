@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import Icon, { IconName } from "@/components/ui/Icon";
 import { BubbleText } from "@/components/ui/BubbleText";
 import Button from "@/components/ui/Button";
@@ -10,11 +11,17 @@ import Leadership from "@/components/sections/Leadership";
 import DDCEventGallery from "@/components/sections/DDCEventGallery";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import BaseModelViewer from "@/components/three/scene/BaseModelViewer";
+import LazyOnVisible from "@/components/ui/LazyOnVisible";
 import ScrollReveal, { ENTRANCE_DURATION } from "@/components/motion/ScrollReveal";
 import { RevealWords } from "@/components/motion/RevealWords";
 import { AutoRevealingHeading } from "@/components/motion/AutoRevealingHeading";
 
+// The model is below the initial content and ships a large GLB. Reserve the
+// established scene area, then fetch/initialize WebGL shortly before it enters
+// view rather than during the route's first render.
+const BaseModelViewer = dynamic(() => import("@/components/three/scene/BaseModelViewer"), {
+  ssr: false,
+});
 
 export default function AboutPage() {
   const t = useTranslations("AboutPage");
@@ -106,7 +113,9 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="relative isolate flex h-[280px] sm:h-[clamp(420px,48vw,620px)] min-h-[280px] sm:min-h-[420px] items-center justify-center overflow-visible rounded-[var(--radius-card)] lg:col-span-6">
-            <BaseModelViewer />
+            <LazyOnVisible minHeight="100%" rootMargin="240px 0px" className="h-full w-full">
+              <BaseModelViewer />
+            </LazyOnVisible>
           </div>
         </div>
 
@@ -177,7 +186,7 @@ export default function AboutPage() {
           variant="liquid-strong"
           className="mt-24 p-8 sm:p-12 border-forest-mid/30 flex flex-col md:flex-row md:items-center justify-between gap-8 relative overflow-hidden text-left"
         >
-          <div className="absolute inset-0 bg-[radial-gradient(#52B78805_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
+          <div className="brand-dot-grid brand-dot-grid--strong absolute inset-0 pointer-events-none" />
           <div>
             <h2 className="text-2xl font-bold text-white mb-3 tracking-wide">{t("ctaTitle")}</h2>
             <p className="text-sm text-zinc-300 font-light leading-relaxed max-w-xl">

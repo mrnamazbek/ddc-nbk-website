@@ -1,15 +1,11 @@
-# DDCNB color variants
+# DDCNB brandbook color system
 
 ## Purpose
 
-The site keeps the existing palette as **Variant A / Current** and exposes the
-official 2026 brandbook palette as **Variant B / Brandbook**. The switcher is a
-manual visual comparison only: it performs no analytics, tracking, cookies, or
-random assignment.
-
-The persisted value is `ddc-color-variant` in local storage and is applied to
-`<html data-color-variant="current|brand">` before hydration. All routes share
-the same document attribute, so navigation does not reset the selection.
+The production website uses the official 2026 brandbook palette as its only
+runtime color system. `data-color-variant="brand"` remains fixed on the root
+element so CSS and WebGL scenes share one semantic-token contract. There is no
+palette switcher, local-storage preference, analytics, or random assignment.
 
 ## Brandbook source palette
 
@@ -30,14 +26,14 @@ change typography.
 
 ## Semantic mapping
 
-| Semantic token | Variant A / Current | Variant B / Brandbook dark | Variant B / Brandbook light |
-| --- | --- | --- | --- |
-| `--background` | `#08140D` | `#022622` | `#F8FAF9` |
-| `--surface` | `#0F1F17` | `#083B34` | `#FFFFFF` |
-| `--text-primary` | `#F4F7F1` | `#FFFFFF` | `#022622` |
-| `--accent-gold` | `#D1B45A` | `#ECC371` | `#805B08` |
-| `--color-forest` | `#1A3D2B` | `#0F534C` | `#0F534C` |
-| `--color-forest-light` | `#52B788` | `#2BBAAC` | `#2BBAAC` |
+| Semantic token | Brandbook dark | Brandbook light |
+| --- | --- | --- |
+| `--background` | `#022622` | `#F8FAF9` |
+| `--surface` | `#083B34` | `#FFFFFF` |
+| `--text-primary` | `#FFFFFF` | `#022622` |
+| `--accent-gold` | `#ECC371` | `#805B08` |
+| `--color-forest` | `#0F534C` | `#0F534C` |
+| `--color-forest-light` | `#2BBAAC` | `#2BBAAC` |
 
 `#805B08` is a derived accessible gold for text and interactive labels on
 white. The raw official `#ECC371` and `#FFBB34` remain available as
@@ -59,12 +55,7 @@ graphics, where they are not used as normal-sized text.
 ## Audit scope and limitations
 
 The global semantic system, Tailwind theme aliases, header, mobile menu,
-surfaces, forms that consume shared tokens, and text/icon utility colors follow
-the selected variant. A source audit identified hard-coded colors in isolated
-WebGL, particle, Lottie/SVG, and animation material definitions. They cannot
-be safely recolored by a document CSS token alone; they require their own
-runtime palette props. They are intentionally not mass-edited in this variant
-change to preserve existing animation behavior.
-
-Future animation work should consume the exposed `--brandbook-*` raw variables
-through a shared palette adapter rather than introducing new literals.
+surfaces, forms, text, icons, backgrounds, WebGL models, particle fields, and
+shader lighting consume the same token set. WebGL reads those values through
+`components/theme/useScenePalette.ts`; new scenes must use that adapter instead
+of introducing isolated color literals.
