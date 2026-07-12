@@ -4,6 +4,24 @@
 
 :root {
   /* ==========================================
+     0. Brand source colors
+     ==========================================
+     Raw colours are retained for brand fidelity. Components consume the
+     semantic tokens below, so a palette can change without duplicating UI. */
+  --brand-current-forest: #1A3D2B;
+  --brand-current-deep: #0F241A;
+  --brand-current-gold: #C9A84C;
+
+  --brandbook-forest: #0F534C;
+  --brandbook-deep: #022622;
+  --brandbook-white: #FFFFFF;
+  --brandbook-gold: #ECC371;
+  --brandbook-teal: #2BBAAC;
+  --brandbook-gray: #9FA3A6;
+  --brandbook-light-gray: #E6E6E6;
+  --brandbook-amber: #FFBB34;
+
+  /* ==========================================
      1. Базовая палитра (Base Colors)
      ========================================== */
 
@@ -228,4 +246,129 @@ html.light {
   --selection-bg: rgba(26, 61, 43, 0.15);
   --selection-text: #0E2419;
   --caret-color: #005F44;
+}
+
+/* ==========================================
+   8. Official brandbook palette (Variant B)
+   ==========================================
+   The raw brandbook values stay available above. Values used for readable
+   text and controls are intentionally derived where the official gold/amber
+   does not meet WCAG contrast on a light surface. */
+html[data-color-variant="brand"] {
+  --color-forest: var(--brandbook-forest);
+  --color-forest-mid: #17786E;
+  --color-forest-light: var(--brandbook-teal);
+  --color-forest-dark: var(--brandbook-deep);
+
+  --color-gold: var(--brandbook-gold);
+  --color-gold-light: var(--brandbook-amber);
+  --color-gold-muted: #A37B28;
+  --color-gold-dark: #604507;
+
+  --color-gray-dark: #56716C;
+  --color-gray-mid: var(--brandbook-gray);
+  --color-gray-light: #C9D3D0;
+  --color-offwhite: #F6F8F7;
+
+  --color-success: var(--brandbook-teal);
+  --color-warning: var(--brandbook-amber);
+  --color-info: var(--brandbook-forest);
+
+  --background: var(--brandbook-deep);
+  --foreground: var(--brandbook-white);
+  --surface: #083B34;
+
+  --text-primary: var(--brandbook-white);
+  --text-secondary: #D4E6E1;
+  --text-tertiary: #ABCAC3;
+
+  --accent-gold: var(--brandbook-gold);
+  --accent-gold-hover: #FFE0A0;
+
+  --hero-scrim-strong: #022622;
+  --hero-scrim-soft: rgba(2, 38, 34, 0.64);
+
+  --border-primary: rgba(230, 230, 230, 0.16);
+  --border-secondary: rgba(236, 195, 113, 0.34);
+
+  --glass-bg: rgba(2, 38, 34, 0.72);
+  --glass-border: rgba(230, 230, 230, 0.18);
+  --glass-border-gold: rgba(236, 195, 113, 0.32);
+  --glass-border-forest: rgba(43, 186, 172, 0.3);
+  --glass-shadow: 0 8px 30px rgba(0, 18, 16, 0.28);
+
+  --mobile-menu-surface: rgba(2, 38, 34, 0.97);
+  --mobile-menu-active: var(--accent-gold);
+  --header-surface: rgba(2, 38, 34, 0.96);
+
+  --showcase-tile-background: linear-gradient(145deg, var(--brandbook-deep), var(--brandbook-forest) 58%, #083B34);
+  --showcase-tile-foreground: var(--brandbook-white);
+  --showcase-tile-border: rgba(236, 195, 113, 0.28);
+  --showcase-tile-shadow: 0 12px 34px rgba(0, 18, 16, 0.3);
+
+  --shadow-gold: 0 8px 32px rgba(236, 195, 113, 0.16);
+  --shadow-green: 0 8px 32px rgba(15, 83, 76, 0.28);
+  --shadow-button: 0 5px 14px rgba(0, 18, 16, 0.28);
+  --shadow-card: 0 18px 52px rgba(0, 18, 16, 0.32);
+
+  --selection-bg: rgba(236, 195, 113, 0.36);
+  --selection-text: var(--brandbook-white);
+  --caret-color: var(--brandbook-teal);
+}
+
+html[data-color-variant="brand"].light {
+  --color-forest: var(--brandbook-forest);
+  --color-forest-mid: #17786E;
+  --color-forest-light: var(--brandbook-teal);
+  --color-forest-dark: var(--brandbook-deep);
+
+  --color-gold: var(--brandbook-gold);
+  --color-gold-light: #805B08;
+  --color-gold-muted: #805B08;
+  --color-gold-dark: #604507;
+
+  --background: #F8FAF9;
+  --foreground: var(--brandbook-deep);
+  --surface: var(--brandbook-white);
+
+  --text-primary: var(--brandbook-deep);
+  --text-secondary: #315B55;
+  --text-tertiary: #587570;
+
+  /* #ECC371 is a raw brand token; #805B08 is the accessible gold for text. */
+  --accent-gold: #805B08;
+  --accent-gold-hover: #604507;
+
+  --hero-scrim-strong: rgba(248, 250, 249, 0.95);
+  --hero-scrim-soft: rgba(248, 250, 249, 0.56);
+
+  --border-primary: rgba(15, 83, 76, 0.18);
+  --border-secondary: rgba(128, 91, 8, 0.34);
+
+  --color-gray-dark: #315B55;
+  --color-gray-mid: #587570;
+  --color-gray-light: #829A95;
+  --color-offwhite: #F8FAF9;
+
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(15, 83, 76, 0.18);
+  --glass-border-gold: rgba(128, 91, 8, 0.28);
+  --glass-border-forest: rgba(15, 83, 76, 0.24);
+  --glass-shadow: 0 12px 36px rgba(2, 38, 34, 0.1);
+
+  --mobile-menu-surface: rgba(255, 255, 255, 0.98);
+  --mobile-menu-active: var(--brandbook-forest);
+  --header-surface: rgba(255, 255, 255, 0.97);
+
+  --showcase-tile-background: linear-gradient(145deg, var(--brandbook-deep), var(--brandbook-forest) 60%, #17786E);
+  --showcase-tile-foreground: var(--brandbook-white);
+  --showcase-tile-border: rgba(15, 83, 76, 0.32);
+  --showcase-tile-shadow: 0 16px 34px rgba(2, 38, 34, 0.16);
+
+  --shadow-button: 0 5px 14px rgba(2, 38, 34, 0.12);
+  --shadow-card: 0 18px 52px rgba(2, 38, 34, 0.1);
+
+  --selection-bg: rgba(43, 186, 172, 0.22);
+  --selection-text: var(--brandbook-deep);
+  --caret-color: var(--brandbook-forest);
 }

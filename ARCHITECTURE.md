@@ -1,100 +1,84 @@
-# ARCHITECTURE.md (Архитектура и Стратегия проекта)
+# Architecture
 
-Этот документ описывает информационную архитектуру, инвентарь компонентов, стратегию анимации и требования доступности для веб-сайта дочерней организации Национального Банка Казахстана — **DDC**.
+## System overview
 
----
+DDCNB is a Next.js 16 App Router website. It runs as a multilingual public
+frontend and does not contain an application database, authentication system,
+payment service, API route handler, or server action.
 
-## 1. Цели сайта (Site Goals)
+```text
+Browser
+  -> Vercel / Next.js edge and application runtime
+    -> next-intl proxy and locale layout
+      -> marketing route + server/client components
+        -> static assets, motion, Lottie, Three/Spline/WebGL
+    -> server-side HeadHunter vacancy request (cached, fallback content)
+```
 
-- **Основная цель**: Создание цифрового авторитета DDC как ключевого технологического партнера Национального Банка Казахстана.
-- **Вторичная цель**: Демонстрация технологического превосходства и инновационности (Цифровой Тенге, открытый банкинг, искусственный интеллект в финансах).
-- **Третичная цель**: Привлечение высококлассных специалистов (Data-инженеры, разработчики баз данных, специалисты по информационной безопасности) и укрепление доверия международных партнеров.
+## Modules and responsibilities
 
----
+| Area | Responsibility |
+| --- | --- |
+| `app/[locale]` | Locale metadata, providers, route composition, marketing pages |
+| `components/layout` | Header, footer, navigation, scroll behavior |
+| `components/sections` | Page-level content sections and business presentation logic |
+| `components/ui` | Reusable presentation primitives, inputs, maps, loaders, Lottie wrappers |
+| `components/motion` | Motion policy and shared reveal/transition behavior |
+| `components/theme` | Theme, icon/background experiments, accessibility preferences |
+| `components/three` | Isolated WebGL, model, and Spline scene integration |
+| `i18n`, `messages` | Route locales and translated message catalogs |
+| `lib` | Side-effect-free helpers, including safe mail-client URL construction |
+| `public` | Explicitly shipped static assets; not a source-data store |
 
-## 2. Информационная архитектура (Information Architecture)
+## Client/server boundary
 
-Сайт имеет следующую древовидную структуру страниц:
-- `/` — Главная страница (презентация бренда, 3D Hero, ключевые сервисы, блок комплаенса).
-- `/about` — О компании (миссия, интерактивный таймлайн истории развития, структура руководства DDC).
-- `/services` — Решения и Услуги (каталог сервисов для государственных органов и банков второго уровня РК).
-- `/digital` — Цифровые платформы (технические детали проектов «Цифровой Тенге» и «Открытый банкинг»).
-- `/security` — Информационная безопасность (лицензии, стандарты комплаенса ISO/IEC 27001, шифрование).
-- `/news` — Пресс-центр (список новостей с поиском и фильтрацией, страницы конкретных новостных статей).
-- `/careers` — Карьерный портал (ценности работы, открытые вакансии с возможностью отправки резюме).
-- `/contact` — Контакты (адреса в Алматы и Астане, контакты пресс-службы, интерактивная карта, форма связи).
-- `/faq` — Часто задаваемые вопросы (структурированный аккордеон).
-- `not-found (404)` — Страница ошибки с брендовым оформлением.
+- Pages are server components by default. Client components declare `"use client"`
+  for interactive controls, animations, local storage, or canvas work.
+- `careers/page.tsx` fetches a public HeadHunter endpoint on the server with a
+  one-hour Next cache and falls back to local translated vacancies on failure.
+- No visitor data is sent to this app. Contact input becomes a local `mailto:`
+  draft after client-side validation.
+- Browser preferences are stored locally only (`localStorage`) for theme and
+  accessibility settings.
 
----
+## Trust boundaries
 
-## 3. Инвентарь компонентов (Component Inventory)
+| Boundary | Data | Current control |
+| --- | --- | --- |
+| Visitor -> browser UI | Public content and optional form values | Zod client validation; no app endpoint |
+| Browser -> external mail client | User-chosen contact text | URL encoding, explicit mail-client handoff |
+| Next server -> HeadHunter | Public vacancy request | Fixed endpoint, server-side fetch, cached fallback |
+| Browser -> third-party assets | Fonts and Iconify icons | CSP allowlist and same-origin-first assets |
+| CI -> packages | Lockfile dependencies | `npm ci`, dependency audit, minimal permissions |
 
-### Макет (Layout Componentry)
-- **Header**: Верхняя панель навигации. Прозрачная при первом экране, плавно переходящая в плотный Forest Green со стеклянным размытием при прокрутке. Включает переключатель языков (KZ / RU / EN), выпадающие меню для «Услуг» и «Технологий» и кнопку «Связаться».
-- **Footer**: Премиальный подвал с интерактивной картой ссылок, логотипом DDC, государственными дисклеймерами и золотым разделителем Saka Style.
-- **MobileNav**: Полноэкранный оверлей для планшетов и смартфонов с плавной анимацией появления.
+## Data flow and storage
 
-### UI-компоненты (UI Primitives)
-- **Button**: Премиальные кнопки с тремя стилями:
-  - *Primary Gold*: Кнопка с золотым градиентом и магнитным притяжением к курсору.
-  - *Secondary Green*: Кнопка с границей цвета Forest Green и мягкой подсветкой при наведении.
-  - *Ghost Glass*: Полупрозрачная кнопка с эффектом стекла для второстепенных действий.
-- **Card / GlassCard**: Контейнеры со стеклянной подложкой (`backdrop-filter: blur`), скруглением углов `16px` и тонкой золотистой границей.
-- **Badge**: Метки категорий новостей или вакансий с золотыми и зелеными градиентами.
-- **Accordion**: Ультра-плавный раскрывающийся блок вопросов и ответов.
+There is no persistent application data store. Static content lives in locale
+JSON files and `public/` assets. The application must not claim that it records
+website form submissions, holds candidate records, or processes financial data.
 
-### Анимационные компоненты (Motion Wrapper)
-- **ScrollReveal**: Обертка, использующая Framer Motion для плавного появления блоков (fade-in-up) со сдвигом по времени (stagger) для соседних элементов.
-- **ParallaxLayer**: Компонент для создания многослойных визуальных композиций с разной скоростью движения при скролле.
-- **CounterAnimation**: Компонент для анимированного подсчета статистики от нуля до целевого значения.
-- **MagneticWrapper**: Обертка для кнопок, притягивающая их к курсору мыши в радиусе 30px.
+## Deployment model
 
-### 3D-компоненты (Three.js / React Three Fiber)
-- **HeroCanvas**: Контейнер для рендеринга 3D сцены в Hero секции.
-- **SakaGeometry**: Три абстрактные вращающиеся геометрические фигуры со стеклянным шейдером (эффект преломления света и хроматической аберрации).
-- **ParticleField**: Облако из 2500 частиц (Forest Green + Premium Gold), совершающих волнообразные колебания и реагирующих на движение мыши.
+The project is configured as a standard Next.js/Vercel deployment. GitHub
+Actions runs validation on `develop` and `main`; the deployment platform is the
+separate control plane. See `docs/operations/DEPLOYMENT.md` for the required
+manual confirmation and rollback steps.
 
----
+## Design and performance boundaries
 
-## 4. Стратегия анимации (Motion Strategy)
+- Heavy 3D/Spline/WebGL belongs in isolated components and has reduced-motion
+  or mobile fallbacks.
+- Design tokens in `styles/tokens.css` are the runtime styling source of truth.
+- Do not put remote data fetching, URL construction, or policy decisions inside
+  generic visual primitives.
+- New integrations should be introduced behind a small server-side adapter,
+  input/output validation, timeout, error policy, and documented ownership.
 
-- **Входная анимация (Entrance)**: Все текстовые блоки в Hero-секции плавно выезжают снизу вверх через `clip-path` за 0.8 секунд. Шейдер частиц плавно разгорается из темноты.
-- **Плавный скролл (Lenis)**: Использование плавной прокрутки со следующими параметрами: `lerp: 0.08`, `duration: 1.2` для создания премиального "дорогого" ощущения при прокрутке.
-- **Анимации при скролле (GSAP ScrollTrigger)**:
-  - Эффект параллакса для фонового изображения Сакской степи в секции "About" (скорость движения 0.3x от скорости скролла).
-  - Плавное затухание 3D-сцены при прокрутке вниз для освобождения ресурсов процессора.
-- **Микро-взаимодействия (Hover & Focus)**:
-  - Эффект 3D Tilt на карточках услуг (максимальный угол наклона 8 градусов).
-  - Формы ввода подсвечиваются мягким золотым свечением при фокусе.
-- **Анимация переходов страниц**: Плавный пролет золотой сакской ленты (swipe transition) при смене роутов.
+## Planned architecture work
 
----
-
-## 5. Адаптивность и 3D-оптимизация (Responsive Strategy)
-
-### Брейкпоинты
-- **xs**: 320px — Ультра-мобильные устройства.
-- **sm**: 480px — Мобильные телефоны.
-- **md**: 768px — Планшеты (портретная ориентация).
-- **lg**: 1024px — Планшеты (альбомная ориентация) / Нетбуки.
-- **xl**: 1280px — Стандартные ноутбуки (Десктоп).
-- **2xl**: 1536px — Большие мониторы.
-- **3xl**: 1920px — Ультра-широкие экраны.
-
-### Оптимизация 3D-графики для мобильных устройств
-- **Десктопы (xl+)**: Полная 3D сцена с преломлениями света, хроматической аберрацией и интерактивным облаком из 2500 частиц с физикой мыши.
-- **Планшеты (lg, md)**: Отключение сложных стеклянных фигур (SakaGeometry). Рендерится только упрощенное интерактивное облако частиц (1000 точек) для экономии заряда батареи и плавности прокрутки.
-- **Мобильные (sm, xs)**: Полное отключение 3D Canvas. Сцена заменяется на высокоэффективный анимированный градиент на чистом CSS (смесь темно-зеленого и золотого свечений).
-
----
-
-## 6. Требования к доступности (Accessibility & WCAG 2.1 AA)
-
-- **Контрастность**: Все текстовые элементы строго соответствуют коэффициенту контрастности не менее **4.5:1** (согласно WCAG 2.1 AA).
-- **Клавиатурная навигация**: Полная поддержка переходов по кнопкам, ссылкам и полям ввода с помощью клавиши `Tab`. Видимые фокусные индикаторы золотого цвета для всех интерактивных элементов.
-- **Поддержка скринридеров (ARIA)**:
-  - Все интерактивные иконки снабжены тегами `aria-label`.
-  - Строгое соблюдение иерархии заголовков (`h1` -> `h2` -> `h3` -> `h4`).
-  - Формы ввода снабжены явными тегами `<label>`.
-- **Поддержка снижения движения (prefers-reduced-motion)**: Если у пользователя в операционной системе включен режим снижения движения, все JS и 3D-анимации мгновенно отключаются, заменяясь на статичные переходы.
+1. Replace public-site mail handoff with a dedicated, rate-limited contact
+   service only after privacy, retention, and operational ownership are defined.
+2. Move the HeadHunter integration into a dedicated server adapter if it gains
+   retries, monitoring, or additional sources.
+3. Inventory legacy demo and experimental UI modules before any larger cleanup;
+   retain them until ownership and route exposure are confirmed.

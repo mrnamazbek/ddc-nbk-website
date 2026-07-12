@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useA11y } from "@/components/theme/AccessibilityProvider";
 
 export interface TypewriterWord {
@@ -54,8 +54,11 @@ export const TypewriterEffect = ({
   lineClassName?: string;
   cursorClassName?: string;
 }) => {
-  const { enabled: a11yEnabled } = useA11y();
-  const reduce = useReducedMotion() || a11yEnabled;
+  // Use the provider value rather than a browser media query during the first
+  // render. The server has no media query, so this keeps SSR and hydration
+  // markup identical before the preference is applied after mount.
+  const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
+  const reduce = prefersReducedMotion || a11yEnabled;
   const [activeLine, setActiveLine] = useState(0);
   const fullText = lines.map((line) => line.map((w) => w.text).join(" ")).join(" ");
 

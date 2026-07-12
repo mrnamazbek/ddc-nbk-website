@@ -3,10 +3,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { motion, useReducedMotion } from "framer-motion";
 import Icon from "@/components/ui/Icon";
 import { BubbleText } from "@/components/ui/BubbleText";
-import { useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { Label } from "@/components/ui/label";
@@ -15,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import Button from "@/components/ui/Button";
 import { KazakhstanMap } from "@/components/ui/kazakhstan-map";
 import { cn } from "@/lib/utils";
+import { createMailtoDraft } from "@/lib/mailto";
 import ScrollReveal, { ENTRANCE_DURATION, STAGGER } from "@/components/motion/ScrollReveal";
 import { RevealWords } from "@/components/motion/RevealWords";
 import { StaggerGroup, StaggerItem } from "@/components/motion/StaggerGroup";
@@ -36,15 +35,13 @@ const LabelInputContainer = ({
 export default function ContactPage() {
   const t = useTranslations("ContactPage");
   const tA11y = useTranslations("A11y");
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const reduce = useReducedMotion();
 
   // Validation schema for quality inbound messages (created dynamically for localization)
   const contactSchema = z.object({
-    name: z.string().min(2, { message: t("errors.name") }),
-    email: z.string().email({ message: t("errors.email") }),
-    organization: z.string().min(2, { message: t("errors.organization") }),
-    message: z.string().min(10, { message: t("errors.message") }),
+    name: z.string().trim().min(2, { message: t("errors.name") }).max(200, { message: t("errors.name") }),
+    email: z.string().trim().email({ message: t("errors.email") }).max(254, { message: t("errors.email") }),
+    organization: z.string().trim().min(2, { message: t("errors.organization") }).max(200, { message: t("errors.organization") }),
+    message: z.string().trim().min(10, { message: t("errors.message") }).max(5000, { message: t("errors.message") }),
   });
 
   type ContactFormValues = z.infer<typeof contactSchema>;
@@ -52,18 +49,25 @@ export default function ContactPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-    reset,
+    formState: { errors },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
   });
 
-  const onSubmit = async (data: ContactFormValues) => {
-    // Simulate server request
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    console.log("Form Submitted:", data);
-    setIsSubmitted(true);
-    reset();
+  const onSubmit = (data: ContactFormValues) => {
+    const href = createMailtoDraft({
+      to: "info@ddc.nationalbank.kz",
+      subject: t("emailSubject"),
+      lines: [
+        `${t("fieldName")}: ${data.name}`,
+        `${t("fieldEmail")}: ${data.email}`,
+        `${t("fieldOrg")}: ${data.organization}`,
+        "",
+        data.message,
+      ],
+    });
+
+    window.location.assign(href);
   };
 
   return (
@@ -165,47 +169,7 @@ export default function ContactPage() {
 
           {/* Right: Contact Form */}
           <div className="lg:col-span-7 bg-charcoal/20 border border-white/5 rounded-3xl p-8 sm:p-12 relative overflow-hidden">
-            {isSubmitted ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-16 flex flex-col items-center justify-center pointer-events-auto"
-              >
-                {/* Checkmark: spring pop-in + a subtle one-shot gold sparkle burst */}
-                <div className="relative mb-6">
-                  {!reduce &&
-                    Array.from({ length: 8 }).map((_, i) => {
-                      const ang = (i / 8) * Math.PI * 2;
-                      return (
-                        <motion.span
-                          key={i}
-                          aria-hidden
-                          className="absolute left-1/2 top-1/2 w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-gold"
-                          initial={{ x: 0, y: 0, scale: 0, opacity: 0 }}
-                          animate={{ x: Math.cos(ang) * 46, y: Math.sin(ang) * 46, scale: [0, 1, 0], opacity: [0, 1, 0] }}
-                          transition={{ duration: 0.7, delay: 0.18 + i * 0.02, ease: "easeOut" }}
-                        />
-                      );
-                    })}
-                  <motion.div
-                    initial={{ scale: 0, rotate: -18 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ type: "spring", stiffness: 340, damping: 15, delay: 0.05 }}
-                    className="w-16 h-16 rounded-full bg-forest/30 border border-forest-light/25 flex items-center justify-center text-gold-light"
-                  >
-                    <Icon name="check-circle" size={32} animate={false} />
-                  </motion.div>
-                </div>
-                <h2 className="text-2xl font-bold text-white mb-4 tracking-wide">{t("formSubmittedTitle")}</h2>
-                <p className="text-sm text-zinc-300 font-light leading-relaxed max-w-md mx-auto mb-8">
-                  {t("formSubmittedDesc")}
-                </p>
-                <Button variant="outline" size="md" className="text-gold-light" onClick={() => setIsSubmitted(false)}>
-                  {t("sendAnotherBtn")}
-                </Button>
-              </motion.div>
-            ) : (
-              <StaggerGroup stagger={STAGGER.base}>
+            <StaggerGroup stagger={STAGGER.base}>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pointer-events-auto">
                 <StaggerItem duration={ENTRANCE_DURATION.subtitle} className="flex flex-col space-y-6 sm:space-y-0 sm:flex-row sm:space-x-6">
                   <LabelInputContainer>
@@ -294,25 +258,14 @@ export default function ContactPage() {
                     type="submit"
                     variant="gold"
                     size="lg"
-                    disabled={isSubmitting}
                     className="w-full"
                   >
-                    {isSubmitting ? (
-                      <>
-                        {t("btnSubmitting")}
-                        <Icon name="refresh" size={16} animate={false} className="animate-spin" />
-                      </>
-                    ) : (
-                      <>
-                        {t("btnSubmit")}
-                        <Icon name="send" size={16} animate={false} />
-                      </>
-                    )}
+                    {t("btnSubmit")}
+                    <Icon name="send" size={16} animate={false} />
                   </Button>
                 </StaggerItem>
               </form>
-              </StaggerGroup>
-            )}
+            </StaggerGroup>
           </div>
 
         </div>

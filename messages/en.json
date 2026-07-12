@@ -21,6 +21,11 @@
     "language": "Language:",
     "theme": "Theme:"
   },
+  "ColorVariant": {
+    "label": "Color palette",
+    "current": "Current palette",
+    "brand": "Brandbook palette"
+  },
   "Hero": {
     "badge": "Digital Development Center • National Bank of Kazakhstan",
     "titleLine1": "Digital solutions for the",
@@ -691,31 +696,6 @@
     "centerPillar4Text": "A single team driven by synergy, mutual support, and personal growth of each member.",
     "centerPillar5Text": "Process optimization and smart resource usage to deliver maximum efficiency.",
     "centerPillar6Text": "Focused on real outcomes, measurable contributions, and public value creation.",
-    "form": {
-      "title": "Apply to the DDC Team",
-      "nameLabel": "Full Name",
-      "emailLabel": "Email Address",
-      "phoneLabel": "Phone Number",
-      "vacancyLabel": "Select Vacancy",
-      "resumeLabel": "Resume Link (Google Drive / HH)",
-      "startQuizBtn": "Take IT Architecture Quiz",
-      "submitBtn": "Submit Application",
-      "successTitle": "Application Submitted Successfully!",
-      "successDesc": "Your application and quiz results have been saved in the DDC HR database. We will contact you shortly.",
-      "quiz": {
-        "title": "IT Express Quiz (System Thinking)",
-        "desc": "Systems thinking is a core competency at DDC. Answer 3 questions to validate your expertise.",
-        "q1": "Which solution is optimal for caching real-time transactions before writing them to the DLT registry?",
-        "q1_a": "In-Memory Redis Cache",
-        "q1_b": "Writing to raw text log files",
-        "q2": "Which DBMS is more suitable for building a Unified Data Factory with millions of OLAP reports?",
-        "q2_a": "ClickHouse (column-oriented)",
-        "q2_b": "SQLite (local file-based)",
-        "q3": "How to avoid the N+1 queries issue when developing API integrations in ORM?",
-        "q3_a": "Use Eager Loading (JOIN/Select-Related)",
-        "q3_b": "Run SELECT queries in a loop"
-      }
-    },
     "locAstana": "Astana",
     "locAlmaty": "Almaty",
     "typeFullTime": "Full-time",
@@ -745,7 +725,7 @@
     "overline": "CONTACT US",
     "titleLine1": "DDC Contacts and",
     "titleAccent": "Feedback",
-    "subtitle": "We are always ready to cooperate with partners, press, and future colleagues. Leave a request, and our specialists will contact you shortly.",
+    "subtitle": "Prepare a message for DDC using your own email client. The website does not transmit or store the form data.",
     "officesOverline": "WHERE WE OPERATE",
     "officesTitle": "Our offices",
     "officesSubtitle": "We operate in two key cities of Kazakhstan — the nation's capital and its financial center.",
@@ -773,11 +753,8 @@
     "labelEmail": "Email",
     "labelClock": "Working hours",
     "clockVal": "Monday — Friday: 09:00 - 18:30 | Lunch: 13:00 - 14:30",
-    "statusTitle": "Request status",
-    "statusDesc": "All requests sent through the form are recorded in the Unified Document Management System of the National Bank of RK and reviewed within the timeframes established by law.",
-    "formSubmittedTitle": "Request Sent",
-    "formSubmittedDesc": "Thank you! Your request has been successfully registered. We will contact you within 2 working days.",
-    "sendAnotherBtn": "Send another message",
+    "statusTitle": "How this form works",
+    "statusDesc": "DDC does not collect or store this form data on the website. The button opens a draft in your email client; you decide whether to send it.",
     "fieldName": "First & Last Name",
     "fieldEmail": "Email",
     "fieldOrg": "Organization",
@@ -786,8 +763,8 @@
     "placeholderEmail": "example@mail.com",
     "placeholderOrg": "Bank of Kazakhstan JSC",
     "placeholderMsg": "Describe the purpose of your request or cooperation proposal...",
-    "btnSubmitting": "Sending...",
-    "btnSubmit": "Send Request",
+    "emailSubject": "Website enquiry to DDC",
+    "btnSubmit": "Open email draft",
     "errors": {
       "name": "Please enter your name (minimum 2 characters)",
       "email": "Invalid email address",
@@ -948,17 +925,6 @@
     "a5": "Yes. One of DDC’s key innovations is a two-tier offline architecture. Using dedicated Secure Element chips in smart cards or mobile phones, users can transact directly with each other without an internet or mobile connection.",
     "q6": "Are you open to working with developers?",
     "a6": "Yes. As part of the Open Banking initiative we are actively developing unified Open API standards and a sandbox for integrating commercial banks, insurers and fintech companies. Details are available in our solutions section or by contacting us through the form."
-  },
-  "JobForm": {
-    "fillContacts": "Please fill in your contact details.",
-    "sendDirect": "Send your CV straight to the HR department of Digital Development Center JSC, National Bank of Kazakhstan",
-    "resumePlaceholder": "https://drive.google.com/... or https://hh.ru/resume/...",
-    "registering": "Registering candidate in the database...",
-    "candidate": "CANDIDATE:",
-    "vacancy": "VACANCY:",
-    "itScore": "IT TEST SCORE:",
-    "passed": "(Passed)",
-    "sendAnother": "Send another application"
   },
   "MonetarySim": {
     "stimulating": "5.0% (Stimulating)",

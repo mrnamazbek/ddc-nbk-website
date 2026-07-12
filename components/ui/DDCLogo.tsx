@@ -26,7 +26,7 @@ export default function DDCLogo({ className, title }: DDCLogoProps) {
       {/* The supplied SVG is deliberately exclusive to the light theme. */}
       <span
         aria-hidden="true"
-        className="ddc-logo__light hidden h-full w-full bg-[#005F44]"
+        className="ddc-logo__light hidden h-full w-full bg-forest"
         style={{
           WebkitMask: "url('/images/logo/ddc-logo-light-theme.svg') center / contain no-repeat",
           mask: "url('/images/logo/ddc-logo-light-theme.svg') center / contain no-repeat",

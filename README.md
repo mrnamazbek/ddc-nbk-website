@@ -1,155 +1,136 @@
-# Digital Development Center (DDC) — NBK Subsidiary Website
-> A premium, high-performance, and secure institutional web portal for the Digital Development Center (DDC), a subsidiary of the National Bank of Kazakhstan (Национальный Банк Казахстана).
+# DDCNB Website
 
-This project represents a world-class digital presence, positioning DDC as a modern, trustworthy, and innovative leader in Central Asia's financial technology landscape. The website's aesthetics combine institutional trust (referencing the National Bank of Kazakhstan, BlackRock, and Bank of England) with modern product polish (Stripe and Apple).
+Public multilingual website for the Digital Development Center (DDC) in the
+National Bank of Kazakhstan ecosystem. It presents DDC information, services,
+mission, careers, news, contact details, and visual storytelling. It is **not**
+a transaction system, customer portal, or authenticated fintech application.
 
----
+## Capabilities
 
-## 🏛️ Brand & Concept: "The Saka Heritage & Digital Future"
-The visual identity is anchored on the blend between Kazakhstan's historical legacy and future-forward digital systems:
-- **Primary Brand Color**: Deep Forest Green (`#1A3D2B`), symbolizing stability and growth.
-- **Accents**: Premium Gold (`#C9A84C`), symbolizing institutional authority and prosperity.
-- **Saka Art (Сакский Стиль)**: Abstract 3D representations of national motifs (torus, icosahedron) rendered dynamically using WebGL.
+- Russian, Kazakh, and English routing with `next-intl`
+- Dark and light themes with accessibility preferences and reduced-motion paths
+- Responsive marketing pages, maps, careers links, news, and contact details
+- Progressive enhancement for Lottie, 3D, Spline, and WebGL storytelling
+- Contact handoff through the visitor's local email client; no website-side
+  contact or resume storage
 
----
+## Stack
 
-## 🛠️ Technical Stack
-The website is engineered for extreme performance, smoothness, and accessibility:
+- Next.js 16 App Router, React 19, TypeScript
+- Tailwind CSS 4 and project design tokens
+- `next-intl`, `next-themes`, React Hook Form, Zod
+- Framer Motion, GSAP, Three.js / React Three Fiber, Lottie
+- Playwright and Axe for browser validation
 
-### Core Frameworks
-* **Next.js 16 (App Router)**: Utilizing React 19 features, static site generation, and optimized image/font loading.
-* **TypeScript (Strict Mode)**: Full type-safety across elements and animation components.
-* **Tailwind CSS v4 + PostCSS**: High-performance atomic utility styling paired with modern CSS variables.
+## Architecture
 
-### Animation & 3D Experiences
-* **Three.js & React Three Fiber (R3F)**: Powering a fully interactive 3D Hero scene with dynamic floating geometries, light refraction, and interactive mouse-tracked particle fields.
-* **Framer Motion**: Custom-made staggered entrance transitions, slide-ins, and complex page wipes.
-* **Lenis Smooth Scroll**: Elegant scrolling mechanics with configurable physics and inertia.
-* **GSAP & ScrollTrigger**: Precision scroll-linked animations for timelines, stats, and parallax layouts.
-
-### Forms & Validation
-* **React Hook Form**: Form state management with zero unnecessary re-renders.
-* **Zod**: Robust client-side validation schemes for contact forms and inquiries.
-
-### Development Quality & CI/CD
-* **ESLint & Prettier**: Automated linting and formatting workflows.
-* **GitHub Actions CI**: Continuous Integration workflow that runs compilation and validation builds on every push to `develop` and `main`.
-* **Vercel Deployments**: Multi-environment preview and production pipeline.
-
----
-
-## 📁 Repository Directory Structure
+See [ARCHITECTURE.md](ARCHITECTURE.md) for the actual module boundaries, data
+flow, trust boundaries, and deployment model. The short version:
 
 ```text
-ddc-nbk-website/
-├── .github/
-│   └── workflows/
-│       └── ci.yml               # Automated CI pipeline
-├── app/
-│   ├── (marketing)/
-│   │   ├── about/               # Organization mission, team, and timeline
-│   │   ├── careers/             # Job vacancies and opportunities
-│   │   ├── contact/             # Contact forms and map integration
-│   │   ├── digital/             # Showcase of DDC products
-│   │   ├── faq/                 # Interactive accordions for FAQ
-│   │   ├── news/                # CMS-ready news and media template
-│   │   ├── security/            # Security certificates & regulatory framework
-│   │   ├── services/            # Interactive services showcase
-│   │   └── page.tsx             # Cinematic Home Landing page
-│   ├── globals.css              # Main tailwind imports & standard animations
-│   ├── layout.tsx               # Root layout with navbar/footer
-│   └── not-found.tsx            # Branded custom 404 page
-├── components/
-│   ├── layout/
-│   │   ├── Header.tsx           # Logo, nav menu, and language toggler
-│   │   ├── Footer.tsx           # Multi-column footer & copyright
-│   │   └── SmoothScroll.tsx     # Lenis provider for smooth scrolling
-│   ├── motion/
-│   │   └── ScrollReveal.tsx     # Framer motion helper for scroll reveals
-│   ├── sections/
-│   │   ├── About.tsx            # Interactive about component with timeline
-│   │   ├── CTA.tsx              # Beautiful call-to-action banner
-│   │   ├── DigitalShowcase.tsx  # Tabs interface showing digital projects
-│   │   ├── Hero.tsx             # Rich hero copy overlay with text reveals
-│   │   ├── News.tsx             # News grid with dynamic hover zooming
-│   │   ├── Security.tsx         # Interactive security checks and logos
-│   │   ├── Services.tsx         # 3D Tilt glass cards showcasing services
-│   │   └── Stats.tsx            # Animated counters of assets and milestones
-│   ├── three/
-│   │   ├── HeroScene.tsx        # Canvas wrapper with suspense limits
-│   │   ├── ParticleField.tsx    # Interactive mouse-tracked particles
-│   │   └── SakaGeometry.tsx     # Dynamic 3D shapes with refraction and tilt
-│   └── ui/
-│       ├── Badge.tsx            # Micro-tag component
-│       ├── Button.tsx           # Type-safe premium button with micro-motion
-│       └── GlassCard.tsx        # 3D interactive tilting glass card container
-├── lib/
-│   └── utils.ts                 # Formatting & class merging utilities
-├── public/
-│   ├── images/                  # High-quality optimized graphics
-│   └── favicon.ico
-├── styles/
-│   └── tokens.css               # Design System global CSS variables
-├── ARCHITECTURE.md              # Detailed information architecture
-├── DESIGN_SYSTEM.md             # Color palettes, spacing scales, and fonts
-├── FULL_PLAN.md                 # Complete implementation roadmap
-├── tsconfig.json                # TypeScript compiler config
-└── package.json                 # Dependency manifests
+app/[locale] routes
+  -> marketing layouts and page composition
+  -> components/{layout,motion,sections,theme,three,ui}
+  -> lib + i18n + static public assets
 ```
 
----
+There are no database models, API route handlers, sessions, or server actions
+in the reviewed application. The only runtime server-side outbound request is
+the cached public HeadHunter vacancy lookup, which falls back to local content.
 
-## ⚡ Design System & Styling Tokens
-All core elements are driven by CSS custom properties located in `styles/tokens.css` and integrated into Tailwind CSS:
-- **Typography Display**: *Cormorant Garamond* (Serif font family representing Kazakhstani national heritage and premium institutional design).
-- **Typography UI**: *Inter* (San-serif font family optimized for readability and technical precision).
-- **Borders & Radii**: Glassmorphic styles using transparent borders `rgba(255,255,255,0.12)`, dynamic backdrop blur filters, and fluid radius scaling (e.g. `--radius-lg: 16px`).
-- **Shadows**: Premium gold reflection glow (`--shadow-gold: 0 8px 32px rgba(201,168,76,0.25)`) and institutional green depths.
+## Security and privacy
 
----
+- Runtime browser headers are configured in `next.config.ts`.
+- The project does not require runtime application secrets.
+- Contact form values are encoded into a `mailto:` draft only after local
+  validation; the site does not submit or persist the content.
+- Do not add authentication, PII collection, document uploads, or payment data
+  without a reviewed server-side design, rate limiting, validation, privacy
+  notice, logging policy, and incident response.
 
-## 🚀 Local Setup & Installation
+Read [SECURITY.md](SECURITY.md), the [threat model](docs/security/THREAT_MODEL.md),
+and [incident response guide](docs/security/INCIDENT_RESPONSE.md) before making
+security-sensitive changes.
 
-### Prerequisites
-Make sure you have [Node.js 18.x+](https://nodejs.org) and `npm` installed.
+## Accessibility
 
-### 1. Clone & Navigate
+The project provides theme switching, a low-vision panel, visible focus states,
+keyboard controls, and reduced-motion fallbacks. Accessibility is tested with
+Playwright/Axe but is not a substitute for a formal conformance audit. See
+[testing strategy](docs/quality/TESTING.md).
+
+## Local setup
+
+Prerequisite: Node.js `>=20.9.0` and npm.
+
 ```bash
 git clone https://github.com/mrnamazbek/ddc-nbk-website.git
 cd ddc-nbk-website
-```
-
-### 2. Install Dependencies
-```bash
-npm install
-```
-
-### 3. Run Development Server
-```bash
+npm ci
 npm run dev
 ```
-Open `http://localhost:3000` in your web browser.
 
-### 4. Build Production Bundle
-To compile and optimize the site for deployment (checking strict lint and TypeScript builds):
+Open `http://localhost:3000/ru`.
+
+### Environment variables
+
+The deployed site has no runtime secret variables. `.env.example` documents
+optional local-only credentials for asset discovery tooling. Never commit a
+real `.env*` file or expose a credential as `NEXT_PUBLIC_*`.
+
+## Commands
+
 ```bash
-npm run build
+npm run dev              # development server
+npm run lint             # ESLint (warnings are reported but do not fail)
+npm run typecheck        # TypeScript, no emit
+npm run check:i18n       # translation parity and hardcoded-text guard
+npm run test:unit        # lightweight repository contract tests
+npm run check:deps       # fail on high/critical production dependency advisories
+npm run check            # static, i18n, unit, and dependency checks
+npm run build            # production build
+npm run test:e2e         # build, then Playwright smoke/security suite
 ```
 
----
+## Deployment
 
-## 🌐 Deployment to Vercel
-The website is pre-configured for automatic deployment to Vercel via Git hook connections:
-1. Connect your repository `mrnamazbek/ddc-nbk-website` to the Vercel dashboard.
-2. Vercel automatically detects Next.js settings.
-3. Every push to the `develop` branch creates a *preview environment*.
-4. Merges into the `main` branch trigger automated production rollouts.
+GitHub Actions validates pushes and pull requests for `develop` and `main`.
+Vercel deployment is repository-integrated and must be confirmed in the Vercel
+dashboard; this repository does not treat a Git push as deployment evidence.
+Follow [deployment and rollback](docs/operations/DEPLOYMENT.md).
 
----
+## Repository organization
 
-## ♿ Accessibility & Performance Audits
-Designed with strict compliance for **WCAG 2.1 AA** standards:
-* **Contrast Ratios**: Core colors guarantee a minimum 4.5:1 contrast against text.
-* **Keyboard Navigation**: Complete support for interactive buttons, links, and accordion items using native browser focus rings.
-* **Prefers Reduced Motion**: System animation curves check `prefers-reduced-motion` media queries and degrade to static layouts automatically when requested by the OS.
-* **Performance Budget**: Under 2.0MB initial bundle sizes, utilizing next-gen image formats (`AVIF`/`WebP`) and lazy-loaded WebGL canvas scenes.
+- `app/` - Next.js App Router routes and layouts
+- `components/` - reusable layout, UI, motion, section, theme, and 3D modules
+- `i18n/`, `messages/` - locale routing and translated content
+- `lib/` - framework-independent utilities
+- `public/` - intentionally shipped static assets
+- `styles/` - CSS tokens and accessibility styles
+- `e2e/`, `tests/` - automated browser and contract checks
+- `docs/` - architecture, operations, security, design, and agent guidance
+- `scripts/` - deterministic repository checks and agent helpers
+
+## Contribution workflow
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md), `AGENTS.md`, and the PR template.
+Keep changes focused and validate them locally. Visual changes require desktop
+and mobile checks; security or dependency changes require a risk and rollback
+note.
+
+## Known limitations and roadmap
+
+- No server-side form intake, CV upload, spam prevention, authentication, or
+  observability service is implemented.
+- Several heavy visual scenes need periodic device-performance profiling.
+- Existing ESLint warnings are documented technical debt; they are not hidden
+  or treated as evidence of a clean codebase.
+- A production backend for personal-data workflows requires a separate threat
+  model, retention policy, DPA/privacy review, abuse controls, and monitoring.
+
+## License and security reporting
+
+No software license is currently declared in this repository. Confirm legal
+ownership and licensing for code, fonts, media, models, and third-party assets
+before reuse or publication. Security reporting instructions are in
+[SECURITY.md](SECURITY.md).

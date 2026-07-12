@@ -1,4 +1,13 @@
-# CODE_REVIEW.md — NBK/DDC site (`develop`)
+# CODE_REVIEW.md — historical review snapshot
+
+> **Superseded for current release decisions.** This document records a review
+> from 2026-06-06 and contains then-current routes, warning counts, assumptions,
+> and proposed work. It is not evidence of the current implementation,
+> deployment, security posture, or compliance. Use `README.md`,
+> `ARCHITECTURE.md`, `SECURITY.md`, `CHANGELOG.md`, and the current CI results
+> for operational decisions.
+
+# NBK/DDC site (`develop`) — 2026-06-06 snapshot
 
 **Reviewer:** senior frontend / QA pass · **Date:** 2026-06-06
 **Commit reviewed:** `a0eb3c0` (post CI-fix)

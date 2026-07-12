@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import PageTransitionProvider from "@/components/motion/PageTransition";
 import ThemeProvider from "@/components/theme/ThemeProvider";
+import ColorVariantProvider from "@/components/theme/ColorVariantProvider";
 import { IconSystemProvider } from "@/components/theme/IconSystemProvider";
 import { BgSystemProvider } from "@/components/theme/BgSystemProvider";
 import AccessibilityProvider from "@/components/theme/AccessibilityProvider";
@@ -47,34 +48,25 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html
-      lang={locale === "kz" ? "kk" : locale}
-      className="h-full antialiased"
-      suppressHydrationWarning
-    >
-      <head>
-        <link rel="preload" href="/fonts/nohemi/Nohemi-Regular.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
-        <link rel="preload" href="/fonts/nohemi/Nohemi-SemiBold.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
-      </head>
-      <body className="min-h-full flex flex-col text-white">
-        <ThemeProvider>
-          <BgSystemProvider>
-            <IconSystemProvider>
-              <NextIntlClientProvider messages={messages}>
-                <AccessibilityProvider>
-                  <MotionA11yConfig>
-                    {/* Faint grain overlay (opacity 0.03) for organic texture */}
+    <ThemeProvider>
+      <ColorVariantProvider>
+        <BgSystemProvider>
+          <IconSystemProvider>
+            <NextIntlClientProvider messages={messages}>
+              <AccessibilityProvider>
+                <MotionA11yConfig>
+                  <div lang={locale === "kz" ? "kk" : locale} className="contents">
                     <div data-decorative className="ddc-noise-overlay fixed inset-0 pointer-events-none z-[9999] opacity-[0.03]" />
                     <PageTransitionProvider>{children}</PageTransitionProvider>
                     <AccessibilityPanel />
                     <InteractiveDotGrid />
-                  </MotionA11yConfig>
-                </AccessibilityProvider>
-              </NextIntlClientProvider>
-            </IconSystemProvider>
-          </BgSystemProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+                  </div>
+                </MotionA11yConfig>
+              </AccessibilityProvider>
+            </NextIntlClientProvider>
+          </IconSystemProvider>
+        </BgSystemProvider>
+      </ColorVariantProvider>
+    </ThemeProvider>
   );
 }

@@ -8,6 +8,11 @@ This folder is the canonical project memory for agents and maintainers.
 - `agents/handoffs/` — temporary handoff notes for split work. Keep only active or recent notes.
 - `architecture/` — implementation notes that affect code structure or runtime behavior.
 - `design/` — design system extensions, icon/asset pipeline, animation placement rules.
+- `ci/` — CI/CD controls and delivery workflow.
+- `operations/` — deployment and rollback guidance.
+- `quality/` — automated and manual testing strategy.
+- `security/` — threat model and incident-response guidance.
+  Includes the current security and architecture review.
 
 ## Required Reading For UI Work
 
@@ -19,3 +24,6 @@ This folder is the canonical project memory for agents and maintainers.
 6. `docs/agents/AGENT_HANDOFF.md`
 
 When changing UI, use Lazyweb first, keep motion subtle, and commit one logical change at a time.
+
+For repository or delivery changes, begin with `README.md`, `ARCHITECTURE.md`,
+`SECURITY.md`, `CONTRIBUTING.md`, and the relevant document in `docs/`.

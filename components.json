@@ -21,10 +21,7 @@
   "registries": {
     "@react-bits": "https://reactbits.dev/r/{name}.json",
     "@aceternity": {
-      "url": "https://ui.aceternity.com/registry/{name}.json",
-      "headers": {
-        "Authorization": "Bearer aceternity_65cbaaa6e35056ad10b85f6280ed31fdae036b56a085613a3d4c5fee11ec3bc7"
-      }
+      "url": "https://ui.aceternity.com/registry/{name}.json"
     }
   }
 }

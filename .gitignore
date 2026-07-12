@@ -30,8 +30,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -53,6 +54,7 @@ next-env.d.ts
 # test artifacts & MCP scratch (never commit — regenerated on every run)
 /output/
 /.playwright-mcp/
+/.playwright-cli/
 /test-results/
 /playwright-report/
 /variant_b_*.png

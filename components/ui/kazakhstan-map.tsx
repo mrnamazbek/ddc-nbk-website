@@ -225,11 +225,20 @@ export function KazakhstanMap() {
                 </feMerge>
               </filter>
 
-              {/* Gold gradient for map border */}
+              {/* Gold gradient for map border (dark theme) */}
               <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#C9A84C" />
                 <stop offset="50%" stopColor="#FFF2CC" />
                 <stop offset="100%" stopColor="#8A6F27" />
+              </linearGradient>
+
+              {/* Map border in light mode: the requested #0F534C teal, with a
+                  slightly brighter sheen through the middle so the outline reads
+                  crisply on the cream background without shifting off-hue. */}
+              <linearGradient id="green-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#0F534C" />
+                <stop offset="50%" stopColor="#1B8378" />
+                <stop offset="100%" stopColor="#0F534C" />
               </linearGradient>
 
               {/* Glowing connection gradient */}
@@ -251,7 +260,7 @@ export function KazakhstanMap() {
                   : "rgba(82, 183, 136, 0.16)"
               }
               fillOpacity={a11yEnabled ? 0.45 : undefined}
-              stroke="url(#gold-grad)"
+              stroke={isLight ? "url(#green-grad)" : "url(#gold-grad)"}
               strokeWidth={1.5}
               filter="url(#gold-glow)"
               className="pointer-events-none transition-colors duration-500"

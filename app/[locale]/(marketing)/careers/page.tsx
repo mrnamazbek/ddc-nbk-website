@@ -4,7 +4,6 @@ import Badge from "@/components/ui/Badge";
 import Icon, { IconName } from "@/components/ui/Icon";
 import CareerCenterSection from "@/components/sections/CareerCenterSection";
 import { getTranslations } from "next-intl/server";
-import JobApplicationForm from "@/components/sections/JobApplicationForm";
 import LottieAnimation from "@/components/ui/LottieAnimation";
 import { BubbleText } from "@/components/ui/BubbleText";
 import ScrollReveal, { ENTRANCE_DURATION, STAGGER } from "@/components/motion/ScrollReveal";
@@ -436,11 +435,6 @@ export default async function CareersPage({ params }: CareersPageProps) {
             ))}
           </StaggerGroup>
         </div>
-
-        {/* Форма подачи отклика с ИТ-тестом */}
-        <ScrollReveal blur={10} duration={ENTRANCE_DURATION.card} className="mt-24">
-          <JobApplicationForm jobs={jobs} />
-        </ScrollReveal>
 
       </div>
     </div>

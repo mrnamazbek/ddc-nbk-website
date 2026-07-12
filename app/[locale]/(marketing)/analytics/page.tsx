@@ -187,19 +187,19 @@ export default function AnalyticsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-zinc-300 font-light">
             <div className="flex gap-2">
               <span className="text-gold-light font-bold">•</span>
-              <span dangerouslySetInnerHTML={{ __html: t.raw("careerBullet1") }} />
+              <span>{t.rich("careerBullet1", { strong: (chunks) => <strong>{chunks}</strong> })}</span>
             </div>
             <div className="flex gap-2">
               <span className="text-gold-light font-bold">•</span>
-              <span dangerouslySetInnerHTML={{ __html: t.raw("careerBullet2") }} />
+              <span>{t.rich("careerBullet2", { strong: (chunks) => <strong>{chunks}</strong> })}</span>
             </div>
             <div className="flex gap-2">
               <span className="text-gold-light font-bold">•</span>
-              <span dangerouslySetInnerHTML={{ __html: t.raw("careerBullet3") }} />
+              <span>{t.rich("careerBullet3", { strong: (chunks) => <strong>{chunks}</strong> })}</span>
             </div>
             <div className="flex gap-2">
               <span className="text-gold-light font-bold">•</span>
-              <span dangerouslySetInnerHTML={{ __html: t.raw("careerBullet4") }} />
+              <span>{t.rich("careerBullet4", { strong: (chunks) => <strong>{chunks}</strong> })}</span>
             </div>
           </div>
         </div>
