@@ -5,9 +5,9 @@ import { useTranslations } from "next-intl";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
 import TerminalGridBackground from "@/components/ui/TerminalGridBackground";
-import ScrollWordHero from "@/components/ui/scroll-hero-section";
 import LottieAnimation from "@/components/ui/LottieAnimation";
 import ScrollReveal, { ENTRANCE_DURATION } from "@/components/motion/ScrollReveal";
+import PageIntro from "@/components/sections/PageIntro";
 
 interface MissionStep {
   key: string;
@@ -68,9 +68,6 @@ function MissionSpine() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
-      {/* The intro (overline, heading, subtitle) is not repeated here: it is now
-          the copy revealed inside the word-hero's full-bleed panel above. */}
-
       {/* Central spine — each pillar sits on alternating sides of it */}
       <div ref={scrollTargetRef} className="relative">
         <div
@@ -140,36 +137,27 @@ function MissionSpine() {
 }
 
 function Mission2D() {
+  const t = useTranslations("Mission");
+
   return (
-    <div className="relative w-full bg-transparent overflow-hidden py-24 sm:py-32 font-sans">
+    <div className="relative w-full overflow-hidden bg-transparent pb-24 pt-32 font-sans sm:pb-32">
       <div className="brand-dot-grid absolute inset-0 pointer-events-none" />
       <TerminalGridBackground className="opacity-75" />
 
+      <div className="relative z-10 mx-auto mb-24 max-w-7xl px-6 sm:px-12 lg:px-16">
+        <PageIntro
+          overline={t("overline")}
+          titleLine1={t("titleLine1")}
+          titleAccent={t("titleAccent")}
+          titleLine2={t("titleLine2")}
+          subtitle={t("subtitle")}
+        />
+      </div>
       <MissionSpine />
     </div>
   );
 }
 
 export default function MissionPage() {
-  const t = useTranslations("Mission");
-  const wordHero = useTranslations("Mission.wordHero");
-
-  return (
-    <>
-      <ScrollWordHero
-        leadIn={wordHero("leadIn")}
-        items={wordHero.raw("words")}
-        srSummary={wordHero("srSummary")}
-      >
-        <span className="scroll-word-hero__overline">{t("overline")}</span>
-        <h1 className="scroll-word-hero__title">
-          {t("titleLine1")}{" "}
-          <span className="scroll-word-hero__accent">{t("titleAccent")}</span>{" "}
-          {t("titleLine2")}
-        </h1>
-        <p className="scroll-word-hero__subtitle">{t("subtitle")}</p>
-      </ScrollWordHero>
-      <Mission2D />
-    </>
-  );
+  return <Mission2D />;
 }

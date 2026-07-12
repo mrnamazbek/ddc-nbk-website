@@ -5,8 +5,8 @@ import { useTranslations } from "next-intl";
 
 import { ContainerScroll, CardSticky } from "@/components/ui/card-sticky";
 import Icon, { IconName } from "@/components/ui/Icon";
-import { BubbleText } from "@/components/ui/BubbleText";
 import LottieAnimation from "@/components/ui/LottieAnimation";
+import PageIntro from "@/components/sections/PageIntro";
 
 /**
  * The five DDC operational services as a sticky stack: the section heading sits
@@ -18,8 +18,8 @@ import LottieAnimation from "@/components/ui/LottieAnimation";
  */
 const SERVICES: { id: number; icon: IconName; visual: string }[] = [
   { id: 1, icon: "contact-center", visual: "/animations/services-contact-center.json" },
-  { id: 2, icon: "procurement", visual: "/animations/services-server-sync.json" },
-  { id: 3, icon: "database", visual: "/animations/services-fintech-flow.json" },
+  { id: 2, icon: "procurement", visual: "/animations/services-fintech-flow.json" },
+  { id: 3, icon: "database", visual: "/animations/services-server-sync.json" },
   { id: 4, icon: "server", visual: "/animations/services-secure-folder.json" },
   { id: 5, icon: "shield-check", visual: "/animations/services-fraud-network.json" },
 ];
@@ -44,19 +44,14 @@ export default function ServicesStickyCards() {
   );
 
   return (
-    <section className="theme-on-forest relative w-full bg-background px-6 pb-36 pt-28 text-foreground sm:pb-44">
-      {/* Heading block — stays at the top of the section, full width. */}
-      <div className="mx-auto max-w-3xl text-center">
-        <span className="mb-5 inline-block rounded-[var(--radius-pill)] border border-[var(--glass-border-gold)] bg-[var(--glass-bg)] px-5 py-2 text-[10px] font-semibold uppercase tracking-[0.38em] text-gold-light">
-          {t("overline")}
-        </span>
-        <h1 className="font-display text-4xl font-normal leading-tight tracking-tight text-foreground sm:text-6xl">
-          <BubbleText text={t("titleLine1")} />{" "}
-          <BubbleText text={t("titleAccent")} activeClassName="text-gold font-black" />
-        </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
-          <BubbleText text={t("subtitle")} />
-        </p>
+    <section className="theme-on-forest relative w-full bg-transparent px-6 pb-36 pt-32 text-foreground sm:pb-44">
+      <div className="mx-auto max-w-7xl">
+        <PageIntro
+          overline={t("overline")}
+          titleLine1={t("titleLine1")}
+          titleAccent={t("titleAccent")}
+          subtitle={t("subtitle")}
+        />
       </div>
 
       <ContainerScroll className="mx-auto mt-16 max-w-5xl space-y-8">
@@ -80,13 +75,13 @@ export default function ServicesStickyCards() {
                       {service.eyebrow}
                     </p>
                     <h2 className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                      <BubbleText text={service.title} />
+                      {service.title}
                     </h2>
                   </div>
                 </div>
 
                 <p className="max-w-xl text-base leading-relaxed text-muted">
-                  <BubbleText text={service.description} />
+                  {service.description}
                 </p>
 
                 <ul className="mt-4 grid gap-2">

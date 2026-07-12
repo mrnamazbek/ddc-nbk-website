@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import Lottie, { type LottieRefCurrentProps } from "lottie-react";
 import { cn } from "@/lib/utils";
 import { ENTRANCE_EASE } from "@/components/motion/ScrollReveal";
+import { useScenePalette } from "@/components/theme/useScenePalette";
+import { recolorBrandLottie } from "@/lib/lottie/recolorBrandLottie";
 
 interface LottieAnimationProps {
   src: string;
@@ -15,6 +17,7 @@ interface LottieAnimationProps {
   loop?: boolean;
   delay?: number;
   shell?: boolean;
+  brandPalette?: boolean;
 }
 
 export default function LottieAnimation({
@@ -26,6 +29,7 @@ export default function LottieAnimation({
   loop = true,
   delay = 0,
   shell = false,
+  brandPalette = true,
 }: LottieAnimationProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const lottieRef = useRef<LottieRefCurrentProps>(null);
@@ -34,6 +38,19 @@ export default function LottieAnimation({
   const shouldReduceMotion = useReducedMotion();
   const [animationData, setAnimationData] = useState<unknown>(null);
   const [hasError, setHasError] = useState(false);
+  const palette = useScenePalette();
+  const themedAnimationData = useMemo(() => {
+    if (!animationData || !brandPalette) return animationData;
+    return recolorBrandLottie(animationData, palette);
+  }, [
+    animationData,
+    brandPalette,
+    palette.backgroundForest,
+    palette.keyLight,
+    palette.modelDarkBase,
+    palette.particleAccent,
+    palette.particlePrimary,
+  ]);
   const revealInitial = shouldReduceMotion
     ? false
     : { opacity: 0, y: 22, scale: 0.985, filter: "blur(10px)" };
@@ -96,10 +113,10 @@ export default function LottieAnimation({
           frameClassName,
         )}
       >
-        {animationData ? (
+        {themedAnimationData ? (
           <Lottie
             lottieRef={lottieRef}
-            animationData={animationData}
+            animationData={themedAnimationData}
             autoplay={!shouldReduceMotion && isActive}
             loop={!shouldReduceMotion && loop}
             className={cn("h-full w-full max-h-[520px] overflow-visible", animationClassName)}

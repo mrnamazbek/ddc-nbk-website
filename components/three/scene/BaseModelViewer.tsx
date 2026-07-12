@@ -68,11 +68,11 @@ function Model({ url, isLight, palette }: { url: string; isLight: boolean; palet
   const material = useMemo(() => {
     const mat = new THREE.MeshPhysicalMaterial({
       color: "#FFFFFF",
-      metalness: 0.9,
-      roughness: 0.15,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.1,
-      envMapIntensity: 2.2,
+      metalness: 0.72,
+      roughness: 0.22,
+      clearcoat: 0.72,
+      clearcoatRoughness: 0.16,
+      envMapIntensity: 3.1,
     });
 
     mat.onBeforeCompile = (shader) => {
@@ -128,7 +128,7 @@ function Model({ url, isLight, palette }: { url: string; isLight: boolean; palet
         "#include <roughnessmap_fragment>",
         `
         #include <roughnessmap_fragment>
-        float darkRoughness = mix(0.22, 0.12, mixFactor);
+        float darkRoughness = mix(0.32, 0.18, mixFactor);
         float lightRoughness = mix(0.35, 0.25, mixFactor);
         roughnessFactor = mix(darkRoughness, lightRoughness, uIsLight);
         `
@@ -136,7 +136,7 @@ function Model({ url, isLight, palette }: { url: string; isLight: boolean; palet
         "#include <metalnessmap_fragment>",
         `
         #include <metalnessmap_fragment>
-        float darkMetalness = mix(0.05, 0.95, mixFactor);
+        float darkMetalness = mix(0.12, 0.58, mixFactor);
         float lightMetalness = mix(0.05, 0.15, mixFactor);
         metalnessFactor = mix(darkMetalness, lightMetalness, uIsLight);
         `
@@ -201,12 +201,12 @@ export default function BaseModelViewer() {
         style={{ display: "block", height: "100%", width: "100%" }}
         onCreated={({ gl }) => {
           gl.toneMapping = THREE.ACESFilmicToneMapping;
-          gl.toneMappingExposure = 1.1;
+          gl.toneMappingExposure = 1.24;
         }}
       >
-        <ambientLight intensity={isLight ? 0.6 : 0.4} />
-        <directionalLight position={[5, 8, 5]} intensity={isLight ? 1.0 : 1.8} color={isLight ? palette.keyLight : palette.modelDarkAccent} />
-        <directionalLight position={[-5, -4, 2]} intensity={isLight ? 0.4 : 0.8} color={isLight ? palette.fillLight : palette.particlePrimary} />
+        <ambientLight intensity={isLight ? 0.65 : 0.72} />
+        <directionalLight position={[5, 8, 5]} intensity={isLight ? 1.15 : 2.35} color={isLight ? palette.keyLight : palette.modelDarkAccent} />
+        <directionalLight position={[-5, -4, 2]} intensity={isLight ? 0.5 : 1.15} color={isLight ? palette.fillLight : palette.particlePrimary} />
 
         <Suspense fallback={null}>
           <Model url="/base.glb" isLight={isLight} palette={palette} />
@@ -219,8 +219,8 @@ export default function BaseModelViewer() {
             maxPolarAngle={Math.PI / 1.8}
           />
           <Environment frames={1} resolution={128}>
-            <Lightformer intensity={2.5} color={isLight ? palette.keyLight : palette.modelDarkAccent} position={[0, 4, -6]} scale={[10, 6, 1]} />
-            <Lightformer intensity={1.2} color={isLight ? palette.fillLight : palette.particlePrimary} position={[-6, 0, 2]} scale={[6, 6, 1]} />
+            <Lightformer intensity={3.7} color={isLight ? palette.keyLight : palette.modelDarkAccent} position={[0, 4, -6]} scale={[10, 6, 1]} />
+            <Lightformer intensity={1.65} color={isLight ? palette.fillLight : palette.particlePrimary} position={[-6, 0, 2]} scale={[6, 6, 1]} />
           </Environment>
         </Suspense>
       </Canvas>
