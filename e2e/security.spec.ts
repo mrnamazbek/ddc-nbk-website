@@ -15,11 +15,13 @@ test.describe("browser security contract", () => {
     expect(headers["content-security-policy"]).toContain("object-src 'none'");
   });
 
-  test("contact form does not claim a server-side submission", async ({ page }) => {
+  test("contact form does not pre-claim successful delivery", async ({ page }) => {
     await page.goto("/en/contact", { waitUntil: "domcontentloaded" });
 
-    await expect(page.getByText("DDC does not collect or store this form data on the website.")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Open email draft" })).toBeVisible();
+    await expect(page.locator("form")).toBeVisible();
+    await expect(page.locator("input#name")).toBeVisible();
+    await expect(page.locator("input#email")).toBeVisible();
+    await expect(page.locator("button[type=submit]")).toBeVisible();
     await expect(page.getByText("Your request has been successfully registered.")).toHaveCount(0);
   });
 });
