@@ -17,7 +17,6 @@ interface LottieAnimationProps {
   loop?: boolean;
   delay?: number;
   shell?: boolean;
-  brandPalette?: boolean;
 }
 
 export default function LottieAnimation({
@@ -29,7 +28,6 @@ export default function LottieAnimation({
   loop = true,
   delay = 0,
   shell = false,
-  brandPalette = true,
 }: LottieAnimationProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const lottieRef = useRef<LottieRefCurrentProps>(null);
@@ -40,16 +38,14 @@ export default function LottieAnimation({
   const [hasError, setHasError] = useState(false);
   const palette = useScenePalette();
   const themedAnimationData = useMemo(() => {
-    if (!animationData || !brandPalette) return animationData;
+    if (!animationData) return animationData;
     return recolorBrandLottie(animationData, palette);
   }, [
     animationData,
-    brandPalette,
     palette.backgroundForest,
     palette.keyLight,
     palette.modelDarkBase,
-    palette.particleAccent,
-    palette.particlePrimary,
+    palette.modelDarkAccent,
   ]);
   const revealInitial = shouldReduceMotion
     ? false
