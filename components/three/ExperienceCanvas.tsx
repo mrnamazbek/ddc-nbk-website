@@ -97,6 +97,14 @@ export default function ExperienceCanvas() {
           onCreated={({ gl }) => {
             gl.toneMapping = THREE.ACESFilmicToneMapping;
             gl.toneMappingExposure = 1.05;
+            const canvas = gl.domElement;
+            canvas.addEventListener("webglcontextlost", (event) => {
+              event.preventDefault();
+              console.warn("ExperienceCanvas: WebGL context lost — awaiting restore.");
+            });
+            canvas.addEventListener("webglcontextrestored", () => {
+              console.warn("ExperienceCanvas: WebGL context restored.");
+            });
           }}
         >
           <Suspense fallback={null}>
