@@ -8,11 +8,8 @@ import * as THREE from "three";
 import AltynAdam from "@/components/three/AltynAdam";
 import Icon, { IconName } from "@/components/ui/Icon";
 import { BubbleText } from "@/components/ui/BubbleText";
-import LottieAnimation from "@/components/ui/LottieAnimation";
 import ThreeModelLoadingOverlay from "@/components/ui/ThreeModelLoadingOverlay";
 import { useA11y } from "@/components/theme/AccessibilityProvider";
-import { useScenePalette } from "@/components/theme/useScenePalette";
-import type { ScenePalette } from "@/components/theme/useScenePalette";
 import { cn } from "@/lib/utils";
 
 export interface CinematicChapter {
@@ -23,13 +20,7 @@ export interface CinematicChapter {
   description: string;
   features?: string[];
   meta?: string;
-  visualSrc?: string;
-  visualLabel?: string;
 }
-
-type LenisScroller = {
-  scrollTo: (target: number, options?: { duration?: number }) => void;
-};
 
 interface CinematicAltynAdamExperienceProps {
   overline: string;
@@ -43,20 +34,11 @@ interface CinematicAltynAdamExperienceProps {
   finalAccent: string;
   finalDescription: string;
   scrollLengthClass?: string;
-  /**
-   * Render the plain card layout instead of the 3D scene: no WebGL canvas,
-   * no Altyn Adam model, no sticky scroll hijack. Same escape hatch the
-   * reduced-motion path already uses, opted into per page.
-   */
-  disable3D?: boolean;
 }
 
 const vertexShader = /* glsl */ `
   uniform float uTime;
   uniform float uProgress;
-  uniform vec3 uForest;
-  uniform vec3 uPrimary;
-  uniform vec3 uGold;
 
   varying float vAlpha;
   varying vec3 vColor;
@@ -95,8 +77,11 @@ const vertexShader = /* glsl */ `
     float edge = 1.0 - smoothstep(0.88, 1.0, uProgress) * 0.55;
     vAlpha = fadeZ * intro * edge * 0.52;
 
+    vec3 forest = vec3(0.07, 0.38, 0.23);
+    vec3 emerald = vec3(0.23, 0.68, 0.48);
+    vec3 gold = vec3(0.89, 0.70, 0.27);
     float m = hash(position.xz);
-    vColor = mix(mix(uForest, uPrimary, smoothstep(0.18, 0.82, m)), uGold, smoothstep(0.66, 1.0, m));
+    vColor = mix(mix(forest, emerald, smoothstep(0.18, 0.82, m)), gold, smoothstep(0.66, 1.0, m));
   }
 `;
 
@@ -129,25 +114,16 @@ function generateDiagonalField(count: number) {
   return positions;
 }
 
-function ParticleRibbon({ scrollRef, palette }: { scrollRef: RefObject<number>; palette: ScenePalette }) {
+function ParticleRibbon({ scrollRef }: { scrollRef: RefObject<number> }) {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const positions = useMemo(() => generateDiagonalField(5200), []);
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
       uProgress: { value: 0 },
-      uForest: { value: new THREE.Color(palette.modelDarkBase) },
-      uPrimary: { value: new THREE.Color(palette.particlePrimary) },
-      uGold: { value: new THREE.Color(palette.particleAccent) },
     }),
-    [palette.modelDarkBase, palette.particleAccent, palette.particlePrimary],
+    [],
   );
-
-  useEffect(() => {
-    uniforms.uForest.value.set(palette.modelDarkBase);
-    uniforms.uPrimary.value.set(palette.particlePrimary);
-    uniforms.uGold.value.set(palette.particleAccent);
-  }, [palette, uniforms]);
 
   useFrame((state, delta) => {
     if (!materialRef.current) return;
@@ -222,7 +198,7 @@ function generateBurstField(count: number) {
   return arr;
 }
 
-function ConnectionBurst({ scrollRef, totalChapters, palette }: { scrollRef: RefObject<number>; totalChapters: number; palette: ScenePalette }) {
+function ConnectionBurst({ scrollRef, totalChapters }: { scrollRef: RefObject<number>; totalChapters: number }) {
   const materialRef = useRef<THREE.PointsMaterial>(null);
   const pointsRef = useRef<THREE.Points>(null);
   const positions = useMemo(() => generateBurstField(900), []);
@@ -269,7 +245,7 @@ function ConnectionBurst({ scrollRef, totalChapters, palette }: { scrollRef: Ref
       </bufferGeometry>
       <pointsMaterial
         ref={materialRef}
-        color={palette.particleAccent}
+        color="#E8C87A"
         size={0.045}
         map={spriteMap}
         alphaMap={spriteMap}
@@ -283,21 +259,19 @@ function ConnectionBurst({ scrollRef, totalChapters, palette }: { scrollRef: Ref
 }
 
 function Scene({ scrollRef, totalChapters }: { scrollRef: RefObject<number>; totalChapters: number }) {
-  const palette = useScenePalette();
-
   return (
     <>
       <ambientLight intensity={0.42} />
-      <directionalLight position={[3, 6, 4]} intensity={1.55} color={palette.fillLight} />
-      <spotLight position={[0, 2.2, 6]} intensity={4.2} angle={Math.PI / 8} penumbra={0.7} color={palette.modelDarkAccent} />
+      <directionalLight position={[3, 6, 4]} intensity={1.55} color="#d6ffdf" />
+      <spotLight position={[0, 2.2, 6]} intensity={4.2} angle={Math.PI / 8} penumbra={0.7} color="#E8C87A" />
       <Environment frames={1} resolution={256}>
-        <Lightformer form="rect" intensity={2.2} color={palette.keyLight} position={[0, 3, 5]} scale={[12, 10, 1]} />
-        <Lightformer form="rect" intensity={1.5} color={palette.fillLight} position={[-5, 0, 3]} scale={[6, 10, 1]} />
-        <Lightformer form="ring" intensity={1.2} color={palette.modelDarkAccent} position={[0, 0, -4]} scale={[8, 8, 1]} />
+        <Lightformer form="rect" intensity={2.2} color="#FFF1C9" position={[0, 3, 5]} scale={[12, 10, 1]} />
+        <Lightformer form="rect" intensity={1.5} color="#52B788" position={[-5, 0, 3]} scale={[6, 10, 1]} />
+        <Lightformer form="ring" intensity={1.2} color="#C9A84C" position={[0, 0, -4]} scale={[8, 8, 1]} />
       </Environment>
-      <ParticleRibbon scrollRef={scrollRef} palette={palette} />
+      <ParticleRibbon scrollRef={scrollRef} />
       <AltynAdamAnchor scrollRef={scrollRef} />
-      <ConnectionBurst scrollRef={scrollRef} totalChapters={totalChapters} palette={palette} />
+      <ConnectionBurst scrollRef={scrollRef} totalChapters={totalChapters} />
     </>
   );
 }
@@ -368,7 +342,7 @@ function ChapterCard({ chapter, index, total, progress }: { chapter: CinematicCh
     >
       <article
         className={cn(
-          "theme-on-forest w-[min(40rem,80vw)] rounded-[28px] border p-7 shadow-[0_28px_90px_rgba(0,0,0,0.5)] transition-colors duration-500",
+          "w-[min(40rem,80vw)] rounded-[28px] border p-7 shadow-[0_28px_90px_rgba(0,0,0,0.5)] transition-colors duration-500",
           held
             ? "pointer-events-auto border-gold/25 bg-[linear-gradient(145deg,rgba(8,30,22,0.94),rgba(2,8,5,0.9))] backdrop-blur-2xl"
             : "border-white/12 bg-[linear-gradient(145deg,rgba(8,30,22,0.7),rgba(2,8,5,0.65))]",
@@ -398,16 +372,7 @@ function ChapterCard({ chapter, index, total, progress }: { chapter: CinematicCh
             ))}
           </ul>
         ) : null}
-        {chapter.visualSrc ? (
-          <LottieAnimation
-            src={chapter.visualSrc}
-            label={chapter.visualLabel ?? chapter.title}
-            shell
-            className="mt-4 h-20"
-            frameClassName="min-h-20 h-20"
-            animationClassName="max-h-20"
-          />
-        ) : chapter.meta ? (
+        {chapter.meta ? (
           <div className="mt-5 border-t border-white/10 pt-4">
             <code className="rounded-full border border-gold/20 bg-gold/[0.06] px-3 py-1.5 font-mono text-[10px] text-gold-light">{chapter.meta}</code>
           </div>
@@ -435,7 +400,7 @@ function StaticExperience({
   "overline" | "title" | "accent" | "trailingTitle" | "subtitle" | "chapters"
 >) {
   return (
-    <section className="cinematic-experience relative w-full bg-[#040c08] px-6 py-24 text-white">
+    <section className="relative w-full bg-[#040c08] px-6 py-24 text-white">
       <div className="mx-auto max-w-5xl text-center">
         <span className="mb-5 inline-block rounded-full border border-gold/20 bg-white/[0.035] px-5 py-2 text-[10px] font-semibold uppercase tracking-[0.38em] text-gold-light">
           {overline}
@@ -448,16 +413,9 @@ function StaticExperience({
       </div>
       <div className="mx-auto mt-14 grid max-w-5xl gap-6 md:grid-cols-2">
         {chapters.map((chapter) => (
-          <article key={chapter.id} className="theme-on-forest rounded-[28px] border border-gold/20 bg-[#071b13]/70 p-7">
-            <div className="mb-5 flex items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-gold/25 bg-gold/10 text-gold-light">
-                {chapter.icon ? <Icon name={chapter.icon} size={20} /> : <span className="h-2 w-2 rounded-full bg-gold" />}
-              </div>
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold-light/80">{chapter.eyebrow}</p>
-                <h2 className="mt-1 text-2xl font-semibold tracking-tight text-white"><BubbleText text={chapter.title} /></h2>
-              </div>
-            </div>
+          <article key={chapter.id} className="rounded-[28px] border border-gold/20 bg-[#071b13]/70 p-7">
+            <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold-light/80">{chapter.eyebrow}</p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white"><BubbleText text={chapter.title} /></h2>
             <p className="mt-3 text-sm leading-relaxed text-white/76"><BubbleText text={chapter.description} /></p>
             {chapter.features?.length ? (
               <ul className="mt-4 grid gap-2">
@@ -471,16 +429,6 @@ function StaticExperience({
             ) : null}
             {chapter.meta ? (
               <p className="mt-4 font-mono text-[10px] tracking-[0.08em] text-gold-light/80">{chapter.meta}</p>
-            ) : null}
-            {chapter.visualSrc ? (
-              <LottieAnimation
-                src={chapter.visualSrc}
-                label={chapter.visualLabel ?? chapter.title}
-                shell
-                className="mt-4 h-20"
-                frameClassName="min-h-20 h-20"
-                animationClassName="max-h-20"
-              />
             ) : null}
           </article>
         ))}
@@ -501,7 +449,6 @@ export default function CinematicAltynAdamExperience({
   finalAccent,
   finalDescription,
   scrollLengthClass = "min-h-[430vh]",
-  disable3D = false,
 }: CinematicAltynAdamExperienceProps) {
   const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
   const reduced = a11yEnabled || prefersReducedMotion;
@@ -512,27 +459,7 @@ export default function CinematicAltynAdamExperience({
   const lastStateRef = useRef(0);
   const [progress, setProgress] = useState(0);
   const [visible, setVisible] = useState(true);
-  const [lowPowerMode, setLowPowerMode] = useState<boolean | null>(null);
-  const [sessionDisabled3d, setSessionDisabled3d] = useState(false);
   const { active: assetsLoading, progress: assetProgress } = useProgress();
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setSessionDisabled3d(window.sessionStorage.getItem("ddc_services_disable_3d") === "true");
-    }
-  }, []);
-
-  useEffect(() => {
-    const updateQuality = () => {
-      const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
-      const noHover = window.matchMedia("(hover: none)").matches;
-      setLowPowerMode(coarsePointer || noHover || window.innerWidth < 1280);
-    };
-
-    updateQuality();
-    window.addEventListener("resize", updateQuality);
-    return () => window.removeEventListener("resize", updateQuality);
-  }, []);
 
   useEffect(() => {
     if (reduced) return;
@@ -547,8 +474,13 @@ export default function CinematicAltynAdamExperience({
     return () => observer.disconnect();
   }, [reduced]);
 
+  // Scroll tracking + the rAF loop that drives it are scoped to `visible`
+  // (not just the Canvas's frameloop) — previously this ran unconditionally
+  // for the component's entire mounted lifetime, including a
+  // getBoundingClientRect() read on every native scroll event, even while
+  // the section was scrolled far out of view.
   useEffect(() => {
-    if (reduced) return;
+    if (reduced || !visible) return;
     const updateTarget = () => {
       const element = containerRef.current;
       if (!element) return;
@@ -562,6 +494,7 @@ export default function CinematicAltynAdamExperience({
     updateTarget();
 
     let mounted = true;
+    let rafId = 0;
     const tick = () => {
       if (!mounted) return;
       const diff = targetRef.current - currentRef.current;
@@ -573,16 +506,17 @@ export default function CinematicAltynAdamExperience({
         setProgress(currentRef.current);
       }
 
-      requestAnimationFrame(tick);
+      rafId = requestAnimationFrame(tick);
     };
-    tick();
+    rafId = requestAnimationFrame(tick);
 
     return () => {
       mounted = false;
+      cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", updateTarget);
       window.removeEventListener("resize", updateTarget);
     };
-  }, [reduced]);
+  }, [reduced, visible]);
 
   const chapterProgress = THREE.MathUtils.clamp((progress - CHAPTER_ZONE_START) / CHAPTER_ZONE_WIDTH, 0, 0.999);
   const activeIndex = Math.min(chapters.length - 1, Math.floor(chapterProgress * chapters.length));
@@ -605,17 +539,10 @@ export default function CinematicAltynAdamExperience({
     // previous hand-tuned mapping drifted enough that the last chapter
     // landed on its exit edge, already half blurred.
     const target = CHAPTER_ZONE_START + ((index + 0.5) / chapters.length) * CHAPTER_ZONE_WIDTH;
-    const targetY = start + target * max;
-
-    const lenis = (window as Window & { __lenis?: LenisScroller }).__lenis;
-    if (lenis?.scrollTo) {
-      lenis.scrollTo(targetY, { duration: 1.2 });
-    } else {
-      window.scrollTo({ top: targetY, behavior: "smooth" });
-    }
+    window.scrollTo({ top: start + target * max, behavior: "smooth" });
   };
 
-  if (disable3D || reduced || lowPowerMode !== false || sessionDisabled3d) {
+  if (reduced) {
     return (
       <StaticExperience
         overline={overline}
@@ -629,7 +556,7 @@ export default function CinematicAltynAdamExperience({
   }
 
   return (
-    <section ref={containerRef} className={cn("cinematic-experience relative w-full bg-[#040c08] text-white", scrollLengthClass)}>
+    <section ref={containerRef} className={cn("relative w-full bg-[#040c08] text-white", scrollLengthClass)}>
       <div className="sticky top-0 h-screen overflow-hidden bg-[#040c08]">
         <div className="absolute inset-0 bg-[linear-gradient(120deg,#031009,#071b13_48%,#020806)]" />
         <div className="absolute inset-0 opacity-[0.28] bg-[radial-gradient(rgba(232,200,122,0.18)_1px,transparent_1px)] bg-[size:22px_22px]" />
@@ -641,6 +568,22 @@ export default function CinematicAltynAdamExperience({
               dpr={[1, 1.45]}
               gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
               frameloop={visible ? "always" : "never"}
+              onCreated={({ gl }) => {
+                // Without this, a GPU-driven context loss (overloaded shader/
+                // particle load, driver TDR, etc.) leaves the canvas
+                // permanently black — Chrome only attempts to restore the
+                // context if the "lost" handler calls preventDefault().
+                const canvas = gl.domElement;
+                const onLost = (event: Event) => {
+                  event.preventDefault();
+                  console.warn("CinematicAltynAdamExperience: WebGL context lost — awaiting restore.");
+                };
+                const onRestored = () => {
+                  console.warn("CinematicAltynAdamExperience: WebGL context restored.");
+                };
+                canvas.addEventListener("webglcontextlost", onLost);
+                canvas.addEventListener("webglcontextrestored", onRestored);
+              }}
             >
               <Scene scrollRef={scrollRef} totalChapters={chapters.length} />
             </Canvas>
@@ -709,7 +652,7 @@ export default function CinematicAltynAdamExperience({
                   type="button"
                   onClick={() => scrollToChapter(index)}
                   className={cn(
-                    "flex w-full min-h-11 items-center gap-3 rounded-2xl px-3 py-2 text-left transition-all duration-500",
+                    "flex w-full items-center gap-3 rounded-2xl px-3 py-2 text-left transition-all duration-500",
                     active ? "bg-gold/14 text-white" : "text-white/45 hover:bg-white/[0.04] hover:text-white",
                   )}
                 >
