@@ -573,6 +573,32 @@
     "readTimeSuffix": "оқу",
     "readMore": "Толық оқу",
     "viewAll": "Барлық жарияланымдар",
+    "archiveLabel": "Жарияланымдар мұрағаты",
+    "searchLabel": "Жарияланымдарды іздеу",
+    "searchPlaceholder": "Тақырып, жоба немесе адам бойынша іздеу",
+    "filterLabel": "Жарияланым санаты",
+    "filters": {
+      "all": "Барлығы",
+      "aiData": "ЖИ және деректер",
+      "infrastructure": "Инфрақұрылым",
+      "people": "Команда және мансап",
+      "organization": "Ұйым"
+    },
+    "sources": {
+      "company": "DDC LinkedIn",
+      "leadership": "Басшылық LinkedIn"
+    },
+    "results": "{count} жарияланым",
+    "showing": "{count} ішінен {from}-{to} көрсетілді",
+    "featured": "Маңызды",
+    "openLinkedIn": "Толығырақ",
+    "noResultsTitle": "Жарияланымдар табылмады",
+    "noResultsDescription": "Басқа іздеу сұрауын немесе санатты қолданып көріңіз.",
+    "clearFilters": "Сүзгілерді тазалау",
+    "paginationLabel": "Жарияланымдар беттеуі",
+    "previous": "Алдыңғы",
+    "next": "Келесі",
+    "page": "{current} / {total}-бет",
     "articles": {
       "a7": {
         "category": "Аналитика",

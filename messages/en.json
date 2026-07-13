@@ -573,6 +573,32 @@
     "readTimeSuffix": "read",
     "readMore": "Read more",
     "viewAll": "All publications",
+    "archiveLabel": "Publication archive",
+    "searchLabel": "Search publications",
+    "searchPlaceholder": "Search by topic, project or person",
+    "filterLabel": "Publication category",
+    "filters": {
+      "all": "All",
+      "aiData": "AI and data",
+      "infrastructure": "Infrastructure",
+      "people": "People and careers",
+      "organization": "Organization"
+    },
+    "sources": {
+      "company": "DDC LinkedIn",
+      "leadership": "Leadership LinkedIn"
+    },
+    "results": "{count} publications",
+    "showing": "Showing {from}-{to} of {count}",
+    "featured": "Featured",
+    "openLinkedIn": "Read more",
+    "noResultsTitle": "No publications found",
+    "noResultsDescription": "Try a different search or category.",
+    "clearFilters": "Clear filters",
+    "paginationLabel": "Publication pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {current} of {total}",
     "articles": {
       "a1": {
         "category": "Pilot Project",

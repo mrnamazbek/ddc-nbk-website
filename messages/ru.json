@@ -573,6 +573,32 @@
     "readTimeSuffix": "чтения",
     "readMore": "Читать полностью",
     "viewAll": "Все публикации",
+    "archiveLabel": "Архив публикаций",
+    "searchLabel": "Поиск публикаций",
+    "searchPlaceholder": "Поиск по теме, проекту или человеку",
+    "filterLabel": "Категория публикаций",
+    "filters": {
+      "all": "Все",
+      "aiData": "ИИ и данные",
+      "infrastructure": "Инфраструктура",
+      "people": "Команда и карьера",
+      "organization": "Организация"
+    },
+    "sources": {
+      "company": "DDC в LinkedIn",
+      "leadership": "Руководство в LinkedIn"
+    },
+    "results": "{count} публикаций",
+    "showing": "Показаны {from}-{to} из {count}",
+    "featured": "Главное",
+    "openLinkedIn": "Подробнее",
+    "noResultsTitle": "Публикации не найдены",
+    "noResultsDescription": "Попробуйте изменить запрос или категорию.",
+    "clearFilters": "Сбросить фильтры",
+    "paginationLabel": "Пагинация публикаций",
+    "previous": "Назад",
+    "next": "Вперёд",
+    "page": "Страница {current} из {total}",
     "articles": {
       "a1": {
         "category": "Пилотный проект",
