@@ -394,7 +394,8 @@
     }
   },
   "Common": {
-    "loading": "Сахнаны жүктеу"
+    "loading": "Сахнаны жүктеу",
+    "sceneUnavailable": "3D көрініс қолжетімсіз"
   },
   "FinancialInform": {
     "title": "Макроэкономикалық монитор",

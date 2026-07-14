@@ -1,22 +1,56 @@
 "use client";
 
-import React, { Suspense, useRef, useMemo, useEffect, useState } from "react";
+import React, { Component, Suspense, useRef, useMemo, useEffect, useState, type ReactNode } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, Lightformer, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { useReducedMotion } from "framer-motion";
 import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 import { useScenePalette } from "@/components/theme/useScenePalette";
 import type { ScenePalette } from "@/components/theme/useScenePalette";
+import { SceneLoader, SceneFallback } from "@/components/ui/SceneLoader";
+
+// useGLTF пробрасывает ошибку загрузки (404/обрыв сети/битый файл) как
+// render-ошибку, которую Suspense не ловит — без boundary падает вся страница.
+class SceneErrorBoundary extends Component<
+  { fallback: ReactNode; children: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  componentDidCatch(error: unknown) {
+    console.error("BaseModelViewer: model failed to load:", error);
+  }
+  render() {
+    return this.state.failed ? this.props.fallback : this.props.children;
+  }
+}
 
 // Set localized Draco decoder path to avoid fetching from external Google CDN
 useGLTF.setDecoderPath("/draco/");
 
-function Model({ url, isLight, palette }: { url: string; isLight: boolean; palette: ScenePalette }) {
-  const { scene } = useGLTF(url, true);
+function Model({ url, isLight, palette, onReady }: { url: string; isLight: boolean; palette: ScenePalette; onReady?: () => void }) {
+  const { scene: cachedScene } = useGLTF(url, true);
+  // drei кэширует GLTF-сцену глобально: <primitive> с общим объектом мутирует
+  // его position/материалы, и при смене локали/SPA-переходе старый и новый
+  // инстансы страницы коротко сосуществуют и дерутся за один объект — модель
+  // «съезжала» и подхватывала чужую раскраску. Клон на каждый маунт (геометрии
+  // остаются общими по ссылке) изолирует инстансы. Тот же паттерн использовал
+  // AltynAdam до своего удаления.
+  const scene = useMemo(() => cachedScene.clone(true), [cachedScene]);
   const groupRef = useRef<THREE.Group>(null);
   const { size } = useThree();
   const reduce = useReducedMotion();
+
+  // Компонент рендерится только после того, как Suspense разрезолвил GLTF —
+  // этот эффект и есть момент «модель полностью готова».
+  useEffect(() => {
+    onReady?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Reference to uniforms to dynamically toggle light/dark shader styles without recompiling
   const uniformsRef = useRef({
@@ -185,17 +219,26 @@ export default function BaseModelViewer() {
   const { resolvedTheme } = useTheme();
   const isLight = resolvedTheme === "light";
   const palette = useScenePalette();
+  const t = useTranslations("Common");
   const hostRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const [everVisible, setEverVisible] = useState(false);
+  const [ready, setReady] = useState(false);
 
   // Тяжёлая сцена рендерится только пока вьюер на экране: иначе она крутится
-  // непрерывно всё время, что открыта страница.
+  // непрерывно всё время, что открыта страница. everVisible дополнительно
+  // откладывает сам маунт Canvas (а с ним и загрузку GLB ~9.5MB) до
+  // приближения секции к вьюпорту — раньше модель качалась сразу при
+  // открытии роута, хотя стоит несколькими экранами ниже.
   useEffect(() => {
     const node = hostRef.current;
     if (!node) return;
     const io = new IntersectionObserver(
-      ([entry]) => setVisible(entry.isIntersecting),
-      { rootMargin: "200px 0px" },
+      ([entry]) => {
+        setVisible(entry.isIntersecting);
+        if (entry.isIntersecting) setEverVisible(true);
+      },
+      { rootMargin: "300px 0px" },
     );
     io.observe(node);
     return () => io.disconnect();
@@ -203,6 +246,16 @@ export default function BaseModelViewer() {
 
   return (
     <div ref={hostRef} className="relative h-full min-h-[inherit] w-full cursor-grab select-none overflow-visible rounded-[var(--radius-card)] active:cursor-grabbing [&_canvas]:!block [&_canvas]:!h-full [&_canvas]:!w-full">
+      <SceneErrorBoundary fallback={<SceneFallback label={t("sceneUnavailable")} />}>
+      {/* Лоадер уходит только после полной готовности модели (onReady из
+          Model срабатывает, когда Suspense разрезолвил GLTF). Контейнер
+          держит размер родителя — layout shift исключён. */}
+      {!ready && <SceneLoader label={t("loading")} />}
+      {everVisible && (
+      <div
+        className="h-full w-full transition-opacity duration-700 ease-out"
+        style={{ opacity: ready ? 1 : 0 }}
+      >
       <Canvas
         className="h-full w-full"
         camera={{ position: [0, 0, 8.0], fov: 35 }}
@@ -234,7 +287,7 @@ export default function BaseModelViewer() {
         <directionalLight position={[-5, -4, 2]} intensity={isLight ? 0.5 : 1.15} color={isLight ? palette.fillLight : palette.particlePrimary} />
 
         <Suspense fallback={null}>
-          <Model url="/base.glb" isLight={isLight} palette={palette} />
+          <Model url="/base.glb" isLight={isLight} palette={palette} onReady={() => setReady(true)} />
           <OrbitControls
             enableZoom={false}
             enablePan={false}
@@ -249,6 +302,9 @@ export default function BaseModelViewer() {
           </Environment>
         </Suspense>
       </Canvas>
+      </div>
+      )}
+      </SceneErrorBoundary>
     </div>
   );
 }

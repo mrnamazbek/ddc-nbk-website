@@ -5,6 +5,7 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
 import Lottie, { type LottieRefCurrentProps } from "lottie-react";
 import { cn } from "@/lib/utils";
 import { ENTRANCE_EASE } from "@/components/motion/ScrollReveal";
+import { SceneFallback } from "@/components/ui/SceneLoader";
 import { useScenePalette } from "@/components/theme/useScenePalette";
 import { recolorBrandLottie } from "@/lib/lottie/recolorBrandLottie";
 
@@ -117,6 +118,10 @@ export default function LottieAnimation({
             loop={!shouldReduceMotion && loop}
             className={cn("h-full w-full max-h-[520px] overflow-visible", animationClassName)}
           />
+        ) : hasError ? (
+          // Терминальное состояние вместо вечного спиннера: тихая эмблема,
+          // контейнер сохраняет высоту — без layout shift.
+          <SceneFallback label={label} className="bg-transparent" />
         ) : (
           <div className="size-10 rounded-full border border-gold/20 border-t-gold-light animate-spin" />
         )}

@@ -394,7 +394,8 @@
     }
   },
   "Common": {
-    "loading": "Loading Scene"
+    "loading": "Loading Scene",
+    "sceneUnavailable": "3D scene unavailable"
   },
   "FinancialInform": {
     "title": "Macroeconomic Monitor",
