@@ -1565,3 +1565,16 @@ html.light .site-footer :is(.border-t, .border-b, .border-y) {
   bottom: -1px;
   background: linear-gradient(to top, var(--background) 0%, transparent 100%) !important;
 }
+
+/* На тач-устройствах глушим входной blur у reveal-анимаций. Каждый
+   анимируемый filter: blur() создаёт офскрин-буфер размером с элемент
+   (на мобиле — ×DPR 3); при загрузке страницы таких крупных слоёв сразу
+   несколько, что на iOS Safari вносит вклад в OOM-краш вкладки
+   («A problem repeatedly occurred»). Media query решает это без
+   SSR/CSR-рассинхрона: framer продолжает анимировать инлайновый filter,
+   а CSS просто перекрывает его на touch. Opacity/сдвиг/scale сохранены. */
+@media (pointer: coarse) {
+  .reveal-blur-touch-off {
+    filter: none !important;
+  }
+}

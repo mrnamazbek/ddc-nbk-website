@@ -87,7 +87,7 @@ export default function ScrollReveal({
       initial={reduce ? false : initial}
       whileInView={animate}
       viewport={VIEWPORT_ONCE}
-      className={className}
+      className={`${blur ? "reveal-blur-touch-off " : ""}${className}`}
     >
       {children}
     </motion.div>

@@ -100,7 +100,7 @@ export default function LottieAnimation({
         delay: shouldReduceMotion ? 0 : delay,
         ease: ENTRANCE_EASE,
       }}
-      className={cn("relative overflow-visible", className)}
+      className={cn("relative overflow-visible reveal-blur-touch-off", className)}
     >
       <div
         className={cn(

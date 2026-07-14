@@ -36,23 +36,34 @@ export default function TerminalGridBackground({
       data-decorative
       className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}
     >
-      <motion.div
-        className="absolute inset-[-8%] opacity-[0.26]"
+      {/* Дрейф сетки — через transform, а не background-position: transform
+          компонуется на GPU без перерисовки, тогда как анимация
+          background-position перерисовывала весь (за)экранный слой с маской
+          каждый кадр бесконечно — главный постоянный paint-налог страницы. */}
+      <div
+        className="absolute inset-[-8%] overflow-hidden opacity-[0.26]"
         style={{
-          backgroundImage: `
-            linear-gradient(rgba(168, 255, 64, 0.2) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(168, 255, 64, 0.2) 1px, transparent 1px)
-          `,
-          backgroundSize: `${gridSize}px ${gridSize}px`,
           maskImage: "radial-gradient(circle at 50% 42%, black 0%, rgba(0,0,0,0.76) 34%, transparent 74%)",
         }}
-        animate={
-          reduceMotion
-            ? undefined
-            : { backgroundPosition: ["0px 0px", `${gridSize}px ${gridSize}px`] }
-        }
-        transition={{ duration: 42, repeat: Infinity, ease: "linear" }}
-      />
+      >
+        <motion.div
+          className="absolute"
+          style={{
+            inset: `-${gridSize}px 0 0 -${gridSize}px`,
+            backgroundImage: `
+              linear-gradient(rgba(168, 255, 64, 0.2) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(168, 255, 64, 0.2) 1px, transparent 1px)
+            `,
+            backgroundSize: `${gridSize}px ${gridSize}px`,
+          }}
+          animate={
+            reduceMotion
+              ? undefined
+              : { x: [0, gridSize], y: [0, gridSize] }
+          }
+          transition={{ duration: 42, repeat: Infinity, ease: "linear" }}
+        />
+      </div>
 
       <motion.div
         className="absolute left-0 top-[28%] h-px w-full bg-gradient-to-r from-transparent via-lime-300/35 to-transparent blur-[0.5px]"
