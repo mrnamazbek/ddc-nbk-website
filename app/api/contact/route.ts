@@ -3,12 +3,15 @@ import { z } from "zod";
 
 export const runtime = "nodejs";
 
+const MAX_CONTACT_BODY_BYTES = 24 * 1024;
+const DELIVERY_TIMEOUT_MS = 8_000;
+
 const contactSchema = z.object({
   name: z.string().trim().min(2).max(200),
   email: z.string().trim().email().max(254),
   organization: z.string().trim().min(2).max(200),
   message: z.string().trim().min(10).max(5000),
-  website: z.string().optional(),
+  website: z.string().trim().max(200).optional(),
 });
 
 type ContactSubmission = z.infer<typeof contactSchema>;
@@ -18,6 +21,38 @@ function noStoreJson(body: Record<string, unknown>, status = 200) {
     status,
     headers: { "Cache-Control": "no-store" },
   });
+}
+
+function isSameOrigin(request: Request) {
+  const origin = request.headers.get("origin");
+  if (!origin) return false;
+
+  try {
+    return origin === new URL(request.url).origin;
+  } catch {
+    return false;
+  }
+}
+
+function acceptsJson(request: Request) {
+  return request.headers.get("content-type")?.toLowerCase().startsWith("application/json") ?? false;
+}
+
+function isBodyTooLarge(request: Request) {
+  const contentLength = request.headers.get("content-length");
+  if (!contentLength) return false;
+
+  const length = Number(contentLength);
+  return !Number.isSafeInteger(length) || length > MAX_CONTACT_BODY_BYTES;
+}
+
+function validWebhookUrl(value: string) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && !url.username && !url.password;
+  } catch {
+    return false;
+  }
 }
 
 function formatEmailText(submission: ContactSubmission) {
@@ -32,7 +67,7 @@ function formatEmailText(submission: ContactSubmission) {
 
 async function deliverToWebhook(submission: ContactSubmission) {
   const webhookUrl = process.env.CONTACT_WEBHOOK_URL;
-  if (!webhookUrl) return false;
+  if (!webhookUrl || !validWebhookUrl(webhookUrl)) return false;
 
   const response = await fetch(webhookUrl, {
     method: "POST",
@@ -43,6 +78,7 @@ async function deliverToWebhook(submission: ContactSubmission) {
       ...submission,
     }),
     cache: "no-store",
+    signal: AbortSignal.timeout(DELIVERY_TIMEOUT_MS),
   });
 
   return response.ok;
@@ -68,12 +104,25 @@ async function deliverWithResend(submission: ContactSubmission) {
       text: formatEmailText(submission),
     }),
     cache: "no-store",
+    signal: AbortSignal.timeout(DELIVERY_TIMEOUT_MS),
   });
 
   return response.ok;
 }
 
 export async function POST(request: Request) {
+  if (!isSameOrigin(request)) {
+    return noStoreJson({ ok: false, error: "forbidden_origin" }, 403);
+  }
+
+  if (!acceptsJson(request)) {
+    return noStoreJson({ ok: false, error: "unsupported_media_type" }, 415);
+  }
+
+  if (isBodyTooLarge(request)) {
+    return noStoreJson({ ok: false, error: "payload_too_large" }, 413);
+  }
+
   let rawBody: unknown;
 
   try {
@@ -96,8 +145,9 @@ export async function POST(request: Request) {
   try {
     const delivered = (await deliverToWebhook(parsed.data)) || (await deliverWithResend(parsed.data));
     if (delivered) return noStoreJson({ ok: true });
-  } catch (error) {
-    console.error("Contact delivery failed", error);
+  } catch {
+    // Do not emit provider responses or webhook URLs into server logs.
+    console.error("Contact delivery provider failed");
     return noStoreJson({ ok: false, error: "delivery_failed" }, 502);
   }
 

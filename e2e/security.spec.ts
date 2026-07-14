@@ -24,4 +24,25 @@ test.describe("browser security contract", () => {
     await expect(page.locator("button[type=submit]")).toBeVisible();
     await expect(page.getByText("Your request has been successfully registered.")).toHaveCount(0);
   });
+
+  test("contact intake accepts only same-origin JSON requests", async ({ request, baseURL }) => {
+    const submission = {
+      name: "Release QA",
+      email: "qa@example.test",
+      organization: "DDC QA",
+      message: "This is a valid contact endpoint security test.",
+    };
+
+    const crossOrigin = await request.post("/api/contact", {
+      headers: { "Content-Type": "application/json", Origin: "https://attacker.example" },
+      data: submission,
+    });
+    expect(crossOrigin.status()).toBe(403);
+
+    const nonJson = await request.post("/api/contact", {
+      headers: { "Content-Type": "text/plain", Origin: new URL(baseURL!).origin },
+      data: JSON.stringify(submission),
+    });
+    expect(nonJson.status()).toBe(415);
+  });
 });
