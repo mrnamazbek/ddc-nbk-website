@@ -474,8 +474,13 @@ export default function CinematicAltynAdamExperience({
     return () => observer.disconnect();
   }, [reduced]);
 
+  // Scroll tracking + the rAF loop that drives it are scoped to `visible`
+  // (not just the Canvas's frameloop) — previously this ran unconditionally
+  // for the component's entire mounted lifetime, including a
+  // getBoundingClientRect() read on every native scroll event, even while
+  // the section was scrolled far out of view.
   useEffect(() => {
-    if (reduced) return;
+    if (reduced || !visible) return;
     const updateTarget = () => {
       const element = containerRef.current;
       if (!element) return;
@@ -489,6 +494,7 @@ export default function CinematicAltynAdamExperience({
     updateTarget();
 
     let mounted = true;
+    let rafId = 0;
     const tick = () => {
       if (!mounted) return;
       const diff = targetRef.current - currentRef.current;
@@ -500,16 +506,17 @@ export default function CinematicAltynAdamExperience({
         setProgress(currentRef.current);
       }
 
-      requestAnimationFrame(tick);
+      rafId = requestAnimationFrame(tick);
     };
-    tick();
+    rafId = requestAnimationFrame(tick);
 
     return () => {
       mounted = false;
+      cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", updateTarget);
       window.removeEventListener("resize", updateTarget);
     };
-  }, [reduced]);
+  }, [reduced, visible]);
 
   const chapterProgress = THREE.MathUtils.clamp((progress - CHAPTER_ZONE_START) / CHAPTER_ZONE_WIDTH, 0, 0.999);
   const activeIndex = Math.min(chapters.length - 1, Math.floor(chapterProgress * chapters.length));
@@ -561,6 +568,22 @@ export default function CinematicAltynAdamExperience({
               dpr={[1, 1.45]}
               gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
               frameloop={visible ? "always" : "never"}
+              onCreated={({ gl }) => {
+                // Without this, a GPU-driven context loss (overloaded shader/
+                // particle load, driver TDR, etc.) leaves the canvas
+                // permanently black — Chrome only attempts to restore the
+                // context if the "lost" handler calls preventDefault().
+                const canvas = gl.domElement;
+                const onLost = (event: Event) => {
+                  event.preventDefault();
+                  console.warn("CinematicAltynAdamExperience: WebGL context lost — awaiting restore.");
+                };
+                const onRestored = () => {
+                  console.warn("CinematicAltynAdamExperience: WebGL context restored.");
+                };
+                canvas.addEventListener("webglcontextlost", onLost);
+                canvas.addEventListener("webglcontextrestored", onRestored);
+              }}
             >
               <Scene scrollRef={scrollRef} totalChapters={chapters.length} />
             </Canvas>

@@ -570,7 +570,9 @@ function ParticleCanvas() {
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
     camera.position.set(0, 0, 6.2);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    // antialias отключён на мобиле: MSAA-буферы удваивают память кадрового
+    // буфера, а на мелком экране с pixelRatio 1.5 разница практически не видна.
+    const renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true });
     renderer.setPixelRatio(pixelRatio);
     renderer.setClearColor(0x000000, 0);
     wrap.appendChild(renderer.domElement);
@@ -796,11 +798,57 @@ function ParticleCanvas() {
       renderer.render(scene, camera);
       raf = requestAnimationFrame(loop);
     };
-    loop();
+
+    // Рендерим ТОЛЬКО когда секция реально на экране и вкладка активна.
+    // Раньше цикл крутился всё время, пока компонент смонтирован: на мобильном
+    // GPU это непрерывная нагрузка даже далеко за пределами секции, вплоть до
+    // потери WebGL-контекста и падения вкладки.
+    let onScreen = false;
+    const isRunning = () => raf !== 0;
+    const start = () => {
+      if (disposed || isRunning() || !onScreen || document.hidden) return;
+      raf = requestAnimationFrame(loop);
+    };
+    const stop = () => {
+      if (!isRunning()) return;
+      cancelAnimationFrame(raf);
+      raf = 0;
+    };
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        onScreen ? start() : stop();
+      },
+      { rootMargin: "200px 0px" },
+    );
+    if (section) io.observe(section);
+
+    const onVisibility = () => (document.hidden ? stop() : start());
+    document.addEventListener("visibilitychange", onVisibility);
+
+    // Без preventDefault() браузер не пытается восстановить потерянный контекст,
+    // и канвас остаётся мёртвым до перезагрузки страницы.
+    const canvas = renderer.domElement;
+    const onContextLost = (event: Event) => {
+      event.preventDefault();
+      stop();
+      console.warn("LogoParticleReveal: WebGL-контекст потерян, ждём восстановления.");
+    };
+    const onContextRestored = () => {
+      console.warn("LogoParticleReveal: WebGL-контекст восстановлен.");
+      start();
+    };
+    canvas.addEventListener("webglcontextlost", onContextLost);
+    canvas.addEventListener("webglcontextrestored", onContextRestored);
 
     return () => {
       disposed = true;
-      cancelAnimationFrame(raf);
+      stop();
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+      canvas.removeEventListener("webglcontextlost", onContextLost);
+      canvas.removeEventListener("webglcontextrestored", onContextRestored);
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onPointerMove);
       themeObserver.disconnect();

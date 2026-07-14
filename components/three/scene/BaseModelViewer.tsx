@@ -177,13 +177,28 @@ export default function BaseModelViewer() {
   const { resolvedTheme } = useTheme();
   const isLight = resolvedTheme === "light";
   const [mounted, setMounted] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const hostRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // Рендерим только пока вьюер на экране: иначе тяжёлая сцена крутится
+  // непрерывно всё время, что страница открыта.
+  useEffect(() => {
+    const node = hostRef.current;
+    if (!node) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { rootMargin: "200px 0px" },
+    );
+    io.observe(node);
+    return () => io.disconnect();
+  }, [mounted]);
+
   return (
-    <div className="relative h-full min-h-[inherit] w-full cursor-grab select-none overflow-visible rounded-[var(--radius-card)] active:cursor-grabbing [&_canvas]:!block [&_canvas]:!h-full [&_canvas]:!w-full">
+    <div ref={hostRef} className="relative h-full min-h-[inherit] w-full cursor-grab select-none overflow-visible rounded-[var(--radius-card)] active:cursor-grabbing [&_canvas]:!block [&_canvas]:!h-full [&_canvas]:!w-full">
       {mounted ? (
         <Canvas
           className="h-full w-full"
@@ -197,9 +212,18 @@ export default function BaseModelViewer() {
             depth: true
           }}
           style={{ display: "block", height: "100%", width: "100%" }}
+          frameloop={visible ? "always" : "never"}
           onCreated={({ gl }) => {
             gl.toneMapping = THREE.ACESFilmicToneMapping;
             gl.toneMappingExposure = 1.1;
+            const canvas = gl.domElement;
+            canvas.addEventListener("webglcontextlost", (event) => {
+              event.preventDefault();
+              console.warn("BaseModelViewer: WebGL-контекст потерян, ждём восстановления.");
+            });
+            canvas.addEventListener("webglcontextrestored", () => {
+              console.warn("BaseModelViewer: WebGL-контекст восстановлен.");
+            });
           }}
         >
           <ambientLight intensity={isLight ? 0.6 : 0.4} />
