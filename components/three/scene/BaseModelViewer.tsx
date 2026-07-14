@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useRef, useMemo, useEffect } from "react";
+import React, { Suspense, useRef, useMemo, useEffect, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, Lightformer, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
@@ -185,13 +185,30 @@ export default function BaseModelViewer() {
   const { resolvedTheme } = useTheme();
   const isLight = resolvedTheme === "light";
   const palette = useScenePalette();
+  const hostRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  // Тяжёлая сцена рендерится только пока вьюер на экране: иначе она крутится
+  // непрерывно всё время, что открыта страница.
+  useEffect(() => {
+    const node = hostRef.current;
+    if (!node) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { rootMargin: "200px 0px" },
+    );
+    io.observe(node);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <div className="relative h-full min-h-[inherit] w-full cursor-grab select-none overflow-visible rounded-[var(--radius-card)] active:cursor-grabbing [&_canvas]:!block [&_canvas]:!h-full [&_canvas]:!w-full">
+    <div ref={hostRef} className="relative h-full min-h-[inherit] w-full cursor-grab select-none overflow-visible rounded-[var(--radius-card)] active:cursor-grabbing [&_canvas]:!block [&_canvas]:!h-full [&_canvas]:!w-full">
       <Canvas
         className="h-full w-full"
         camera={{ position: [0, 0, 8.0], fov: 35 }}
         dpr={[1, 2]} // Limit DPR to 2 for performance optimization on Retina screens
         resize={{ scroll: false, debounce: { scroll: 50, resize: 0 } }}
+        frameloop={visible ? "always" : "never"}
         gl={{
           antialias: true,
           powerPreference: "high-performance",
@@ -202,6 +219,14 @@ export default function BaseModelViewer() {
         onCreated={({ gl }) => {
           gl.toneMapping = THREE.ACESFilmicToneMapping;
           gl.toneMappingExposure = 1.24;
+          const canvasEl = gl.domElement;
+          canvasEl.addEventListener("webglcontextlost", (event) => {
+            event.preventDefault();
+            console.warn("BaseModelViewer: WebGL-контекст потерян, ждём восстановления.");
+          });
+          canvasEl.addEventListener("webglcontextrestored", () => {
+            console.warn("BaseModelViewer: WebGL-контекст восстановлен.");
+          });
         }}
       >
         <ambientLight intensity={isLight ? 0.65 : 0.72} />
