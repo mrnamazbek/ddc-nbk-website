@@ -955,10 +955,10 @@ function ParticleCanvas() {
     const onContextLost = (event: Event) => {
       event.preventDefault();
       stopLoop();
-      console.warn("LogoParticleReveal: WebGL-контекст потерян, ждём восстановления.");
+      console.warn("LogoParticleReveal: WebGL context lost — awaiting restore.");
     };
     const onContextRestored = () => {
-      console.warn("LogoParticleReveal: WebGL-контекст восстановлен.");
+      console.warn("LogoParticleReveal: WebGL context restored.");
       startLoop();
     };
     canvasEl.addEventListener("webglcontextlost", onContextLost);

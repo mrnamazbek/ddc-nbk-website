@@ -222,10 +222,10 @@ export default function BaseModelViewer() {
           const canvasEl = gl.domElement;
           canvasEl.addEventListener("webglcontextlost", (event) => {
             event.preventDefault();
-            console.warn("BaseModelViewer: WebGL-контекст потерян, ждём восстановления.");
+            console.warn("BaseModelViewer: WebGL context lost — awaiting restore.");
           });
           canvasEl.addEventListener("webglcontextrestored", () => {
-            console.warn("BaseModelViewer: WebGL-контекст восстановлен.");
+            console.warn("BaseModelViewer: WebGL context restored.");
           });
         }}
       >
