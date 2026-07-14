@@ -16,7 +16,12 @@ const securityHeaders = [
       `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${isDevelopment ? " 'unsafe-eval'" : ""}`,
       "style-src 'self' 'unsafe-inline'",
       "font-src 'self' data:",
-      "img-src 'self' data: blob: https://images.unsplash.com https://assets.aceternity.com https://img.icons8.com",
+      // Разрешаем только реально используемые источники: unsplash/aceternity
+      // в проекте не используются — лишние доверенные хосты в CSP снижают
+      // оценку сканеров и расширяют поверхность атаки без пользы.
+      // unpkg.com обязан остаться: @splinetool/runtime загружает оттуда свой
+      // WASM (modelling-wasm) — без него падает Spline-сцена в хиро.
+      "img-src 'self' data: blob: https://img.icons8.com",
       "connect-src 'self' https://api.iconify.design https://api.simplesvg.com https://api.unisvg.com https://unpkg.com",
       "media-src 'self' blob: data:",
       "worker-src 'self' blob:",
