@@ -13,9 +13,19 @@ test("contact workflow keeps visitor data out of browser logs", () => {
 
 test("baseline browser security headers remain configured", () => {
   const config = read("next.config.ts");
-  for (const directive of ["Content-Security-Policy", "X-Content-Type-Options", "X-Frame-Options", "Referrer-Policy"]) {
+  for (const directive of ["X-Content-Type-Options", "X-Frame-Options", "Referrer-Policy"]) {
     assert.match(config, new RegExp(directive));
   }
+
+  // CSP живёт в proxy.ts (ему нужен per-request nonce) и не должен
+  // дублироваться статикой в next.config.ts: два CSP-заголовка применяются
+  // пересечением, и nonce перестаёт работать. Отсутствие 'unsafe-inline' в
+  // фактическом script-src проверяет e2e (e2e/security.spec.ts) по живому
+  // заголовку ответа — здесь только контракт на структуру кода.
+  assert.doesNotMatch(config, /Content-Security-Policy/);
+  const proxy = read("proxy.ts");
+  assert.match(proxy, /Content-Security-Policy/);
+  assert.match(proxy, /`script-src 'self' 'nonce-\$\{nonce\}' 'strict-dynamic'/);
 });
 
 test("services error boundary never forces a browser reload", () => {
