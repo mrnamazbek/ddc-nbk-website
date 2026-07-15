@@ -2,31 +2,11 @@ import type { NextConfig } from "next";
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin();
-const isDevelopment = process.env.NODE_ENV !== "production";
 
+// CSP здесь НЕ задаётся: ему нужен per-request nonce, поэтому он собирается
+// в proxy.ts. Два одновременных CSP-заголовка нельзя — браузер применяет
+// пересечение политик, и nonce перестаёт работать.
 const securityHeaders = [
-  {
-    key: "Content-Security-Policy",
-    value: [
-      "default-src 'self'",
-      "base-uri 'self'",
-      "object-src 'none'",
-      "frame-ancestors 'none'",
-      "form-action 'self' mailto:",
-      `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${isDevelopment ? " 'unsafe-eval'" : ""}`,
-      "style-src 'self' 'unsafe-inline'",
-      "font-src 'self' data:",
-      // Разрешаем только реально используемые источники: unsplash/aceternity
-      // в проекте не используются — лишние доверенные хосты в CSP снижают
-      // оценку сканеров и расширяют поверхность атаки без пользы.
-      // unpkg.com обязан остаться: @splinetool/runtime загружает оттуда свой
-      // WASM (modelling-wasm) — без него падает Spline-сцена в хиро.
-      "img-src 'self' data: blob: https://img.icons8.com",
-      "connect-src 'self' https://api.iconify.design https://api.simplesvg.com https://api.unisvg.com https://unpkg.com",
-      "media-src 'self' blob: data:",
-      "worker-src 'self' blob:",
-    ].join("; "),
-  },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },

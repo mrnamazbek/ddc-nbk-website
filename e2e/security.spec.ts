@@ -13,6 +13,22 @@ test.describe("browser security contract", () => {
     expect(headers["content-security-policy"]).toContain("default-src 'self'");
     expect(headers["content-security-policy"]).toContain("frame-ancestors 'none'");
     expect(headers["content-security-policy"]).toContain("object-src 'none'");
+
+    // Nonce-based script-src: у каждого ответа свой nonce, и в script-src не
+    // должно быть 'unsafe-inline' — иначе CSP не защищает от XSS.
+    const scriptSrc = headers["content-security-policy"]
+      .split(";")
+      .find((d) => d.trim().startsWith("script-src"))!;
+    expect(scriptSrc).toMatch(/'nonce-[A-Za-z0-9+/=]+'/);
+    expect(scriptSrc).toContain("'strict-dynamic'");
+    expect(scriptSrc).not.toContain("'unsafe-inline'");
+
+    const second = await request.get("/ru");
+    const secondNonce = second.headers()["content-security-policy"].match(/'nonce-([^']+)'/)?.[1];
+    const firstNonce = scriptSrc.match(/'nonce-([^']+)'/)?.[1];
+    expect(firstNonce).toBeTruthy();
+    expect(secondNonce).toBeTruthy();
+    expect(secondNonce).not.toBe(firstNonce);
   });
 
   test("contact form does not pre-claim successful delivery", async ({ page }) => {
