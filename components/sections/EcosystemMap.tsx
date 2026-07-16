@@ -131,7 +131,10 @@ export default function EcosystemMap() {
                 className="h-12 w-12 sm:h-[72px] sm:w-[72px]"
               />
             </div>
-            <span className="sr-only sm:not-sr-only mt-3 max-w-40 text-center font-mono text-[10px] uppercase tracking-[0.28em] text-gold-light">
+            {/* Подпись вынесена из потока (absolute): иначе она входит в
+                центрируемый translate(-50%,-50%)-бокс и сталкивает круг
+                эмблемы вверх от точки схождения линий (замерено: −12px). */}
+            <span className="sr-only sm:not-sr-only sm:absolute sm:left-1/2 sm:top-full sm:mt-3 sm:block sm:-translate-x-1/2 sm:whitespace-nowrap sm:text-center sm:font-mono sm:text-[10px] sm:uppercase sm:tracking-[0.28em] sm:text-gold-light">
               {t("centerLabel")}
             </span>
           </div>
