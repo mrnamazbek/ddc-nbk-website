@@ -411,7 +411,9 @@
     "rub": "Ресей рублі",
     "updated": "Жаңартылды",
     "loading": "жүктелуде...",
-    "liveFeed": "ҚҰБ Live feed"
+    "liveFeed": "ҚҰБ Live feed",
+    "source": "ҚР ҰБ деректері бойынша",
+    "unavailable": "Бағамдар уақытша қолжетімсіз"
   },
   "AboutPage": {
     "overline": "DDC ОРТАЛЫҒЫ ТУРАЛЫ",

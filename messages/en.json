@@ -411,7 +411,9 @@
     "rub": "Russian Ruble",
     "updated": "Updated",
     "loading": "loading...",
-    "liveFeed": "NBK Live feed"
+    "liveFeed": "NBK Live feed",
+    "source": "Official NBK RK data",
+    "unavailable": "Exchange rates are temporarily unavailable"
   },
   "AboutPage": {
     "overline": "ABOUT DDC CENTER",

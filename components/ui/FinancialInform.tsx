@@ -17,52 +17,51 @@ interface RateItem {
 export default function FinancialInform() {
   const t = useTranslations("FinancialInform");
   const [rates, setRates] = useState<RateItem[]>([]);
-  const [baseRate, setBaseRate] = useState({ value: 14.75, change: -0.25, history: [16.0, 15.75, 15.25, 15.0, 14.75] });
-  const [inflation, setInflation] = useState({ value: 8.4, change: -0.3, history: [9.8, 9.3, 8.9, 8.6, 8.4] });
+  // Ставка и инфляция публикуются НБК по календарю заседаний, а не фидом —
+  // значения и история фиксируются в коде и обновляются вместе с контентом.
+  const [baseRate] = useState({ value: 14.75, change: -0.25, history: [16.0, 15.75, 15.25, 15.0, 14.75] });
+  const [inflation] = useState({ value: 8.4, change: -0.3, history: [9.8, 9.3, 8.9, 8.6, 8.4] });
   const [lastUpdated, setLastUpdated] = useState<string>("");
   const [isRefreshing, setIsRefreshing] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
-  const generateData = (manual = false) => {
-    if (manual) setIsRefreshing(true);
-    setTimeout(() => {
-      const mockRates: RateItem[] = [
-        {
-          code: "USD",
-          name: t("usd"),
-          value: 448.25 + (Math.random() * 2 - 1),
-          change: 0.15 + (Math.random() * 0.4 - 0.2),
-          trend: Math.random() > 0.5 ? "up" : "down",
-          history: [445.2, 446.8, 447.1, 447.9, 448.25],
-        },
-        {
-          code: "EUR",
-          name: t("eur"),
-          value: 485.4 + (Math.random() * 2 - 1),
-          change: -0.32 + (Math.random() * 0.4 - 0.2),
-          trend: Math.random() > 0.5 ? "down" : "up",
-          history: [487.5, 486.9, 486.2, 485.8, 485.4],
-        },
-        {
-          code: "RUB",
-          name: t("rub"),
-          value: 4.95 + (Math.random() * 0.1 - 0.05),
-          change: 0.02 + (Math.random() * 0.04 - 0.02),
-          trend: Math.random() > 0.5 ? "up" : "stable",
-          history: [4.88, 4.91, 4.93, 4.92, 4.95],
-        },
-      ];
-      setRates(mockRates);
-      
-      const now = new Date();
-      setLastUpdated(now.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit", second: "2-digit" }));
+  // Курсы валют — живые официальные данные НБК через наш кэширующий
+  // эндпоинт /api/rates (источник: rss/rates_all.xml Нацбанка). Фид
+  // дневной, поэтому никакого фонового поллинга — только маунт и ручное
+  // обновление. Никаких сгенерированных значений: если данных нет,
+  // показываем честное состояние недоступности.
+  const loadRates = async () => {
+    setIsRefreshing(true);
+    try {
+      const response = await fetch("/api/rates");
+      if (!response.ok) throw new Error(`rates endpoint ${response.status}`);
+      const data: { asOf: string | null; rates: { code: string; value: number; change: number; trend: "up" | "down" }[] } =
+        await response.json();
+
+      const names: Record<string, string> = { USD: t("usd"), EUR: t("eur"), RUB: t("rub") };
+      setRates(
+        data.rates.map((rate) => ({
+          code: rate.code,
+          name: names[rate.code] ?? rate.code,
+          value: rate.value,
+          change: rate.change,
+          trend: rate.trend,
+          history: [],
+        })),
+      );
+      setLastUpdated(data.asOf ?? "");
+      setHasError(false);
+    } catch (error) {
+      console.error("Failed to load NBK rates:", error);
+      setHasError(true);
+    } finally {
       setIsRefreshing(false);
-    }, 800);
+    }
   };
 
   useEffect(() => {
-    generateData();
-    const interval = setInterval(() => generateData(), 15000);
-    return () => clearInterval(interval);
+    void loadRates();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Функция для отрисовки спарклайна (мини-графика) через SVG
@@ -107,7 +106,7 @@ export default function FinancialInform() {
             </h3>
           </div>
           <button
-            onClick={() => generateData(true)}
+            onClick={() => void loadRates()}
             disabled={isRefreshing}
             className="h-11 min-w-11 shrink-0 rounded-full bg-glass border border-glass-border flex items-center justify-center text-muted hover:text-gold hover:bg-glass active:scale-95 transition-all duration-300 disabled:opacity-50 select-none cursor-pointer"
             title={t("refreshBtn")}
@@ -172,40 +171,45 @@ export default function FinancialInform() {
           <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase block mb-1">
             {t("exchangeRates")}
           </span>
-          {rates.map((rate) => (
-            <div
-              key={rate.code}
-              className="flex items-center justify-between p-3.5 rounded-xl bg-white/[0.01] border border-white/[0.03] hover:bg-white/[0.03] hover:border-glass-border transition-all duration-300"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-glass border border-glass-border flex items-center justify-center text-foreground font-mono text-xs font-semibold">
-                  {rate.code}
+          {hasError && rates.length === 0 ? (
+            <div className="p-3.5 rounded-xl bg-white/[0.01] border border-white/[0.03] text-xs text-muted font-light">
+              {t("unavailable")}
+            </div>
+          ) : (
+            rates.map((rate) => (
+              <div
+                key={rate.code}
+                className="flex items-center justify-between p-3.5 rounded-xl bg-white/[0.01] border border-white/[0.03] hover:bg-white/[0.03] hover:border-glass-border transition-all duration-300"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-glass border border-glass-border flex items-center justify-center text-foreground font-mono text-xs font-semibold">
+                    {rate.code}
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-foreground tracking-wide leading-tight">
+                      {rate.code} / KZT
+                    </h4>
+                    <span className="text-[10px] text-zinc-400 font-light">
+                      {rate.name}
+                    </span>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-foreground tracking-wide leading-tight">
-                    {rate.code} / KZT
-                  </h4>
-                  <span className="text-[10px] text-zinc-400 font-light">
-                    {rate.name}
-                  </span>
-                </div>
-              </div>
 
-              <div className="flex items-center gap-6">
-                {renderSparkline(rate.history, rate.trend === "up" ? "text-forest-light" : "text-gold")}
                 <div className="text-right">
                   <span className="text-sm font-mono font-bold text-foreground block">
                     {rate.value.toFixed(2)} ₸
                   </span>
+                  {/* change из фида НБК — абсолютное изменение в тенге */}
                   <span className={`text-[10px] font-mono font-medium flex items-center justify-end gap-0.5 ${
-                    rate.change > 0 ? "text-forest-light" : "text-gold-light"
+                    rate.trend === "up" ? "text-forest-light" : "text-gold-light"
                   }`}>
-                    {rate.change > 0 ? "+" : ""}{rate.change.toFixed(2)}%
+                    {rate.trend === "up" ? <Icon name="trending-up" size={12} /> : <Icon name="trending-down" size={12} />}
+                    {rate.change > 0 ? "+" : ""}{rate.change.toFixed(2)} ₸
                   </span>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
 
@@ -213,11 +217,11 @@ export default function FinancialInform() {
       <div className="flex items-center justify-between border-t border-glass-border pt-6 mt-8">
         <span className="text-[10px] font-mono text-zinc-400 flex items-center gap-1.5">
           <Icon name="calendar" size={14} />
-          {t("updated")}: {lastUpdated || t("loading")}
+          {t("updated")}: {hasError ? t("unavailable") : lastUpdated || t("loading")}
         </span>
         <span className="inline-flex items-center gap-1 text-[10px] font-mono text-gold-light">
-          <span className="w-1.5 h-1.5 rounded-full bg-gold animate-ping" />
-          {t("liveFeed")}
+          <span className={`w-1.5 h-1.5 rounded-full bg-gold ${hasError ? "" : "animate-ping"}`} />
+          {t("source")}
         </span>
       </div>
     </GlassCard>
