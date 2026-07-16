@@ -1578,3 +1578,15 @@ html.light .site-footer :is(.border-t, .border-b, .border-y) {
     filter: none !important;
   }
 }
+
+/* Линии связи в секции «Экосистема»: медленное течение штриха к ядру.
+   Анимируется только stroke-dashoffset (не layout); при reduced-motion
+   компонент вообще не вешает этот класс. */
+@keyframes ecosystem-link-flow {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+.ecosystem-link {
+  animation: ecosystem-link-flow 14s linear infinite;
+}

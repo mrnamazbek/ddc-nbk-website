@@ -415,6 +415,16 @@
     "source": "Official NBK RK data",
     "unavailable": "Exchange rates are temporarily unavailable"
   },
+  "Ecosystem": {
+    "overline": "ECOSYSTEM",
+    "title": "The systems we keep running",
+    "subtitle": "We maintain and evolve the key systems connected to the National Bank and support their data warehouses.",
+    "centerLabel": "DDC Core",
+    "nodesLabel": "Systems maintained by DDC",
+    "maintenance": "Maintenance & development",
+    "dwh": "DWH support",
+    "others": "and other systems"
+  },
   "AboutPage": {
     "overline": "ABOUT DDC CENTER",
     "titleLine1": "Architects of",
