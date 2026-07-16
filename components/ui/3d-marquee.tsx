@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface ThreeDMarqueeProps {
@@ -46,9 +47,11 @@ export function ThreeDMarquee({ images, className }: ThreeDMarqueeProps) {
                   key={`${src}-${rowIndex}-${index}`}
                   className="h-36 w-56 shrink-0 overflow-hidden rounded-[1.15rem] border border-white/[0.08] bg-white/[0.03] shadow-[0_28px_80px_rgba(0,0,0,0.55)]"
                 >
-                  <img
+                  <Image
                     src={src}
                     alt=""
+                    width={224}
+                    height={144}
                     loading="lazy"
                     className="h-full w-full object-cover opacity-[0.65] saturate-[0.82] contrast-[1.08]"
                   />

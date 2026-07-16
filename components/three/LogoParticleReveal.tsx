@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useMounted } from "@/lib/clientState";
 import * as THREE from "three";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
@@ -1056,8 +1057,7 @@ export default function LogoParticleReveal() {
   const a11y = useA11y();
   const reduce = useReducedMotion() || a11y.enabled;
   const sectionRef = useRef<HTMLDivElement | null>(null);
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useMounted();
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,

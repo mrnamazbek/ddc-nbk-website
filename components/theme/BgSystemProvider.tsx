@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { useClientOnce } from "@/lib/clientState";
 
 export type BgSystem = "bg-forest" | "bg-teal";
 
@@ -11,37 +12,44 @@ interface BgSystemContextType {
 
 const BgSystemContext = createContext<BgSystemContextType | undefined>(undefined);
 
+// Вынесена на модульный уровень: не зависит от состояния компонента, а её
+// прежнее объявление ПОСЛЕ использующего эффекта ловил линтер
+// («Cannot access variable before it is declared»).
+function updateHtmlClass(system: BgSystem) {
+  if (typeof document !== "undefined") {
+    const root = document.documentElement;
+    root.classList.remove("bg-theme-forest", "bg-theme-teal");
+    root.classList.add(`bg-theme-${system === "bg-forest" ? "forest" : "teal"}`);
+  }
+}
+
+function readSavedBgSystem(): BgSystem | null {
+  const saved = localStorage.getItem("ddc-bg-system");
+  return saved === "bg-forest" || saved === "bg-teal" ? saved : null;
+}
+
 export function BgSystemProvider({ children }: { children: React.ReactNode }) {
-  const [bgSystem, setBgSystemState] = useState<BgSystem>("bg-forest");
-  const [mounted, setMounted] = useState(false);
+  // Сохранённое значение читается один раз на клиенте без setState-в-эффекте:
+  // SSR отдаёт дефолт, клиент сразу после гидрации — сохранённое.
+  const saved = useClientOnce<BgSystem | null>(readSavedBgSystem, null);
+  const [override, setOverride] = useState<BgSystem | null>(null);
 
+  const bgSystem = override ?? saved ?? "bg-forest";
+
+  // Синхронизация класса на <html> — это side effect, ему место в эффекте;
+  // setState здесь больше нет.
   useEffect(() => {
-    const saved = localStorage.getItem("ddc-bg-system") as BgSystem;
-    if (saved && (saved === "bg-forest" || saved === "bg-teal")) {
-      setBgSystemState(saved);
-      updateHtmlClass(saved);
-    } else {
-      updateHtmlClass("bg-forest");
-    }
-    setMounted(true);
-  }, []);
-
-  const updateHtmlClass = (system: BgSystem) => {
-    if (typeof document !== "undefined") {
-      const root = document.documentElement;
-      root.classList.remove("bg-theme-forest", "bg-theme-teal");
-      root.classList.add(`bg-theme-${system === "bg-forest" ? "forest" : "teal"}`);
-    }
-  };
+    updateHtmlClass(bgSystem);
+  }, [bgSystem]);
 
   const setBgSystem = (system: BgSystem) => {
-    setBgSystemState(system);
+    setOverride(system);
     localStorage.setItem("ddc-bg-system", system);
     updateHtmlClass(system);
   };
 
   return (
-    <BgSystemContext.Provider value={{ bgSystem: mounted ? bgSystem : "bg-forest", setBgSystem }}>
+    <BgSystemContext.Provider value={{ bgSystem, setBgSystem }}>
       {children}
     </BgSystemContext.Provider>
   );

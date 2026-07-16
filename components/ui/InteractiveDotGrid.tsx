@@ -1,15 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMounted } from "@/lib/clientState";
 import { useA11y } from "../theme/AccessibilityProvider";
 
 export default function InteractiveDotGrid() {
   const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useMounted();
 
   // If accessibility is enabled or prefers-reduced-motion is active, disable background animations
   if (!mounted || a11yEnabled || prefersReducedMotion) {

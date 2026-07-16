@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useMounted } from "@/lib/clientState";
 import { createPortal } from "react-dom";
 import { ChevronDown, Check } from "lucide-react";
 import { usePathname, useRouter } from "@/i18n/navigation";
@@ -13,7 +14,6 @@ import { AccessibilityTrigger } from "../ui/AccessibilityPanel";
 import { useA11y } from "../theme/AccessibilityProvider";
 import NavPreviewCard from "./NavPreview";
 import DDCLogo from "../ui/DDCLogo";
-import { TextRollHover } from "../ui/text-roll-hover";
 import {
   TextStaggerHover,
   TextStaggerHoverActive,
@@ -44,7 +44,7 @@ function LanguageSwitcher({
 }) {
   const a11y = useA11y();
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -52,10 +52,6 @@ function LanguageSwitcher({
   const [coords, setCoords] = useState<{ top: number; left: number; width: number; height: number } | null>(null);
   
   const showMenu = open || (mounted && a11y.enabled);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const updateCoords = () => {
     if (buttonRef.current) {

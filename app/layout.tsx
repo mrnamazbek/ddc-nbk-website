@@ -10,10 +10,9 @@ export default function RootLayout({
       data-color-variant="brand"
       suppressHydrationWarning
     >
-      <head>
-        <link rel="preload" href="/fonts/nohemi/Nohemi-Regular.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
-        <link rel="preload" href="/fonts/nohemi/Nohemi-SemiBold.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
-      </head>
+      {/* Preload-линки шрифтов убраны: Chrome на каждой загрузке предупреждал
+          «preloaded but not used within a few seconds» — т.е. критическому
+          пути они не помогали; @font-face в globals.css грузит их сам. */}
       <body className="min-h-full flex flex-col text-white">{children}</body>
     </html>
   );

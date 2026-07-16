@@ -46,7 +46,7 @@ export default function TransitionLink({ href, onClick, ...rest }: LinkProps) {
           }
           return;
         }
-      } catch (err) {
+      } catch {
         // Fallback for relative paths or invalid URL formats
       }
 

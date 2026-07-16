@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useClientOnce } from "@/lib/clientState";
 import { motion } from "framer-motion";
 import Button from "@/components/ui/Button";
 import Icon from "@/components/ui/Icon";
@@ -29,18 +29,12 @@ const translations = {
 };
 
 export default function NotFound() {
-  const [locale, setLocale] = useState<"ru" | "en" | "kz">("ru");
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const path = window.location.pathname;
-      const pathParts = path.split("/");
-      const detectedLocale = pathParts[1];
-      if (detectedLocale === "en" || detectedLocale === "kz" || detectedLocale === "ru") {
-        setLocale(detectedLocale);
-      }
-    }
-  }, []);
+  // Локаль читается из URL один раз, без setState-в-эффекте: SSR отдаёт
+  // ru-дефолт, клиент сразу после гидрации — локаль из пути.
+  const locale = useClientOnce<"ru" | "en" | "kz">(() => {
+    const detected = window.location.pathname.split("/")[1];
+    return detected === "en" || detected === "kz" || detected === "ru" ? detected : "ru";
+  }, "ru");
 
   const t = translations[locale];
 

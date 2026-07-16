@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "@/lib/gsap";
@@ -113,7 +113,7 @@ export default function Leadership() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [showPillars, setShowPillars] = useState(false);
   const [activeLeader, setActiveLeader] = useState<Leader | null>(null);
-  const { enabled: a11yEnabled, prefersReducedMotion } = useA11y();
+  const { prefersReducedMotion } = useA11y();
 
   // Данные для Совета директоров
   const boardOfDirectors: Leader[] = [

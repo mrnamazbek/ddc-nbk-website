@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test('Verify Variant B scroll milestones', async ({ page }) => {
   await page.goto('/en?variant=B');

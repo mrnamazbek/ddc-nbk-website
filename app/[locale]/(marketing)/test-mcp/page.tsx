@@ -7,10 +7,8 @@ import { motion } from 'framer-motion';
 import {
   IconShield,
   IconActivity,
-  IconDeviceLaptop,
   IconServer,
   IconDatabase,
-  IconTrendingUp,
   IconCheck
 } from '@tabler/icons-react';
 import { Link } from '@/i18n/navigation';

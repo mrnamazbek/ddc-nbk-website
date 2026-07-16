@@ -8,11 +8,10 @@ export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children">
   children: ReactNode;
   variant?: "gold" | "forest" | "ghost" | "glass" | "outline";
   size?: "sm" | "md" | "lg";
-  isMagnetic?: boolean;
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, variant = "gold", size = "md", isMagnetic = false, className, ...props }, ref) => {
+  ({ children, variant = "gold", size = "md", className, ...props }, ref) => {
     const shouldReduceMotion = useReducedMotion();
 
     const baseStyles =

@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { useMounted } from "@/lib/clientState";
 import {
   motion,
   useScroll,
@@ -88,8 +89,7 @@ function HeroParallaxScrollView({
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
 }) {
-  const [mounted, setMounted] = React.useState(false);
-  React.useEffect(() => setMounted(true), []);
+  const mounted = useMounted();
 
   if (!mounted) {
     return <div className="min-h-[960px] md:min-h-[2020px]" aria-hidden="true" />;

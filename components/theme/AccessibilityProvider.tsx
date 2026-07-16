@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { useClientOnce, useMediaQuery } from "@/lib/clientState";
 
 export type A11yScheme = "bw" | "wb" | "blue"; // чёрным по белому / белым по чёрному / синяя
 export type A11yScale = 100 | 125 | 150 | 200;
@@ -64,36 +65,33 @@ function applyToHtml(s: A11yState) {
   if (s.serif) r.classList.add("a11y-serif");
 }
 
+function readSavedA11yState(): A11yState | null {
+  try {
+    const raw = localStorage.getItem("ddc-a11y");
+    return raw ? { ...DEFAULT, ...JSON.parse(raw) } : null;
+  } catch {
+    return null;
+  }
+}
+
 export default function AccessibilityProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<A11yState>(DEFAULT);
+  // Сохранённое состояние читается один раз на клиенте без setState-в-эффекте
+  // (SSR отдаёт DEFAULT); дальнейшие изменения пользователя живут в override.
+  const saved = useClientOnce<A11yState | null>(readSavedA11yState, null);
+  const [override, setOverride] = useState<A11yState | null>(null);
+  const state = override ?? saved ?? DEFAULT;
   const [panelOpen, setPanelOpen] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
 
+  // Классы на <html> — side effect, синхронизируется с текущим состоянием.
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setPrefersReducedMotion(mediaQuery.matches);
-    const listener = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
-    mediaQuery.addEventListener("change", listener);
-    return () => mediaQuery.removeEventListener("change", listener);
-  }, []);
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem("ddc-a11y");
-      if (raw) {
-        const s: A11yState = { ...DEFAULT, ...JSON.parse(raw) };
-        setState(s);
-        applyToHtml(s);
-      }
-    } catch {
-      /* ignore */
-    }
-  }, []);
+    applyToHtml(state);
+  }, [state]);
 
   const update = useCallback((patch: Partial<A11yState>) => {
-    setState((prev) => {
-      const next = { ...prev, ...patch };
+    setOverride((prev) => {
+      const base = prev ?? readSavedA11yState() ?? DEFAULT;
+      const next = { ...base, ...patch };
       try {
         localStorage.setItem("ddc-a11y", JSON.stringify(next));
       } catch {

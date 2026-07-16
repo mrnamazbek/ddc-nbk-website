@@ -21,6 +21,10 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   transpilePackages: ['three'],
   turbopack: {
+    // Явный корень: без него Next видит второй lockfile уровнем выше
+    // (родительский checkout) и на каждую сборку пишет warning об
+    // угадывании workspace root.
+    root: __dirname,
     resolveAlias: {
       three: 'three',
     },

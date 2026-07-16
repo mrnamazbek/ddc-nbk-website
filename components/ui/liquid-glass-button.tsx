@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useMounted, useClientOnce } from "@/lib/clientState";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { motion, useReducedMotion } from "framer-motion";
@@ -92,20 +93,13 @@ function LiquidButton({
   className,
   variant,
   size,
-  asChild = false,
   children,
   ...props
 }: React.ComponentProps<"button"> &
-  VariantProps<typeof liquidbuttonVariants> & {
-    asChild?: boolean;
-  }) {
-  const [mounted, setMounted] = React.useState(false);
+  VariantProps<typeof liquidbuttonVariants>) {
+  const mounted = useMounted();
   const shouldReduceMotionRaw = useReducedMotion();
   const shouldReduceMotion = mounted ? !!shouldReduceMotionRaw : false;
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const hoverAnimation = shouldReduceMotion ? {} : { scale: 1.02 };
   const tapAnimation = shouldReduceMotion ? {} : { scale: 0.97 };
@@ -328,17 +322,15 @@ const ShineEffect = ({ isPressed }: { isPressed: boolean }) => {
 
 const MetalButton = React.forwardRef<HTMLButtonElement, MetalButtonProps>(
   ({ children, className, variant = "default", ...props }, ref) => {
-    const [mounted, setMounted] = React.useState(false);
+    const mounted = useMounted();
     const [isPressed, setIsPressed] = React.useState(false);
     const [isHovered, setIsHovered] = React.useState(false);
-    const [isTouchDevice, setIsTouchDevice] = React.useState(false);
+    const isTouchDevice = useClientOnce(
+      () => "ontouchstart" in window || navigator.maxTouchPoints > 0,
+      false,
+    );
     const shouldReduceMotionRaw = useReducedMotion();
     const shouldReduceMotion = mounted ? !!shouldReduceMotionRaw : false;
-
-    React.useEffect(() => {
-      setMounted(true);
-      setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
-    }, []);
 
     const buttonText = children || "Button";
     const variants = metalButtonVariants(

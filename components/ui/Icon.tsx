@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
+import { useMounted } from "@/lib/clientState";
 import { Icon as IconifyIcon } from "@iconify/react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useReducedMotion } from "framer-motion";
 import { useIconSystem } from "../theme/IconSystemProvider";
 import { cn } from "@/lib/utils";
 import * as TechIcons from "./TechIcons";
@@ -278,11 +279,7 @@ const phosphorMap: Partial<Record<IconName, string>> = {
 export default function Icon({ name, className, size = 20, animate = true }: IconProps) {
   const { iconSystem } = useIconSystem();
   const reduce = useReducedMotion();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useMounted();
 
   // Отрисовка конкретной системы иконок
   const renderIconContent = () => {

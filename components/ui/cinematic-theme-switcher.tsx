@@ -1,7 +1,8 @@
 'use client';
 
 import Icon from './Icon';
-import { useState, useEffect, useRef } from 'react';
+import { useMounted } from "@/lib/clientState";
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { useTranslations } from 'next-intl';
@@ -16,16 +17,12 @@ export default function CinematicThemeSwitcher() {
   const t = useTranslations("A11y");
   const { theme, setTheme, resolvedTheme } = useTheme();
 
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const [particles, setParticles] = useState<Particle[]>([]);
   const [isAnimating, setIsAnimating] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
   const isDark = mounted && (theme === 'dark' || resolvedTheme === 'dark');
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const generateParticles = () => {
     const newParticles: Particle[] = [];

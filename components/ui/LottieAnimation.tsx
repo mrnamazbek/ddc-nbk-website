@@ -41,13 +41,7 @@ export default function LottieAnimation({
   const themedAnimationData = useMemo(() => {
     if (!animationData) return animationData;
     return recolorBrandLottie(animationData, palette);
-  }, [
-    animationData,
-    palette.backgroundForest,
-    palette.keyLight,
-    palette.modelDarkBase,
-    palette.modelDarkAccent,
-  ]);
+  }, [animationData, palette]);
   const revealInitial = shouldReduceMotion
     ? false
     : { opacity: 0, y: 22, scale: 0.985, filter: "blur(10px)" };

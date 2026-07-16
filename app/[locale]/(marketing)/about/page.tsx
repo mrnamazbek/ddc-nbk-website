@@ -10,7 +10,7 @@ import Timeline from "@/components/sections/Timeline";
 import Leadership from "@/components/sections/Leadership";
 import DDCEventGallery from "@/components/sections/DDCEventGallery";
 import EcosystemMap from "@/components/sections/EcosystemMap";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import LazyOnVisible from "@/components/ui/LazyOnVisible";
 import ScrollReveal, { ENTRANCE_DURATION } from "@/components/motion/ScrollReveal";
@@ -26,7 +26,6 @@ const BaseModelViewer = dynamic(() => import("@/components/three/scene/BaseModel
 
 export default function AboutPage() {
   const t = useTranslations("AboutPage");
-  const locale = useLocale();
   const router = useRouter();
 
   const containerVariants = {

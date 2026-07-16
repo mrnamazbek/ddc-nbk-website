@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
+import { useDocumentClassFlag } from "@/lib/clientState";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
@@ -113,24 +114,13 @@ export function KazakhstanMap() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [isLight, setIsLight] = useState(false);
+  // Подписка на класс html без setState-в-эффекте: SSR отдаёт dark-дефолт,
+  // клиент синхронизируется сразу после гидрации.
+  const isLight = useDocumentClassFlag("light");
   // The provider starts with the same value during SSR and hydration, then
   // updates from matchMedia. Reading Framer's hook here changed the initial
   // markup only for reduced-motion users and caused a hydration recovery.
   const { enabled: a11yEnabled, prefersReducedMotion: reduce } = useA11y();
-
-  useEffect(() => {
-    setIsLight(document.documentElement.classList.contains("light"));
-
-    const observer = new MutationObserver(() => {
-      setIsLight(document.documentElement.classList.contains("light"));
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
 
   const updateMapMotionFromPointer = (clientX: number, clientY: number) => {
     if (reduce || !containerRef.current) return;

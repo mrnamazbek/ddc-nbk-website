@@ -7,7 +7,6 @@ import DDCLogo from "@/components/ui/DDCLogo";
 import LottieAnimation from "@/components/ui/LottieAnimation";
 import { BubbleText } from "@/components/ui/BubbleText";
 import ScrollReveal, { ENTRANCE_DURATION, STAGGER } from "@/components/motion/ScrollReveal";
-import { RevealWords } from "@/components/motion/RevealWords";
 import { StaggerGroup, StaggerItem } from "@/components/motion/StaggerGroup";
 
 import { motion } from "framer-motion";

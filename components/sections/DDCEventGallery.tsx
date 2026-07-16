@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useMounted } from "@/lib/clientState";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
@@ -78,13 +79,9 @@ export default function DDCEventGallery() {
   const t = useTranslations("EventGallery");
   const { enabled: a11yEnabled } = useA11y();
   const shouldReduceMotionRaw = useReducedMotion();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const shouldReduceMotion = mounted ? !!shouldReduceMotionRaw : false;
 
