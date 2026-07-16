@@ -416,14 +416,21 @@
     "unavailable": "Exchange rates are temporarily unavailable"
   },
   "Ecosystem": {
-    "overline": "ECOSYSTEM",
-    "title": "The systems we keep running",
-    "subtitle": "We maintain and evolve the key systems connected to the National Bank and support their data warehouses.",
-    "centerLabel": "DDC Core",
-    "nodesLabel": "Systems maintained by DDC",
-    "maintenance": "Maintenance & development",
-    "dwh": "DWH support",
-    "others": "and other systems"
+    "overline": "DDC DIGITAL CONTEXT",
+    "title": "Central node and connections",
+    "subtitle": "DDC NBK develops the National Bank's technology context: systems, data, integrations, infrastructure, security, and services.",
+    "centerLabel": "DDC / DDC NBK",
+    "nodesLabel": "DDC technology work domains",
+    "disclaimer": "The diagram shows DDC work domains, not a list of specific systems or contractual relationships.",
+    "nbkSource": "About DDC NBK on the National Bank website",
+    "nodes": {
+      "systems": { "title": "Systems", "description": "development and support" },
+      "data": { "title": "Data", "description": "management and storage" },
+      "integrations": { "title": "Integrations", "description": "system interaction" },
+      "infrastructure": { "title": "Infrastructure", "description": "technology foundation" },
+      "security": { "title": "Security", "description": "digital context protection" },
+      "services": { "title": "Services", "description": "digital support" }
+    }
   },
   "AboutPage": {
     "overline": "ABOUT DDC CENTER",
