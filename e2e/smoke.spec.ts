@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const locales = ["ru", "kz", "en"] as const;
-const publicRoutes = ["", "/about", "/services", "/mission", "/news", "/careers", "/contact", "/faq", "/security", "/digital", "/analytics", "/ecommerce"] as const;
+const publicRoutes = ["", "/about", "/services", "/mission", "/news", "/careers", "/contact", "/faq", "/security", "/digital", "/ecommerce"] as const;
 
 test.describe("public route smoke checks", () => {
   test("core localized pages render without page errors", async ({ page }) => {

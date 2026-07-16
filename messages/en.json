@@ -14,7 +14,6 @@
     "security": "Security",
     "news": "News",
     "careers": "Careers",
-    "analytics": "Analytics",
     "contact": "Contact",
     "procurementPortal": "Procurement Portal of NBK",
     "subsidiaryOfNBK": "Subsidiary of NBK",
@@ -347,73 +346,9 @@
     "certStandardLabel": "Standard",
     "certStandardValue": "ISO 27001"
   },
-  "AnalyticsPage": {
-    "overline": "Analytics & Data",
-    "titleLine1": "Information",
-    "titleAccent": "financial flows",
-    "description": "Real-time analytical monitoring of the financial market of Kazakhstan and high-load data platform architecture.",
-    "pipelineTitle": "ETL Pipeline Architecture",
-    "pipelineDesc": "To process millions of Digital Tenge transactions and build the unified Financial Data Factory for the National Bank, DDC designs fault-tolerant data pipelines. The Data Factory accelerated data loading and processing by 6.6x and optimized report generation speed by 80%.",
-    "ingestionTitle": "Ingestion Layer",
-    "ingestionDesc": "Real-time streaming via Apache Kafka message brokers.",
-    "storageTitle": "Storage & Analytics",
-    "storageDesc": "Hybrid storage: PostgreSQL for transactions, ClickHouse for instant OLAP reports.",
-    "orchTitle": "Orchestration",
-    "orchDesc": "Scheduling and monitoring DAGs in Apache Airflow with data quality validation (dbt).",
-    "schoolOverline": "DDC ENGINEERING SCHOOL",
-    "schoolTitle": "Database Optimization",
-    "schoolTitleAccent": "for high loads",
-    "tip1Title": "Indexing (B-Tree & BRIN)",
-    "tip1Desc": "Use of B-Tree indexes for point queries and BRIN (Block Range Index) for extra-large temporary tables (time-series) in PostgreSQL.",
-    "tip2Title": "Table Partitioning",
-    "tip2Desc": "Sectioning tables by date ranges (Range Partitioning) to accelerate analytical queries for specific periods.",
-    "tip3Title": "Denormalization in ClickHouse",
-    "tip3Desc": "Designing wide denormalized tables in ClickHouse to aggregate millions of transactions without resource-heavy JOIN operations.",
-    "careerOverline": "career growth tips",
-    "careerTitle": "How to become a Data Engineer / Database Developer in fintech?",
-    "careerDesc": "Working with state transaction systems in the National Bank requires fundamental knowledge of database theory. We recommend beginners focus on:",
-    "careerBullet1": "<strong>SQL Optimization</strong>: understanding Query Planner behavior, `EXPLAIN ANALYZE` parsing, and avoiding `N+1` issues with ORM integration.",
-    "careerBullet2": "<strong>Data Modeling</strong>: 3NF normalization for OLTP and denormalization (Kimball Dimensional Modeling) for Data Warehouses (DWH).",
-    "careerBullet3": "<strong>Python for Data Engineering</strong>: writing maintainable scripts with Pydantic typing, Kafka/RabbitMQ integration, and custom Airflow operators.",
-    "careerBullet4": "<strong>Security</strong>: understanding cryptography (AES, RSA), password hashing, and database security audits.",
-    "simulator": {
-      "title": "Monetary Policy Simulator",
-      "subtitle": "Try to keep inflation within the 5-8% target corridor",
-      "rateLabel": "Base Rate of the National Bank:",
-      "quarterLabel": "Quarter",
-      "simulateBtn": "Simulate Next Quarter",
-      "restartBtn": "Restart Simulation",
-      "inflationLabel": "Annual Inflation",
-      "kztLabel": "USD / KZT Exchange Rate",
-      "activityLabel": "Business Activity",
-      "status": {
-        "win": "Excellent monetary policy! You are successfully maintaining macroeconomic stability.",
-        "high": "High inflation! The base rate is too low for the current money supply. Raise the rate to cool down the market.",
-        "low": "Economy is cooling down! An excessively high rate is restricting business lending. Try lowering the rate to stimulate growth."
-      }
-    }
-  },
   "Common": {
     "loading": "Loading Scene",
     "sceneUnavailable": "3D scene unavailable"
-  },
-  "FinancialInform": {
-    "title": "Macroeconomic Monitor",
-    "subtitle": "Financial Indicators of RK",
-    "refreshBtn": "Refresh Indicators",
-    "baseRate": "NBK Base Rate",
-    "baseRateTrend": "Trend over 5 meetings",
-    "inflation": "Annual Inflation",
-    "inflationTrend": "Rate reduction",
-    "exchangeRates": "Official Exchange Rates (KZT)",
-    "usd": "US Dollar",
-    "eur": "Euro",
-    "rub": "Russian Ruble",
-    "updated": "Updated",
-    "loading": "loading...",
-    "liveFeed": "NBK Live feed",
-    "source": "Official NBK RK data",
-    "unavailable": "Exchange rates are temporarily unavailable"
   },
   "Ecosystem": {
     "overline": "DDC DIGITAL CONTEXT",
@@ -424,12 +359,30 @@
     "disclaimer": "The diagram shows DDC work domains, not a list of specific systems or contractual relationships.",
     "nbkSource": "About DDC NBK on the National Bank website",
     "nodes": {
-      "systems": { "title": "Systems", "description": "development and support" },
-      "data": { "title": "Data", "description": "management and storage" },
-      "integrations": { "title": "Integrations", "description": "system interaction" },
-      "infrastructure": { "title": "Infrastructure", "description": "technology foundation" },
-      "security": { "title": "Security", "description": "digital context protection" },
-      "services": { "title": "Services", "description": "digital support" }
+      "systems": {
+        "title": "Systems",
+        "description": "development and support"
+      },
+      "data": {
+        "title": "Data",
+        "description": "management and storage"
+      },
+      "integrations": {
+        "title": "Integrations",
+        "description": "system interaction"
+      },
+      "infrastructure": {
+        "title": "Infrastructure",
+        "description": "technology foundation"
+      },
+      "security": {
+        "title": "Security",
+        "description": "digital context protection"
+      },
+      "services": {
+        "title": "Services",
+        "description": "digital support"
+      }
     }
   },
   "AboutPage": {
