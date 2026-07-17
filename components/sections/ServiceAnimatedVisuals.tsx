@@ -84,12 +84,32 @@ function ContactCenterScene() {
         transition={{ duration: reduceMotion ? 0 : 0.8, ease: [0.22, 1, 0.36, 1] }}
         style={{ transformBox: "fill-box", transformOrigin: "center" }}
       />
-      <motion.circle cx="355" cy="265" r="58" fill={colors.gold} initial={reduceMotion ? false : { scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: "spring", stiffness: 130, damping: 15 }} style={{ transformBox: "fill-box", transformOrigin: "center" }} />
-      <path d="M280 445c12-78 45-118 75-118s63 40 75 118" fill={colors.forest} />
-      <DrawPath d="M292 273c0-53 25-86 63-86s63 33 63 86" delay={0.25} stroke={colors.white} strokeWidth={8} />
-      <DrawPath d="M293 270v50M417 270v50M417 318c0 36-23 53-55 53" delay={0.48} stroke={colors.white} strokeWidth={8} />
-      <motion.rect x="275" y="272" width="28" height="66" rx="12" fill={colors.teal} initial={reduceMotion ? false : { x: -22, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.45, duration: 0.55 }} />
-      <motion.rect x="407" y="272" width="28" height="66" rx="12" fill={colors.teal} initial={reduceMotion ? false : { x: 22, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.45, duration: 0.55 }} />
+      <DrawPath d="M290 278c0-57 27-91 65-91s65 34 65 91" delay={0.2} stroke={colors.white} strokeWidth={9} />
+      <path d="M270 445c10-76 42-118 85-118s75 42 85 118" fill={colors.forest} />
+      <motion.ellipse
+        cx="355"
+        cy="266"
+        rx="57"
+        ry="62"
+        fill={colors.gold}
+        initial={reduceMotion ? false : { scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.2, type: "spring", stiffness: 130, damping: 15 }}
+        style={{ transformBox: "fill-box", transformOrigin: "center" }}
+      />
+      <motion.rect x="277" y="268" width="30" height="72" rx="14" fill={colors.teal} initial={reduceMotion ? false : { x: -22, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.45, duration: 0.55 }} />
+      <motion.rect x="403" y="268" width="30" height="72" rx="14" fill={colors.teal} initial={reduceMotion ? false : { x: 22, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.45, duration: 0.55 }} />
+      <DrawPath d="M418 320c0 34-19 52-52 52h-7" delay={0.52} stroke={colors.white} strokeWidth={8} />
+      <motion.circle
+        cx="357"
+        cy="372"
+        r="6"
+        fill={colors.white}
+        initial={reduceMotion ? false : { opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: reduceMotion ? 0 : 1.08, duration: 0.28 }}
+        style={{ transformBox: "fill-box", transformOrigin: "center" }}
+      />
       {[0, 1, 2].map((index) => (
         <motion.path
           key={index}
