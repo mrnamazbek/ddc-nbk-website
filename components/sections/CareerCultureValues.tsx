@@ -4,23 +4,25 @@ import { useTranslations } from "next-intl";
 import GlassCard from "@/components/ui/GlassCard";
 import ScrollReveal, { ENTRANCE_DURATION, STAGGER } from "@/components/motion/ScrollReveal";
 import { StaggerGroup, StaggerItem } from "@/components/motion/StaggerGroup";
+import LottieAnimation from "@/components/ui/LottieAnimation";
 
 interface Pillar {
   letter: string;
   title: string;
   textKey: string;
+  animation: string;
 }
 
 // The pillar names spell "CENTER" on purpose (a nod to ЦЦР — the Center for
 // Digital Development) and stay in English in every locale since the acronym
 // itself only works in English; only the descriptions below are translated.
 const PILLARS: Pillar[] = [
-  { letter: "C", title: "Commitment", textKey: "centerPillar1Text" },
-  { letter: "E", title: "Excellence", textKey: "centerPillar2Text" },
-  { letter: "N", title: "No Blame", textKey: "centerPillar3Text" },
-  { letter: "T", title: "Team", textKey: "centerPillar4Text" },
-  { letter: "E", title: "Efficiency", textKey: "centerPillar5Text" },
-  { letter: "R", title: "Result", textKey: "centerPillar6Text" },
+  { letter: "C", title: "Commitment", textKey: "centerPillar1Text", animation: "/animations/career-center/commitment.json" },
+  { letter: "E", title: "Excellence", textKey: "centerPillar2Text", animation: "/animations/career-center/excellence.json" },
+  { letter: "N", title: "No Blame", textKey: "centerPillar3Text", animation: "/animations/career-center/no-blame.json" },
+  { letter: "T", title: "Team", textKey: "centerPillar4Text", animation: "/animations/career-center/team.json" },
+  { letter: "E", title: "Efficiency", textKey: "centerPillar5Text", animation: "/animations/career-center/efficiency.json" },
+  { letter: "R", title: "Result", textKey: "centerPillar6Text", animation: "/animations/career-center/result.json" },
 ];
 
 export default function CareerCultureValues() {
@@ -39,12 +41,12 @@ export default function CareerCultureValues() {
                 className="p-5 sm:p-6 border border-white/5 hover:border-gold/15"
               >
                 <div className="flex items-center gap-5">
-                  <div className="shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-forest/25 border border-forest-light/15 flex items-center justify-center">
-                    <span className="font-display text-2xl sm:text-3xl font-bold text-gold-light">
+                  <div className="flex size-14 shrink-0 items-center justify-center rounded-xl border border-forest-light/15 bg-forest/25 sm:size-18">
+                    <span className="font-display text-2xl font-bold text-gold-light sm:text-4xl">
                       {pillar.letter}
                     </span>
                   </div>
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <h3 className="text-sm sm:text-base font-bold text-white tracking-wide uppercase mb-1">
                       {pillar.title}
                     </h3>
@@ -52,6 +54,14 @@ export default function CareerCultureValues() {
                       {t(pillar.textKey)}
                     </p>
                   </div>
+                  <LottieAnimation
+                    src={pillar.animation}
+                    label={`${pillar.title} illustration`}
+                    className="hidden h-20 w-20 shrink-0 bg-transparent sm:block"
+                    frameClassName="h-20 min-h-0 w-20 bg-transparent"
+                    animationClassName="h-20 w-20 max-h-none"
+                    delay={idx * 0.04}
+                  />
                 </div>
               </GlassCard>
             </StaggerItem>

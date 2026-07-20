@@ -1,11 +1,42 @@
+"use client";
+
+import { useSyncExternalStore } from "react";
+import { useReducedMotion } from "framer-motion";
 import CareerCultureValues from "./CareerCultureValues";
+import CareerCenterConverge from "./CareerCenterConverge";
+
+const DESKTOP_MOTION_QUERY = "(min-width: 1280px)";
+
+function subscribeToDesktopLayout(callback: () => void) {
+  const mediaQuery = window.matchMedia(DESKTOP_MOTION_QUERY);
+  mediaQuery.addEventListener("change", callback);
+  return () => mediaQuery.removeEventListener("change", callback);
+}
+
+function getDesktopLayoutSnapshot() {
+  return window.matchMedia(DESKTOP_MOTION_QUERY).matches;
+}
+
+function getDesktopLayoutServerSnapshot() {
+  return false;
+}
 
 /**
- * The CENTER culture section: six pillars (spelling CENTER) laid out as
- * alternating text / Lottie rows down a central spine, mission-page style,
- * each row revealing on scroll. Works across all viewports, so there is no
- * separate desktop/mobile variant.
+ * The restored cinematic sequence requires a desktop viewport and native
+ * motion. Touch, smaller screens, and reduced-motion users keep the existing
+ * accessible culture-values list instead.
  */
 export default function CareerCenterSection() {
-  return <CareerCultureValues />;
+  const prefersReducedMotion = useReducedMotion();
+  const canConverge = useSyncExternalStore(
+    subscribeToDesktopLayout,
+    getDesktopLayoutSnapshot,
+    getDesktopLayoutServerSnapshot,
+  );
+
+  if (prefersReducedMotion || !canConverge) {
+    return <CareerCultureValues />;
+  }
+
+  return <CareerCenterConverge />;
 }

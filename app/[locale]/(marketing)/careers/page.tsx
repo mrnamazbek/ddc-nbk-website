@@ -3,13 +3,12 @@ import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import Icon, { IconName } from "@/components/ui/Icon";
 import CareerCenterSection from "@/components/sections/CareerCenterSection";
+import CareerWhyUsPath from "@/components/sections/CareerWhyUsPath";
 import { getTranslations } from "next-intl/server";
-import LottieAnimation from "@/components/ui/LottieAnimation";
 import { BubbleText } from "@/components/ui/BubbleText";
 import ScrollReveal, { ENTRANCE_DURATION, STAGGER } from "@/components/motion/ScrollReveal";
 import { RevealWords } from "@/components/motion/RevealWords";
 import { StaggerGroup, StaggerItem } from "@/components/motion/StaggerGroup";
-import { AutoRevealingHeading } from "@/components/motion/AutoRevealingHeading";
 
 
 type Translator = (key: string, values?: Record<string, string | number>) => string;
@@ -322,34 +321,8 @@ export default async function CareersPage({ params }: CareersPageProps) {
         {/* Культура CENTER */}
         <CareerCenterSection />
 
-        {/* Почему именно мы? */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24 pb-12">
-          <div className="lg:col-span-7">
-            <ScrollReveal blur={10} duration={ENTRANCE_DURATION.title}>
-              <h2 className="text-2xl font-bold text-white mb-6 tracking-wide">{t("whyUsTitle")}</h2>
-            </ScrollReveal>
-            <div className="space-y-4">
-              {whyUsPoints.map((point, idx) => (
-                <div key={idx} className="flex items-start gap-3.5 text-sm sm:text-base text-zinc-300 font-light leading-relaxed">
-                  <Icon name="check-circle" size={20} className="text-forest-light shrink-0 mt-0.5" />
-                  <AutoRevealingHeading text={point} splitBy="word" delay={0.025} className="flex-1 min-w-0" />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Правая колонка «Почему именно мы?» — только Lottie-иллюстрация */}
-          <ScrollReveal direction="right" distance={40} duration={ENTRANCE_DURATION.card} delay={0.15} className="lg:col-span-5 relative">
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-forest/20 rounded-full blur-2xl pointer-events-none" />
-            <LottieAnimation
-              src="/animations/career-programmer-code.json"
-              label="DDC engineer writing production code"
-              className="mb-0"
-              frameClassName="min-h-[320px] sm:min-h-[380px] lg:min-h-[440px]"
-              animationClassName="max-h-[440px] scale-[1.12] w-full"
-            />
-          </ScrollReveal>
-        </div>
+        {/* Почему именно мы? Полная scroll-path композиция из Code (6). */}
+        <CareerWhyUsPath title={t("whyUsTitle")} points={whyUsPoints} />
 
         {/* Отдельная секция призыва «Начните свой путь в DDC» */}
         <ScrollReveal blur={10} duration={ENTRANCE_DURATION.card} className="mb-24">
