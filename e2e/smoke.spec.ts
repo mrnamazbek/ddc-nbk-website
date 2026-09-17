@@ -15,7 +15,7 @@ test.describe("public route smoke checks", () => {
         const response = await page.goto(`/${locale}${route}`, { waitUntil: "domcontentloaded" });
         expect(response?.status(), `/${locale}${route} should return 200`).toBe(200);
         await expect(page.locator("#main")).toBeVisible();
-        await expect(page.locator("footer")).toBeVisible();
+        await expect(page.locator("footer.site-footer")).toBeVisible();
       }
     }
 
