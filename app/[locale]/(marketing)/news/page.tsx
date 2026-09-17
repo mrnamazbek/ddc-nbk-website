@@ -12,6 +12,7 @@ import {
 } from "@/components/motion/ScrollReveal";
 import Button from "@/components/ui/Button";
 import Icon from "@/components/ui/Icon";
+import NewsCubeIntro from "@/components/sections/NewsCubeIntro";
 import { useA11y } from "@/components/theme/AccessibilityProvider";
 import {
   getLinkedInPostUrl,
@@ -65,27 +66,20 @@ export default function NewsPage() {
     document.getElementById("news-results")?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
   };
 
-  return (
-    <main className="min-h-screen pt-32 pb-24">
-      <div className="mx-auto max-w-7xl px-6 sm:px-12 lg:px-16">
-        <motion.header
-          initial={reduce ? false : { opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: ENTRANCE_DURATION.title, ease: ENTRANCE_EASE }}
-          className="max-w-3xl"
-        >
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--color-gold)]">
-            {t("overline")}
-          </p>
-          <h1 className="font-display text-4xl leading-[0.96] text-[var(--text-primary)] sm:text-6xl">
-            {t("titleLine1")} <span className="text-[var(--color-gold)]">{t("titleAccent")}</span>
-          </h1>
-          <p className="mt-6 max-w-2xl text-base leading-7 text-[var(--text-secondary)] sm:text-lg">
-            {t("subtitle")}
-          </p>
-        </motion.header>
+  const cubeImages = LINKEDIN_NEWS_INDEX.flatMap((item) => (item.image ? [item.image] : [])).slice(0, 6);
 
-        <section aria-label={t("archiveLabel")} className="mt-12">
+  return (
+    <main className="min-h-screen pb-24">
+      <NewsCubeIntro
+        overline={t("overline")}
+        titleLine1={t("titleLine1")}
+        titleAccent={t("titleAccent")}
+        subtitle={t("subtitle")}
+        images={cubeImages}
+        reduce={reduce}
+      />
+      <div className="mx-auto max-w-7xl px-6 sm:px-12 lg:px-16">
+        <section aria-label={t("archiveLabel")} className="pt-16">
           <div className="grid gap-4 rounded-[var(--radius-card)] border border-[var(--glass-border)] bg-[var(--surface)] p-4 shadow-[var(--shadow-soft)] lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:p-5">
             <label className="sr-only" htmlFor="news-search">
               {t("searchLabel")}

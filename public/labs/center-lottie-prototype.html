@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>CENTER - Lottie Art Direction Test</title>
+    <style>
+      @font-face {
+        font-family: "Nohemi";
+        src: url("/fonts/nohemi/Nohemi-Regular.ttf") format("truetype");
+        font-weight: 400;
+      }
+
+      @font-face {
+        font-family: "Nohemi";
+        src: url("/fonts/nohemi/Nohemi-Bold.ttf") format("truetype");
+        font-weight: 700;
+      }
+
+      :root {
+        --forest: #003e35;
+        --forest-deep: #002b25;
+        --forest-soft: #0a5a4c;
+        --gold: #c99a3c;
+        --ink: #102b25;
+        --paper: #f3f6f1;
+        --paper-muted: #e5ebe2;
+        --line: rgba(0, 62, 53, 0.14);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        min-width: 320px;
+        margin: 0;
+        color: var(--ink);
+        background: var(--forest-deep);
+        font-family: "Nohemi", sans-serif;
+      }
+
+      .page {
+        position: relative;
+        min-height: 100vh;
+        overflow: hidden;
+        padding: 32px clamp(20px, 5vw, 72px) 72px;
+        background:
+          radial-gradient(circle at 14% 8%, rgba(201, 154, 60, 0.17) 0 1px, transparent 1.5px) 0 0 / 26px 26px,
+          linear-gradient(120deg, #002b25, #003e35 58%, #002b25);
+      }
+
+      .page::before {
+        position: absolute;
+        inset: 0;
+        content: "";
+        opacity: 0.3;
+        background-image: linear-gradient(rgba(243, 246, 241, 0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(243, 246, 241, 0.07) 1px, transparent 1px);
+        background-size: 80px 80px;
+        mask-image: linear-gradient(to bottom, #000 0%, transparent 82%);
+        pointer-events: none;
+      }
+
+      header,
+      main { position: relative; z-index: 1; }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        max-width: 1440px;
+        margin: 0 auto 50px;
+        color: var(--paper);
+      }
+
+      .eyebrow,
+      .status,
+      .option-index,
+      .note { font-size: 12px; font-weight: 700; letter-spacing: 0; text-transform: uppercase; }
+
+      .eyebrow { color: rgba(243, 246, 241, 0.72); }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--paper);
+      }
+
+      .status::before {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--gold);
+        content: "";
+        box-shadow: 0 0 0 5px rgba(201, 154, 60, 0.15);
+      }
+
+      .canvas {
+        position: relative;
+        max-width: 1440px;
+        min-height: 720px;
+        margin: 0 auto;
+        overflow: hidden;
+        border: 1px solid rgba(243, 246, 241, 0.68);
+        border-radius: 8px;
+        background:
+          linear-gradient(rgba(0, 62, 53, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 62, 53, 0.06) 1px, transparent 1px), var(--paper);
+        background-size: 40px 40px;
+        box-shadow: 0 28px 80px rgba(0, 15, 12, 0.28);
+      }
+
+      .canvas::after {
+        position: absolute;
+        inset: 24px;
+        border: 1px solid var(--line);
+        content: "";
+        pointer-events: none;
+      }
+
+      .canvas-topline {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 32px clamp(28px, 4vw, 56px);
+      }
+
+      h1 {
+        max-width: 14ch;
+        margin: 0;
+        color: var(--forest);
+        font-size: clamp(34px, 4vw, 66px);
+        font-weight: 700;
+        line-height: 0.95;
+        letter-spacing: 0;
+      }
+
+      .canvas-topline p {
+        max-width: 31ch;
+        margin: 0;
+        color: rgba(16, 43, 37, 0.7);
+        font-size: 15px;
+        line-height: 1.45;
+      }
+
+      .visual-stage {
+        position: absolute;
+        inset: 128px clamp(28px, 4vw, 56px) 36px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(380px, 0.9fr);
+        gap: clamp(36px, 6vw, 110px);
+        align-items: center;
+      }
+
+      .letters {
+        position: relative;
+        display: grid;
+        justify-items: start;
+        gap: 9px;
+      }
+
+      .letters::before {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: min(100%, 520px);
+        height: 1px;
+        background: rgba(0, 62, 53, 0.16);
+        content: "";
+      }
+
+      .word {
+        position: relative;
+        margin: 0;
+        color: var(--forest);
+        font-size: clamp(84px, 12.5vw, 188px);
+        font-weight: 700;
+        line-height: 0.75;
+        letter-spacing: 0;
+      }
+
+      .letters small {
+        position: relative;
+        max-width: 31ch;
+        margin: 18px 0 0 4px;
+        color: rgba(16, 43, 37, 0.68);
+        font-size: 14px;
+        line-height: 1.45;
+      }
+
+      .letters small strong { color: var(--forest); }
+
+      .selector {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        width: min(100%, 520px);
+        margin-top: 18px;
+      }
+
+      .selector button {
+        min-height: 50px;
+        padding: 10px 12px;
+        cursor: pointer;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        color: rgba(16, 43, 37, 0.7);
+        background: rgba(243, 246, 241, 0.64);
+        font: inherit;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.1;
+        text-align: left;
+        transition: color 180ms ease, background 180ms ease, border-color 180ms ease, transform 180ms ease;
+      }
+
+      .selector button:hover,
+      .selector button:focus-visible {
+        border-color: var(--forest-soft);
+        color: var(--forest);
+        transform: translateY(-2px);
+        outline: none;
+      }
+
+      .selector button[aria-pressed="true"] {
+        border-color: var(--forest);
+        color: var(--paper);
+        background: var(--forest);
+      }
+
+      .lottie-card {
+        position: relative;
+        min-height: 460px;
+        padding: 22px;
+        border: 1px solid rgba(0, 62, 53, 0.14);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.78);
+        box-shadow: 0 20px 50px rgba(0, 62, 53, 0.13);
+      }
+
+      .lottie-card::before {
+        position: absolute;
+        inset: 11px;
+        border: 1px solid rgba(0, 62, 53, 0.08);
+        border-radius: 3px;
+        content: "";
+        pointer-events: none;
+      }
+
+      .lottie-card header {
+        position: relative;
+        z-index: 1;
+        margin: 0;
+        color: var(--forest);
+      }
+
+      .lottie-card .status { color: var(--forest); }
+
+      .motion-frame {
+        position: relative;
+        z-index: 1;
+        display: block;
+        width: 100%;
+        height: 340px;
+        margin: 34px auto 0;
+      }
+
+      .motion-frame svg { display: block; width: 100%; height: 100%; overflow: visible; }
+      .motion-scene { opacity: 0; transform-origin: center; transition: opacity 300ms ease; }
+      .motion-frame[data-mode="connection"] .motion-scene--connection,
+      .motion-frame[data-mode="systems"] .motion-scene--systems,
+      .motion-frame[data-mode="result"] .motion-scene--result { opacity: 1; }
+
+      .svg-line { fill: none; stroke: var(--forest); stroke-linecap: round; stroke-linejoin: round; }
+      .svg-guide { fill: none; stroke: rgba(0, 62, 53, 0.16); stroke-linecap: round; stroke-linejoin: round; }
+      .svg-gold { fill: var(--gold); stroke: var(--gold); }
+      .svg-paper { fill: var(--paper); stroke: var(--forest); }
+      .svg-node { transform-box: fill-box; transform-origin: center; }
+      .motion-scene--connection .svg-node { animation: node-breathe 2.8s ease-in-out infinite; }
+      .motion-scene--connection .svg-node:nth-of-type(2) { animation-delay: -0.45s; }
+      .motion-scene--connection .svg-node:nth-of-type(3) { animation-delay: -0.9s; }
+      .motion-scene--connection .svg-node:nth-of-type(4) { animation-delay: -1.35s; }
+      .motion-scene--connection .svg-node:nth-of-type(5) { animation-delay: -1.8s; }
+      .motion-scene--connection .svg-node:nth-of-type(6) { animation-delay: -2.25s; }
+      .motion-scene--connection .connection-path { stroke-dasharray: 12 14; animation: path-flow 2.6s linear infinite; }
+      .motion-scene--systems .system-column { transform-box: fill-box; transform-origin: bottom; animation: column-rise 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite alternate; }
+      .motion-scene--systems .system-column:nth-of-type(2) { animation-delay: -0.8s; }
+      .motion-scene--systems .system-column:nth-of-type(3) { animation-delay: -1.5s; }
+      .motion-scene--systems .scan { stroke-dasharray: 56 280; animation: scan-line 2.8s ease-in-out infinite; }
+      .motion-scene--result .target-ring { transform-box: fill-box; transform-origin: center; animation: target-pulse 2.5s ease-out infinite; }
+      .motion-scene--result .result-arrow { stroke-dasharray: 170; stroke-dashoffset: 170; animation: arrow-draw 2.3s ease-out infinite; }
+
+      @keyframes node-breathe { 50% { transform: scale(1.28); } }
+      @keyframes path-flow { to { stroke-dashoffset: -52; } }
+      @keyframes column-rise { to { transform: scaleY(0.64); opacity: 0.54; } }
+      @keyframes scan-line { 0%, 18% { stroke-dashoffset: 336; } 62%, 100% { stroke-dashoffset: 0; } }
+      @keyframes target-pulse { 0%, 100% { transform: scale(0.82); opacity: 0.32; } 48% { transform: scale(1.18); opacity: 0.05; } }
+      @keyframes arrow-draw { 22% { stroke-dashoffset: 170; } 72%, 100% { stroke-dashoffset: 0; } }
+
+      .meta {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: end;
+        gap: 14px;
+        padding: 14px 22px 16px;
+        border-top: 1px solid rgba(0, 62, 53, 0.1);
+        color: rgba(16, 43, 37, 0.66);
+        font-size: 12px;
+        line-height: 1.3;
+      }
+
+      .meta a { color: var(--forest); font-weight: 700; text-decoration: none; }
+      .meta a:hover { text-decoration: underline; }
+
+      .option-index { color: var(--gold); }
+
+      .caption {
+        position: absolute;
+        right: clamp(28px, 4vw, 56px);
+        bottom: 12px;
+        color: rgba(16, 43, 37, 0.38);
+      }
+
+      @media (max-width: 860px) {
+        .page { padding: 22px 16px 48px; }
+        header { margin-bottom: 30px; }
+        .canvas { min-height: 860px; }
+        .canvas-topline { display: block; padding: 28px 28px 10px; }
+        .canvas-topline p { margin-top: 16px; }
+        .visual-stage { position: relative; inset: auto; display: grid; grid-template-columns: 1fr; gap: 28px; padding: 30px 28px 36px; }
+        .word { font-size: clamp(78px, 20vw, 136px); }
+        .lottie-card { min-height: 400px; }
+        .motion-frame { height: 280px; margin-top: 18px; }
+        .caption { display: none; }
+      }
+
+      @media (max-width: 520px) {
+        header { align-items: flex-start; flex-direction: column; gap: 10px; }
+        .canvas { min-height: 900px; }
+        .selector { grid-template-columns: 1fr; }
+        .lottie-card { min-height: 420px; padding: 18px; }
+        .meta { grid-template-columns: 1fr; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <span class="eyebrow">DDC / Career culture / motion study 01</span>
+        <span class="status">Three original vector studies</span>
+      </header>
+
+      <main class="canvas">
+        <div class="canvas-topline">
+          <h1>White surface. One precise motion accent.</h1>
+          <p>Test only: a porcelain field behind the CENTER story, with one inline SVG animation instead of six competing decorative elements.</p>
+        </div>
+
+        <div class="visual-stage">
+          <section class="letters" aria-label="CENTER culture values">
+            <p class="word">CENTER</p>
+            <small><strong>Commitment. Excellence. No blame. Team. Efficiency. Result.</strong><br />The animation belongs beside the outcome, not inside every letter card.</small>
+            <div class="selector" role="group" aria-label="Choose an animation candidate">
+              <button type="button" data-choice="connection" aria-pressed="true">Connection</button>
+              <button type="button" data-choice="systems" aria-pressed="false">Systems</button>
+              <button type="button" data-choice="result" aria-pressed="false">Result</button>
+            </div>
+          </section>
+
+          <section class="lottie-card" aria-live="polite">
+            <header>
+              <span class="status" id="animation-title">Connection</span>
+              <span class="option-index" id="animation-number">01 / 03</span>
+            </header>
+            <div class="motion-frame" id="motion-frame" data-mode="connection" role="img" aria-label="Connection animation">
+              <svg viewBox="0 0 560 340" aria-hidden="true">
+                <g class="motion-scene motion-scene--connection">
+                  <path class="svg-guide" d="M90 170H470M280 55V285" stroke-width="1" />
+                  <path class="svg-line connection-path" d="M106 92C155 92 178 145 248 164M106 248C155 248 178 195 248 176M454 92C405 92 382 145 312 164M454 248C405 248 382 195 312 176" stroke-width="3" />
+                  <circle class="svg-node svg-paper" cx="90" cy="92" r="15" stroke-width="3" />
+                  <circle class="svg-node svg-paper" cx="90" cy="248" r="15" stroke-width="3" />
+                  <circle class="svg-node svg-paper" cx="470" cy="92" r="15" stroke-width="3" />
+                  <circle class="svg-node svg-paper" cx="470" cy="248" r="15" stroke-width="3" />
+                  <circle class="svg-node svg-gold" cx="280" cy="62" r="12" stroke-width="3" />
+                  <circle class="svg-node svg-gold" cx="280" cy="278" r="12" stroke-width="3" />
+                  <circle class="svg-paper" cx="280" cy="170" r="49" stroke-width="3" />
+                  <path class="svg-line" d="M254 170h52M280 144v52" stroke-width="3" />
+                  <circle class="svg-gold" cx="280" cy="170" r="8" />
+                </g>
+                <g class="motion-scene motion-scene--systems">
+                  <path class="svg-guide" d="M100 264H460M100 76H460" stroke-width="1" />
+                  <g class="system-column"><rect class="svg-paper" x="126" y="114" width="72" height="150" rx="4" stroke-width="3" /><path class="svg-line" d="M146 146h32M146 171h32M146 196h32M146 221h32" stroke-width="3" /></g>
+                  <g class="system-column"><rect class="svg-paper" x="244" y="76" width="72" height="188" rx="4" stroke-width="3" /><path class="svg-line" d="M264 111h32M264 136h32M264 161h32M264 186h32M264 211h32" stroke-width="3" /></g>
+                  <g class="system-column"><rect class="svg-paper" x="362" y="132" width="72" height="132" rx="4" stroke-width="3" /><path class="svg-line" d="M382 162h32M382 187h32M382 212h32" stroke-width="3" /></g>
+                  <path class="svg-gold scan" d="M100 278H460" fill="none" stroke-width="5" />
+                </g>
+                <g class="motion-scene motion-scene--result">
+                  <circle class="svg-guide target-ring" cx="280" cy="170" r="106" stroke-width="2" />
+                  <circle class="svg-guide target-ring" cx="280" cy="170" r="76" stroke-width="2" />
+                  <circle class="svg-paper" cx="280" cy="170" r="46" stroke-width="3" />
+                  <circle class="svg-gold" cx="280" cy="170" r="14" />
+                  <path class="svg-line result-arrow" d="M122 256L230 201L276 172L405 83M367 83h38v38" stroke-width="6" />
+                  <circle class="svg-paper" cx="122" cy="256" r="12" stroke-width="3" />
+                  <circle class="svg-gold" cx="405" cy="83" r="12" />
+                </g>
+              </svg>
+            </div>
+            <div class="meta">
+              <span id="animation-description">Six values converge into one shared centre.</span>
+              <span class="note">Original inline SVG</span>
+            </div>
+          </section>
+        </div>
+        <span class="caption note">Vector motion direction lab</span>
+      </main>
+    </div>
+
+    <script>
+      const options = {
+        connection: {
+          number: "01 / 03",
+          title: "Connection",
+          description: "Six values converge into one shared centre.",
+        },
+        systems: {
+          number: "02 / 03",
+          title: "Systems",
+          description: "A composed system moving with quiet, measurable momentum.",
+        },
+        result: {
+          number: "03 / 03",
+          title: "Result",
+          description: "A focused trajectory for the final CENTER state.",
+        },
+      };
+
+      const frame = document.querySelector("#motion-frame");
+      const title = document.querySelector("#animation-title");
+      const number = document.querySelector("#animation-number");
+      const description = document.querySelector("#animation-description");
+
+      function chooseAnimation(key) {
+        const option = options[key];
+        frame.dataset.mode = key;
+        frame.setAttribute("aria-label", option.title + " animation");
+        title.textContent = option.title;
+        number.textContent = option.number;
+        description.textContent = option.description;
+        document.querySelectorAll("[data-choice]").forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.choice === key));
+        });
+      }
+
+      document.querySelectorAll("[data-choice]").forEach((button) => {
+        button.addEventListener("click", () => chooseAnimation(button.dataset.choice));
+      });
+
+      chooseAnimation("connection");
+    </script>
+  </body>
+</html>
